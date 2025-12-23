@@ -9,20 +9,31 @@
 
 <body>
 
-<header class="hero">
-  <h1>BowesProduct</h1>
-  <p>Brand kits & icon assets for commercial use</p>
+<!-- TOP NAV -->
+<header class="topbar">
+  <nav class="nav">
+    <div class="nav-left">
+      <a href="index.html" class="logo">BowesProduct</a>
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+  </nav>
 </header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Brand Kits & Icon Assets</h1>
+  <p>Commercial design assets built to order</p>
+</section>
 
 <section>
   <h2>Brand Kits</h2>
 
   <div class="products">
 
-    <!-- STARTER -->
     <div class="card">
       <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
-
       <h3>Starter Brand Kit</h3>
       <p class="price">€250</p>
 
@@ -35,18 +46,13 @@
 
       <p class="delivery">Delivery: minimum 14 days</p>
 
-      <a
-        href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00"
-        target="_blank"
-      >
+      <a href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00" target="_blank">
         Buy Starter Kit
       </a>
     </div>
 
-    <!-- PRO -->
     <div class="card">
       <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
-
       <h3>Pro Brand Kit</h3>
       <p class="price">€500</p>
 
@@ -59,18 +65,13 @@
 
       <p class="delivery">Delivery: minimum 21 days</p>
 
-      <a
-        href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01"
-        target="_blank"
-      >
+      <a href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01" target="_blank">
         Buy Pro Kit
       </a>
     </div>
 
-    <!-- MASTER -->
     <div class="card">
       <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
-
       <h3>Master Brand Kit</h3>
       <p class="price">€1,500</p>
 
@@ -83,10 +84,7 @@
 
       <p class="delivery">Delivery: minimum 28 days</p>
 
-      <a
-        href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02"
-        target="_blank"
-      >
+      <a href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02" target="_blank">
         Buy Master Kit
       </a>
     </div>
@@ -94,24 +92,25 @@
   </div>
 </section>
 
-<section>
-  <h2>Icon Library</h2>
-  <p>Purchase individual SVG icons for commercial use.</p>
-
-  <p style="margin-top:1rem;">
-    <a href="icons.html"><strong>Browse Icon Library →</strong></a>
-  </p>
-</section>
-
 <footer>
-  <nav>
-    <a href="terms.html">Terms</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="refund.html">Refunds</a>
-    <a href="icons.html">Icons</a>
-  </nav>
   <p>© 2025 BowesProduct</p>
 </footer>
+
+<script>
+  const body = document.body;
+
+  if (localStorage.getItem("theme") === "dark") {
+    body.classList.add("dark");
+  }
+
+  function toggleTheme() {
+    body.classList.toggle("dark");
+    localStorage.setItem(
+      "theme",
+      body.classList.contains("dark") ? "dark" : "light"
+    );
+  }
+</script>
 
 </body>
 </html>
