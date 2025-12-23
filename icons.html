@@ -1,3 +1,6 @@
+<!-- =======================
+icons.html
+======================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,23 +9,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <header class="topbar">
   <nav class="nav">
     <div class="nav-left">
-      <a href="index.html" class="logo">BowesProduct</a>
-      <a href="index.html">Home</a>
-      <a href="icons.html">Icons</a>
+      <a href="index.html" class="nav-btn">Home</a>
+      <a href="icons.html" class="nav-btn">Icons</a>
     </div>
-    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">Light</button>
   </nav>
 </header>
 
 <section class="hero">
   <h1>Icon Library</h1>
-  <p>SVG icons for commercial use</p>
+  <p>Commercial SVG icons</p>
 </section>
 
 <section>
@@ -31,31 +32,29 @@
       <img src="icons/teardrop.svg" alt="Teardrop Icon">
       <h3>Teardrop Icon</h3>
       <p class="price">€1</p>
-
-      <a href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" target="_blank">
-        Buy Icon
-      </a>
+      <a class="buy-btn" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" target="_blank">Buy Icon</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>© 2025 BowesProduct</p>
+  © 2025 BowesProduct
 </footer>
 
 <script>
   const body = document.body;
+  const btn = document.getElementById("themeBtn");
 
   if (localStorage.getItem("theme") === "dark") {
     body.classList.add("dark");
+    btn.textContent = "Dark";
   }
 
   function toggleTheme() {
     body.classList.toggle("dark");
-    localStorage.setItem(
-      "theme",
-      body.classList.contains("dark") ? "dark" : "light"
-    );
+    const dark = body.classList.contains("dark");
+    btn.textContent = dark ? "Dark" : "Light";
+    localStorage.setItem("theme", dark ? "dark" : "light");
   }
 </script>
 
