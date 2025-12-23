@@ -2,53 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Icon Library – BowesProduct</title>
+  <title>Icons – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="hero">
-  <h1>Icon Library</h1>
-  <p>Commercial SVG icons — €1 each</p>
+<header class="topbar">
+  <nav class="nav">
+    <div class="nav-left">
+      <a href="index.html" class="logo">BowesProduct</a>
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+  </nav>
 </header>
+
+<section class="hero">
+  <h1>Icon Library</h1>
+  <p>SVG icons for commercial use</p>
+</section>
 
 <section>
   <div class="products">
-
-    <!-- ICON -->
     <div class="card">
       <img src="icons/teardrop.svg" alt="Teardrop Icon">
-
       <h3>Teardrop Icon</h3>
       <p class="price">€1</p>
 
-      <ul>
-        <li>SVG format</li>
-        <li>Editable & scalable</li>
-        <li>Commercial use allowed</li>
-      </ul>
-
-      <a
-        href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03"
-        target="_blank"
-      >
+      <a href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" target="_blank">
         Buy Icon
       </a>
     </div>
-
   </div>
 </section>
 
 <footer>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="terms.html">Terms</a>
-    <a href="privacy.html">Privacy</a>
-  </nav>
   <p>© 2025 BowesProduct</p>
 </footer>
+
+<script>
+  const body = document.body;
+
+  if (localStorage.getItem("theme") === "dark") {
+    body.classList.add("dark");
+  }
+
+  function toggleTheme() {
+    body.classList.toggle("dark");
+    localStorage.setItem(
+      "theme",
+      body.classList.contains("dark") ? "dark" : "light"
+    );
+  }
+</script>
 
 </body>
 </html>
