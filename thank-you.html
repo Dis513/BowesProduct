@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Thank You — BowesProDuct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Thank You – BowesProduct</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="style.css">
 </head>
+<body class="theme-blue">
 
-<body>
+<nav class="nav">
+  <div>
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="about.html">About</a>
+  </div>
+  <select id="themeSelect">
+    <option value="theme-blue">Blue</option>
+    <option value="theme-emerald">Emerald</option>
+    <option value="theme-violet">Violet</option>
+    <option value="theme-amber">Amber</option>
+  </select>
+</nav>
 
-<header class="site-header">
-  <h1>Thank You</h1>
-  <p>Your payment was successful</p>
+<header class="hero">
+<h1>Thank You</h1>
+<p>Your payment was successful.</p>
 </header>
 
-<main class="thank-you">
+<section>
+<p>You’ll receive next steps by email shortly.</p>
+</section>
 
-  <p class="thanks">
-    Thank you for purchasing a <strong>BowesProDuct Brand Kit</strong>.
-    This is a custom design service, so your files will be created specifically
-    for you.
-  </p>
-
-  <p class="next-steps">
-    <strong>Next step:</strong> Please complete the brand brief below so we can
-    begin work on your project.
-  </p>
-
-  <a class="buy-btn"
-     href="https://formspree.io/f/mkowkqvd"
-     target="_blank">
-     Fill Out Brand Brief
-  </a>
-
-  <p class="timeline">
-    Estimated delivery: <strong>5–10 business days</strong> depending on package.
-  </p>
-
-</main>
-
-<footer class="site-footer">
-  <p>© 2025 BowesProDuct. All rights reserved.</p>
+<footer>
+<a href="license.html">License</a>
+<a href="privacy.html">Privacy</a>
+<a href="terms.html">Terms</a>
+<a href="refund.html">Refund</a>
+<p>© 2025 BowesProduct</p>
 </footer>
+
+<script>
+const t=document.getElementById("themeSelect");
+const s=localStorage.getItem("theme")||"theme-blue";
+document.body.className=s;
+t.value=s;
+t.onchange=()=>{document.body.className=t.value;localStorage.setItem("theme",t.value);}
+</script>
 
 </body>
 </html>
