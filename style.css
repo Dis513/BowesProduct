@@ -1,0 +1,63 @@
+/* ======================
+   ICON PAGE
+====================== */
+
+.icon-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.icon-controls select {
+  margin-left: 0.5rem;
+  padding: 0.4rem;
+}
+
+.icons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1.5rem;
+}
+
+.icon-card {
+  background: #fff;
+  padding: 1.2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.icon-card img {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 0.5rem;
+}
+
+.icon-card span {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.pagination button {
+  margin: 0.25rem;
+  padding: 0.4rem 0.7rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: #111;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .icon-controls {
+    justify-content: center;
+  }
+}
