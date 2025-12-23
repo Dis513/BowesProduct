@@ -1,40 +1,35 @@
 /* ======================
-   RESET & BASE
+   RESET
 ====================== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ======================
+   THEME
+====================== */
+.theme-blue {
+  --bg: #f4f8ff;
+  --card: #ffffff;
+  --text: #0f172a;
+  --accent: #2563eb;
+}
+
+/* ======================
+   BASE
+====================== */
 body {
   font-family: Arial, Helvetica, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-}
-
-/* ======================
-   THEMES
-====================== */
-.theme-blue {
-  --bg: #f4f8ff;
-  --text: #0f172a;
-  --accent: #2563eb;
-}
-
-.theme-emerald {
-  --bg: #f3faf7;
-  --text: #064e3b;
-  --accent: #10b981;
-}
-
-.theme-violet {
-  --bg: #f7f5ff;
-  --text: #2e1065;
-  --accent: #7c3aed;
-}
-
-.theme-amber {
-  --bg: #fffbeb;
-  --text: #78350f;
-  --accent: #f59e0b;
 }
 
 /* ======================
@@ -44,20 +39,16 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
-  background: #fff;
-  border-bottom: 1px solid rgba(0,0,0,.08);
+  padding: 1rem;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
 .nav a {
-  margin-right: 1rem;
+  margin-right: 0.8rem;
   text-decoration: none;
   font-weight: bold;
   color: var(--accent);
-}
-
-.nav select {
-  padding: .4rem;
 }
 
 /* ======================
@@ -65,80 +56,62 @@ body {
 ====================== */
 .hero {
   text-align: center;
-  padding: 4rem 1rem;
+  padding: 2.5rem 1rem;
 }
 
 .hero h1 {
-  font-size: 2.4rem;
-  margin-bottom: .5rem;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero p {
+  opacity: 0.85;
 }
 
 /* ======================
-   ICON PAGE
-====================== */
-.icon-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.icon-controls input {
-  padding: .6rem;
-  flex: 1;
-}
-
-.tabs button {
-  background: none;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: .5rem .8rem;
-  cursor: pointer;
-}
-
-.tabs button.active {
-  background: var(--accent);
-  color: #fff;
-}
-
-/* ======================
-   GRID
+   ICON GRID
 ====================== */
 .icon-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1.2rem;
 }
 
+/* ======================
+   ICON CARD
+====================== */
 .icon-card {
-  background: #fff;
-  border-radius: 10px;
+  background: var(--card);
+  border-radius: 12px;
   padding: 1rem;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
 .icon-card img {
-  width: 48px;
-  height: 48px;
-  margin-bottom: .6rem;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.5rem;
 }
 
 /* ======================
-   PLACEHOLDERS
+   PLACEHOLDER
 ====================== */
 .placeholder {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto .6rem;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 0.5rem;
   border-radius: 8px;
   background: var(--accent);
-  opacity: .18;
+  opacity: 0.18;
 }
 
 .placeholder-text {
-  font-size: .85rem;
-  opacity: .6;
+  font-size: 0.8rem;
+  opacity: 0.6;
 }
 
 /* ======================
@@ -146,48 +119,64 @@ body {
 ====================== */
 .buy-btn {
   display: inline-block;
-  margin-top: .6rem;
+  margin-top: 0.5rem;
   background: var(--accent);
-  color: #fff;
-  padding: .4rem .8rem;
+  color: #ffffff;
+  padding: 0.4rem 0.8rem;
   text-decoration: none;
   border-radius: 6px;
-  font-size: .9rem;
+  font-size: 0.85rem;
 }
 
 /* ======================
    PAGINATION
 ====================== */
 .pagination {
-  margin-top: 3rem;
   text-align: center;
+  padding: 1.5rem 1rem 2.5rem;
 }
 
-.pagination button {
-  margin: .2rem;
-  padding: .4rem .7rem;
+.pagination a,
+.pagination strong {
+  margin: 0 0.25rem;
+  padding: 0.35rem 0.6rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.pagination strong {
+  background: var(--accent);
+  color: #ffffff;
+  border-radius: 6px;
 }
 
 /* ======================
    FOOTER
 ====================== */
 footer {
-  margin-top: 4rem;
-  padding: 2rem 1rem;
-  background: #111;
-  color: #fff;
+  background: #111111;
+  color: #ffffff;
   text-align: center;
+  padding: 1.8rem 1rem;
 }
 
 footer a {
-  color: #fff;
-  margin: 0 .5rem;
+  color: #ffffff;
+  margin: 0 0.4rem;
   text-decoration: none;
+  font-size: 0.85rem;
 }
 
 /* ======================
-   MOBILE
+   MOBILE HARD FIX
 ====================== */
-@media (max-width: 700px) {
-  .hero h1 { font-size: 2rem; }
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .icon-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
