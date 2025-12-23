@@ -1,76 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>BowesProduct</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>BowesProduct – Brand Kits & Icon Library</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
+<body class="theme-blue">
+
+<!-- ======================
+     NAV
+====================== -->
 <nav class="nav">
-<div>
-<a href="index.html">Home</a>
-<a href="icons.html">Icons</a>
-<a href="about.html">About</a>
-</div>
-<select id="themeSelect">
-<option value="">Blue</option>
-<option value="theme-emerald">Emerald</option>
-<option value="theme-violet">Violet</option>
-<option value="theme-amber">Amber</option>
-</select>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="about.html">About</a>
+  </div>
 </nav>
 
+<!-- ======================
+     HERO
+====================== -->
 <header class="hero">
-<h1>Brand Kits & Icon Assets</h1>
-<p>Commercial design assets built to order</p>
+  <h1>Commercial Brand Assets</h1>
+  <p>Brand kits and scalable icons built for real businesses</p>
 </header>
 
+<!-- ======================
+     BRAND KITS
+====================== -->
 <section>
-<div class="products">
+  <h2>Brand Identity Kits</h2>
 
-<div class="card">
-<img src="Product-Starter-Brand-Kit.png">
-<h3>Starter Brand Kit</h3>
-<p class="price">€250</p>
-<p>Delivery: 14 days minimum</p>
-<a class="buy" href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00">Buy</a>
-</div>
+  <div class="products">
 
-<div class="card">
-<img src="Product-Pro-Brand-Kit.png">
-<h3>Pro Brand Kit</h3>
-<p class="price">€500</p>
-<p>Delivery: 21 days minimum</p>
-<a class="buy" href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01">Buy</a>
-</div>
+    <div class="card">
+      <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
+      <h3>Starter Brand Kit</h3>
+      <p class="price">€250 — Commercial License</p>
 
-<div class="card">
-<img src="Product-Master-Brand-Kit.png">
-<h3>Master Brand Kit</h3>
-<p class="price">€1500</p>
-<p>Delivery: 28 days minimum</p>
-<a class="buy" href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02">Buy</a>
-</div>
+      <ul>
+        <li>Primary logo design</li>
+        <li>Color palette</li>
+        <li>Font pairing guidance</li>
+        <li>Basic brand guidelines</li>
+        <li>Commercial usage rights</li>
+      </ul>
 
-</div>
+      <p class="delivery">Delivery: 14 working days</p>
+    </div>
+
+    <div class="card">
+      <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
+      <h3>Pro Brand Kit</h3>
+      <p class="price">€500 — Commercial License</p>
+
+      <ul>
+        <li>Expanded logo system</li>
+        <li>Refined color strategy</li>
+        <li>Typography hierarchy</li>
+        <li>Social Media Assets</li>
+        <li>Brand usage guide</li>
+      </ul>
+
+      <p class="delivery">Delivery: 21 working days</p>
+    </div>
+
+    <div class="card">
+      <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
+      <h3>Master Brand Kit</h3>
+      <p class="price">€1,500 — Commercial License</p>
+
+      <ul>
+        <li>Complete logo suite</li>
+        <li>Brand strategy overview</li>
+        <li>Full typography system</li>
+        <li>Marketing & social assets</li>
+        <li>Comprehensive brand manual</li>
+      </ul>
+
+      <p class="delivery">Delivery: 28 working days</p>
+    </div>
+
+  </div>
 </section>
 
-<footer>
-<a href="license.html">License</a>
-<a href="privacy.html">Privacy</a>
-<a href="terms.html">Terms</a>
-<a href="refund.html">Refund</a>
-<p>© 2025 BowesProduct</p>
-</footer>
+<!-- ======================
+     ICON LIBRARY
+====================== -->
+<section>
+  <h2>Icon Library</h2>
+  <p>
+    A growing library of clean, pixel-perfect SVG icons designed for designers,
+    developers, and businesses.
+  </p>
 
-<script>
-const t=document.getElementById("themeSelect");
-const s=localStorage.getItem("theme");
-if(s){document.body.className=s;t.value=s;}
-t.onchange=()=>{document.body.className=t.value;localStorage.setItem("theme",t.value);}
-</script>
+  <p style="margin-top:1rem;">
+    <a class="buy-btn" href="icons.html">Browse the Icon Library</a>
+  </p>
+</section>
+
+<!-- ======================
+     HOW IT WORKS
+====================== -->
+<section class="process">
+  <h2>How It Works</h2>
+  <ol>
+    <li>Select a brand kit or browse icons</li>
+    <li>Complete secure checkout</li>
+    <li>We design and prepare your assets</li>
+    <li>You receive commercial-ready files</li>
+  </ol>
+</section>
+
+<!-- ======================
+     CONTACT
+====================== -->
+<section class="contact">
+  <h2>Contact</h2>
+  <p>
+    Questions or custom requests?  
+    Email <a href="mailto:hello@bowesproduct.com">hello@bowesproduct.com</a>
+  </p>
+</section>
+
+<!-- ======================
+     FOOTER
+====================== -->
+<footer>
+  <a href="license.html">License</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms</a>
+  <a href="refund.html">Refund</a>
+  <p style="margin-top:1rem;">© 2025 BowesProduct</p>
+</footer>
 
 </body>
 </html>
