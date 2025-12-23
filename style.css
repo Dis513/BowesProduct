@@ -1,29 +1,7 @@
-:root {
-  --bg: #f5f8ff;
-  --card-bg: #ffffff;
-  --text: #111;
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-}
-
-/* THEMES */
-body.theme-emerald {
-  --bg: #f0fdf4;
-  --primary: #16a34a;
-  --primary-hover: #15803d;
-}
-body.theme-violet {
-  --bg: #faf5ff;
-  --primary: #7c3aed;
-  --primary-hover: #6d28d9;
-}
-body.theme-amber {
-  --bg: #fffbeb;
-  --primary: #d97706;
-  --primary-hover: #b45309;
-}
-
-* { box-sizing:border-box; margin:0; padding:0; }
+/* ======================
+   RESET & BASE
+====================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -32,78 +10,184 @@ body {
   line-height: 1.6;
 }
 
+/* ======================
+   THEMES
+====================== */
+.theme-blue {
+  --bg: #f4f8ff;
+  --text: #0f172a;
+  --accent: #2563eb;
+}
+
+.theme-emerald {
+  --bg: #f3faf7;
+  --text: #064e3b;
+  --accent: #10b981;
+}
+
+.theme-violet {
+  --bg: #f7f5ff;
+  --text: #2e1065;
+  --accent: #7c3aed;
+}
+
+.theme-amber {
+  --bg: #fffbeb;
+  --text: #78350f;
+  --accent: #f59e0b;
+}
+
+/* ======================
+   NAV
+====================== */
 .nav {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,.08);
 }
 
-.nav a, .nav select {
-  background:var(--primary);
-  color:#fff;
-  padding:.45rem .9rem;
-  border-radius:6px;
-  text-decoration:none;
-  border:none;
-  margin-right:.4rem;
+.nav a {
+  margin-right: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--accent);
 }
 
+.nav select {
+  padding: .4rem;
+}
+
+/* ======================
+   HERO
+====================== */
 .hero {
-  background:rgba(0,0,0,.04);
-  padding:4rem 1rem;
-  text-align:center;
+  text-align: center;
+  padding: 4rem 1rem;
 }
 
-section {
-  max-width:1200px;
-  margin:auto;
-  padding:3rem 1.5rem;
+.hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: .5rem;
 }
 
-.products, .icon-grid {
-  display:grid;
-  gap:2rem;
-  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+/* ======================
+   ICON PAGE
+====================== */
+.icon-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.card, .icon-card {
-  background:var(--card-bg);
-  border-radius:12px;
-  padding:1.5rem;
-  text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
+.icon-controls input {
+  padding: .6rem;
+  flex: 1;
 }
 
-.card img, .icon-card img {
-  max-width:200px;
-  margin-bottom:1rem;
-  pointer-events:none;
+.tabs button {
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: .5rem .8rem;
+  cursor: pointer;
 }
 
-.price { color:var(--primary); font-weight:bold; }
-
-.buy {
-  display:inline-block;
-  background:var(--primary);
-  color:#fff;
-  padding:.6rem 1rem;
-  border-radius:8px;
-  text-decoration:none;
+.tabs button.active {
+  background: var(--accent);
+  color: #fff;
 }
 
+/* ======================
+   GRID
+====================== */
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+
+.icon-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.icon-card img {
+  width: 48px;
+  height: 48px;
+  margin-bottom: .6rem;
+}
+
+/* ======================
+   PLACEHOLDERS
+====================== */
+.placeholder {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto .6rem;
+  border-radius: 8px;
+  background: var(--accent);
+  opacity: .18;
+}
+
+.placeholder-text {
+  font-size: .85rem;
+  opacity: .6;
+}
+
+/* ======================
+   BUTTON
+====================== */
+.buy-btn {
+  display: inline-block;
+  margin-top: .6rem;
+  background: var(--accent);
+  color: #fff;
+  padding: .4rem .8rem;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: .9rem;
+}
+
+/* ======================
+   PAGINATION
+====================== */
+.pagination {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.pagination button {
+  margin: .2rem;
+  padding: .4rem .7rem;
+}
+
+/* ======================
+   FOOTER
+====================== */
 footer {
-  background:#020617;
-  color:#fff;
-  padding:2rem 1rem;
-  text-align:center;
-}
-footer a {
-  color:#93c5fd;
-  margin:0 .5rem;
-  text-decoration:none;
+  margin-top: 4rem;
+  padding: 2rem 1rem;
+  background: #111;
+  color: #fff;
+  text-align: center;
 }
 
-@media(max-width:900px){
-  .products,.icon-grid{grid-template-columns:1fr;}
+footer a {
+  color: #fff;
+  margin: 0 .5rem;
+  text-decoration: none;
+}
+
+/* ======================
+   MOBILE
+====================== */
+@media (max-width: 700px) {
+  .hero h1 { font-size: 2rem; }
 }
