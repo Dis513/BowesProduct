@@ -1,0 +1,108 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #121a2f, #050814);
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+}
+
+.hero p {
+  opacity: 0.85;
+}
+
+/* SECTIONS */
+section {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.about, .process, .contact {
+  background: rgba(255,255,255,0.05);
+  padding: 25px;
+  border-radius: 12px;
+}
+
+/* PRODUCTS */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.card {
+  background: rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.card img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.price {
+  color: #4f7cff;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card ul {
+  text-align: left;
+  margin: 15px 0;
+}
+
+.card li {
+  margin-bottom: 6px;
+}
+
+.delivery {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* PROCESS */
+.process ol {
+  margin-left: 20px;
+}
+
+/* CONTACT */
+.contact a {
+  color: #4f7cff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 30px 15px;
+  opacity: 0.7;
+}
+
+footer a {
+  color: #aaa;
+  text-decoration: none;
+  margin: 0 5px;
+}
