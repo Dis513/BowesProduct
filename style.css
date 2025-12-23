@@ -7,13 +7,23 @@
   --primary-hover: #1d4ed8;
 }
 
-body.dark {
-  --bg: #0f172a;
-  --card-bg: #020617;
-  --text: #f8fafc;
-  --muted: #94a3b8;
-  --primary: #38bdf8;
-  --primary-hover: #0ea5e9;
+/* THEMES */
+body.theme-emerald {
+  --bg: #f0fdf4;
+  --primary: #16a34a;
+  --primary-hover: #15803d;
+}
+
+body.theme-violet {
+  --bg: #faf5ff;
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+}
+
+body.theme-amber {
+  --bg: #fffbeb;
+  --primary: #d97706;
+  --primary-hover: #b45309;
 }
 
 * {
@@ -27,29 +37,29 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-  user-select: none;
 }
 
 .nav {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem 1.5rem;
 }
 
 .nav a,
-.nav button {
+.nav select {
   background: var(--primary);
   color: #fff;
   padding: 0.45rem 0.9rem;
   border-radius: 6px;
   text-decoration: none;
   border: none;
-  cursor: pointer;
   margin-right: 0.4rem;
+  cursor: pointer;
 }
 
 .hero {
-  background: rgba(37,99,235,0.08);
+  background: rgba(0,0,0,0.04);
   padding: 4rem 1rem;
   text-align: center;
 }
@@ -64,7 +74,7 @@ section {
 .icon-grid {
   display: grid;
   gap: 2rem;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
 
 .card,
@@ -81,7 +91,6 @@ section {
   max-width: 200px;
   margin-bottom: 1rem;
   pointer-events: none;
-  opacity: 0.9;
 }
 
 .price {
@@ -107,7 +116,7 @@ footer {
 }
 
 footer a {
-  color: #38bdf8;
+  color: #93c5fd;
   margin: 0 0.5rem;
   text-decoration: none;
 }
