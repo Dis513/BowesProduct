@@ -1,63 +1,208 @@
 /* ======================
-   ICON PAGE
+   RESET & GLOBAL
 ====================== */
 
-.icon-controls {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5rem;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.icon-controls select {
-  margin-left: 0.5rem;
-  padding: 0.4rem;
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f5f5;
+  color: #111;
+  line-height: 1.6;
 }
 
-.icons-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 1.5rem;
-}
+/* ======================
+   HERO
+====================== */
 
-.icon-card {
-  background: #fff;
-  padding: 1.2rem;
-  border-radius: 12px;
+.hero {
+  background: #111;
+  color: #fff;
+  padding: 4rem 1.5rem;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
-.icon-card img {
-  width: 32px;
-  height: 32px;
+.hero h1 {
+  font-size: 2.5rem;
   margin-bottom: 0.5rem;
 }
 
-.icon-card span {
-  font-size: 0.85rem;
-  opacity: 0.8;
+.hero p {
+  font-size: 1.1rem;
+  opacity: 0.85;
 }
 
-.pagination {
+/* ======================
+   SECTIONS
+====================== */
+
+section {
+  max-width: 1200px;
+  margin: auto;
+  padding: 3rem 1.5rem;
+}
+
+section h2 {
+  font-size: 1.9rem;
+  margin-bottom: 1.2rem;
+}
+
+/* ======================
+   GRID SYSTEM
+====================== */
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* ======================
+   CARD
+====================== */
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.8rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
   text-align: center;
-  margin-top: 2rem;
 }
 
-.pagination button {
-  margin: 0.25rem;
-  padding: 0.4rem 0.7rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.card img {
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto 1.4rem;
+  border-radius: 8px;
 }
 
-.pagination button.active {
+.card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.price {
+  font-weight: bold;
+  margin-bottom: 1.1rem;
+}
+
+/* ======================
+   CARD LIST
+====================== */
+
+.card ul {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 1.2rem;
+}
+
+.card ul li {
+  position: relative;
+  padding-left: 1.3rem;
+  margin-bottom: 0.6rem;
+}
+
+.card ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #000;
+  font-weight: bold;
+}
+
+/* ======================
+   BUTTONS
+====================== */
+
+.card a {
+  margin-top: auto;
+  display: inline-block;
+  padding: 0.75rem 1.4rem;
   background: #111;
   color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background 0.2s ease;
 }
 
-@media (max-width: 768px) {
-  .icon-controls {
-    justify-content: center;
+.card a:hover {
+  background: #000;
+}
+
+/* ======================
+   TEXT UTILITIES
+====================== */
+
+.delivery {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* ======================
+   PROCESS
+====================== */
+
+.process ol {
+  padding-left: 1.3rem;
+}
+
+.process li {
+  margin-bottom: 0.6rem;
+}
+
+/* ======================
+   FOOTER
+====================== */
+
+footer {
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  margin-top: 4rem;
+}
+
+footer nav {
+  margin-bottom: 0.8rem;
+}
+
+footer nav a {
+  color: #fff;
+  margin: 0 0.6rem;
+  text-decoration: none;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+footer nav a:hover {
+  opacity: 1;
+}
+
+/* ======================
+   ICON PAGE EXTRAS
+====================== */
+
+select {
+  padding: 0.4rem;
+}
+
+/* ======================
+   RESPONSIVE
+====================== */
+
+@media (max-width: 900px) {
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
   }
 }
