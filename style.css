@@ -1,62 +1,157 @@
-<!-- =======================
-icons.html
-======================= -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Icons – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* ======================
+THEME VARIABLES
+====================== */
+:root {
+  --bg: #f5f7fb;
+  --card-bg: #ffffff;
+  --text: #111;
+  --muted: #666;
+  --accent: #2563eb;
+  --hero-bg: #eaf0ff;
+}
 
-<header class="topbar">
-  <nav class="nav">
-    <div class="nav-left">
-      <a href="index.html" class="nav-btn">Home</a>
-      <a href="icons.html" class="nav-btn">Icons</a>
-    </div>
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">Light</button>
-  </nav>
-</header>
+body.dark {
+  --bg: #0f1115;
+  --card-bg: #1a1d24;
+  --text: #f1f1f1;
+  --muted: #aaa;
+  --accent: #4f8cff;
+  --hero-bg: #121622;
+}
 
-<section class="hero">
-  <h1>Icon Library</h1>
-  <p>Commercial SVG icons</p>
-</section>
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-<section>
-  <div class="products">
-    <div class="card">
-      <img src="icons/teardrop.svg" alt="Teardrop Icon">
-      <h3>Teardrop Icon</h3>
-      <p class="price">€1</p>
-      <a class="buy-btn" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" target="_blank">Buy Icon</a>
-    </div>
-  </div>
-</section>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  transition: background 0.25s, color 0.25s;
+}
 
-<footer>
-  © 2025 BowesProduct
-</footer>
+/* TOP NAV */
+.topbar {
+  background: var(--card-bg);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
 
-<script>
-  const body = document.body;
-  const btn = document.getElementById("themeBtn");
+.nav {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  if (localStorage.getItem("theme") === "dark") {
-    body.classList.add("dark");
-    btn.textContent = "Dark";
+.nav-btn {
+  margin-right: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.theme-toggle {
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: var(--card-bg);
+  cursor: pointer;
+}
+
+/* HERO */
+.hero {
+  background: var(--hero-bg);
+  text-align: center;
+  padding: 4rem 1.5rem;
+}
+
+/* SECTIONS */
+section {
+  max-width: 1200px;
+  margin: auto;
+  padding: 3rem 1.5rem;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* CARD */
+.card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  padding: 1.8rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.card img {
+  max-width: 260px;
+  margin: 0 auto 1rem;
+}
+
+.price {
+  color: var(--accent);
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.card ul {
+  list-style: none;
+  text-align: left;
+}
+
+.card ul li {
+  margin-bottom: 0.5rem;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.card ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.delivery {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.buy-btn {
+  margin-top: auto;
+  padding: 0.8rem;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .products {
+    grid-template-columns: 1fr;
   }
-
-  function toggleTheme() {
-    body.classList.toggle("dark");
-    const dark = body.classList.contains("dark");
-    btn.textContent = dark ? "Dark" : "Light";
-    localStorage.setItem("theme", dark ? "dark" : "light");
-  }
-</script>
-
-</body>
-</html>
+}
