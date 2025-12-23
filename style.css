@@ -1,7 +1,3 @@
-/* ======================
-THEME VARIABLES
-====================== */
-
 :root {
   --bg: #f5f8ff;
   --card-bg: #ffffff;
@@ -9,7 +5,6 @@ THEME VARIABLES
   --muted: #555;
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
-  --border: #e5e7eb;
 }
 
 body.dark {
@@ -19,12 +14,7 @@ body.dark {
   --muted: #94a3b8;
   --primary: #38bdf8;
   --primary-hover: #0ea5e9;
-  --border: #1e293b;
 }
-
-/* ======================
-GLOBAL
-====================== */
 
 * {
   box-sizing: border-box;
@@ -37,17 +27,12 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-  user-select: none; /* deterrent */
+  user-select: none;
 }
-
-/* ======================
-NAV
-====================== */
 
 .nav {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 1rem 1.5rem;
 }
 
@@ -55,23 +40,13 @@ NAV
 .nav button {
   background: var(--primary);
   color: #fff;
-  text-decoration: none;
   padding: 0.45rem 0.9rem;
   border-radius: 6px;
-  font-size: 0.9rem;
-  margin-right: 0.4rem;
+  text-decoration: none;
   border: none;
   cursor: pointer;
+  margin-right: 0.4rem;
 }
-
-.nav a:hover,
-.nav button:hover {
-  background: var(--primary-hover);
-}
-
-/* ======================
-HERO
-====================== */
 
 .hero {
   background: rgba(37,99,235,0.08);
@@ -79,29 +54,17 @@ HERO
   text-align: center;
 }
 
-.hero p {
-  color: var(--muted);
-}
-
-/* ======================
-SECTIONS
-====================== */
-
 section {
   max-width: 1200px;
   margin: auto;
   padding: 3rem 1.5rem;
 }
 
-/* ======================
-PRODUCTS / ICONS
-====================== */
-
 .products,
 .icon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 
 .card,
@@ -109,17 +72,16 @@ PRODUCTS / ICONS
   background: var(--card-bg);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   text-align: center;
-  user-select: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 .card img,
 .icon-card img {
   max-width: 200px;
   margin-bottom: 1rem;
-  pointer-events: none; /* stops drag */
-  opacity: 0.9; /* preview only */
+  pointer-events: none;
+  opacity: 0.9;
 }
 
 .price {
@@ -137,14 +99,6 @@ PRODUCTS / ICONS
   text-decoration: none;
 }
 
-.buy:hover {
-  background: var(--primary-hover);
-}
-
-/* ======================
-FOOTER
-====================== */
-
 footer {
   background: #020617;
   color: #fff;
@@ -157,10 +111,6 @@ footer a {
   margin: 0 0.5rem;
   text-decoration: none;
 }
-
-/* ======================
-MOBILE
-====================== */
 
 @media (max-width: 900px) {
   .products,
