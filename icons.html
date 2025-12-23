@@ -6,50 +6,115 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="style.css">
 </head>
-<body oncontextmenu="return false">
+<body class="theme-blue">
 
 <nav class="nav">
-<div>
-<a href="index.html">Home</a>
-<a href="icons.html">Icons</a>
-<a href="about.html">About</a>
-</div>
-<select id="themeSelect">
-<option value="">Blue</option>
-<option value="theme-emerald">Emerald</option>
-<option value="theme-violet">Violet</option>
-<option value="theme-amber">Amber</option>
-</select>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+  </div>
+  <select id="themeSelect">
+    <option value="theme-blue">Blue</option>
+    <option value="theme-emerald">Emerald</option>
+    <option value="theme-violet">Violet</option>
+    <option value="theme-amber">Amber</option>
+  </select>
 </nav>
 
 <header class="hero">
-<h1>Icon Library</h1>
-<p>€1 per icon – commercial license included</p>
+  <h1>Icon Library</h1>
+  <p>Commercial-use SVG icons. €1 per icon.</p>
 </header>
 
-<section>
-<div class="icon-grid">
-<div class="icon-card">
-<img src="icons/teardrop.svg">
-<p>Teardrop Icon</p>
-<a class="buy" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">Buy €1</a>
-</div>
-</div>
+<section class="icon-controls">
+  <input type="text" id="search" placeholder="Search icons…">
+  <div class="tabs">
+    <button class="active">All</button>
+    <button>UI</button>
+    <button>Brand</button>
+    <button>Shapes</button>
+  </div>
 </section>
 
+<section class="icon-grid" id="iconGrid"></section>
+
+<div class="pagination" id="pagination"></div>
+
 <footer>
-<a href="license.html">License</a>
-<a href="privacy.html">Privacy</a>
-<a href="terms.html">Terms</a>
-<a href="refund.html">Refund</a>
-<p>© 2025 BowesProduct</p>
+  <a href="license.html">License</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms</a>
+  <a href="refund.html">Refund</a>
+  <p>© 2025 BowesProduct</p>
 </footer>
 
 <script>
-const t=document.getElementById("themeSelect");
-const s=localStorage.getItem("theme");
-if(s){document.body.className=s;t.value=s;}
-t.onchange=()=>{document.body.className=t.value;localStorage.setItem("theme",t.value);}
+/* ======================
+   THEME
+====================== */
+const themeSelect = document.getElementById("themeSelect");
+const savedTheme = localStorage.getItem("theme") || "theme-blue";
+document.body.className = savedTheme;
+themeSelect.value = savedTheme;
+themeSelect.onchange = () => {
+  document.body.className = themeSelect.value;
+  localStorage.setItem("theme", themeSelect.value);
+};
+
+/* ======================
+   ICON DATA
+====================== */
+const TOTAL_ICONS = 100;
+const ICONS_PER_PAGE = 24;
+let currentPage = 1;
+
+function renderIcons() {
+  const grid = document.getElementById("iconGrid");
+  grid.innerHTML = "";
+
+  const start = (currentPage - 1) * ICONS_PER_PAGE + 1;
+  const end = Math.min(start + ICONS_PER_PAGE - 1, TOTAL_ICONS);
+
+  for (let i = start; i <= end; i++) {
+    if (i === 1) {
+      grid.innerHTML += `
+        <div class="icon-card">
+          <img src="icons/teardrop.svg" alt="Teardrop Icon">
+          <strong>Teardrop</strong>
+          <a class="buy-btn" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">€1 Buy</a>
+        </div>
+      `;
+    } else {
+      grid.innerHTML += `
+        <div class="icon-card">
+          <div class="placeholder"></div>
+          <div class="placeholder-text">Coming Soon</div>
+        </div>
+      `;
+    }
+  }
+}
+
+/* ======================
+   PAGINATION
+====================== */
+function renderPagination() {
+  const pages = Math.ceil(TOTAL_ICONS / ICONS_PER_PAGE);
+  const pag = document.getElementById("pagination");
+  pag.innerHTML = "";
+
+  for (let i = 1; i <= pages; i++) {
+    pag.innerHTML += `<button onclick="goPage(${i})">${i}</button>`;
+  }
+}
+
+function goPage(p) {
+  currentPage = p;
+  renderIcons();
+}
+
+renderIcons();
+renderPagination();
 </script>
 
 </body>
