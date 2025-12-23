@@ -1,60 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Icons – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Icons – BowesProduct</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="style.css">
 </head>
 <body oncontextmenu="return false">
 
 <nav class="nav">
-  <div class="nav-left">
-    <a href="index.html">Home</a>
-    <a href="icons.html">Icons</a>
-    <a href="about.html">About</a>
-  </div>
-  <button id="themeToggle">Light</button>
+<div>
+<a href="index.html">Home</a>
+<a href="icons.html">Icons</a>
+<a href="about.html">About</a>
+</div>
+<select id="themeSelect">
+<option value="">Blue</option>
+<option value="theme-emerald">Emerald</option>
+<option value="theme-violet">Violet</option>
+<option value="theme-amber">Amber</option>
+</select>
 </nav>
 
 <header class="hero">
-  <h1>Icon Library</h1>
-  <p>Licensed SVG icons — €1 each</p>
+<h1>Icon Library</h1>
+<p>€1 per icon – commercial license included</p>
 </header>
 
 <section>
-  <div class="icon-grid">
-    <div class="icon-card">
-      <img src="icons/teardrop.svg" draggable="false">
-      <p>Teardrop Icon</p>
-      <a class="buy" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">Buy €1</a>
-    </div>
-  </div>
+<div class="icon-grid">
+<div class="icon-card">
+<img src="icons/teardrop.svg">
+<p>Teardrop Icon</p>
+<a class="buy" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">Buy €1</a>
+</div>
+</div>
 </section>
 
 <footer>
-  <a href="index.html">Home</a>
-  <a href="icons.html">Icons</a>
-  <a href="about.html">About</a>
-  <a href="license.html">License</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="terms.html">Terms</a>
-  <a href="refund.html">Refund</a>
-  <p>© 2025 BowesProduct</p>
+<a href="license.html">License</a>
+<a href="privacy.html">Privacy</a>
+<a href="terms.html">Terms</a>
+<a href="refund.html">Refund</a>
+<p>© 2025 BowesProduct</p>
 </footer>
 
 <script>
-const btn = document.getElementById("themeToggle");
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark");
-  btn.textContent = "Dark";
-}
-btn.onclick = () => {
-  document.body.classList.toggle("dark");
-  const dark = document.body.classList.contains("dark");
-  btn.textContent = dark ? "Dark" : "Light";
-  localStorage.setItem("theme", dark ? "dark" : "light");
-};
+const t=document.getElementById("themeSelect");
+const s=localStorage.getItem("theme");
+if(s){document.body.className=s;t.value=s;}
+t.onchange=()=>{document.body.className=t.value;localStorage.setItem("theme",t.value);}
 </script>
 
 </body>
