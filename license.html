@@ -1,93 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>License – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- TOP NAV -->
-  <nav class="top-nav">
-    <div class="nav-left">
-      <a href="index.html" class="nav-btn">Home</a>
-      <a href="icons.html" class="nav-btn">Icons</a>
-    </div>
-  </nav>
+<nav class="nav">
+  <div class="nav-left">
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="about.html">About</a>
+  </div>
+  <button id="themeToggle">Light</button>
+</nav>
 
-  <!-- HERO -->
-  <header class="hero">
-    <h1>License Agreement</h1>
-    <p>Usage rights for BowesProduct design assets</p>
-  </header>
+<header class="hero">
+  <h1>License</h1>
+</header>
 
-  <!-- CONTENT -->
-  <section>
-    <h2>BowesProduct Asset License</h2>
+<section>
+  <p>
+    All icons and brand assets sold by BowesProduct include a
+    commercial usage license.
+  </p>
+  <p>
+    Assets may be used in client work and commercial projects,
+    but may not be redistributed or resold as standalone products.
+  </p>
+</section>
 
-    <p>
-      This License Agreement governs the use of digital assets purchased or
-      downloaded from BowesProduct, including but not limited to SVG icons,
-      brand kits, and design resources.
-    </p>
+<footer>
+  <a href="index.html">Home</a>
+  <a href="icons.html">Icons</a>
+  <a href="about.html">About</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms</a>
+  <a href="refund.html">Refund</a>
+  <p>© 2025 BowesProduct</p>
+</footer>
 
-    <h3>Permitted Use</h3>
-    <p>You MAY:</p>
-    <ul>
-      <li>Use the assets in personal and commercial projects</li>
-      <li>Use assets in websites, applications, branding, and client work</li>
-      <li>Modify assets for your own projects</li>
-      <li>Use assets in unlimited projects</li>
-    </ul>
-
-    <h3>Prohibited Use</h3>
-    <p>You MAY NOT:</p>
-    <ul>
-      <li>Resell, sublicense, or redistribute the assets as standalone files</li>
-      <li>Include the assets in icon packs, templates, or asset libraries</li>
-      <li>Share, give away, or make the assets publicly available</li>
-      <li>Claim the assets as your own or rebrand them for resale</li>
-    </ul>
-
-    <h3>Ownership</h3>
-    <p>
-      All assets remain the intellectual property of BowesProduct. Purchasing
-      or downloading an asset grants a license to use the asset — not ownership.
-    </p>
-
-    <h3>No Warranty</h3>
-    <p>
-      Assets are provided “as is” without warranty of any kind. BowesProduct
-      shall not be liable for any damages arising from the use or inability to
-      use the assets.
-    </p>
-
-    <h3>Termination</h3>
-    <p>
-      This license is automatically terminated if you violate any of the terms.
-      Upon termination, you must cease all use of the assets.
-    </p>
-
-    <h3>Contact</h3>
-    <p>
-      If you have questions regarding this license, please contact:
-      <br><br>
-      <strong>Email:</strong> support@bowesproduct.com
-    </p>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="icons.html">Icons</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-    </nav>
-    <p>© 2025 BowesProduct. All rights reserved.</p>
-  </footer>
+<script>
+const btn=document.getElementById("themeToggle");
+if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark");btn.textContent="Dark";}
+btn.onclick=()=>{document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");btn.textContent=d?"Dark":"Light";localStorage.setItem("theme",d?"dark":"light");};
+</script>
 
 </body>
 </html>
