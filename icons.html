@@ -3,16 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <title>Icons – BowesProduct</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="theme-blue">
 
+<!-- NAV -->
 <nav class="nav">
   <div>
     <a href="index.html">Home</a>
     <a href="icons.html">Icons</a>
+    <a href="about.html">About</a>
   </div>
+
   <select id="themeSelect">
     <option value="theme-blue">Blue</option>
     <option value="theme-emerald">Emerald</option>
@@ -21,25 +25,54 @@
   </select>
 </nav>
 
+<!-- HERO -->
 <header class="hero">
   <h1>Icon Library</h1>
-  <p>Commercial-use SVG icons. €1 per icon.</p>
+  <p>Commercial-use SVG icons • €1 per icon</p>
 </header>
 
+<!-- FILTERS -->
 <section class="icon-controls">
-  <input type="text" id="search" placeholder="Search icons…">
   <div class="tabs">
-    <button class="active">All</button>
-    <button>UI</button>
-    <button>Brand</button>
-    <button>Shapes</button>
+    <button class="active" data-filter="all">All</button>
+    <button data-filter="shapes">Shapes</button>
+    <button data-filter="ui">UI</button>
+    <button data-filter="brand">Brand</button>
   </div>
 </section>
 
-<section class="icon-grid" id="iconGrid"></section>
+<!-- ICON GRID -->
+<section class="icon-grid" id="iconGrid">
 
-<div class="pagination" id="pagination"></div>
+  <!-- REAL ICON -->
+  <div class="icon-card" data-category="shapes">
+    <img src="icons/teardrop.svg" alt="Teardrop Icon">
+    <strong>Teardrop</strong>
+    <a class="buy-btn"
+       href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">
+      Buy €1
+    </a>
+  </div>
 
+  <!-- PLACEHOLDERS (VISUAL ONLY) -->
+  <div class="icon-card">
+    <div class="placeholder"></div>
+    <div class="placeholder-text">Coming Soon</div>
+  </div>
+
+  <div class="icon-card">
+    <div class="placeholder"></div>
+    <div class="placeholder-text">Coming Soon</div>
+  </div>
+
+  <div class="icon-card">
+    <div class="placeholder"></div>
+    <div class="placeholder-text">Coming Soon</div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
 <footer>
   <a href="license.html">License</a>
   <a href="privacy.html">Privacy</a>
@@ -56,65 +89,36 @@ const themeSelect = document.getElementById("themeSelect");
 const savedTheme = localStorage.getItem("theme") || "theme-blue";
 document.body.className = savedTheme;
 themeSelect.value = savedTheme;
+
 themeSelect.onchange = () => {
   document.body.className = themeSelect.value;
   localStorage.setItem("theme", themeSelect.value);
 };
 
 /* ======================
-   ICON DATA
+   FILTERS
 ====================== */
-const TOTAL_ICONS = 100;
-const ICONS_PER_PAGE = 24;
-let currentPage = 1;
+const buttons = document.querySelectorAll(".tabs button");
+const icons = document.querySelectorAll(".icon-card");
 
-function renderIcons() {
-  const grid = document.getElementById("iconGrid");
-  grid.innerHTML = "";
+buttons.forEach(btn => {
+  btn.onclick = () => {
+    buttons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
 
-  const start = (currentPage - 1) * ICONS_PER_PAGE + 1;
-  const end = Math.min(start + ICONS_PER_PAGE - 1, TOTAL_ICONS);
+    const filter = btn.dataset.filter;
 
-  for (let i = start; i <= end; i++) {
-    if (i === 1) {
-      grid.innerHTML += `
-        <div class="icon-card">
-          <img src="icons/teardrop.svg" alt="Teardrop Icon">
-          <strong>Teardrop</strong>
-          <a class="buy-btn" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">€1 Buy</a>
-        </div>
-      `;
-    } else {
-      grid.innerHTML += `
-        <div class="icon-card">
-          <div class="placeholder"></div>
-          <div class="placeholder-text">Coming Soon</div>
-        </div>
-      `;
-    }
-  }
-}
-
-/* ======================
-   PAGINATION
-====================== */
-function renderPagination() {
-  const pages = Math.ceil(TOTAL_ICONS / ICONS_PER_PAGE);
-  const pag = document.getElementById("pagination");
-  pag.innerHTML = "";
-
-  for (let i = 1; i <= pages; i++) {
-    pag.innerHTML += `<button onclick="goPage(${i})">${i}</button>`;
-  }
-}
-
-function goPage(p) {
-  currentPage = p;
-  renderIcons();
-}
-
-renderIcons();
-renderPagination();
+    icons.forEach(icon => {
+      if (!icon.dataset.category && filter !== "all") {
+        icon.style.display = "none";
+      } else if (filter === "all" || icon.dataset.category === filter) {
+        icon.style.display = "block";
+      } else {
+        icon.style.display = "none";
+      }
+    });
+  };
+});
 </script>
 
 </body>
