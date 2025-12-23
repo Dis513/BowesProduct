@@ -3,32 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Icons – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body oncontextmenu="return false">
 
-<div class="nav">
-  <div>
+<nav class="nav">
+  <div class="nav-left">
     <a href="index.html">Home</a>
     <a href="icons.html">Icons</a>
     <a href="about.html">About</a>
   </div>
   <button id="themeToggle">Light</button>
-</div>
+</nav>
 
-<div class="hero">
+<header class="hero">
   <h1>Icon Library</h1>
   <p>Licensed SVG icons — €1 each</p>
-</div>
+</header>
 
 <section>
   <div class="icon-grid">
     <div class="icon-card">
-      <img src="icons/teardrop.svg" alt="Teardrop Icon" draggable="false">
+      <img src="icons/teardrop.svg" draggable="false">
       <p>Teardrop Icon</p>
-      <a class="buy" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">
-        Buy €1
-      </a>
+      <a class="buy" href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">Buy €1</a>
     </div>
   </div>
 </section>
@@ -46,12 +45,10 @@
 
 <script>
 const btn = document.getElementById("themeToggle");
-
 if (localStorage.getItem("theme") === "dark") {
   document.body.classList.add("dark");
   btn.textContent = "Dark";
 }
-
 btn.onclick = () => {
   document.body.classList.toggle("dark");
   const dark = document.body.classList.contains("dark");
