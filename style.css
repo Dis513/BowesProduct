@@ -1,25 +1,31 @@
 /* ======================
 THEME VARIABLES
 ====================== */
+
 :root {
-  --bg: #f5f7fb;
+  --bg: #f5f8ff;
   --card-bg: #ffffff;
   --text: #111;
-  --muted: #666;
-  --accent: #2563eb;
-  --hero-bg: #eaf0ff;
+  --muted: #555;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --border: #e5e7eb;
 }
 
 body.dark {
-  --bg: #0f1115;
-  --card-bg: #1a1d24;
-  --text: #f1f1f1;
-  --muted: #aaa;
-  --accent: #4f8cff;
-  --hero-bg: #121622;
+  --bg: #0f172a;
+  --card-bg: #020617;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --primary: #38bdf8;
+  --primary-hover: #0ea5e9;
+  --border: #1e293b;
 }
 
-/* RESET */
+/* ======================
+GLOBAL
+====================== */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -31,127 +37,134 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-  transition: background 0.25s, color 0.25s;
+  user-select: none; /* deterrent */
 }
 
-/* TOP NAV */
-.topbar {
-  background: var(--card-bg);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-}
+/* ======================
+NAV
+====================== */
 
 .nav {
-  max-width: 1200px;
-  margin: auto;
-  padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 1.5rem;
 }
 
-.nav-btn {
-  margin-right: 0.5rem;
-  padding: 0.45rem 0.9rem;
-  background: var(--accent);
+.nav a,
+.nav button {
+  background: var(--primary);
   color: #fff;
   text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-}
-
-.theme-toggle {
   padding: 0.45rem 0.9rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
-  background: var(--card-bg);
+  font-size: 0.9rem;
+  margin-right: 0.4rem;
+  border: none;
   cursor: pointer;
 }
 
-/* HERO */
-.hero {
-  background: var(--hero-bg);
-  text-align: center;
-  padding: 4rem 1.5rem;
+.nav a:hover,
+.nav button:hover {
+  background: var(--primary-hover);
 }
 
-/* SECTIONS */
+/* ======================
+HERO
+====================== */
+
+.hero {
+  background: rgba(37,99,235,0.08);
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.hero p {
+  color: var(--muted);
+}
+
+/* ======================
+SECTIONS
+====================== */
+
 section {
   max-width: 1200px;
   margin: auto;
   padding: 3rem 1.5rem;
 }
 
-.products {
+/* ======================
+PRODUCTS / ICONS
+====================== */
+
+.products,
+.icon-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 2rem;
 }
 
-/* CARD */
-.card {
+.card,
+.icon-card {
   background: var(--card-bg);
-  border-radius: 14px;
-  padding: 1.8rem;
+  border-radius: 12px;
+  padding: 1.5rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
   text-align: center;
+  user-select: none;
 }
 
-.card img {
-  max-width: 260px;
-  margin: 0 auto 1rem;
+.card img,
+.icon-card img {
+  max-width: 200px;
+  margin-bottom: 1rem;
+  pointer-events: none; /* stops drag */
+  opacity: 0.9; /* preview only */
 }
 
 .price {
-  color: var(--accent);
+  color: var(--primary);
   font-weight: bold;
   margin-bottom: 1rem;
 }
 
-.card ul {
-  list-style: none;
-  text-align: left;
-}
-
-.card ul li {
-  margin-bottom: 0.5rem;
-  padding-left: 1.2rem;
-  position: relative;
-}
-
-.card ul li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-}
-
-.delivery {
-  font-size: 0.9rem;
-  color: var(--muted);
-  margin-bottom: 1rem;
-}
-
-.buy-btn {
-  margin-top: auto;
-  padding: 0.8rem;
-  background: var(--accent);
+.buy {
+  display: inline-block;
+  background: var(--primary);
   color: #fff;
-  text-decoration: none;
+  padding: 0.6rem 1rem;
   border-radius: 8px;
-  font-weight: bold;
+  text-decoration: none;
 }
 
-/* FOOTER */
+.buy:hover {
+  background: var(--primary-hover);
+}
+
+/* ======================
+FOOTER
+====================== */
+
 footer {
-  text-align: center;
+  background: #020617;
+  color: #fff;
   padding: 2rem 1rem;
+  text-align: center;
 }
 
-/* MOBILE */
+footer a {
+  color: #38bdf8;
+  margin: 0 0.5rem;
+  text-decoration: none;
+}
+
+/* ======================
+MOBILE
+====================== */
+
 @media (max-width: 900px) {
-  .products {
+  .products,
+  .icon-grid {
     grid-template-columns: 1fr;
   }
 }
