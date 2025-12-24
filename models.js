@@ -1,62 +1,107 @@
-const canvas = document.getElementById("viewer");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Werewolf 3D Model – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf5f7fb);
+  <!-- Google Model Viewer -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
-const camera = new THREE.PerspectiveCamera(
-  45,
-  canvas.clientWidth / 500,
-  0.1,
-  100
-);
-camera.position.set(0, 1.5, 3);
+  <link rel="stylesheet" href="style.css" />
 
-const renderer = new THREE.WebGLRenderer({
-  canvas,
-  antialias: true
-});
-renderer.setSize(canvas.clientWidth, 500);
-renderer.setPixelRatio(window.devicePixelRatio);
+  <style>
+    .model-container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 3rem auto;
+      height: 600px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #020617;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
 
-// Controls
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      background-color: #020617;
+    }
 
-// Lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-scene.add(ambientLight);
+    .model-info {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(5, 5, 5);
-scene.add(directionalLight);
+    .price {
+      font-size: 1.8rem;
+      color: #2563eb;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+  </style>
 
-// Load model
-const loader = new THREE.GLTFLoader();
-loader.load(
-  "models/demo-model.glb",
-  (gltf) => {
-    const model = gltf.scene;
-    model.scale.set(1, 1, 1);
-    scene.add(model);
-  },
-  undefined,
-  (error) => {
-    console.error("Error loading model:", error);
-  }
-);
+  <script>
+    window.onload = () => {
+      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+    };
+  </script>
+</head>
+<body>
 
-// Resize fix
-window.addEventListener("resize", () => {
-  renderer.setSize(canvas.clientWidth, 500);
-  camera.aspect = canvas.clientWidth / 500;
-  camera.updateProjectionMatrix();
-});
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">BowesProduct</div>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html" class="active">Models</a>
+    </nav>
+  </div>
+</header>
 
-// Animate
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
+<section class="hero">
+  <h1>Werewolf 3D Model</h1>
+  <p>High-quality, commercial-ready GLB model</p>
+</section>
 
-animate();
+<div class="model-container">
+  <model-viewer 
+    src="models/werewolf.glb" 
+    alt="Werewolf 3D Model"
+    auto-rotate 
+    camera-controls 
+    shadow-intensity="1"
+    exposure="1"
+    ar
+    ar-modes="webxr scene-viewer quick-look">
+  </model-viewer>
+</div>
+
+<div class="model-info">
+  <h2>€49 — Commercial License</h2>
+  <p class="price">One-time purchase</p>
+  <ul style="text-align:left; max-width:600px; margin:2rem auto;">
+    <li>GLB format (optimized for web & apps)</li>
+    <li>Commercial usage allowed</li>
+    <li>PBR materials & rigging ready</li>
+    <li>Immediate download after purchase</li>
+  </ul>
+  <a href="#" class="btn">Buy Model (Coming Soon)</a>
+</div>
+
+<footer class="site-footer">
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
+    <a href="license.html">License</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
+  <p class="copyright">© 2025 BowesProduct. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
