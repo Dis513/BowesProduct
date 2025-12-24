@@ -1,6 +1,6 @@
 // server.js
 const express = require("express");
-const stripe = require("stripe")("sk_test_YOUR_SECRET_KEY"); // replace with your secret key
+const stripe = require("stripe")("sk_test_51ShTSuCP7Y0gyZEAA8nXge7DL49S5GvLZkCAsfdCLodomdNOhKprQhWlHftYHuV2Cz0Dxju7KHJCxsFDqjeCPrZp00n1lrhX2M"); // replace with your secret key
 const app = express();
 app.use(express.json());
 
@@ -42,3 +42,4 @@ app.post("/create-checkout-session", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));
+
