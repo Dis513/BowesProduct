@@ -5,12 +5,13 @@
   <title>3D Models – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
   <link rel="stylesheet" href="style.css" />
 
   <script>
     window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+      const theme = localStorage.getItem("theme") || "blue";
+      document.body.className = "theme-" + theme;
     };
   </script>
 </head>
@@ -29,33 +30,33 @@
 
 <section class="hero">
   <h1>3D Models</h1>
-  <p>High-quality, rigged, commercial-ready GLB models</p>
+  <p>High-quality, rigged, and commercial-ready GLB models for developers.</p>
 </section>
 
 <div class="model-container">
   <model-viewer
     src="models/werewolf.glb"
     alt="Werewolf 3D Model"
+    shadow-intensity="1"
     auto-rotate
     camera-controls
-    shadow-intensity="1"
     exposure="1.2"
     ar
     ar-modes="webxr scene-viewer quick-look">
   </model-viewer>
 </div>
 
-<div class="model-info">
+<section class="model-info">
   <h2>Werewolf Model</h2>
   <p class="price">€49 — Commercial License</p>
   <ul>
-    <li>Optimized GLB format</li>
-    <li>PBR materials & full rigging</li>
-    <li>Ready for games, apps, and web</li>
-    <li>Immediate download after purchase</li>
+    <li>Optimized GLB format (PBR-ready)</li>
+    <li>Fully rigged for animation</li>
+    <li>Works in Unity, Unreal, and web</li>
+    <li>Instant download after purchase</li>
   </ul>
-  <a href="#" class="btn">Buy Model (Coming Soon)</a>
-</div>
+  <a href="#" class="btn">Buy Model — Coming Soon</a>
+</section>
 
 <footer class="site-footer">
   <nav class="footer-nav">
@@ -65,7 +66,7 @@
     <a href="terms.html">Terms</a>
     <a href="refund.html">Refunds</a>
   </nav>
-  <p class="copyright">© 2025 BowesProduct. All rights reserved.</p>
+  <p>© 2025 BowesProduct. All rights reserved.</p>
 </footer>
 
 </body>
