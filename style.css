@@ -41,23 +41,10 @@ section.light { background: var(--light-bg); }
 
 a, .price, .main-nav a.active { color: var(--primary); }
 
-/* Primary buttons: force white text */
-.btn {
-  background: var(--primary);
-  color: #ffffff;
-}
-.btn:hover {
-  background: color-mix(in srgb, var(--primary) 90%, black);
-  color: #ffffff;
-}
-.btn.secondary {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-.btn.secondary:hover {
-  background: var(--primary);
-  color: #ffffff;
-}
+.btn { background: var(--primary); }
+.btn:hover { background: color-mix(in srgb, var(--primary) 90%, black); }
+.btn.secondary { border-color: var(--primary); color: var(--primary); }
+.btn.secondary:hover { background: var(--primary); color: white; }
 
 /* ======================
    RESET / BASE
@@ -215,7 +202,7 @@ section h2 {
 }
 
 /* ======================
-   BUTTONS (layout only; colors above)
+   BUTTONS
 ====================== */
 
 .btn {
@@ -226,7 +213,6 @@ section h2 {
   margin-top: 1rem;
   transition: background 0.3s;
   text-decoration: none;
-  border: none;
 }
 
 .btn.secondary {
