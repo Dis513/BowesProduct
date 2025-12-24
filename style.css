@@ -1,7 +1,6 @@
 /* ======================
-   RESET & BASE
+   RESET
 ====================== */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,231 +8,233 @@
 }
 
 html, body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f5f8ff;
-  color: #0f172a;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ======================
+   THEME
+====================== */
+.theme-blue {
+  --bg: #f4f8ff;
+  --card: #ffffff;
+  --text: #0f172a;
+  --accent: #2563eb;
+}
+
+/* ======================
+   BASE
+====================== */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
   line-height: 1.6;
 }
 
 /* ======================
-   HEADER / NAV
+   NAV
 ====================== */
-
-header.site-header {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 1rem 1.5rem;
+.nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
-.site-title {
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-nav a {
-  margin-left: 1rem;
+.nav a {
+  margin-right: 1rem;
   text-decoration: none;
-  color: #2563eb;
-  font-weight: 500;
-}
-
-nav a:hover {
-  text-decoration: underline;
+  font-weight: bold;
+  color: var(--accent);
 }
 
 /* ======================
    HERO
 ====================== */
-
 .hero {
-  background: #eaf0ff;
-  padding: 4rem 1.5rem;
   text-align: center;
+  padding: 2.5rem 1rem;
 }
 
 .hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.hero p {
-  font-size: 1.1rem;
-  opacity: 0.85;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 /* ======================
    SECTIONS
 ====================== */
-
 section {
   max-width: 1200px;
   margin: auto;
-  padding: 3rem 1.5rem;
-}
-
-section h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1.2rem;
+  padding: 2.5rem 1rem;
 }
 
 /* ======================
-   GRID / CARDS
+   PRODUCTS GRID (INDEX FIX)
 ====================== */
-
-.grid {
+.products {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 1.8rem;
 }
 
+/* ======================
+   CARD (INDEX FIX)
+====================== */
 .card {
-  background: #ffffff;
-  border-radius: 14px;
+  background: var(--card);
+  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   text-align: center;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
 }
 
-.card img,
-.card svg {
-  max-width: 180px;
-  margin-bottom: 1rem;
+.card img {
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto 1rem;
+  border-radius: 10px;
 }
 
 .card h3 {
-  font-size: 1.3rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .price {
-  font-weight: 700;
-  color: #2563eb;
+  font-weight: bold;
   margin-bottom: 1rem;
 }
 
 .card ul {
   list-style: none;
   text-align: left;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
 }
 
 .card ul li {
-  padding-left: 1.4rem;
-  margin-bottom: 0.5rem;
+  padding-left: 1.2rem;
   position: relative;
+  margin-bottom: 0.4rem;
 }
 
 .card ul li::before {
   content: "✓";
   position: absolute;
   left: 0;
-  color: #2563eb;
+  color: var(--accent);
+}
+
+.delivery {
+  font-size: 0.85rem;
+  opacity: 0.7;
 }
 
 /* ======================
-   BUTTONS
+   ICON GRID
 ====================== */
-
-.button {
-  display: inline-block;
-  padding: 0.65rem 1.4rem;
-  background: #2563eb;
-  color: #ffffff;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
+.icon-grid {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1.2rem;
 }
 
-.button:hover {
-  background: #1e4fd8;
+.icon-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-/* ======================
-   ICON / MODEL FILTERS
-====================== */
-
-.filters {
-  margin-bottom: 2rem;
-}
-
-.filters button {
-  margin-right: 0.5rem;
+.icon-card img {
+  width: 40px;
+  height: 40px;
   margin-bottom: 0.5rem;
-  padding: 0.45rem 1rem;
-  border-radius: 999px;
-  border: 1px solid #2563eb;
-  background: #ffffff;
-  color: #2563eb;
-  cursor: pointer;
 }
 
-.filters button.active {
-  background: #2563eb;
+/* ======================
+   PLACEHOLDER
+====================== */
+.placeholder {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 0.5rem;
+  border-radius: 8px;
+  background: var(--accent);
+  opacity: 0.2;
+}
+
+.placeholder-text {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* ======================
+   BUTTON
+====================== */
+.buy-btn {
+  display: inline-block;
+  margin-top: 0.6rem;
+  background: var(--accent);
   color: #ffffff;
+  padding: 0.45rem 0.9rem;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* ======================
+   PAGINATION
+====================== */
+.pagination {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.pagination a,
+.pagination strong {
+  margin: 0 0.3rem;
+  padding: 0.4rem 0.7rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.pagination strong {
+  background: var(--accent);
+  color: #ffffff;
+  border-radius: 6px;
 }
 
 /* ======================
    FOOTER
 ====================== */
-
 footer {
-  margin-top: 4rem;
-  padding: 2rem 1.5rem;
-  background: #ffffff;
-  border-top: 1px solid #e5e7eb;
+  background: #111111;
+  color: #ffffff;
   text-align: center;
+  padding: 2rem 1rem;
 }
 
-footer nav a {
-  margin: 0 0.6rem;
-  color: #2563eb;
+footer a {
+  color: #ffffff;
+  margin: 0 0.5rem;
   text-decoration: none;
-}
-
-footer nav a:hover {
-  text-decoration: underline;
-}
-
-footer p {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  opacity: 0.7;
+  font-size: 0.85rem;
 }
 
 /* ======================
-   MODEL VIEWER PAGE
+   MOBILE FIX (CRITICAL)
 ====================== */
-
-.model-wrapper {
-  height: 70vh;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #020617;
-}
-
-/* ======================
-   RESPONSIVE
-====================== */
-
 @media (max-width: 900px) {
-  .grid {
+  .products {
     grid-template-columns: 1fr;
   }
-
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-  header.site-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  nav {
-    margin-top: 0.5rem;
-  }
 }
-
