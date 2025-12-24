@@ -19,10 +19,10 @@
         <a href="models.html" class="active">Models</a>
       </div>
       <select id="themeSelect">
-        <option value="theme-blue">Blue Theme</option>
-        <option value="theme-emerald">Emerald Theme</option>
-        <option value="theme-violet">Violet Theme</option>
-        <option value="theme-amber">Amber Theme</option>
+        <option value="theme-blue">Blue</option>
+        <option value="theme-emerald">Emerald</option>
+        <option value="theme-violet">Violet</option>
+        <option value="theme-amber">Amber</option>
       </select>
     </nav>
   </div>
@@ -37,12 +37,15 @@
   <model-viewer
     src="models/werewolf.glb"
     alt="Werewolf 3D Model"
+    poster="https://via.placeholder.com/1100x620?text=Loading+Model..."  <!-- Fallback image while loading -->
+    loading="eager"
     auto-rotate
     camera-controls
     shadow-intensity="1"
     exposure="1.2"
     ar
     ar-modes="webxr scene-viewer quick-look">
+    <div slot="progress-bar" style="background:#2563eb;">Loading model...</div>
   </model-viewer>
 </div>
 
