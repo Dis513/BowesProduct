@@ -5,6 +5,9 @@
   <title>3D Models Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+
   <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
@@ -15,7 +18,6 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* THEMES */
     body.theme-blue { --primary:#2563eb; --hero-bg:#eaf0ff; --text:#0f172a; }
     body.theme-emerald { --primary:#10b981; --hero-bg:#d5f5e3; --text:#065f46; }
     body.theme-violet { --primary:#8b5cf6; --hero-bg:#ede9fe; --text:#581c87; }
@@ -74,7 +76,6 @@
       font-size: 1.2rem;
     }
 
-    /* Models Grid */
     .models-grid {
       max-width: 1200px;
       margin: 3rem auto;
@@ -217,7 +218,7 @@
     </div>
   </footer>
 
-  <!-- THEME SWITCHER + Scripts -->
+  <!-- SCRIPTS -->
   <script>
     // Theme switcher
     const select = document.getElementById('themeSelect');
@@ -226,13 +227,27 @@
       localStorage.setItem('theme', select.value);
     });
 
-    // Function to add product to shop/cart
+    // Initialize Stripe
+    const stripe = Stripe("YOUR_STRIPE_PUBLISHABLE_KEY");
+
     function addToCart(productId) {
-      // Example: redirect to shop/checkout page
-      window.location.href = `https://yourshop.com/checkout?product=${productId}`;
+      fetch("/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.sessionId){
+          stripe.redirectToCheckout({ sessionId: data.sessionId });
+        } else {
+          alert("Failed to create checkout session.");
+        }
+      })
+      .catch(err => console.error(err));
     }
 
-    // Model grid functionality
+    // Model viewer and buttons
     const gridItems = document.querySelectorAll('.grid-item');
     const viewer = document.getElementById('mainViewer');
 
@@ -241,7 +256,6 @@
       const priceBtn = item.querySelector('.btn-price');
       const productId = item.getAttribute('data-product');
 
-      // View model
       viewBtn.addEventListener('click', () => {
         const modelSrc = item.getAttribute('data-model');
         viewer.setAttribute('src', modelSrc);
@@ -250,7 +264,6 @@
         window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
       });
 
-      // Price / shop button
       priceBtn.addEventListener('click', () => {
         addToCart(productId);
       });
