@@ -4,31 +4,8 @@
   <meta charset="UTF-8">
   <title>3D Models – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <link rel="stylesheet" href="style.css">
-
-  <style>
-    .products {
-      margin-top: 2rem;
-    }
-
-    .card img {
-      border-radius: 12px;
-    }
-
-    .card .tagline {
-      font-size: 0.95rem;
-      opacity: 0.8;
-    }
-
-    .card .actions {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-  </style>
 </head>
 <body>
 
@@ -53,30 +30,40 @@
 
 <section class="hero">
   <h1>3D Models</h1>
-  <p>High-quality, rigged, commercial-ready GLB models for games and apps.</p>
+  <p>High-quality, rigged, commercial-ready GLB models</p>
 </section>
 
-<section>
-  <div class="products">
-    <!-- Werewolf product card -->
-    <article class="card">
-      <!-- Optional preview image if you add models/werewolf-preview.jpg -->
-      <!-- <img src="models/werewolf-preview.jpg" alt="Werewolf 3D Model preview"> -->
+<div class="model-container">
+  <model-viewer
+    src="https://raw.githubusercontent.com/Dis513/BowesProduct/main/models/werewolf.glb"  <!-- Full binary via raw link -->
+    poster="models/werewolf-preview.jpg"  <!-- Add screenshot JPG for instant view -->
+    alt="Werewolf 3D Model"
+    loading="eager"
+    auto-rotate
+    camera-controls
+    shadow-intensity="1"
+    exposure="1.2"
+    ar
+    ar-modes="webxr scene-viewer quick-look">
+    
+    <div class="progress-message" slot="progress-bar">
+      Loading optimized 3D model...<br>
+      <small>(4MB – fast & high-quality)</small>
+    </div>
+  </model-viewer>
+</div>
 
-      <h3>Werewolf</h3>
-      <p class="tagline">Ferocious mid-poly werewolf, perfect for dark fantasy RPGs.</p>
-      <p class="price">€49</p>
-      <p class="delivery">Commercial license · GLB format · PBR materials</p>
-
-      <div class="actions">
-        <a href="werewolf.html" class="btn">View Model</a>
-        <a href="#" class="btn secondary">Buy (Coming Soon)</a>
-      </div>
-    </article>
-
-    <!-- Duplicate this block for more models in future -->
-  </div>
-</section>
+<div class="model-info">
+  <h2>Werewolf Model</h2>
+  <p class="price">€49 — Commercial License</p>
+  <ul>
+    <li>Optimized GLB format with Draco compression</li>
+    <li>PBR materials & full rigging</li>
+    <li>Ready for games, apps, and web</li>
+    <li>Immediate download after purchase</li>
+  </ul>
+  <a href="#" class="btn">Buy Model (Coming Soon)</a>
+</div>
 
 <footer class="site-footer">
   <nav class="footer-nav">
@@ -90,19 +77,15 @@
 </footer>
 
 <script>
-  // Theme selector for shop page
-  window.addEventListener('load', () => {
-    const themeSelect = document.getElementById("themeSelect");
-    const savedTheme = localStorage.getItem("theme") || "theme-blue";
-    document.body.className = savedTheme;
-    themeSelect.value = savedTheme;
-
-    themeSelect.onchange = () => {
-      const newTheme = themeSelect.value;
-      document.body.className = newTheme;
-      localStorage.setItem("theme", newTheme);
-    };
-  });
+  const themeSelect = document.getElementById("themeSelect");
+  const savedTheme = localStorage.getItem("theme") || "theme-blue";
+  document.body.className = savedTheme;
+  themeSelect.value = savedTheme;
+  themeSelect.onchange = () => {
+    const newTheme = themeSelect.value;
+    document.body.className = newTheme;
+    localStorage.setItem("theme", newTheme);
+  };
 </script>
 
 </body>
