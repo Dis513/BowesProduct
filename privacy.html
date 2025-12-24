@@ -5,16 +5,38 @@
   <title>Privacy – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <script>
+    window.onload = () => {
+      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+    };
+  </script>
 </head>
+
 <body>
 
+<nav class="top-nav">
+  <div>BowesProduct</div>
+  <div class="nav-right">
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="models.html">Models</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>Privacy Policy</h1>
+</header>
+
 <section>
-  <h2>Privacy Policy</h2>
   <p>
-    We collect only necessary information to process orders.
-    We do not sell or share personal data.
+    We do not sell or share personal data. Payments are processed securely
+    via third-party providers. No customer data is stored on this website.
   </p>
 </section>
+
+<footer>
+  <p>© 2025 BowesProduct</p>
+</footer>
 
 </body>
 </html>
