@@ -2,135 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BowesProduct – Commercial Brand Assets</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Models Viewer – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="style.css">
+  <!-- Model Viewer -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
-  <!-- FIXED THEME LOAD -->
-  <script>
-    window.onload = () => {
-      const savedTheme = localStorage.getItem("theme") || "theme-blue";
-      document.body.className = savedTheme;
-    };
-  </script>
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* Keep your previous styles or link to css/style.css */
+    body { margin:0; font-family:system-ui,sans-serif; }
+    .hero { text-align:center; padding:4rem 2rem; }
+    .model-container { width:100%; max-width:1100px; height:620px; margin:2rem auto; background:#020617; border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
+    model-viewer { width:100%; height:100%; }
+    .models-grid { max-width:1200px; margin:3rem auto; padding:0 2rem; }
+    .models-grid h2 { text-align:center; margin-bottom:2rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:1.5rem; }
+    .grid-item { background:#f3f4f6; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:1rem; font-weight:600; color:#4b5563; }
+    .btn-view, .btn-price { margin-top:0.5rem; padding:0.5rem 1rem; border:none; border-radius:8px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block; }
+    .btn-view { background:#2563eb; color:white; }
+    .btn-view:hover { background:#1d4ed8; }
+    .btn-price { background:#10b981; color:white; }
+    header, footer { background:#fff; border:1px solid #e5e7eb; }
+    .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .main-nav a { color:#000; text-decoration:none; margin-right:1.2rem; font-weight:500; }
+    .main-nav a.active { color:#10b981; font-weight:700; }
+  </style>
 </head>
 
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="logo">BowesProduct</div>
-
-    <nav class="main-nav">
-      <a href="index.html" class="active">Home</a>
-      <a href="icons.html">Icons</a>
-      <a href="models.html">Models</a>
-    </nav>
-  </div>
-</header>
-
-<section class="hero">
-  <h1>Commercial Brand Assets</h1>
-  <p>Brand kits, icons & 3D models built for real businesses</p>
-</section>
-
-<section class="section">
-  <h2>Brand Identity Kits</h2>
-
-  <div class="products">
-
-    <div class="card">
-      <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
-      <h3>Starter Brand Kit</h3>
-      <p class="price">€250</p>
-
-      <ul>
-        <li>Primary logo design</li>
-        <li>Color palette</li>
-        <li>Font pairing guidance</li>
-        <li>Basic brand guidelines</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 14 days</p>
-
-      <a href="#" class="btn">Buy Starter Kit</a>
+<body class="theme-emerald">
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="icons.html">Icons</a>
+        <a href="#models" class="active">Models</a>
+      </nav>
+      <select id="themeSelect">
+        <option value="theme-emerald">Emerald</option>
+        <option value="theme-blue">Blue</option>
+        <option value="theme-violet">Violet</option>
+        <option value="theme-amber">Amber</option>
+      </select>
     </div>
+  </header>
 
-    <div class="card">
-      <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
-      <h3>Pro Brand Kit</h3>
-      <p class="price">€500</p>
+  <!-- HERO -->
+  <section id="hero" class="hero">
+    <h1>Explore Our 3D Models</h1>
+    <p>Click any model below to load it into the viewer.</p>
+  </section>
 
-      <ul>
-        <li>Expanded logo system</li>
-        <li>Typography hierarchy</li>
-        <li>Social media assets</li>
-        <li>Brand usage guide</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 21 days</p>
-
-      <a href="#" class="btn">Buy Pro Kit</a>
+  <!-- MODEL VIEWER -->
+  <section id="viewer">
+    <h2 style="text-align:center;">Model Viewer</h2>
+    <div class="model-container">
+      <model-viewer
+        id="mainViewer"
+        src="models/werewolf.glb"
+        alt="3D Model"
+        shadow-intensity="1"
+        auto-rotate
+        camera-controls
+        style="background:#020617;">
+        <div slot="progress-bar" class="progress-message">Loading model…</div>
+      </model-viewer>
     </div>
+  </section>
 
-    <div class="card">
-      <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
-      <h3>Master Brand Kit</h3>
-      <p class="price">€1,500</p>
-
-      <ul>
-        <li>Complete logo suite</li>
-        <li>Brand strategy overview</li>
-        <li>Marketing & social assets</li>
-        <li>Full brand manual</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 28 days</p>
-
-      <a href="#" class="btn">Buy Master Kit</a>
+  <!-- MODELS GRID -->
+  <section id="models" class="models-grid">
+    <h2>Available Models</h2>
+    <div class="grid">
+      <div class="grid-item" data-model="models/werewolf.glb">
+        Werewolf
+        <button class="btn-view">View Model</button>
+        <a href="https://buy.stripe.com/test_prod_TfDrG6YjEzxBiO" target="_blank" class="btn-price">10€</a>
+      </div>
+      <div class="grid-item" data-model="models/zombiewerewolf.glb">
+        Zombie Werewolf
+        <button class="btn-view">View Model</button>
+        <a href="https://buy.stripe.com/test_prod_TfDskIkgjdC2N7" target="_blank" class="btn-price">10€</a>
+      </div>
+      <div class="grid-item" data-model="models/giantbunny.glb">
+        Giant Bunny
+        <button class="btn-view">View Model</button>
+        <a href="https://buy.stripe.com/test_prod_TfDtH0eDaAAlxu" target="_blank" class="btn-price">10€</a>
+      </div>
+      <div class="grid-item" data-model="models/giantskeletonbunny.glb">
+        Giant Skeleton Bunny
+        <button class="btn-view">View Model</button>
+        <a href="https://buy.stripe.com/test_prod_TfDuZyHjnZYoCP" target="_blank" class="btn-price">10€</a>
+      </div>
     </div>
+  </section>
 
-  </div>
-</section>
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <div>&copy; 2025 BowesProduct</div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="icons.html">Icons</a>
+        <a href="#models">Models</a>
+      </nav>
+    </div>
+  </footer>
 
-<section class="section light">
-  <h2>Icon Library</h2>
-  <p>
-    A growing library of clean, scalable SVG icons designed for designers,
-    developers, and businesses.
-  </p>
+  <!-- SCRIPTS -->
+  <script>
+    // Theme switcher
+    const select = document.getElementById('themeSelect');
+    select.addEventListener('change', () => {
+      document.body.className = select.value;
+      localStorage.setItem('theme', select.value);
+    });
+    window.addEventListener('load', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) document.body.className = savedTheme;
+    });
 
-  <a href="icons.html" class="btn secondary">Browse Icons</a>
-</section>
-
-<section class="section">
-  <h2>How It Works</h2>
-
-  <ol class="process">
-    <li>Select a product or asset</li>
-    <li>Complete secure checkout</li>
-    <li>Assets are prepared or created</li>
-    <li>Files delivered for commercial use</li>
-  </ol>
-</section>
-
-<footer class="site-footer">
-  <nav class="footer-nav">
-    <a href="about.html">About</a>
-    <a href="license.html">License</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
-
-  <p class="copyright">
-    © 2025 BowesProduct. All rights reserved.
-  </p>
-</footer>
-
+    // Model viewer buttons
+    const viewer = document.getElementById('mainViewer');
+    document.querySelectorAll('.grid-item').forEach(item => {
+      item.querySelector('.btn-view').addEventListener('click', () => {
+        viewer.setAttribute('src', item.dataset.model);
+        viewer.reload();
+        window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
+      });
+    });
+  </script>
 </body>
 </html>
