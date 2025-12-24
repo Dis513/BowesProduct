@@ -113,7 +113,7 @@
     }
     .btn-view { background: #2563eb; color: white; cursor: pointer; }
     .btn-view:hover { background: #1d4ed8; }
-    .btn-price { background: #10b981; color: white; cursor: default; }
+    .btn-price { background: #10b981; color: white; cursor: pointer; }
 
     @media (max-width: 768px) {
       .hero h1 { font-size: 2rem; }
@@ -171,35 +171,35 @@
   <section id="models" class="models-grid">
     <h2>Available Models</h2>
     <div class="grid">
-      <div class="grid-item" data-model="models/werewolf.glb">
+      <div class="grid-item" data-model="models/werewolf.glb" data-product="prod_TfDrG6YjEzxBiO" data-price="10€">
         Werewolf
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$29.99</button>
+        <button class="btn-price">10€</button>
       </div>
-      <div class="grid-item" data-model="models/zombiewerewolf.glb">
+      <div class="grid-item" data-model="models/zombiewerewolf.glb" data-product="prod_TfDskIkgjdC2N7" data-price="10€">
         Zombie Werewolf
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$24.99</button>
+        <button class="btn-price">10€</button>
       </div>
-      <div class="grid-item" data-model="models/giantbunny.glb">
+      <div class="grid-item" data-model="models/giantbunny.glb" data-product="prod_TfDtH0eDaAAlxu" data-price="10€">
         Giant Bunny
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$19.99</button>
+        <button class="btn-price">10€</button>
       </div>
-      <div class="grid-item" data-model="models/giantskeletonbunny.glb">
+      <div class="grid-item" data-model="models/giantskeletonbunny.glb" data-product="prod_TfDuZyHjnZYoCP" data-price="10€">
         Giant Skeleton Bunny
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$22.99</button>
+        <button class="btn-price">10€</button>
       </div>
-      <div class="grid-item" data-model="models/model5.glb">
+      <div class="grid-item" data-model="models/model5.glb" data-product="prod_placeholder5" data-price="0€">
         Model #5
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$0.00</button>
+        <button class="btn-price">0€</button>
       </div>
-      <div class="grid-item" data-model="models/model6.glb">
+      <div class="grid-item" data-model="models/model6.glb" data-product="prod_placeholder6" data-price="0€">
         Model #6
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$0.00</button>
+        <button class="btn-price">0€</button>
       </div>
     </div>
   </section>
@@ -217,7 +217,7 @@
     </div>
   </footer>
 
-  <!-- THEME SWITCHER + Model Selector -->
+  <!-- THEME SWITCHER + Scripts -->
   <script>
     // Theme switcher
     const select = document.getElementById('themeSelect');
@@ -226,18 +226,33 @@
       localStorage.setItem('theme', select.value);
     });
 
-    // Grid model click
+    // Function to add product to shop/cart
+    function addToCart(productId) {
+      // Example: redirect to shop/checkout page
+      window.location.href = `https://yourshop.com/checkout?product=${productId}`;
+    }
+
+    // Model grid functionality
     const gridItems = document.querySelectorAll('.grid-item');
     const viewer = document.getElementById('mainViewer');
 
     gridItems.forEach(item => {
       const viewBtn = item.querySelector('.btn-view');
+      const priceBtn = item.querySelector('.btn-price');
+      const productId = item.getAttribute('data-product');
+
+      // View model
       viewBtn.addEventListener('click', () => {
         const modelSrc = item.getAttribute('data-model');
         viewer.setAttribute('src', modelSrc);
         viewer.removeAttribute('poster');
         viewer.reload();
         window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
+      });
+
+      // Price / shop button
+      priceBtn.addEventListener('click', () => {
+        addToCart(productId);
       });
     });
   </script>
