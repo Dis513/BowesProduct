@@ -1,52 +1,4 @@
 /* ======================
-   THEME COLORS
-====================== */
-
-body.theme-blue {
-  --primary: #2563eb;
-  --hero-bg: #eaf0ff;
-  --light-bg: #f8fafc;
-  --text: #0f172a;
-}
-
-body.theme-emerald {
-  --primary: #10b981;
-  --hero-bg: #d5f5e3;
-  --light-bg: #ecfdf5;
-  --text: #065f46;
-}
-
-body.theme-violet {
-  --primary: #8b5cf6;
-  --hero-bg: #ede9fe;
-  --light-bg: #f5f3ff;
-  --text: #581c87;
-}
-
-body.theme-amber {
-  --primary: #f59e0b;
-  --hero-bg: #fffbeb;
-  --light-bg: #fffbeb;
-  --text: #78350f;
-}
-
-/* Apply variables */
-body {
-  background: #f5f8ff;
-  color: var(--text, #0f172a);
-}
-
-.hero { background: var(--hero-bg); }
-section.light { background: var(--light-bg); }
-
-a, .price, .main-nav a.active { color: var(--primary); }
-
-.btn { background: var(--primary); }
-.btn:hover { background: color-mix(in srgb, var(--primary) 90%, black); }
-.btn.secondary { border-color: var(--primary); color: var(--primary); }
-.btn.secondary:hover { background: var(--primary); color: white; }
-
-/* ======================
    RESET / BASE
 ====================== */
 
@@ -57,19 +9,37 @@ a, .price, .main-nav a.active { color: var(--primary); }
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  background: #f5f8ff;
+  color: #0f172a;
   line-height: 1.6;
 }
 
-img { max-width: 100%; display: block; }
+img {
+  max-width: 100%;
+  display: block;
+}
 
-ul { padding-left: 1.4rem; }
+a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+ul {
+  padding-left: 1.4rem;
+}
 
 /* ======================
    CONTAINER CENTERING
 ====================== */
 
-section, .model-info, .model-container, .products, .process {
+section,
+.model-info,
+.model-container,
+.products,
+.icon-grid,
+.process {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -87,7 +57,7 @@ section, .model-info, .model-container, .products, .process {
   padding: 1rem 2rem;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 10;
 }
 
 .header-inner {
@@ -96,8 +66,6 @@ section, .model-info, .model-container, .products, .process {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
 .logo {
@@ -105,27 +73,14 @@ section, .model-info, .model-container, .products, .process {
   font-size: 1.4rem;
 }
 
-.main-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
 .main-nav a {
+  margin-left: 1.5rem;
   font-weight: 500;
 }
 
 .main-nav a.active {
+  color: #2563eb;
   font-weight: 700;
-}
-
-#themeSelect {
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: white;
-  font-size: 0.95rem;
 }
 
 /* ======================
@@ -133,6 +88,7 @@ section, .model-info, .model-container, .products, .process {
 ====================== */
 
 .hero {
+  background: #eaf0ff;
   padding: 5rem 2rem;
   text-align: center;
 }
@@ -155,6 +111,10 @@ section {
   padding: 4rem 0;
 }
 
+section.light {
+  background: #f8fafc;
+}
+
 section h2 {
   text-align: center;
   font-size: 2rem;
@@ -162,20 +122,25 @@ section h2 {
 }
 
 /* ======================
-   CARDS & GRIDS
+   PRODUCT GRIDS
 ====================== */
 
-.products {
+.products,
+.icon-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2.5rem;
 }
 
+/* ======================
+   CARDS
+====================== */
+
 .card {
   background: #ffffff;
   border-radius: 16px;
   padding: 1.8rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
   transition: transform 0.3s ease;
 }
@@ -190,8 +155,9 @@ section h2 {
 }
 
 .price {
-  font-size: 1.6rem;
+  color: #2563eb;
   font-weight: 700;
+  font-size: 1.6rem;
   margin: 1rem 0;
 }
 
@@ -207,21 +173,32 @@ section h2 {
 
 .btn {
   display: inline-block;
+  background: #2563eb;
+  color: #ffffff;
   padding: 0.9rem 1.6rem;
   border-radius: 10px;
   font-weight: 600;
   margin-top: 1rem;
   transition: background 0.3s;
-  text-decoration: none;
+}
+
+.btn:hover {
+  background: #1d4ed8;
 }
 
 .btn.secondary {
   background: transparent;
-  border: 2px solid var(--primary);
+  color: #2563eb;
+  border: 2px solid #2563eb;
+}
+
+.btn.secondary:hover {
+  background: #2563eb;
+  color: white;
 }
 
 /* ======================
-   MODEL VIEWER
+   MODEL VIEWER PAGE
 ====================== */
 
 .model-container {
@@ -233,68 +210,12 @@ section h2 {
   overflow: hidden;
   background: #020617;
   box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-  position: relative;
 }
 
 model-viewer {
   width: 100%;
   height: 100%;
-}
-
-/* Custom loading progress bar */
-model-viewer::part(default-progress-bar) {
-  background-color: rgba(0, 0, 0, 0.7) !important;
-  height: 100% !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-model-viewer .progress-message {
-  color: white;
-  font-size: 1.4rem;
-  text-align: center;
-  padding: 2rem;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .hero h1 { font-size: 2.2rem; }
-  .model-container { height: 420px; margin: 2rem auto; }
-  .header-inner { flex-direction: column; text-align: center; }
-  .main-nav { flex-direction: column; gap: 1rem; }
-}
-
-/* ======================
-   PROCESS LIST
-====================== */
-
-.process {
-  counter-reset: step;
-  max-width: 800px;
-}
-
-.process li {
-  font-size: 1.1rem;
-  margin: 1.5rem 0;
-  position: relative;
-  padding-left: 3rem;
-}
-
-.process li::before {
-  counter-increment: step;
-  content: counter(step);
-  position: absolute;
-  left: 0;
-  background: var(--primary);
-  color: white;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
+  background: #020617;
 }
 
 /* ======================
@@ -319,4 +240,61 @@ model-viewer .progress-message {
 .copyright {
   font-size: 0.9rem;
   opacity: 0.7;
+}
+
+/* ======================
+   PROCESS LIST
+====================== */
+
+.process {
+  counter-reset: step;
+  max-width: 800px;
+}
+
+.process li {
+  font-size: 1.1rem;
+  margin: 1.5rem 0;
+  position: relative;
+  padding-left: 3rem;
+}
+
+.process li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #2563eb;
+  color: white;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* ======================
+   MOBILE RESPONSIVE
+====================== */
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .model-container {
+    height: 420px;
+    margin: 2rem auto;
+  }
+
+  .header-inner {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .main-nav a {
+    margin: 0 0.8rem;
+  }
 }
