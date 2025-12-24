@@ -5,23 +5,24 @@
   <title>Refunds – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-
-  <script>
-    window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
-    };
-  </script>
 </head>
-
 <body>
 
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">BowesProduct</div>
     <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="icons.html">Icons</a>
-      <a href="models.html">Models</a>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="icons.html">Icons</a>
+        <a href="models.html">Models</a>
+      </div>
+      <select id="themeSelect">
+        <option value="theme-blue">Blue Theme</option>
+        <option value="theme-emerald">Emerald Theme</option>
+        <option value="theme-violet">Violet Theme</option>
+        <option value="theme-amber">Amber Theme</option>
+      </select>
     </nav>
   </div>
 </header>
@@ -31,15 +32,31 @@
 </section>
 
 <section class="section">
-  <p>
-    Due to the digital and custom nature of our products, refunds are not
-    offered once work has begun or files are delivered.
-  </p>
+  <p>Due to the digital and custom nature of our products, refunds are not offered once work has begun or files are delivered.</p>
 </section>
 
 <footer class="site-footer">
-  <p>© 2025 BowesProduct</p>
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
+    <a href="license.html">License</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
+  <p class="copyright">© 2025 BowesProduct. All rights reserved.</p>
 </footer>
+
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  const savedTheme = localStorage.getItem("theme") || "theme-blue";
+  document.body.className = savedTheme;
+  themeSelect.value = savedTheme;
+  themeSelect.onchange = () => {
+    const newTheme = themeSelect.value;
+    document.body.className = newTheme;
+    localStorage.setItem("theme", newTheme);
+  };
+</script>
 
 </body>
 </html>
