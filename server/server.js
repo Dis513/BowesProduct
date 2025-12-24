@@ -1,5 +1,5 @@
 const express = require("express");
-const stripe = require("stripe")("sk_test_YOUR_SECRET_KEY"); // your test secret key
+const stripe = require("stripe")("sk_test_51ShTSuCP7Y0gyZEAA8nXge7DL49S5GvLZkCAsfdCLodomdNOhKprQhWlHftYHuV2Cz0Dxju7KHJCxsFDqjeCPrZp00n1lrhX2M"); // your test secret key
 const path = require("path");
 const app = express();
 
@@ -50,3 +50,4 @@ app.get("*", (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+
