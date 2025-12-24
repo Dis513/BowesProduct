@@ -2,52 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Models – BowesProduct</title>
+  <title>3D Models – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Main site styles -->
   <link rel="stylesheet" href="style.css">
 
-  <script>
-    window.onload = () => {
-      document.body.className =
-        "theme-" + (localStorage.getItem("theme") || "blue");
-    };
+  <!-- Model Viewer -->
+  <script type="module"
+    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
 </head>
 
 <body>
 
-<nav class="top-nav">
-  <div>BowesProduct</div>
-  <div class="nav-right">
-    <a href="index.html">Home</a>
-    <a href="icons.html">Icons</a>
-    <a href="models.html">Models</a>
-  </div>
-</nav>
+<!-- ======================
+     HEADER
+====================== -->
 
-<header class="hero">
-  <h1>3D Models</h1>
-  <p>Commercial-ready models — coming soon</p>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">BowesProduct</div>
+
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html" class="active">Models</a>
+    </nav>
+  </div>
 </header>
 
-<section style="text-align:center;">
-  <p>
-    This section will allow customers to preview and purchase
-    3D models with selectable materials.
+<!-- ======================
+     HERO
+====================== -->
+
+<section class="hero">
+  <h1>3D Model Library</h1>
+  <p>Commercial-ready 3D assets for real-world projects</p>
+</section>
+
+<!-- ======================
+     MODEL VIEWER
+====================== -->
+
+<section class="section light">
+
+  <h2>Featured Model</h2>
+  <p style="color:#64748b; margin-bottom:1.5rem;">
+    Rotate, zoom, and inspect the model below.
   </p>
 
-  <p style="opacity:0.6; margin-top:1rem;">
-    Model viewer coming next phase.
+  <div style="
+    max-width:800px;
+    margin:0 auto;
+    background:#ffffff;
+    border-radius:16px;
+    padding:1rem;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  ">
+
+    <model-viewer
+      src="models/sample.glb"
+      alt="3D Model Preview"
+      camera-controls
+      auto-rotate
+      shadow-intensity="1"
+      exposure="1"
+      environment-image="neutral"
+      style="
+        width:100%;
+        height:420px;
+        background:#f1f5f9;
+        border-radius:12px;
+      ">
+    </model-viewer>
+
+  </div>
+
+  <div style="max-width:800px; margin:2rem auto 0;">
+    <h3>Model Details</h3>
+    <ul>
+      <li>Format: GLB</li>
+      <li>Optimised for web & real-time use</li>
+      <li>Commercial usage allowed</li>
+      <li>Game engines & render pipelines supported</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- ======================
+     COMING SOON
+====================== -->
+
+<section class="section">
+  <h2>More Models Coming Soon</h2>
+  <p style="color:#64748b;">
+    This library will expand with AI-generated and hand-polished 3D assets,
+    including props, UI objects, and product visuals.
   </p>
 </section>
 
-<footer>
-  <nav>
+<!-- ======================
+     FOOTER
+====================== -->
+
+<footer class="site-footer">
+  <div class="footer-nav">
     <a href="privacy.html">Privacy</a>
     <a href="terms.html">Terms</a>
     <a href="license.html">License</a>
     <a href="refund.html">Refunds</a>
-  </nav>
+  </div>
+
   <p>© 2025 BowesProduct</p>
 </footer>
 
