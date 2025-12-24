@@ -52,17 +52,6 @@
     .hero h1 { font-size: 2.6rem; margin-bottom: .5rem; }
     .hero p { font-size: 1.2rem; opacity: 0.85; }
 
-    button.btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: .9rem 1.6rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 1.2rem;
-    }
-
     .model-container {
       background: #020617;
       border-radius: 20px;
@@ -93,12 +82,15 @@
 </head>
 
 <body class="theme-emerald">
+  <!-- HEADER -->
   <header>
     <div class="header-inner">
       <div class="logo">Werewolf Viewer</div>
       <nav class="main-nav">
         <a href="#hero" class="active">Home</a>
-        <a href="#viewer">Viewer</a>
+        <a href="#viewer">3D Model</a>
+        <a href="#footer">Icons</a>
+        <!-- Add more links here if needed -->
       </nav>
       <select id="themeSelect">
         <option value="theme-emerald">Emerald</option>
@@ -109,12 +101,13 @@
     </div>
   </header>
 
+  <!-- HERO -->
   <section id="hero" class="hero">
     <h1>Inspect the Werewolf Model</h1>
     <p>Spin, zoom, and explore the detailed 3D Werewolf in your browser.</p>
-    <button class="btn">Download Showcase</button>
   </section>
 
+  <!-- 3D VIEWER -->
   <section id="viewer">
     <h2 style="text-align:center;">3D Werewolf Preview</h2>
     <div class="model-container">
@@ -133,16 +126,19 @@
     </div>
   </section>
 
-  <footer>
+  <!-- FOOTER -->
+  <footer id="footer">
     <div class="footer-inner">
       <div>&copy; 2025 Werewolf Viewer</div>
       <nav class="main-nav">
         <a href="#hero">Home</a>
-        <a href="#viewer">Viewer</a>
+        <a href="#viewer">3D Model</a>
+        <a href="#footer">Icons</a>
       </nav>
     </div>
   </footer>
 
+  <!-- THEME SWITCHER -->
   <script>
     const select = document.getElementById('themeSelect');
     select.addEventListener('change', () => {
