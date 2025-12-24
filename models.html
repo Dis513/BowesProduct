@@ -35,7 +35,8 @@
 
 <div class="model-container">
   <model-viewer
-    src="models/werewolf.glb"
+    src="models/werewolf.glb?v=4"  <!-- Cache-buster: change v= number when updating file -->
+    poster="models/werewolf-preview.jpg"  <!-- Optional: add a screenshot PNG/JPG for instant view -->
     alt="Werewolf 3D Model"
     loading="eager"
     auto-rotate
@@ -46,8 +47,8 @@
     ar-modes="webxr scene-viewer quick-look">
     
     <div class="progress-message" slot="progress-bar">
-      Loading high-quality 3D model...<br>
-      <small>(21MB – please wait a moment)</small>
+      Loading optimized 3D model...<br>
+      <small>(4MB – fast & high-quality)</small>
     </div>
   </model-viewer>
 </div>
@@ -56,7 +57,7 @@
   <h2>Werewolf Model</h2>
   <p class="price">€49 — Commercial License</p>
   <ul>
-    <li>Optimized GLB format</li>
+    <li>Optimized GLB format with Draco compression</li>
     <li>PBR materials & full rigging</li>
     <li>Ready for games, apps, and web</li>
     <li>Immediate download after purchase</li>
