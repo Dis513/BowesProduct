@@ -1,125 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Icons – BowesProduct</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Icons – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
+<body>
 
-<body class="theme-blue">
-
-<!-- NAV -->
-<nav class="nav">
-  <div>
+<nav class="top-nav">
+  <div class="nav-left">BowesProduct</div>
+  <div class="nav-right">
     <a href="index.html">Home</a>
     <a href="icons.html">Icons</a>
+    <a href="models.html">Models</a>
     <a href="about.html">About</a>
   </div>
-
-  <select id="themeSelect">
-    <option value="theme-blue">Blue</option>
-    <option value="theme-emerald">Emerald</option>
-    <option value="theme-violet">Violet</option>
-    <option value="theme-amber">Amber</option>
-  </select>
 </nav>
 
-<!-- HERO -->
 <header class="hero">
   <h1>Icon Library</h1>
-  <p>Commercial-use SVG icons • €1 per icon</p>
+  <p>Commercial SVG icons</p>
 </header>
 
-<!-- FILTERS -->
-<section class="icon-controls">
-  <div class="tabs">
-    <button class="active" data-filter="all">All</button>
-    <button data-filter="shapes">Shapes</button>
-    <button data-filter="ui">UI</button>
-    <button data-filter="brand">Brand</button>
+<section>
+  <div class="icon-grid">
+    <div class="icon-card">
+      <img src="icons/teardrop.svg" alt="Teardrop">
+      <p>Teardrop</p>
+      <span>€1</span>
+    </div>
+
+    <div class="icon-card placeholder">Coming Soon</div>
+    <div class="icon-card placeholder">Coming Soon</div>
   </div>
 </section>
 
-<!-- ICON GRID -->
-<section class="icon-grid" id="iconGrid">
-
-  <!-- REAL ICON -->
-  <div class="icon-card" data-category="shapes">
-    <img src="icons/teardrop.svg" alt="Teardrop Icon">
-    <strong>Teardrop</strong>
-    <a class="buy-btn"
-       href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">
-      Buy €1
-    </a>
-  </div>
-
-  <!-- PLACEHOLDERS (VISUAL ONLY) -->
-  <div class="icon-card">
-    <div class="placeholder"></div>
-    <div class="placeholder-text">Coming Soon</div>
-  </div>
-
-  <div class="icon-card">
-    <div class="placeholder"></div>
-    <div class="placeholder-text">Coming Soon</div>
-  </div>
-
-  <div class="icon-card">
-    <div class="placeholder"></div>
-    <div class="placeholder-text">Coming Soon</div>
-  </div>
-
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <a href="license.html">License</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="terms.html">Terms</a>
-  <a href="refund.html">Refund</a>
+<footer class="footer">
+  <nav>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="license.html">License</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
   <p>© 2025 BowesProduct</p>
 </footer>
-
-<script>
-/* ======================
-   THEME
-====================== */
-const themeSelect = document.getElementById("themeSelect");
-const savedTheme = localStorage.getItem("theme") || "theme-blue";
-document.body.className = savedTheme;
-themeSelect.value = savedTheme;
-
-themeSelect.onchange = () => {
-  document.body.className = themeSelect.value;
-  localStorage.setItem("theme", themeSelect.value);
-};
-
-/* ======================
-   FILTERS
-====================== */
-const buttons = document.querySelectorAll(".tabs button");
-const icons = document.querySelectorAll(".icon-card");
-
-buttons.forEach(btn => {
-  btn.onclick = () => {
-    buttons.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    const filter = btn.dataset.filter;
-
-    icons.forEach(icon => {
-      if (!icon.dataset.category && filter !== "all") {
-        icon.style.display = "none";
-      } else if (filter === "all" || icon.dataset.category === filter) {
-        icon.style.display = "block";
-      } else {
-        icon.style.display = "none";
-      }
-    });
-  };
-});
-</script>
 
 </body>
 </html>
