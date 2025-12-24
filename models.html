@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>3D Models – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+
+  <script>
+    window.onload = () => {
+      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+    };
+  </script>
 </head>
 <body>
 
@@ -13,17 +20,9 @@
   <div class="header-inner">
     <div class="logo">BowesProduct</div>
     <nav class="main-nav">
-      <div>
-        <a href="index.html">Home</a>
-        <a href="icons.html">Icons</a>
-        <a href="models.html" class="active">Models</a>
-      </div>
-      <select id="themeSelect">
-        <option value="theme-blue">Blue</option>
-        <option value="theme-emerald">Emerald</option>
-        <option value="theme-violet">Violet</option>
-        <option value="theme-amber">Amber</option>
-      </select>
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html" class="active">Models</a>
     </nav>
   </div>
 </header>
@@ -35,21 +34,14 @@
 
 <div class="model-container">
   <model-viewer
-    src="https://raw.githubusercontent.com/Dis513/BowesProduct/main/models/werewolf.glb"  <!-- Full binary via raw link -->
-    poster="models/werewolf-preview.jpg"  <!-- Add screenshot JPG for instant view -->
+    src="models/werewolf.glb"
     alt="Werewolf 3D Model"
-    loading="eager"
     auto-rotate
     camera-controls
     shadow-intensity="1"
     exposure="1.2"
     ar
     ar-modes="webxr scene-viewer quick-look">
-    
-    <div class="progress-message" slot="progress-bar">
-      Loading optimized 3D model...<br>
-      <small>(4MB – fast & high-quality)</small>
-    </div>
   </model-viewer>
 </div>
 
@@ -57,7 +49,7 @@
   <h2>Werewolf Model</h2>
   <p class="price">€49 — Commercial License</p>
   <ul>
-    <li>Optimized GLB format with Draco compression</li>
+    <li>Optimized GLB format</li>
     <li>PBR materials & full rigging</li>
     <li>Ready for games, apps, and web</li>
     <li>Immediate download after purchase</li>
@@ -75,18 +67,6 @@
   </nav>
   <p class="copyright">© 2025 BowesProduct. All rights reserved.</p>
 </footer>
-
-<script>
-  const themeSelect = document.getElementById("themeSelect");
-  const savedTheme = localStorage.getItem("theme") || "theme-blue";
-  document.body.className = savedTheme;
-  themeSelect.value = savedTheme;
-  themeSelect.onchange = () => {
-    const newTheme = themeSelect.value;
-    document.body.className = newTheme;
-    localStorage.setItem("theme", newTheme);
-  };
-</script>
 
 </body>
 </html>
