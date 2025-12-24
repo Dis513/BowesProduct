@@ -1,167 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>3D Models Viewer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>3D Models Viewer – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Stripe.js -->
-  <script src="https://js.stripe.com/v3/"></script>
-
-  <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
 
-  <style>
-    body { margin:0; font-family:system-ui,sans-serif; transition: background 0.3s,color 0.3s; }
-    body.theme-blue { --primary:#2563eb; --hero-bg:#eaf0ff; --text:#0f172a; }
-    body.theme-emerald { --primary:#10b981; --hero-bg:#d5f5e3; --text:#065f46; }
-    body.theme-violet { --primary:#8b5cf6; --hero-bg:#ede9fe; --text:#581c87; }
-    body.theme-amber { --primary:#f59e0b; --hero-bg:#fffbeb; --text:#78350f; }
-
-    header, footer { background:#fff; border:1px solid #e5e7eb; }
-    .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-    .logo { font-weight:700; font-size:1.4rem; }
-    .main-nav a { color:var(--text); text-decoration:none; font-weight:500; margin-right:1.2rem; }
-    .main-nav a.active { color:var(--primary); font-weight:700; }
-
-    .hero { background: var(--hero-bg); text-align:center; padding:4rem 2rem; }
-    .hero h1 { font-size:2.6rem; margin-bottom:.5rem; }
-    .hero p { font-size:1.2rem; opacity:.85; }
-
-    .model-container { background:#020617; border-radius:20px; overflow:hidden; margin:2rem auto; max-width:1100px; height:620px; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
-    model-viewer { width:100%; height:100%; }
-    .progress-message { color:white; text-align:center; padding:2rem; font-size:1.2rem; }
-
-    .models-grid { max-width:1200px; margin:3rem auto; padding:0 2rem; }
-    .models-grid h2 { text-align:center; margin-bottom:2rem; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.5rem; }
-    .grid-item { background:#f3f4f6; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:600; color:#4b5563; text-align:center; padding:1rem; cursor:default; }
-    .grid-item button { margin-top:0.5rem; padding:0.5rem 1rem; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition: background 0.2s; }
-    .btn-view { background:#2563eb; color:white; cursor:pointer; }
-    .btn-view:hover { background:#1d4ed8; }
-    .btn-price { background:#10b981; color:white; cursor:pointer; }
-
-    @media (max-width:768px) { .hero h1{font-size:2rem;} .model-container{height:420px;} }
-  </style>
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
-
 <body class="theme-emerald">
-  <header>
-    <div class="header-inner">
-      <div class="logo">3D Models Viewer</div>
-      <nav class="main-nav">
-        <a href="#hero" class="active">Home</a>
-        <a href="#viewer">Viewer</a>
-        <a href="#models">Models</a>
-        <a href="#footer">Icons</a>
-      </nav>
-      <select id="themeSelect">
-        <option value="theme-emerald">Emerald</option>
-        <option value="theme-blue">Blue</option>
-        <option value="theme-violet">Violet</option>
-        <option value="theme-amber">Amber</option>
-      </select>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo"><a href="index.html">BowesProduct</a></div>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="models.html" class="active">Models</a>
+      <a href="icons.html">Icons</a>
+    </nav>
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
+  </div>
+</header>
+
+<section id="viewer" class="hero">
+  <h1>3D Model Viewer</h1>
+  <p>Click a model below to explore in 3D</p>
+  <div class="model-container">
+    <model-viewer
+      id="mainViewer"
+      src="models/werewolf.glb"
+      alt="3D Model"
+      shadow-intensity="1"
+      auto-rotate
+      camera-controls
+      crossorigin="anonymous"
+    >
+      <div slot="progress-bar" class="progress-message">Loading model…</div>
+    </model-viewer>
+  </div>
+</section>
+
+<section id="models" class="models-grid">
+  <h2 style="text-align:center;">Available Models</h2>
+  <div class="products">
+    <!-- Werewolf -->
+    <div class="card grid-item" data-model="models/werewolf.glb" data-product="prod_TfDrG6YjEzxBiO">
+      <h3>Werewolf</h3>
+      <button class="btn btn-view">View Model</button>
+      <button class="btn btn-price">10€</button>
     </div>
-  </header>
-
-  <section id="hero" class="hero">
-    <h1>Explore Our 3D Models</h1>
-    <p>Click any model below to load it into the viewer.</p>
-  </section>
-
-  <section id="viewer">
-    <h2 style="text-align:center;">Model Viewer</h2>
-    <div class="model-container">
-      <model-viewer id="mainViewer" src="models/werewolf.glb" alt="3D Model" shadow-intensity="1" auto-rotate camera-controls style="background:#020617;">
-        <div slot="progress-bar" class="progress-message">Loading model…</div>
-      </model-viewer>
+    <!-- Zombie Werewolf -->
+    <div class="card grid-item" data-model="models/zombiewerewolf.glb" data-product="prod_TfDskIkgjdC2N7">
+      <h3>Zombie Werewolf</h3>
+      <button class="btn btn-view">View Model</button>
+      <button class="btn btn-price">10€</button>
     </div>
-  </section>
-
-  <section id="models" class="models-grid">
-    <h2>Available Models</h2>
-    <div class="grid">
-      <div class="grid-item" data-model="models/werewolf.glb" data-product="prod_TfDrG6YjEzxBiO" data-price="10€">
-        Werewolf
-        <button class="btn-view">View Model</button>
-        <button class="btn-price">10€</button>
-      </div>
-      <div class="grid-item" data-model="models/zombiewerewolf.glb" data-product="prod_TfDskIkgjdC2N7" data-price="10€">
-        Zombie Werewolf
-        <button class="btn-view">View Model</button>
-        <button class="btn-price">10€</button>
-      </div>
-      <div class="grid-item" data-model="models/giantbunny.glb" data-product="prod_TfDtH0eDaAAlxu" data-price="10€">
-        Giant Bunny
-        <button class="btn-view">View Model</button>
-        <button class="btn-price">10€</button>
-      </div>
-      <div class="grid-item" data-model="models/giantskeletonbunny.glb" data-product="prod_TfDuZyHjnZYoCP" data-price="10€">
-        Giant Skeleton Bunny
-        <button class="btn-view">View Model</button>
-        <button class="btn-price">10€</button>
-      </div>
+    <!-- Giant Bunny -->
+    <div class="card grid-item" data-model="models/giantbunny.glb" data-product="prod_TfDtH0eDaAAlxu">
+      <h3>Giant Bunny</h3>
+      <button class="btn btn-view">View Model</button>
+      <button class="btn btn-price">10€</button>
     </div>
-  </section>
-
-  <footer id="footer">
-    <div class="footer-inner">
-      <div>&copy; 2025 3D Models Viewer</div>
-      <nav class="main-nav">
-        <a href="#hero">Home</a>
-        <a href="#viewer">Viewer</a>
-        <a href="#models">Models</a>
-        <a href="#footer">Icons</a>
-      </nav>
+    <!-- Giant Skeleton Bunny -->
+    <div class="card grid-item" data-model="models/giantskeletonbunny.glb" data-product="prod_TfDuZyHjnZYoCP">
+      <h3>Giant Skeleton Bunny</h3>
+      <button class="btn btn-view">View Model</button>
+      <button class="btn btn-price">10€</button>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script>
-    // Theme switcher
-    const select = document.getElementById('themeSelect');
-    select.addEventListener('change', () => {
-      document.body.className = select.value;
-      localStorage.setItem('theme', select.value);
+<footer class="site-footer">
+  <div class="footer-inner">&copy; 2025 BowesProduct</div>
+</footer>
+
+<script>
+  // Theme selector
+  const select = document.getElementById('themeSelect');
+  select.addEventListener('change', () => {
+    document.body.className = select.value;
+    localStorage.setItem('theme', select.value);
+  });
+
+  // Restore theme on load
+  window.addEventListener('load', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.body.className = savedTheme;
+  });
+
+  const viewer = document.getElementById('mainViewer');
+  const stripe = Stripe("pk_test_51ShTSuCP7Y0gyZEAYn4KfGpkzlWrTc59lcOZCPSn77p9GuVIgHQ24tVy2HMGkYcejD7JfvFbRFGle3CKfyEPJm4500Xcgi5Cv7");
+
+  document.querySelectorAll('.grid-item').forEach(item => {
+    const viewBtn = item.querySelector('.btn-view');
+    const priceBtn = item.querySelector('.btn-price');
+
+    // Change model in viewer
+    viewBtn.addEventListener('click', () => {
+      viewer.setAttribute('src', item.dataset.model);
+      viewer.reload();
+      window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
     });
 
-    // Stripe Checkout
-    const stripe = Stripe("pk_test_51ShTSuCP7Y0gyZEAYn4KfGpkzlWrTc59lcOZCPSn77p9GuVIgHQ24tVy2HMGkYcejD7JfvFbRFGle3CKfyEPJm4500Xcgi5Cv7");
-
-    function addToCart(productId) {
-      fetch("/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.sessionId){
+    // Stripe test checkout
+    priceBtn.addEventListener('click', async () => {
+      const productId = item.dataset.product;
+      try {
+        const res = await fetch("/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId })
+        });
+        const data = await res.json();
+        if (data.sessionId) {
           stripe.redirectToCheckout({ sessionId: data.sessionId });
         } else {
           alert("Failed to create checkout session.");
         }
-      })
-      .catch(err => console.error(err));
-    }
-
-    // Model viewer + buttons
-    const gridItems = document.querySelectorAll('.grid-item');
-    const viewer = document.getElementById('mainViewer');
-
-    gridItems.forEach(item => {
-      const viewBtn = item.querySelector('.btn-view');
-      const priceBtn = item.querySelector('.btn-price');
-      const productId = item.getAttribute('data-product');
-
-      viewBtn.addEventListener('click', () => {
-        viewer.setAttribute('src', item.getAttribute('data-model'));
-        viewer.removeAttribute('poster');
-        viewer.reload();
-        window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
-      });
-
-      priceBtn.addEventListener('click', () => addToCart(productId));
+      } catch (err) {
+        console.error(err);
+        alert("Error connecting to server.");
+      }
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
