@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>3D Models Viewer</title>
+  <title>3D Models Viewer – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Model Viewer -->
@@ -21,117 +21,61 @@
     body.theme-violet { --primary:#8b5cf6; --hero-bg:#ede9fe; --text:#581c87; }
     body.theme-amber { --primary:#f59e0b; --hero-bg:#fffbeb; --text:#78350f; }
 
-    header, footer {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-    }
+    header, footer { background: #fff; border: 1px solid #e5e7eb; }
     .header-inner, .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
+      max-width: 1200px; margin: auto; padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
     }
 
     .logo { font-weight: 700; font-size: 1.4rem; }
-    .main-nav a {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 500;
-      margin-right: 1.2rem;
-    }
+    .main-nav a { color: var(--text); text-decoration: none; font-weight: 500; margin-right: 1.2rem; }
     .main-nav a.active { color: var(--primary); font-weight: 700; }
 
-    .hero {
-      background: var(--hero-bg);
-      text-align: center;
-      padding: 4rem 2rem;
-    }
+    .hero { background: var(--hero-bg); text-align: center; padding: 4rem 2rem; }
     .hero h1 { font-size: 2.6rem; margin-bottom: .5rem; }
     .hero p { font-size: 1.2rem; opacity: 0.85; }
 
     .model-container {
-      background: #020617;
-      border-radius: 20px;
-      overflow: hidden;
-      margin: 2rem auto;
-      max-width: 1100px;
-      height: 620px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      background: #020617; border-radius: 20px; overflow: hidden;
+      margin: 2rem auto; max-width: 1100px; height: 620px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     }
-
-    model-viewer {
-      width: 100%;
-      height: 100%;
-    }
-
-    .progress-message {
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      font-size: 1.2rem;
-    }
+    model-viewer { width: 100%; height: 100%; }
+    .progress-message { color: white; text-align: center; padding: 2rem; font-size: 1.2rem; }
 
     /* Models Grid */
-    .models-grid {
-      max-width: 1200px;
-      margin: 3rem auto;
-      padding: 0 2rem;
-    }
-    .models-grid h2 {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    .models-grid { max-width: 1200px; margin: 3rem auto; padding: 0 2rem; }
+    .models-grid h2 { text-align: center; margin-bottom: 2rem; }
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.5rem;
     }
     .grid-item {
-      background: #f3f4f6;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      color: #4b5563;
-      text-align: center;
-      padding: 1rem;
-      cursor: default;
+      background: #f3f4f6; border-radius: 12px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-weight: 600; color: #4b5563; text-align: center; padding: 1rem;
     }
     .grid-item button {
-      margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s;
+      margin-top: 0.5rem; padding: 0.5rem 1rem; border: none; border-radius: 8px;
+      cursor: pointer; font-weight: 600; transition: background 0.2s;
     }
-    .btn-view { background: #2563eb; color: white; cursor: pointer; }
+    .btn-view { background: #2563eb; color: white; }
     .btn-view:hover { background: #1d4ed8; }
-    .btn-price { background: #10b981; color: white; cursor: default; }
+    .btn-price { background: #10b981; color: white; }
 
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 2rem; }
-      .model-container { height: 420px; }
-    }
+    @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .model-container { height: 420px; } }
   </style>
 </head>
 
 <body class="theme-emerald">
+
   <!-- HEADER -->
   <header>
     <div class="header-inner">
-      <div class="logo">3D Models Viewer</div>
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
         <a href="#hero" class="active">Home</a>
         <a href="#viewer">Viewer</a>
         <a href="#models">Models</a>
-        <a href="#footer">Icons</a>
       </nav>
       <select id="themeSelect">
         <option value="theme-emerald">Emerald</option>
@@ -160,9 +104,7 @@
         auto-rotate
         camera-controls
         style="background:#020617;">
-        <div slot="progress-bar" class="progress-message">
-          Loading model…
-        </div>
+        <div slot="progress-bar" class="progress-message">Loading model…</div>
       </model-viewer>
     </div>
   </section>
@@ -174,32 +116,22 @@
       <div class="grid-item" data-model="models/werewolf.glb">
         Werewolf
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$29.99</button>
+        <a href="https://buy.stripe.com/test_prod_TfDrG6YjEzxBiO" target="_blank" class="btn-price">10€</a>
       </div>
       <div class="grid-item" data-model="models/zombiewerewolf.glb">
         Zombie Werewolf
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$24.99</button>
+        <a href="https://buy.stripe.com/test_prod_TfDskIkgjdC2N7" target="_blank" class="btn-price">10€</a>
       </div>
       <div class="grid-item" data-model="models/giantbunny.glb">
         Giant Bunny
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$19.99</button>
+        <a href="https://buy.stripe.com/test_prod_TfDtH0eDaAAlxu" target="_blank" class="btn-price">10€</a>
       </div>
       <div class="grid-item" data-model="models/giantskeletonbunny.glb">
         Giant Skeleton Bunny
         <button class="btn-view">View Model</button>
-        <button class="btn-price">$22.99</button>
-      </div>
-      <div class="grid-item" data-model="models/model5.glb">
-        Model #5
-        <button class="btn-view">View Model</button>
-        <button class="btn-price">$0.00</button>
-      </div>
-      <div class="grid-item" data-model="models/model6.glb">
-        Model #6
-        <button class="btn-view">View Model</button>
-        <button class="btn-price">$0.00</button>
+        <a href="https://buy.stripe.com/test_prod_TfDuZyHjnZYoCP" target="_blank" class="btn-price">10€</a>
       </div>
     </div>
   </section>
@@ -207,17 +139,15 @@
   <!-- FOOTER -->
   <footer id="footer">
     <div class="footer-inner">
-      <div>&copy; 2025 3D Models Viewer</div>
+      <div>&copy; 2025 BowesProduct</div>
       <nav class="main-nav">
         <a href="#hero">Home</a>
         <a href="#viewer">Viewer</a>
         <a href="#models">Models</a>
-        <a href="#footer">Icons</a>
       </nav>
     </div>
   </footer>
 
-  <!-- THEME SWITCHER + Model Selector -->
   <script>
     // Theme switcher
     const select = document.getElementById('themeSelect');
@@ -225,17 +155,16 @@
       document.body.className = select.value;
       localStorage.setItem('theme', select.value);
     });
+    window.addEventListener('load', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) document.body.className = savedTheme;
+    });
 
-    // Grid model click
-    const gridItems = document.querySelectorAll('.grid-item');
+    // Grid model buttons
     const viewer = document.getElementById('mainViewer');
-
-    gridItems.forEach(item => {
-      const viewBtn = item.querySelector('.btn-view');
-      viewBtn.addEventListener('click', () => {
-        const modelSrc = item.getAttribute('data-model');
-        viewer.setAttribute('src', modelSrc);
-        viewer.removeAttribute('poster');
+    document.querySelectorAll('.grid-item').forEach(item => {
+      item.querySelector('.btn-view').addEventListener('click', () => {
+        viewer.setAttribute('src', item.dataset.model);
         viewer.reload();
         window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
       });
