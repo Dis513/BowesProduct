@@ -2,36 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Models – BowesProduct</title>
+  <title>BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 
-  <!-- MODEL VIEWER -->
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-  </script>
-
   <script>
-    function toggleTheme() {
-      const body = document.body;
-      const label = document.getElementById("theme-label");
-
-      if (body.classList.contains("dark")) {
-        body.classList.remove("dark");
-        label.innerText = "Blue";
-        localStorage.setItem("theme", "blue");
-      } else {
-        body.classList.add("dark");
-        label.innerText = "Dark";
-        localStorage.setItem("theme", "dark");
-      }
+    function setTheme(theme, label) {
+      document.body.className = "theme-" + theme;
+      localStorage.setItem("theme", theme);
+      document.getElementById("theme-label").innerText = label;
     }
 
     window.onload = () => {
-      if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-        document.getElementById("theme-label").innerText = "Dark";
-      }
+      const saved = localStorage.getItem("theme") || "blue";
+      setTheme(saved, saved.charAt(0).toUpperCase() + saved.slice(1));
     };
   </script>
 </head>
@@ -39,33 +23,54 @@
 <body>
 
 <nav class="top-nav">
-  <div class="nav-left">BowesProduct</div>
+  <div>BowesProduct</div>
   <div class="nav-right">
-    <a class="nav-btn" href="index.html">Home</a>
-    <a class="nav-btn" href="icons.html">Icons</a>
-    <a class="nav-btn" href="models.html">Models</a>
-    <button class="theme-btn" onclick="toggleTheme()">Theme: <span id="theme-label">Blue</span></button>
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="models.html">Models</a>
+
+    <button class="theme-btn" onclick="setTheme('blue','Blue')">Blue</button>
+    <button class="theme-btn" onclick="setTheme('purple','Purple')">Purple</button>
+    <button class="theme-btn" onclick="setTheme('green','Green')">Green</button>
+    <button class="theme-btn" onclick="setTheme('orange','Orange')">Orange</button>
   </div>
 </nav>
 
 <header class="hero">
-  <h1>3D Model Viewer</h1>
-  <p>Preview purchasable models with materials</p>
+  <h1>Commercial Brand Assets</h1>
+  <p>Brand kits, icons & models for real businesses</p>
 </header>
 
-<section class="center">
-  <model-viewer
-    src="placeholder.glb"
-    camera-controls
-    auto-rotate
-    exposure="1"
-    style="width:100%;max-width:500px;height:400px;">
-  </model-viewer>
+<section>
+  <h2>Brand Kits</h2>
 
-  <p class="muted">Model viewer demo – models unlock after purchase</p>
+  <div class="products">
+
+    <div class="card">
+      <img src="Product-Starter-Brand-Kit.png">
+      <h3>Starter Brand Kit</h3>
+      <p class="price">€250</p>
+      <a class="buy-btn" href="#">Buy</a>
+    </div>
+
+    <div class="card">
+      <img src="Product-Pro-Brand-Kit.png">
+      <h3>Pro Brand Kit</h3>
+      <p class="price">€500</p>
+      <a class="buy-btn" href="#">Buy</a>
+    </div>
+
+    <div class="card">
+      <img src="Product-Master-Brand-Kit.png">
+      <h3>Master Brand Kit</h3>
+      <p class="price">€1500</p>
+      <a class="buy-btn" href="#">Buy</a>
+    </div>
+
+  </div>
 </section>
 
-<footer class="footer">
+<footer>
   <nav>
     <a href="privacy.html">Privacy</a>
     <a href="terms.html">Terms</a>
