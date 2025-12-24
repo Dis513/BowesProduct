@@ -1,9 +1,12 @@
 const express = require("express");
-const stripe = require("stripe")("sk_test_YOUR_SECRET_KEY"); // replace with your test secret key
+const stripe = require("stripe")("sk_test_YOUR_SECRET_KEY"); // your test secret key
+const path = require("path");
 const app = express();
 
 app.use(express.json());
-app.use(express.static("../")); // serve HTML/CSS/models
+
+// Serve static files from the root BowesProduct folder
+app.use(express.static(path.join(__dirname, ".."))); // go up one folder
 
 const PRODUCTS = {
   "prod_TfDrG6YjEzxBiO": { price: 1000, name: "Werewolf" },
@@ -39,6 +42,11 @@ app.post("/create-checkout-session", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Stripe session creation failed" });
   }
+});
+
+// fallback route for unknown paths
+app.get("*", (req, res) => {
+  res.status(404).send("Page not found");
 });
 
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
