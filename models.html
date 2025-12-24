@@ -5,19 +5,12 @@
   <title>3D Models Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Stripe.js -->
-  <script src="https://js.stripe.com/v3/"></script>
-
   <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
   <style>
     body { margin:0; font-family:system-ui,sans-serif; transition: background 0.3s,color 0.3s; }
-    body.theme-blue { --primary:#2563eb; --hero-bg:#eaf0ff; --text:#0f172a; }
     body.theme-emerald { --primary:#10b981; --hero-bg:#d5f5e3; --text:#065f46; }
-    body.theme-violet { --primary:#8b5cf6; --hero-bg:#ede9fe; --text:#581c87; }
-    body.theme-amber { --primary:#f59e0b; --hero-bg:#fffbeb; --text:#78350f; }
-
     header, footer { background:#fff; border:1px solid #e5e7eb; }
     .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
     .logo { font-weight:700; font-size:1.4rem; }
@@ -40,8 +33,6 @@
     .btn-view { background:#2563eb; color:white; cursor:pointer; }
     .btn-view:hover { background:#1d4ed8; }
     .btn-price { background:#10b981; color:white; cursor:pointer; }
-
-    @media (max-width:768px) { .hero h1{font-size:2rem;} .model-container{height:420px;} }
   </style>
 </head>
 
@@ -53,14 +44,7 @@
         <a href="#hero" class="active">Home</a>
         <a href="#viewer">Viewer</a>
         <a href="#models">Models</a>
-        <a href="#footer">Icons</a>
       </nav>
-      <select id="themeSelect">
-        <option value="theme-emerald">Emerald</option>
-        <option value="theme-blue">Blue</option>
-        <option value="theme-violet">Violet</option>
-        <option value="theme-amber">Amber</option>
-      </select>
     </div>
   </header>
 
@@ -72,7 +56,7 @@
   <section id="viewer">
     <h2 style="text-align:center;">Model Viewer</h2>
     <div class="model-container">
-      <model-viewer id="mainViewer" src="models/werewolf.glb" alt="3D Model" shadow-intensity="1" auto-rotate camera-controls style="background:#020617;">
+      <model-viewer id="mainViewer" src="models/werewolf.glb" alt="3D Model" shadow-intensity="1" auto-rotate camera-controls>
         <div slot="progress-bar" class="progress-message">Loading model…</div>
       </model-viewer>
     </div>
@@ -81,22 +65,22 @@
   <section id="models" class="models-grid">
     <h2>Available Models</h2>
     <div class="grid">
-      <div class="grid-item" data-model="models/werewolf.glb" data-product="prod_TfDrG6YjEzxBiO" data-price="10€">
+      <div class="grid-item" data-model="models/werewolf.glb" data-link="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03">
         Werewolf
         <button class="btn-view">View Model</button>
         <button class="btn-price">10€</button>
       </div>
-      <div class="grid-item" data-model="models/zombiewerewolf.glb" data-product="prod_TfDskIkgjdC2N7" data-price="10€">
+      <div class="grid-item" data-model="models/zombiewerewolf.glb" data-link="https://buy.stripe.com/test_6oE6tF3fHcJ8a7G8wE">
         Zombie Werewolf
         <button class="btn-view">View Model</button>
         <button class="btn-price">10€</button>
       </div>
-      <div class="grid-item" data-model="models/giantbunny.glb" data-product="prod_TfDtH0eDaAAlxu" data-price="10€">
+      <div class="grid-item" data-model="models/giantbunny.glb" data-link="https://buy.stripe.com/test_5kA3fT2fHcJ8a7G8wE">
         Giant Bunny
         <button class="btn-view">View Model</button>
         <button class="btn-price">10€</button>
       </div>
-      <div class="grid-item" data-model="models/giantskeletonbunny.glb" data-product="prod_TfDuZyHjnZYoCP" data-price="10€">
+      <div class="grid-item" data-model="models/giantskeletonbunny.glb" data-link="https://buy.stripe.com/test_3kE2fT3fHcJ8a7G8wE">
         Giant Skeleton Bunny
         <button class="btn-view">View Model</button>
         <button class="btn-price">10€</button>
@@ -104,63 +88,28 @@
     </div>
   </section>
 
-  <footer id="footer">
-    <div class="footer-inner">
-      <div>&copy; 2025 3D Models Viewer</div>
-      <nav class="main-nav">
-        <a href="#hero">Home</a>
-        <a href="#viewer">Viewer</a>
-        <a href="#models">Models</a>
-        <a href="#footer">Icons</a>
-      </nav>
-    </div>
+  <footer>
+    <div class="footer-inner">&copy; 2025 3D Models Viewer</div>
   </footer>
 
   <script>
-    // Theme switcher
-    const select = document.getElementById('themeSelect');
-    select.addEventListener('change', () => {
-      document.body.className = select.value;
-      localStorage.setItem('theme', select.value);
-    });
-
-    // Stripe Checkout
-    const stripe = Stripe("pk_test_51ShTSuCP7Y0gyZEAYn4KfGpkzlWrTc59lcOZCPSn77p9GuVIgHQ24tVy2HMGkYcejD7JfvFbRFGle3CKfyEPJm4500Xcgi5Cv7");
-
-    function addToCart(productId) {
-      fetch("/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.sessionId){
-          stripe.redirectToCheckout({ sessionId: data.sessionId });
-        } else {
-          alert("Failed to create checkout session.");
-        }
-      })
-      .catch(err => console.error(err));
-    }
-
-    // Model viewer + buttons
-    const gridItems = document.querySelectorAll('.grid-item');
     const viewer = document.getElementById('mainViewer');
+    const items = document.querySelectorAll('.grid-item');
 
-    gridItems.forEach(item => {
+    items.forEach(item => {
       const viewBtn = item.querySelector('.btn-view');
       const priceBtn = item.querySelector('.btn-price');
-      const productId = item.getAttribute('data-product');
 
       viewBtn.addEventListener('click', () => {
-        viewer.setAttribute('src', item.getAttribute('data-model'));
+        viewer.setAttribute('src', item.dataset.model);
         viewer.removeAttribute('poster');
         viewer.reload();
         window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
       });
 
-      priceBtn.addEventListener('click', () => addToCart(productId));
+      priceBtn.addEventListener('click', () => {
+        window.open(item.dataset.link, "_blank");
+      });
     });
   </script>
 </body>
