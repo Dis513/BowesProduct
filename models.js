@@ -1,49 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Models – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+const canvas = document.getElementById("viewer");
 
-  <script>
-    function setTheme(theme) {
-      document.body.className = "theme-" + theme;
-      localStorage.setItem("theme", theme);
-    }
-    window.onload = () => {
-      setTheme(localStorage.getItem("theme") || "blue");
-    };
-  </script>
-</head>
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf5f7fb);
 
-<body>
+const camera = new THREE.PerspectiveCamera(
+  45,
+  canvas.clientWidth / 500,
+  0.1,
+  100
+);
+camera.position.set(0, 1.5, 3);
 
-<nav class="top-nav">
-  <div>BowesProduct</div>
-  <div class="nav-right">
-    <a href="index.html">Home</a>
-    <a href="icons.html">Icons</a>
-    <a href="models.html">Models</a>
-  </div>
-</nav>
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  antialias: true
+});
+renderer.setSize(canvas.clientWidth, 500);
+renderer.setPixelRatio(window.devicePixelRatio);
 
-<header class="hero">
-  <h1>3D Models</h1>
-  <p>Commercial-ready 3D assets coming soon</p>
-</header>
+// Controls
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 
-<section>
-  <div class="products">
-    <div class="card" style="opacity:.4">Model Viewer – Coming Soon</div>
-    <div class="card" style="opacity:.4">Material Selector – Coming Soon</div>
-    <div class="card" style="opacity:.4">AI Generated Models – Coming Soon</div>
-  </div>
-</section>
+// Lights
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+scene.add(ambientLight);
 
-<footer>
-  <p>© 2025 BowesProduct</p>
-</footer>
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+directionalLight.position.set(5, 5, 5);
+scene.add(directionalLight);
 
-</body>
-</html>
+// Load model
+const loader = new THREE.GLTFLoader();
+loader.load(
+  "models/demo-model.glb",
+  (gltf) => {
+    const model = gltf.scene;
+    model.scale.set(1, 1, 1);
+    scene.add(model);
+  },
+  undefined,
+  (error) => {
+    console.error("Error loading model:", error);
+  }
+);
+
+// Resize fix
+window.addEventListener("resize", () => {
+  renderer.setSize(canvas.clientWidth, 500);
+  camera.aspect = canvas.clientWidth / 500;
+  camera.updateProjectionMatrix();
+});
+
+// Animate
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+animate();
