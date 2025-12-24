@@ -1,47 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>About – BowesProduct</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>About – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="theme-blue">
 
 <nav class="nav">
-<div>
-<a href="index.html">Home</a>
-<a href="icons.html">Icons</a>
-<a href="about.html">About</a>
-</div>
-<select id="themeSelect">
-<option value="">Blue</option>
-<option value="theme-emerald">Emerald</option>
-<option value="theme-violet">Violet</option>
-<option value="theme-amber">Amber</option>
-</select>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="about.html">About</a>
+  </div>
 </nav>
 
-<header class="hero"><h1>About</h1></header>
+<header class="hero">
+  <h1>About BowesProduct</h1>
+  <p>Design assets crafted for real businesses and creators</p>
+</header>
 
 <section>
-<p>BowesProduct provides licensed brand kits and icon assets for commercial use.</p>
+  <p>
+    BowesProduct is dedicated to providing high-quality visual assets that help
+    creators, designers, and businesses launch better brands and products.
+  </p>
+
+  <h2>Our Purpose</h2>
+  <p>
+    We noticed that many businesses need professional design assets — but don’t
+    want to hire an expensive agency or deal with complicated licensing.
+    BowesProduct makes beautiful, commercial-ready design resources accessible,
+    usable, and affordable.
+  </p>
+
+  <h2>What We Offer</h2>
+  <p>
+    From brand identity kits to scalable SVG icons, every product is designed
+    for real-world use. Our focus is clarity, quality, and simplicity:
+  </p>
+  <ul>
+    <li>Clean, editable SVG assets</li>
+    <li>Commercial usage rights included</li>
+    <li>Simple licensing you can understand</li>
+    <li>Responsive support if you need help</li>
+  </ul>
+
+  <h2>Who It’s For</h2>
+  <p>
+    BowesProduct is ideal for:
+  </p>
+  <ul>
+    <li>Freelance designers creating client deliverables</li>
+    <li>Startups launching new products or brands</li>
+    <li>Developers building UI/UX experiences</li>
+    <li>Businesses looking for polished, ready-to-use assets</li>
+  </ul>
+
+  <p>
+    We’re constantly expanding our library and refining our products. If you
+    ever need a custom asset or have questions, we’re here to help.
+  </p>
 </section>
 
 <footer>
-<a href="license.html">License</a>
-<a href="privacy.html">Privacy</a>
-<a href="terms.html">Terms</a>
-<a href="refund.html">Refund</a>
-<p>© 2025 BowesProduct</p>
+  <a href="license.html">License</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms</a>
+  <a href="refund.html">Refund</a>
+  <p>© 2025 BowesProduct</p>
 </footer>
-
-<script>
-const t=document.getElementById("themeSelect");
-const s=localStorage.getItem("theme");
-if(s){document.body.className=s;t.value=s;}
-t.onchange=()=>{document.body.className=t.value;localStorage.setItem("theme",t.value);}
-</script>
 
 </body>
 </html>
