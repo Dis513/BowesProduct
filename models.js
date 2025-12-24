@@ -5,8 +5,9 @@
   <title>Werewolf 3D Model – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google Model Viewer -->
+  <!-- Google Model Viewer: BOTH scripts for full compatibility -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
 
   <link rel="stylesheet" href="style.css" />
 
@@ -28,6 +29,22 @@
       background-color: #020617;
     }
 
+    /* Custom loading progress bar */
+    model-viewer::part(default-progress-bar) {
+      background: rgba(0, 0, 0, 0.8) !important;
+      backdrop-filter: blur(10px);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .progress-message {
+      color: white;
+      font-size: 1.4rem;
+      text-align:  center;
+      padding: 2rem;
+    }
+
     .model-info {
       max-width: 1100px;
       margin: 2rem auto;
@@ -37,19 +54,13 @@
 
     .price {
       font-size: 1.8rem;
-      color: #2563eb;
+      color: var(--primary, #2563eb);
       font-weight: bold;
       margin: 1rem 0;
     }
   </style>
-
-  <script>
-    window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
-    };
-  </script>
 </head>
-<body>
+<body class="theme-blue">
 
 <header class="site-header">
   <div class="header-inner">
@@ -71,12 +82,17 @@
   <model-viewer 
     src="models/werewolf.glb" 
     alt="Werewolf 3D Model"
+    loading="eager"
     auto-rotate 
     camera-controls 
     shadow-intensity="1"
     exposure="1"
     ar
     ar-modes="webxr scene-viewer quick-look">
+    
+    <div class="progress-message" slot="progress-bar">
+      Loading Werewolf model...
+    </div>
   </model-viewer>
 </div>
 
@@ -102,6 +118,13 @@
   </nav>
   <p class="copyright">© 2025 BowesProduct. All rights reserved.</p>
 </footer>
+
+<script>
+  window.addEventListener('load', () => {
+    const savedTheme = localStorage.getItem("theme") || "blue";
+    document.body.className = "theme-" + savedTheme;
+  });
+</script>
 
 </body>
 </html>
