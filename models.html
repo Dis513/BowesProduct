@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Werewolf 3D Model – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>BowesProduct – 3D Model Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Global styles -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Style -->
+  <link rel="stylesheet" href="style.css" />
 
   <!-- Model Viewer -->
   <script type="module"
@@ -16,60 +16,38 @@
 
 <body>
 
-<!-- ======================
-     HEADER
-====================== -->
+<!-- HEADER -->
 <header class="site-header">
-  <div class="site-title">BowesProduct</div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="icons.html">Icons</a>
-    <a href="models.html" class="active">Models</a>
-  </nav>
+  <div class="nav-left">
+    <strong>BowesProduct</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html">Models</a>
+    </nav>
+  </div>
 </header>
 
-<!-- ======================
-     HERO
-====================== -->
-<section class="hero">
-  <h1>3D Model</h1>
-  <p>Commercial-ready assets for games & products</p>
-</section>
+<!-- MODEL VIEW -->
+<main class="model-page">
 
-<!-- ======================
-     MODEL VIEWER (FULL PAGE)
-====================== -->
-<section class="model-section">
-
-  <div class="model-wrapper">
-
-    <!-- Loading overlay -->
-    <div id="loading">
-      <div class="spinner"></div>
-      <p>Loading model…</p>
-    </div>
-
-    <!-- 3D MODEL -->
+  <div class="model-container">
     <model-viewer
       id="viewer"
-      src="models/werewolf.glb"
       camera-controls
-      auto-rotate
-      rotation-per-second="20deg"
-      shadow-intensity="1"
-      exposure="1"
-      environment-image="neutral"
-      loading="eager"
-      style="width:100%; height:100%;">
+      disable-zoom
+      interaction-prompt="none"
+      style="width:100%; height:100%; background:#0f172a;"
+    >
     </model-viewer>
 
+    <div class="model-overlay" id="overlay">
+      <button id="lightsBtn">💡 Turn on the lights</button>
+    </div>
   </div>
 
-  <!-- ======================
-       MODEL DETAILS
-  ====================== -->
-  <div class="model-info">
-    <h2>Werewolf</h2>
+  <section class="model-info">
+    <h1>Werewolf</h1>
     <p class="price">€15 — Commercial License</p>
 
     <ul>
@@ -79,43 +57,11 @@
       <li>Optimized geometry</li>
     </ul>
 
-    <a class="button" href="#">Purchase Model</a>
-  </div>
+    <a class="btn-primary" href="#">Purchase Model</a>
+  </section>
 
-</section>
+</main>
 
-<!-- ======================
-     FOOTER
-====================== -->
-<footer>
-  <nav>
-    <a href="about.html">About</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
-  <p>© 2025 BowesProduct</p>
-</footer>
-
-<!-- ======================
-     LOADING SCRIPT
-====================== -->
-<script>
-  const viewer = document.getElementById("viewer");
-  const loading = document.getElementById("loading");
-
-  viewer.addEventListener("load", () => {
-    loading.style.opacity = "0";
-    setTimeout(() => {
-      loading.style.display = "none";
-    }, 400);
-  });
-
-  viewer.addEventListener("error", () => {
-    loading.innerHTML = "<p>Model failed to load</p>";
-  });
-</script>
-
+<script src="models.js"></script>
 </body>
 </html>
