@@ -5,13 +5,15 @@
   <title>Icon Library – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    window.onload = () => {
+      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+    };
+  </script>
 </head>
 
 <body>
-
-<!-- ======================
-     HEADER
-====================== -->
 
 <header class="site-header">
   <div class="header-inner">
@@ -25,18 +27,10 @@
   </div>
 </header>
 
-<!-- ======================
-     HERO
-====================== -->
-
 <section class="hero">
   <h1>Icon Library</h1>
   <p>Clean, scalable SVG icons for commercial use</p>
 </section>
-
-<!-- ======================
-     FILTERS
-====================== -->
 
 <section class="section light">
   <h2>Browse Icons</h2>
@@ -52,13 +46,8 @@
     <a class="btn secondary">Arrows</a>
   </div>
 
-  <!-- ======================
-       ICON GRID
-  ====================== -->
-
   <div class="products">
 
-    <!-- ICON 1 (REAL / BUYABLE) -->
     <div class="card">
       <img src="icons/teardrop.svg" alt="Teardrop Icon">
       <h3>Teardrop</h3>
@@ -75,19 +64,8 @@
       </a>
     </div>
 
-    <!-- ICON 2 (PLACEHOLDER) -->
     <div class="card">
-      <div style="
-        width:100%;
-        height:180px;
-        background:#e5e7eb;
-        border-radius:12px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:#64748b;
-        font-weight:bold;
-      ">
+      <div style="width:100%;height:180px;background:#e5e7eb;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:bold;">
         Coming Soon
       </div>
 
@@ -103,19 +81,8 @@
       <a class="btn secondary">Coming Soon</a>
     </div>
 
-    <!-- ICON 3 (PLACEHOLDER) -->
     <div class="card">
-      <div style="
-        width:100%;
-        height:180px;
-        background:#e5e7eb;
-        border-radius:12px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:#64748b;
-        font-weight:bold;
-      ">
+      <div style="width:100%;height:180px;background:#e5e7eb;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:bold;">
         Coming Soon
       </div>
 
@@ -133,10 +100,6 @@
 
   </div>
 </section>
-
-<!-- ======================
-     FOOTER
-====================== -->
 
 <footer class="site-footer">
   <div class="footer-nav">
