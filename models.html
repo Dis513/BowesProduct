@@ -7,8 +7,6 @@
 
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
-
-  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body class="theme-emerald">
 
@@ -51,28 +49,31 @@
   <h2 style="text-align:center;">Available Models</h2>
   <div class="products">
     <!-- Werewolf -->
-    <div class="card grid-item" data-model="models/werewolf.glb" data-product="prod_TfDrG6YjEzxBiO">
+    <div class="card grid-item" data-model="models/werewolf.glb">
       <h3>Werewolf</h3>
       <button class="btn btn-view">View Model</button>
-      <button class="btn btn-price">10€</button>
+      <a href="https://buy.stripe.com/test_prod_TfDrG6YjEzxBiO" target="_blank" class="btn btn-price">10€</a>
     </div>
+
     <!-- Zombie Werewolf -->
-    <div class="card grid-item" data-model="models/zombiewerewolf.glb" data-product="prod_TfDskIkgjdC2N7">
+    <div class="card grid-item" data-model="models/zombiewerewolf.glb">
       <h3>Zombie Werewolf</h3>
       <button class="btn btn-view">View Model</button>
-      <button class="btn btn-price">10€</button>
+      <a href="https://buy.stripe.com/test_prod_TfDskIkgjdC2N7" target="_blank" class="btn btn-price">10€</a>
     </div>
+
     <!-- Giant Bunny -->
-    <div class="card grid-item" data-model="models/giantbunny.glb" data-product="prod_TfDtH0eDaAAlxu">
+    <div class="card grid-item" data-model="models/giantbunny.glb">
       <h3>Giant Bunny</h3>
       <button class="btn btn-view">View Model</button>
-      <button class="btn btn-price">10€</button>
+      <a href="https://buy.stripe.com/test_prod_TfDtH0eDaAAlxu" target="_blank" class="btn btn-price">10€</a>
     </div>
+
     <!-- Giant Skeleton Bunny -->
-    <div class="card grid-item" data-model="models/giantskeletonbunny.glb" data-product="prod_TfDuZyHjnZYoCP">
+    <div class="card grid-item" data-model="models/giantskeletonbunny.glb">
       <h3>Giant Skeleton Bunny</h3>
       <button class="btn btn-view">View Model</button>
-      <button class="btn btn-price">10€</button>
+      <a href="https://buy.stripe.com/test_prod_TfDuZyHjnZYoCP" target="_blank" class="btn btn-price">10€</a>
     </div>
   </div>
 </section>
@@ -88,46 +89,18 @@
     document.body.className = select.value;
     localStorage.setItem('theme', select.value);
   });
-
-  // Restore theme on load
   window.addEventListener('load', () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) document.body.className = savedTheme;
   });
 
+  // Model Viewer Buttons
   const viewer = document.getElementById('mainViewer');
-  const stripe = Stripe("pk_test_51ShTSuCP7Y0gyZEAYn4KfGpkzlWrTc59lcOZCPSn77p9GuVIgHQ24tVy2HMGkYcejD7JfvFbRFGle3CKfyEPJm4500Xcgi5Cv7");
-
   document.querySelectorAll('.grid-item').forEach(item => {
-    const viewBtn = item.querySelector('.btn-view');
-    const priceBtn = item.querySelector('.btn-price');
-
-    // Change model in viewer
-    viewBtn.addEventListener('click', () => {
+    item.querySelector('.btn-view').addEventListener('click', () => {
       viewer.setAttribute('src', item.dataset.model);
       viewer.reload();
       window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
-    });
-
-    // Stripe test checkout
-    priceBtn.addEventListener('click', async () => {
-      const productId = item.dataset.product;
-      try {
-        const res = await fetch("/create-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productId })
-        });
-        const data = await res.json();
-        if (data.sessionId) {
-          stripe.redirectToCheckout({ sessionId: data.sessionId });
-        } else {
-          alert("Failed to create checkout session.");
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Error connecting to server.");
-      }
     });
   });
 </script>
