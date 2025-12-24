@@ -1,49 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Refund – BowesProduct</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Refund Policy – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-blue">
+<body>
 
-<nav class="nav">
-  <div>
-    <a href="index.html">Home</a>
-    <a href="icons.html">Icons</a>
-    <a href="about.html">About</a>
-  </div>
-  <select id="themeSelect">
-    <option value="theme-blue">Blue</option>
-    <option value="theme-emerald">Emerald</option>
-    <option value="theme-violet">Violet</option>
-    <option value="theme-amber">Amber</option>
-  </select>
-</nav>
-
-<header class="hero"><h1>Refund Policy</h1></header>
+<header class="hero">
+  <h1>Refund Policy</h1>
+  <p>Clear and fair</p>
+</header>
 
 <section>
-<p>Digital and custom products are non-refundable.</p>
-<p>Contact us if there is an issue.</p>
+  <h2>Digital Products</h2>
+  <p>
+    Due to the digital nature of our products, refunds are generally
+    not provided once a product has been delivered.
+  </p>
+
+  <h2>Exceptions</h2>
+  <p>
+    If a product is defective or incorrect, please contact us within
+    7 days and we will resolve the issue.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Email refund requests to hello@bowesproduct.com
+  </p>
 </section>
 
 <footer>
-<a href="license.html">License</a>
-<a href="privacy.html">Privacy</a>
-<a href="terms.html">Terms</a>
-<a href="refund.html">Refund</a>
-<p>© 2025 BowesProduct</p>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="license.html">License</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </nav>
+  <p>© 2025 BowesProduct</p>
 </footer>
-
-<script>
-const t=document.getElementById("themeSelect");
-const s=localStorage.getItem("theme")||"theme-blue";
-document.body.className=s;
-t.value=s;
-t.onchange=()=>{document.body.className=t.value;localStorage.setItem("theme",t.value);}
-</script>
 
 </body>
 </html>
