@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Werewolf 3D Viewer</title>
+  <title>3D Models Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Model Viewer -->
@@ -47,7 +47,7 @@
     .hero {
       background: var(--hero-bg);
       text-align: center;
-      padding: 5rem 2rem;
+      padding: 4rem 2rem;
     }
     .hero h1 { font-size: 2.6rem; margin-bottom: .5rem; }
     .hero p { font-size: 1.2rem; opacity: 0.85; }
@@ -56,7 +56,7 @@
       background: #020617;
       border-radius: 20px;
       overflow: hidden;
-      margin: 3rem auto;
+      margin: 2rem auto;
       max-width: 1100px;
       height: 620px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.3);
@@ -74,43 +74,50 @@
       font-size: 1.2rem;
     }
 
-    /* Coming Soon Grid */
-    .coming-soon {
+    /* Models Grid */
+    .models-grid {
       max-width: 1200px;
-      margin: 4rem auto;
+      margin: 3rem auto;
       padding: 0 2rem;
     }
-    .coming-soon h2 {
+    .models-grid h2 {
       text-align: center;
       margin-bottom: 2rem;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.5rem;
     }
     .grid-item {
       background: #f3f4f6;
       border-radius: 12px;
-      height: 150px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       font-weight: 600;
       color: #4b5563;
       text-align: center;
+      padding: 1rem;
+      cursor: default;
+    }
+    .grid-item button {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
+      font-weight: 600;
+      transition: background 0.2s;
     }
-    .grid-item:hover {
-      transform: scale(1.05);
-      background: #e5e7eb;
-    }
+    .btn-view { background: #2563eb; color: white; cursor: pointer; }
+    .btn-view:hover { background: #1d4ed8; }
+    .btn-price { background: #10b981; color: white; cursor: default; }
 
     @media (max-width: 768px) {
       .hero h1 { font-size: 2rem; }
       .model-container { height: 420px; }
-      .grid-item { height: 120px; }
     }
   </style>
 </head>
@@ -119,11 +126,11 @@
   <!-- HEADER -->
   <header>
     <div class="header-inner">
-      <div class="logo">Werewolf Viewer</div>
+      <div class="logo">3D Models Viewer</div>
       <nav class="main-nav">
         <a href="#hero" class="active">Home</a>
-        <a href="#viewer">Model #1</a>
-        <a href="#coming-soon">Coming Soon</a>
+        <a href="#viewer">Viewer</a>
+        <a href="#models">Models</a>
         <a href="#footer">Icons</a>
       </nav>
       <select id="themeSelect">
@@ -137,11 +144,11 @@
 
   <!-- HERO -->
   <section id="hero" class="hero">
-    <h1>Inspect the Werewolf Models</h1>
-    <p>Spin, zoom, and explore the detailed 3D models in your browser.</p>
+    <h1>Explore Our 3D Models</h1>
+    <p>Click any model below to load it into the viewer.</p>
   </section>
 
-  <!-- MODEL #1 VIEWER -->
+  <!-- MODEL VIEWER -->
   <section id="viewer">
     <h2 style="text-align:center;">Model Viewer</h2>
     <div class="model-container">
@@ -160,25 +167,51 @@
     </div>
   </section>
 
-  <!-- COMING SOON GRID -->
-  <section id="coming-soon" class="coming-soon">
-    <h2>Coming Soon</h2>
+  <!-- MODELS GRID -->
+  <section id="models" class="models-grid">
+    <h2>Available Models</h2>
     <div class="grid">
-      <div class="grid-item" data-model="models/zombiewerewolf.glb">Model #2: Zombie Werewolf</div>
-      <div class="grid-item" data-model="models/model3.glb">Model #3</div>
-      <div class="grid-item" data-model="models/model4.glb">Model #4</div>
-      <div class="grid-item" data-model="models/model5.glb">Model #5</div>
+      <div class="grid-item" data-model="models/zombiewerewolf.glb">
+        Zombie Werewolf
+        <button class="btn-view">View Model</button>
+        <button class="btn-price">$24.99</button>
+      </div>
+      <div class="grid-item" data-model="models/giantbunny.glb">
+        Giant Bunny
+        <button class="btn-view">View Model</button>
+        <button class="btn-price">$19.99</button>
+      </div>
+      <div class="grid-item" data-model="models/giantskeletonbunny.glb">
+        Giant Skeleton Bunny
+        <button class="btn-view">View Model</button>
+        <button class="btn-price">$22.99</button>
+      </div>
+      <div class="grid-item" data-model="models/model4.glb">
+        Model #5
+        <button class="btn-view">View Model</button>
+        <button class="btn-price">$0.00</button>
+      </div>
+      <div class="grid-item" data-model="models/model5.glb">
+        Model #6
+        <button class="btn-view">View Model</button>
+        <button class="btn-price">$0.00</button>
+      </div>
+      <div class="grid-item" data-model="models/model6.glb">
+        Model #7
+        <button class="btn-view">View Model</button>
+        <button class="btn-price">$0.00</button>
+      </div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer id="footer">
     <div class="footer-inner">
-      <div>&copy; 2025 Werewolf Viewer</div>
+      <div>&copy; 2025 3D Models Viewer</div>
       <nav class="main-nav">
         <a href="#hero">Home</a>
-        <a href="#viewer">Model Viewer</a>
-        <a href="#coming-soon">Coming Soon</a>
+        <a href="#viewer">Viewer</a>
+        <a href="#models">Models</a>
         <a href="#footer">Icons</a>
       </nav>
     </div>
@@ -193,16 +226,20 @@
       localStorage.setItem('theme', select.value);
     });
 
-    // Model grid click
+    // Grid model click (locks after selection)
     const gridItems = document.querySelectorAll('.grid-item');
     const viewer = document.getElementById('mainViewer');
+    let modelLocked = false;
 
     gridItems.forEach(item => {
-      item.addEventListener('click', () => {
+      const viewBtn = item.querySelector('.btn-view');
+      viewBtn.addEventListener('click', () => {
+        if (modelLocked) return; // prevent changing again
         const modelSrc = item.getAttribute('data-model');
         viewer.setAttribute('src', modelSrc);
-        viewer.removeAttribute('poster'); // remove poster if any
+        viewer.removeAttribute('poster');
         viewer.reload();
+        modelLocked = true; // lock viewer
         window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
       });
     });
