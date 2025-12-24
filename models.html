@@ -9,7 +9,24 @@
 </head>
 <body>
 
-<!-- Your header here (same as before) -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">BowesProduct</div>
+    <nav class="main-nav">
+      <div>
+        <a href="index.html">Home</a>
+        <a href="icons.html">Icons</a>
+        <a href="models.html" class="active">Models</a>
+      </div>
+      <select id="themeSelect">
+        <option value="theme-blue">Blue</option>
+        <option value="theme-emerald">Emerald</option>
+        <option value="theme-violet">Violet</option>
+        <option value="theme-amber">Amber</option>
+      </select>
+    </nav>
+  </div>
+</header>
 
 <section class="hero">
   <h1>3D Models</h1>
@@ -18,7 +35,7 @@
 
 <div class="model-container">
   <model-viewer
-    src="models/werewolf.glb"  <!-- Change to Astronaut URL for testing -->
+    src="models/werewolf.glb"
     alt="Werewolf 3D Model"
     loading="eager"
     auto-rotate
@@ -27,23 +44,48 @@
     exposure="1.2"
     ar
     ar-modes="webxr scene-viewer quick-look">
-
-    <!-- Custom loading message -->
-    <div class="progress-bar" slot="progress-bar">
-      <div class="update-bar"></div>
-      <p>Loading 3D model... (this may take a moment for large files)</p>
+    
+    <div class="progress-message" slot="progress-bar">
+      Loading high-quality 3D model...<br>
+      <small>(21MB – please wait a moment)</small>
     </div>
-
-    <!-- Fallback if error -->
-    <button slot="ar-button" style="display:none;"></button>
   </model-viewer>
 </div>
 
 <div class="model-info">
-  <!-- Your info here -->
+  <h2>Werewolf Model</h2>
+  <p class="price">€49 — Commercial License</p>
+  <ul>
+    <li>Optimized GLB format</li>
+    <li>PBR materials & full rigging</li>
+    <li>Ready for games, apps, and web</li>
+    <li>Immediate download after purchase</li>
+  </ul>
+  <a href="#" class="btn">Buy Model (Coming Soon)</a>
 </div>
 
-<!-- Footer and theme script here -->
+<footer class="site-footer">
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
+    <a href="license.html">License</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
+  <p class="copyright">© 2025 BowesProduct. All rights reserved.</p>
+</footer>
+
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  const savedTheme = localStorage.getItem("theme") || "theme-blue";
+  document.body.className = savedTheme;
+  themeSelect.value = savedTheme;
+  themeSelect.onchange = () => {
+    const newTheme = themeSelect.value;
+    document.body.className = newTheme;
+    localStorage.setItem("theme", newTheme);
+  };
+</script>
 
 </body>
 </html>
