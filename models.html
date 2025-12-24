@@ -2,21 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>BowesProduct – 3D Model Viewer</title>
+  <title>Werewolf 3D Model – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Style -->
-  <link rel="stylesheet" href="style.css" />
-
   <!-- Model Viewer -->
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-  </script>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="nav-left">
     <strong>BowesProduct</strong>
@@ -28,25 +24,29 @@
   </div>
 </header>
 
-<!-- MODEL VIEW -->
-<main class="model-page">
+<section class="model-page">
 
+  <!-- MODEL VIEWER -->
   <div class="model-container">
+
     <model-viewer
       id="viewer"
       camera-controls
-      disable-zoom
-      interaction-prompt="none"
-      style="width:100%; height:100%; background:#0f172a;"
-    >
-    </model-viewer>
+      auto-rotate
+      exposure="1"
+      shadow-intensity="1"
+      style="background:#020617;"
+    ></model-viewer>
 
-    <div class="model-overlay" id="overlay">
-      <button id="lightsBtn">💡 Turn on the lights</button>
+    <!-- OVERLAY -->
+    <div id="overlay" class="model-overlay">
+      <button id="loadModel">💡 Turn on the lights</button>
     </div>
+
   </div>
 
-  <section class="model-info">
+  <!-- INFO -->
+  <div class="model-info">
     <h1>Werewolf</h1>
     <p class="price">€15 — Commercial License</p>
 
@@ -57,10 +57,21 @@
       <li>Optimized geometry</li>
     </ul>
 
-    <a class="btn-primary" href="#">Purchase Model</a>
-  </section>
+    <button class="btn-primary">Purchase Model</button>
+  </div>
 
-</main>
+</section>
+
+<footer>
+  <nav>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="license.html">License</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
+  <p>© 2025 BowesProduct</p>
+</footer>
 
 <script src="models.js"></script>
 </body>
