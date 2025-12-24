@@ -1,6 +1,4 @@
-/* ======================
-   RESET
-====================== */
+/* ===== RESET ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,155 +7,160 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background: #f5f7fb;
+  color: #111;
   line-height: 1.6;
-  background: var(--bg);
-  color: var(--text);
 }
 
-/* ======================
-   THEME VARIABLES
-====================== */
-:root {
-  --bg: #f5f8ff;
-  --card: #ffffff;
-  --text: #111;
-  --accent: #2563eb;
-}
+/* ===== THEMES ===== */
+.theme-blue { --accent: #2563eb; }
+.theme-purple { --accent: #7c3aed; }
+.theme-green { --accent: #16a34a; }
+.theme-orange { --accent: #ea580c; }
 
-body.theme-blue {
-  --bg: #f5f8ff;
-  --accent: #2563eb;
-}
-
-body.theme-purple {
-  --bg: #f7f5ff;
-  --accent: #7c3aed;
-}
-
-body.theme-green {
-  --bg: #f5fff9;
-  --accent: #16a34a;
-}
-
-body.theme-orange {
-  --bg: #fff7ed;
-  --accent: #ea580c;
-}
-
-/* ======================
-   NAV
-====================== */
+/* ===== NAV ===== */
 .top-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1rem 2rem;
   background: #fff;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.nav-right a,
-.theme-btn {
-  margin-left: 0.5rem;
-  padding: 0.5rem 0.9rem;
-  background: var(--accent);
-  color: #fff;
+.nav-right {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.top-nav a {
   text-decoration: none;
+  padding: 0.45rem 0.8rem;
   border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
+  background: #eef2ff;
+  color: #111;
+  font-weight: 600;
 }
 
-/* ======================
-   HERO
-====================== */
-.hero {
+.top-nav a:hover {
   background: var(--accent);
   color: #fff;
-  padding: 4rem 1.5rem;
-  text-align: center;
 }
 
-/* ======================
-   SECTIONS
-====================== */
+.theme-btn {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===== HERO ===== */
+.hero {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: #eef2ff;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+}
+
+.hero p {
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+/* ===== SECTIONS ===== */
 section {
   max-width: 1200px;
   margin: auto;
   padding: 3rem 1.5rem;
 }
 
-/* ======================
-   PRODUCTS GRID
-====================== */
+section h2 {
+  margin-bottom: 1rem;
+}
+
+/* ===== PRODUCT GRID ===== */
 .products {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
-@media (max-width: 900px) {
-  .products {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ======================
-   CARD
-====================== */
+/* ===== CARD ===== */
 .card {
-  background: var(--card);
+  background: #fff;
+  border-radius: 14px;
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   text-align: center;
 }
 
 .card img {
-  width: 100%;
-  max-width: 260px;
+  max-width: 100%;
+  border-radius: 10px;
   margin-bottom: 1rem;
 }
 
 .price {
-  font-weight: bold;
   color: var(--accent);
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .card ul {
   list-style: none;
   text-align: left;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
-.card ul li::before {
-  content: "✓ ";
-  color: var(--accent);
+.card ul li {
+  margin-bottom: 0.4rem;
 }
 
 .buy-btn {
   display: inline-block;
-  margin-top: 1rem;
-  padding: 0.7rem 1.2rem;
   background: var(--accent);
   color: #fff;
+  padding: 0.6rem 1.2rem;
   border-radius: 8px;
   text-decoration: none;
+  font-weight: bold;
 }
 
-/* ======================
-   FOOTER
-====================== */
+/* ===== FOOTER ===== */
 footer {
   background: #111;
   color: #fff;
-  text-align: center;
   padding: 2rem 1rem;
+  text-align: center;
 }
 
-footer a {
-  color: #9db4ff;
+footer nav {
+  margin-bottom: 0.8rem;
+}
+
+footer nav a {
+  color: #9ca3af;
   margin: 0 0.5rem;
   text-decoration: none;
+}
+
+footer nav a:hover {
+  color: #fff;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 900px) {
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
 }
