@@ -5,34 +5,43 @@
   <title>About – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    window.onload = () => {
+      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+    };
+  </script>
 </head>
+
 <body>
 
 <nav class="top-nav">
-  <div class="nav-left">BowesProduct</div>
+  <div>BowesProduct</div>
   <div class="nav-right">
     <a href="index.html">Home</a>
     <a href="icons.html">Icons</a>
     <a href="models.html">Models</a>
-    <a href="about.html">About</a>
   </div>
 </nav>
 
+<header class="hero">
+  <h1>About</h1>
+</header>
+
 <section>
-  <h2>About</h2>
   <p>
-    BowesProduct creates commercial-grade icons, brand systems,
-    and digital assets for businesses worldwide.
+    BowesProduct creates commercial-ready digital assets for designers,
+    developers, and businesses. Our focus is clarity, licensing simplicity,
+    and assets that work in real production environments.
+  </p>
+
+  <p style="margin-top:1rem;">
+    All products are designed with scalability, consistency, and
+    professional usage in mind.
   </p>
 </section>
 
-<footer class="footer">
-  <nav>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
+<footer>
   <p>© 2025 BowesProduct</p>
 </footer>
 
