@@ -1,3 +1,6 @@
+/* ======================
+   RESET
+====================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,36 +9,58 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #f5f8ff;
-  color: #111;
   line-height: 1.6;
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* DARK */
-body.dark {
-  background: #0f1115;
-  color: #f1f1f1;
+/* ======================
+   THEME VARIABLES
+====================== */
+:root {
+  --bg: #f5f8ff;
+  --card: #ffffff;
+  --text: #111;
+  --accent: #2563eb;
 }
 
-/* NAV */
+body.theme-blue {
+  --bg: #f5f8ff;
+  --accent: #2563eb;
+}
+
+body.theme-purple {
+  --bg: #f7f5ff;
+  --accent: #7c3aed;
+}
+
+body.theme-green {
+  --bg: #f5fff9;
+  --accent: #16a34a;
+}
+
+body.theme-orange {
+  --bg: #fff7ed;
+  --accent: #ea580c;
+}
+
+/* ======================
+   NAV
+====================== */
 .top-nav {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem 1.5rem;
   background: #fff;
   border-bottom: 1px solid #ddd;
 }
 
-body.dark .top-nav {
-  background: #111;
-  border-color: #222;
-}
-
-.nav-btn,
+.nav-right a,
 .theme-btn {
   margin-left: 0.5rem;
   padding: 0.5rem 0.9rem;
-  background: #2563eb;
+  background: var(--accent);
   color: #fff;
   text-decoration: none;
   border-radius: 6px;
@@ -44,29 +69,28 @@ body.dark .top-nav {
   font-size: 0.9rem;
 }
 
-/* HERO */
+/* ======================
+   HERO
+====================== */
 .hero {
+  background: var(--accent);
+  color: #fff;
   padding: 4rem 1.5rem;
   text-align: center;
-  background: #eaf0ff;
 }
 
-body.dark .hero {
-  background: #151822;
-}
-
-/* SECTIONS */
+/* ======================
+   SECTIONS
+====================== */
 section {
   max-width: 1200px;
   margin: auto;
   padding: 3rem 1.5rem;
 }
 
-.center {
-  text-align: center;
-}
-
-/* PRODUCTS */
+/* ======================
+   PRODUCTS GRID
+====================== */
 .products {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -79,17 +103,15 @@ section {
   }
 }
 
-/* CARD */
+/* ======================
+   CARD
+====================== */
 .card {
-  background: #fff;
+  background: var(--card);
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
   text-align: center;
-}
-
-body.dark .card {
-  background: #1b1f2a;
 }
 
 .card img {
@@ -99,41 +121,42 @@ body.dark .card {
 }
 
 .price {
-  color: #2563eb;
   font-weight: bold;
+  color: var(--accent);
 }
 
-ul {
+.card ul {
   list-style: none;
-  margin: 1rem 0;
   text-align: left;
+  margin-top: 1rem;
 }
 
-ul li::before {
+.card ul li::before {
   content: "✓ ";
-  color: #2563eb;
+  color: var(--accent);
 }
 
 .buy-btn {
   display: inline-block;
   margin-top: 1rem;
   padding: 0.7rem 1.2rem;
-  background: #2563eb;
+  background: var(--accent);
   color: #fff;
   border-radius: 8px;
   text-decoration: none;
 }
 
-/* FOOTER */
-.footer {
-  margin-top: 4rem;
-  padding: 2rem 1rem;
+/* ======================
+   FOOTER
+====================== */
+footer {
   background: #111;
   color: #fff;
   text-align: center;
+  padding: 2rem 1rem;
 }
 
-.footer a {
+footer a {
   color: #9db4ff;
   margin: 0 0.5rem;
   text-decoration: none;
