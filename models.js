@@ -3,22 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <title>Werewolf 3D Model – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- ✅ MODULE ONLY -->
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js">
-  </script>
-
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
   <link rel="stylesheet" href="style.css" />
 
   <style>
     .model-container {
+      background: #020617;
+      border-radius: 16px;
       max-width: 1100px;
       height: 600px;
       margin: 3rem auto;
-      background: #020617;
-      border-radius: 16px;
       overflow: hidden;
     }
 
@@ -30,31 +26,25 @@
     .progress-message {
       color: white;
       font-size: 1.2rem;
-      padding: 2rem;
       text-align: center;
+      padding: 2rem;
     }
   </style>
 </head>
-
 <body class="theme-blue">
-
-<div class="model-container">
-  <model-viewer
-    src="./models/werewolf.glb"
-    alt="Werewolf 3D Model"
-    camera-controls
-    auto-rotate
-    loading="eager"
-    exposure="1"
-    shadow-intensity="1"
-    environment-image="neutral"
-    crossorigin="anonymous"
-  >
-    <div slot="progress-bar" class="progress-message">
-      Loading Werewolf…
-    </div>
-  </model-viewer>
-</div>
-
+  <div class="model-container">
+    <model-viewer
+      src="./models/werewolf.glb"
+      alt="Werewolf 3D Model"
+      shadow-intensity="1"
+      camera-controls
+      auto-rotate
+      exposure="1"
+      environment-image="neutral"
+      crossorigin="anonymous"
+    >
+      <div slot="progress-bar" class="progress-message">Loading Werewolf…</div>
+    </model-viewer>
+  </div>
 </body>
 </html>
