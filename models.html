@@ -2,32 +2,152 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Werewolf 3D Model – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Werewolf 3D Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Model Viewer -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+
   <style>
-    body { margin: 0; font-family: system-ui, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-    .viewer-container { width: 100%; height: 70vh; max-width: 1200px; margin: 2rem auto; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-    .branding { text-align: center; padding: 2rem; background: rgba(255,255,255,0.95); }
-    .branding h1 { margin: 0; font-size: 2.5rem; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .price { font-size: 2rem; font-weight: 700; color: #10b981; }
-    .btn { background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; padding: 1rem 2rem; border: none; border-radius: 50px; font-weight: 600; text-decoration: none; display: inline-block; }
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* THEMES */
+    body.theme-blue { --primary:#2563eb; --hero-bg:#eaf0ff; --text:#0f172a; }
+    body.theme-emerald { --primary:#10b981; --hero-bg:#d5f5e3; --text:#065f46; }
+    body.theme-violet { --primary:#8b5cf6; --hero-bg:#ede9fe; --text:#581c87; }
+    body.theme-amber { --primary:#f59e0b; --hero-bg:#fffbeb; --text:#78350f; }
+
+    header, footer {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+    }
+    .header-inner, .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo { font-weight: 700; font-size: 1.4rem; }
+    .main-nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      margin-right: 1.2rem;
+    }
+    .main-nav a.active { color: var(--primary); font-weight: 700; }
+
+    .hero {
+      background: var(--hero-bg);
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+    .hero h1 { font-size: 2.6rem; margin-bottom: .5rem; }
+    .hero p { font-size: 1.2rem; opacity: 0.85; }
+
+    button.btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: .9rem 1.6rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.2rem;
+    }
+
+    .model-container {
+      background: #020617;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 3rem auto;
+      max-width: 1100px;
+      height: 620px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+    }
+
+    .progress-message {
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .model-container { height: 420px; }
+    }
   </style>
 </head>
-<body>
-  <!-- Online3DViewer CDN Embed -->
-  <div id="viewer" class="viewer-container" model="models/werewolf.glb"></div>
-  
-  <div class="branding">
-    <h1>Werewolf 3D Model</h1>
-    <p class="price">€49 — Commercial License</p>
-    <a href="#" class="btn">Buy Now (Coming Soon)</a>
-  </div>
 
-  <!-- Load Online3DViewer from CDN -->
-  <script src="https://unpkg.com/online-3d-viewer@0.2.6/build/online-3d-viewer.min.js"></script>
+<body class="theme-emerald">
+  <header>
+    <div class="header-inner">
+      <div class="logo">Werewolf Viewer</div>
+      <nav class="main-nav">
+        <a href="#hero" class="active">Home</a>
+        <a href="#viewer">Viewer</a>
+      </nav>
+      <select id="themeSelect">
+        <option value="theme-emerald">Emerald</option>
+        <option value="theme-blue">Blue</option>
+        <option value="theme-violet">Violet</option>
+        <option value="theme-amber">Amber</option>
+      </select>
+    </div>
+  </header>
+
+  <section id="hero" class="hero">
+    <h1>Inspect the Werewolf Model</h1>
+    <p>Spin, zoom, and explore the detailed 3D Werewolf in your browser.</p>
+    <button class="btn">Download Showcase</button>
+  </section>
+
+  <section id="viewer">
+    <h2 style="text-align:center;">3D Werewolf Preview</h2>
+    <div class="model-container">
+      <model-viewer
+        id="werewolfViewer"
+        src="models/werewolf.glb"
+        alt="3D Werewolf"
+        shadow-intensity="1"
+        auto-rotate
+        camera-controls
+        style="background:#020617;">
+        <div slot="progress-bar" class="progress-message">
+          Loading Werewolf…
+        </div>
+      </model-viewer>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div>&copy; 2025 Werewolf Viewer</div>
+      <nav class="main-nav">
+        <a href="#hero">Home</a>
+        <a href="#viewer">Viewer</a>
+      </nav>
+    </div>
+  </footer>
+
   <script>
-    window.addEventListener('load', () => {
-      OV.Init3DViewerElements();
+    const select = document.getElementById('themeSelect');
+    select.addEventListener('change', () => {
+      document.body.className = select.value;
+      localStorage.setItem('theme', select.value);
     });
   </script>
 </body>
