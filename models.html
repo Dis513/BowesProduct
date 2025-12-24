@@ -5,10 +5,93 @@
   <title>Werewolf 3D Model – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Model Viewer -->
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <!-- MODEL VIEWER -->
+  <script type="module"
+    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+  </script>
 
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* MODEL VIEWER FIXES */
+    .model-container {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      margin: 3rem auto;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #020617;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 520px;
+      background: radial-gradient(#020617, #000);
+    }
+
+    /* LOADING SPINNER */
+    model-viewer::part(default-progress-bar) {
+      display: none;
+    }
+
+    .loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2,6,23,0.85);
+      z-index: 5;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255,255,255,.2);
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* OVERLAY BUTTON */
+    .model-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2,6,23,0.9);
+      z-index: 10;
+      transition: opacity .3s ease;
+    }
+
+    .model-overlay button {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 1rem 1.6rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .model-info {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .price {
+      color: #2563eb;
+      font-weight: bold;
+      margin: .5rem 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,62 +100,4 @@
   <div class="nav-left">
     <strong>BowesProduct</strong>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="icons.html">Icons</a>
-      <a href="models.html">Models</a>
-    </nav>
-  </div>
-</header>
-
-<section class="model-page">
-
-  <!-- MODEL VIEWER -->
-  <div class="model-container">
-
-    <model-viewer
-      id="viewer"
-      camera-controls
-      auto-rotate
-      exposure="1"
-      shadow-intensity="1"
-      style="background:#020617;"
-    ></model-viewer>
-
-    <!-- OVERLAY -->
-    <div id="overlay" class="model-overlay">
-      <button id="loadModel">💡 Turn on the lights</button>
-    </div>
-
-  </div>
-
-  <!-- INFO -->
-  <div class="model-info">
-    <h1>Werewolf</h1>
-    <p class="price">€15 — Commercial License</p>
-
-    <ul>
-      <li>GLB format</li>
-      <li>Game & render ready</li>
-      <li>Commercial usage allowed</li>
-      <li>Optimized geometry</li>
-    </ul>
-
-    <button class="btn-primary">Purchase Model</button>
-  </div>
-
-</section>
-
-<footer>
-  <nav>
-    <a href="about.html">About</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
-  <p>© 2025 BowesProduct</p>
-</footer>
-
-<script src="models.js"></script>
-</body>
-</html>
+      <a href="index.html
