@@ -1,74 +1,62 @@
-/* ======================
-   3D MODEL PAGE
-====================== */
+const canvas = document.getElementById("viewer");
 
-.model-page {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: auto;
-  padding: 3rem 1.5rem;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf5f7fb);
+
+const camera = new THREE.PerspectiveCamera(
+  45,
+  canvas.clientWidth / 500,
+  0.1,
+  1000
+);
+
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  antialias: true
+});
+renderer.setSize(canvas.clientWidth, 500);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+// Controls
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(0, 0, 0);
+
+// Lights
+scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+dirLight.position.set(5, 10, 7);
+scene.add(dirLight);
+
+// Load model
+const loader = new THREE.GLTFLoader();
+loader.load("models/demo-model.glb", (gltf) => {
+  const model = gltf.scene;
+  scene.add(model);
+
+  // 🔑 CENTER + FRAME MODEL
+  const box = new THREE.Box3().setFromObject(model);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+
+  model.position.sub(center);
+
+  const maxDim = Math.max(size.x, size.y, size.z);
+  camera.position.set(0, maxDim * 0.8, maxDim * 2.2);
+  controls.update();
+});
+
+// Resize fix
+window.addEventListener("resize", () => {
+  renderer.setSize(canvas.clientWidth, 500);
+  camera.aspect = canvas.clientWidth / 500;
+  camera.updateProjectionMatrix();
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
 }
 
-.viewer-container {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-#viewer {
-  width: 100%;
-  height: 500px;
-  display: block;
-}
-
-.model-info {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-}
-
-.model-info h2 {
-  margin-bottom: 0.5rem;
-}
-
-.model-info .price {
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-.materials {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.8rem;
-  margin-top: 1rem;
-}
-
-.materials button {
-  padding: 0.7rem;
-  border: none;
-  border-radius: 8px;
-  background: #ddd;
-  color: #666;
-  cursor: not-allowed;
-}
-
-.note {
-  font-size: 0.9rem;
-  opacity: 0.7;
-  margin-top: 1rem;
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-  .model-page {
-    grid-template-columns: 1fr;
-  }
-
-  #viewer {
-    height: 350px;
-  }
-}
+animate();
