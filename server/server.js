@@ -1,7 +1,9 @@
 const express = require("express");
-const stripe = require("stripe")("sk_test_YOUR_SECRET_KEY");
+const stripe = require("stripe")("sk_test_YOUR_SECRET_KEY"); // replace with your test secret key
 const app = express();
+
 app.use(express.json());
+app.use(express.static("../")); // serve HTML/CSS/models
 
 const PRODUCTS = {
   "prod_TfDrG6YjEzxBiO": { price: 1000, name: "Werewolf" },
@@ -29,10 +31,9 @@ app.post("/create-checkout-session", async (req, res) => {
         }
       ],
       mode: "payment",
-      success_url: "http://localhost:5500/success.html",
-      cancel_url: "http://localhost:5500/cancel.html"
+      success_url: "http://localhost:3000/success.html",
+      cancel_url: "http://localhost:3000/cancel.html"
     });
-
     res.json({ sessionId: session.id });
   } catch (err) {
     console.error(err);
@@ -40,4 +41,4 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(3000, () => console.log("Server running on http://localhost:3000"));
