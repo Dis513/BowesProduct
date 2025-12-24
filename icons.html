@@ -2,47 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Icons – BowesProduct</title>
+  <title>Icons</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    function setTheme(theme,label) {
+      document.body.className = "theme-" + theme;
+      localStorage.setItem("theme", theme);
+    }
+
+    window.onload = () => {
+      setTheme(localStorage.getItem("theme") || "blue");
+    };
+  </script>
 </head>
+
 <body>
 
 <nav class="top-nav">
-  <div class="nav-left">BowesProduct</div>
+  <div>BowesProduct</div>
   <div class="nav-right">
     <a href="index.html">Home</a>
     <a href="icons.html">Icons</a>
     <a href="models.html">Models</a>
-    <a href="about.html">About</a>
   </div>
 </nav>
 
 <header class="hero">
   <h1>Icon Library</h1>
-  <p>Commercial SVG icons</p>
 </header>
 
-<section>
-  <div class="icon-grid">
-    <div class="icon-card">
-      <img src="icons/teardrop.svg" alt="Teardrop">
-      <p>Teardrop</p>
-      <span>€1</span>
-    </div>
-
-    <div class="icon-card placeholder">Coming Soon</div>
-    <div class="icon-card placeholder">Coming Soon</div>
+<section class="products">
+  <div class="card">
+    <img src="icons/teardrop.svg" style="max-width:96px;">
+    <h3>Teardrop Icon</h3>
+    <p class="price">€1</p>
+    <a class="buy-btn" href="#">Buy</a>
   </div>
+
+  <div class="card" style="opacity:.35">Coming Soon</div>
+  <div class="card" style="opacity:.35">Coming Soon</div>
 </section>
 
-<footer class="footer">
-  <nav>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
+<footer>
   <p>© 2025 BowesProduct</p>
 </footer>
 
