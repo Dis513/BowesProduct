@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Privacy – BowesProduct</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Privacy Policy – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-blue">
 
@@ -14,37 +14,68 @@
     <a href="icons.html">Icons</a>
     <a href="about.html">About</a>
   </div>
-  <select id="themeSelect">
-    <option value="theme-blue">Blue</option>
-    <option value="theme-emerald">Emerald</option>
-    <option value="theme-violet">Violet</option>
-    <option value="theme-amber">Amber</option>
-  </select>
 </nav>
 
-<header class="hero"><h1>Privacy Policy</h1></header>
+<header class="hero">
+  <h1>Privacy Policy</h1>
+</header>
 
 <section>
-<p>Payments are handled securely via Stripe.</p>
-<p>No card details are stored.</p>
-<p>No data is sold or shared.</p>
+  <p>
+    Your privacy is important to us. This policy explains what information we
+    collect, how it’s used, and how we protect it when you visit BowesProduct
+    or make a purchase.
+  </p>
+
+  <h2>Information We Collect</h2>
+  <p>
+    We collect the minimum information necessary to process purchases and
+    communicate with you about orders or support requests.
+  </p>
+  <ul>
+    <li>Email address (for order confirmation and digital delivery)</li>
+    <li>Payment details handled securely by Stripe</li>
+    <li>Optional messages you submit via contact form or email</li>
+  </ul>
+
+  <h2>How We Use Your Information</h2>
+  <p>
+    We use the information you provide to:
+  </p>
+  <ul>
+    <li>Process and complete purchases</li>
+    <li>Respond to support inquiries</li>
+    <li>Send account or transactional emails</li>
+  </ul>
+
+  <h2>Third-Party Services</h2>
+  <p>
+    Payments are processed by Stripe. We never store your credit card details.
+    Stripe’s own privacy and security practices apply.
+  </p>
+
+  <h2>Data Security</h2>
+  <p>
+    We implement reasonable safeguards to protect your information, but no
+    system is 100% secure. If you ever have concerns, contact us at
+    hello@bowesproduct.com.
+  </p>
+
+  <h2>Cookies and Tracking</h2>
+  <p>
+    We may use cookies or tracking tools for analytics and performance
+    monitoring, but we do not sell or share personal information with
+    advertisers.
+  </p>
 </section>
 
 <footer>
-<a href="license.html">License</a>
-<a href="privacy.html">Privacy</a>
-<a href="terms.html">Terms</a>
-<a href="refund.html">Refund</a>
-<p>© 2025 BowesProduct</p>
+  <a href="license.html">License</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms</a>
+  <a href="refund.html">Refund</a>
+  <p>© 2025 BowesProduct</p>
 </footer>
-
-<script>
-const t=document.getElementById("themeSelect");
-const s=localStorage.getItem("theme")||"theme-blue";
-document.body.className=s;
-t.value=s;
-t.onchange=()=>{document.body.className=t.value;localStorage.setItem("theme",t.value);}
-</script>
 
 </body>
 </html>
