@@ -1,134 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>BowesProduct – Commercial Brand Assets</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="style.css">
-
-  <script>
-    window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
-    };
-  </script>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="icon" type="image/png" href="assets/images/3dviewer_net_favicon.ico">
+    <title>BowesProduct – 3D Models & Brand Assets</title>
+    
+    <!-- Original 3D Viewer CSS/JS -->
+    <link rel="stylesheet" type="text/css" href="../build/website_dev/o3dv.website.min.css">
+    <script type="text/javascript" src="../build/website_dev/o3dv.website.min.js"></script>
+    
+    <!-- Your custom styles (add your style.css content here or link it) -->
+    <style>
+        .site-header { position: relative; z-index: 10; background: rgba(0,0,0,0.9); }
+        .hero { text-align: center; padding: 4rem 2rem; background: #f8f9fa; }
+        .model-preview { margin: 2rem 0; }
+        .main_viewer { height: 500px !important; width: 100%; }
+        .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .btn { background: #007bff; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 4px; }
+    </style>
 </head>
-
 <body>
+    <!-- Your Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="logo">BowesProduct</div>
+            <nav class="main-nav">
+                <a href="index.html" class="active">Home</a>
+                <a href="icons.html">Icons</a>
+                <a href="models.html">Models</a>
+            </nav>
+        </div>
+    </header>
 
-<header class="site-header">
-  <div class="header-inner">
-    <div class="logo">BowesProduct</div>
+    <!-- Hero with 3D Viewer Call-to-Action -->
+    <section class="hero">
+        <h1>Commercial Brand Assets & 3D Models</h1>
+        <p>Interactive 3D previews + Brand kits built for real businesses</p>
+        <div class="model-preview">
+            <h3>Preview: Werewolf Model (€49)</h3>
+            <div class="main_viewer" id="main_viewer"></div>
+            <a href="#" class="btn" onclick="OV.LoadModelFromUrl('assets/models/werewolf.glb')">Reload Preview</a>
+            <a href="https://gumroad.com/l/werewolfmodel" class="btn">Buy Werewolf Model</a>
+        </div>
+    </section>
 
-    <nav class="main-nav">
-      <a href="index.html" class="active">Home</a>
-      <a href="icons.html">Icons</a>
-      <a href="models.html">Models</a>
-    </nav>
-  </div>
-</header>
-
-<section class="hero">
-  <h1>Commercial Brand Assets</h1>
-  <p>Brand kits, icons & 3D models built for real businesses</p>
-</section>
-
-<section class="section">
-  <h2>Brand Identity Kits</h2>
-
-  <div class="products">
-
-    <div class="card">
-      <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
-      <h3>Starter Brand Kit</h3>
-      <p class="price">€250</p>
-
-      <ul>
-        <li>Primary logo design</li>
-        <li>Color palette</li>
-        <li>Font pairing guidance</li>
-        <li>Basic brand guidelines</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 14 days</p>
-
-      <a href="#" class="btn">Buy Starter Kit</a>
+    <!-- Original Viewer Structure (hidden initially) -->
+    <input type="file" id="open_file" style="display:none;" multiple>
+    <div class="header" id="header" style="display:none;">
+        <div class="title">
+            <div class="title_left">
+                <a href="index.html">
+                    <svg class="logo_image"><use href="assets/images/3dviewer_net_logo_text.svg#logo"></use></svg>
+                </a>
+            </div>
+            <div class="title_right" id="header_buttons"></div>
+            <div class="main_file_name only_full_width" id="main_file_name"></div>
+        </div>
+        <div class="toolbar" id="toolbar"></div>
+    </div>
+    <div class="main" id="main" style="display:none;">
+        <div class="main_left_container only_full_width" id="main_left_container">
+            <div class="main_navigator ov_panel_set_container" id="main_navigator"></div>
+            <div class="main_splitter" id="main_navigator_splitter"></div>
+        </div>
+        <div class="main_viewer" id="main_viewer_hidden"></div>
+        <div class="main_right_container only_full_width" id="main_right_container">
+            <div class="main_splitter" id="main_sidebar_splitter"></div>
+            <div class="main_sidebar ov_panel_set_right_container" id="main_sidebar"></div>
+        </div>
     </div>
 
-    <div class="card">
-      <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
-      <h3>Pro Brand Kit</h3>
-      <p class="price">€500</p>
+    <!-- Your Brand Kits Section -->
+    <section class="section">
+        <h2>Brand Identity Kits</h2>
+        <div class="products">
+            <div class="card">
+                <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
+                <h3>Starter Brand Kit</h3>
+                <p class="price">€250</p>
+                <a href="#" class="btn">Buy Starter Kit</a>
+            </div>
+            <!-- Add other cards... -->
+        </div>
+    </section>
 
-      <ul>
-        <li>Expanded logo system</li>
-        <li>Typography hierarchy</li>
-        <li>Social media assets</li>
-        <li>Brand usage guide</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 21 days</p>
-
-      <a href="#" class="btn">Buy Pro Kit</a>
-    </div>
-
-    <div class="card">
-      <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
-      <h3>Master Brand Kit</h3>
-      <p class="price">€1,500</p>
-
-      <ul>
-        <li>Complete logo suite</li>
-        <li>Brand strategy overview</li>
-        <li>Marketing & social assets</li>
-        <li>Full brand manual</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 28 days</p>
-
-      <a href="#" class="btn">Buy Master Kit</a>
-    </div>
-
-  </div>
-</section>
-
-<section class="section light">
-  <h2>Icon Library</h2>
-  <p>
-    A growing library of clean, scalable SVG icons designed for designers,
-    developers, and businesses.
-  </p>
-
-  <a href="icons.html" class="btn secondary">Browse Icons</a>
-</section>
-
-<section class="section">
-  <h2>How It Works</h2>
-
-  <ol class="process">
-    <li>Select a product or asset</li>
-    <li>Complete secure checkout</li>
-    <li>Assets are prepared or created</li>
-    <li>Files delivered for commercial use</li>
-  </ol>
-</section>
-
-<footer class="site-footer">
-  <nav class="footer-nav">
-    <a href="about.html">About</a>
-    <a href="license.html">License</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
-
-  <p class="copyright">
-    © 2025 BowesProduct. All rights reserved.
-  </p>
-</footer>
-
+    <!-- Viewer Initialization + Your werewolf.glb -->
+    <script type="text/javascript">
+        // Original viewer init
+        OV.StartWebsite();
+        
+        // Auto-load werewolf model on start
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                OV.LoadModelFromUrl('assets/models/werewolf.glb');
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
