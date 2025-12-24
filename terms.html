@@ -5,15 +5,38 @@
   <title>Terms – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <script>
+    window.onload = () => {
+      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+    };
+  </script>
 </head>
+
 <body>
 
+<nav class="top-nav">
+  <div>BowesProduct</div>
+  <div class="nav-right">
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="models.html">Models</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>Terms & Conditions</h1>
+</header>
+
 <section>
-  <h2>Terms & Conditions</h2>
   <p>
-    By purchasing, you agree to the license terms and delivery timelines.
+    By purchasing from BowesProduct you agree to the licensing terms,
+    delivery timelines, and usage limitations outlined on this site.
   </p>
 </section>
+
+<footer>
+  <p>© 2025 BowesProduct</p>
+</footer>
 
 </body>
 </html>
