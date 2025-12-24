@@ -171,6 +171,11 @@
   <section id="models" class="models-grid">
     <h2>Available Models</h2>
     <div class="grid">
+      <div class="grid-item" data-model="models/werewolf.glb">
+        Werewolf
+        <button class="btn-view">View Model</button>
+        <button class="btn-price">$29.99</button>
+      </div>
       <div class="grid-item" data-model="models/zombiewerewolf.glb">
         Zombie Werewolf
         <button class="btn-view">View Model</button>
@@ -186,18 +191,13 @@
         <button class="btn-view">View Model</button>
         <button class="btn-price">$22.99</button>
       </div>
-      <div class="grid-item" data-model="models/model4.glb">
+      <div class="grid-item" data-model="models/model5.glb">
         Model #5
         <button class="btn-view">View Model</button>
         <button class="btn-price">$0.00</button>
       </div>
-      <div class="grid-item" data-model="models/model5.glb">
-        Model #6
-        <button class="btn-view">View Model</button>
-        <button class="btn-price">$0.00</button>
-      </div>
       <div class="grid-item" data-model="models/model6.glb">
-        Model #7
+        Model #6
         <button class="btn-view">View Model</button>
         <button class="btn-price">$0.00</button>
       </div>
@@ -226,20 +226,17 @@
       localStorage.setItem('theme', select.value);
     });
 
-    // Grid model click (locks after selection)
+    // Grid model click
     const gridItems = document.querySelectorAll('.grid-item');
     const viewer = document.getElementById('mainViewer');
-    let modelLocked = false;
 
     gridItems.forEach(item => {
       const viewBtn = item.querySelector('.btn-view');
       viewBtn.addEventListener('click', () => {
-        if (modelLocked) return; // prevent changing again
         const modelSrc = item.getAttribute('data-model');
         viewer.setAttribute('src', modelSrc);
         viewer.removeAttribute('poster');
         viewer.reload();
-        modelLocked = true; // lock viewer
         window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
       });
     });
