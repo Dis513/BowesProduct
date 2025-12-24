@@ -1,34 +1,68 @@
+/* ======================
+   RESET & GLOBAL
+====================== */
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+:root {
+  --blue: #2563eb;
+  --blue-dark: #1e40af;
+  --bg: #f4f7fb;
+  --bg-light: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e5e7eb;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #f4f7ff;
-  color: #111;
+  background: var(--bg);
+  color: var(--text);
   line-height: 1.6;
 }
 
-a {
-  color: #2563eb;
-  text-decoration: none;
-  font-weight: 600;
+/* ======================
+   HEADER / NAV
+====================== */
+
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
 }
 
-header {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+.header-inner {
+  max-width: 1200px;
+  margin: auto;
   padding: 1rem 1.5rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
-nav a {
-  margin-right: 1rem;
+.logo {
+  font-weight: bold;
+  font-size: 1.1rem;
 }
+
+.main-nav a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.main-nav a.active,
+.main-nav a:hover {
+  color: var(--blue);
+}
+
+/* ======================
+   HERO
+====================== */
 
 .hero {
   background: #eaf0ff;
@@ -41,11 +75,34 @@ nav a {
   margin-bottom: 0.5rem;
 }
 
-section {
+.hero p {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+/* ======================
+   SECTIONS
+====================== */
+
+.section {
   max-width: 1200px;
   margin: auto;
   padding: 3rem 1.5rem;
 }
+
+.section.light {
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+.section h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+/* ======================
+   PRODUCTS GRID
+====================== */
 
 .products {
   display: grid;
@@ -53,61 +110,155 @@ section {
   gap: 2rem;
 }
 
+/* ======================
+   CARD
+====================== */
+
 .card {
-  background: #fff;
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 16px;
   padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 .card img {
   width: 100%;
   max-width: 260px;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem;
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.3rem;
 }
 
 .price {
-  color: #2563eb;
   font-weight: bold;
+  color: var(--blue);
   margin-bottom: 1rem;
 }
 
 .card ul {
   list-style: none;
   text-align: left;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 
 .card ul li {
-  margin-bottom: 0.4rem;
+  position: relative;
+  padding-left: 1.3rem;
+  margin-bottom: 0.5rem;
 }
+
+.card ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--blue);
+}
+
+.delivery {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+/* ======================
+   BUTTONS
+====================== */
 
 .btn {
   display: inline-block;
-  background: #2563eb;
-  color: #fff;
-  padding: 0.7rem 1.3rem;
-  border-radius: 6px;
-  margin-top: 1rem;
+  background: var(--blue);
+  color: #ffffff;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.2s ease;
 }
 
-footer {
-  background: #111827;
-  color: #fff;
-  text-align: center;
-  padding: 2rem 1rem;
+.btn:hover {
+  background: var(--blue-dark);
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--blue);
+  border: 2px solid var(--blue);
+}
+
+.btn.secondary:hover {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+/* ======================
+   PROCESS
+====================== */
+
+.process {
+  padding-left: 1.2rem;
+}
+
+.process li {
+  margin-bottom: 0.6rem;
+}
+
+/* ======================
+   FOOTER
+====================== */
+
+.site-footer {
+  background: #ffffff;
+  border-top: 1px solid var(--border);
+  padding: 2rem 1.5rem;
   margin-top: 4rem;
+  text-align: center;
 }
 
-footer nav a {
-  color: #9ca3af;
+.footer-nav {
+  margin-bottom: 1rem;
+}
+
+.footer-nav a {
   margin: 0 0.6rem;
+  text-decoration: none;
+  color: var(--muted);
   font-size: 0.9rem;
 }
+
+.footer-nav a:hover {
+  color: var(--blue);
+}
+
+.site-footer p {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ======================
+   MOBILE
+====================== */
 
 @media (max-width: 900px) {
   .products {
     grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .header-inner {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .main-nav a {
+    margin: 0 0.5rem;
   }
 }
