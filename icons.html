@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Icons</title>
+  <title>Icons – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 
   <script>
-    function setTheme(theme,label) {
+    function setTheme(theme) {
       document.body.className = "theme-" + theme;
       localStorage.setItem("theme", theme);
     }
-
     window.onload = () => {
       setTheme(localStorage.getItem("theme") || "blue");
     };
@@ -31,18 +30,32 @@
 
 <header class="hero">
   <h1>Icon Library</h1>
+  <p>Commercial SVG icons — €1 per icon</p>
 </header>
 
-<section class="products">
-  <div class="card">
-    <img src="icons/teardrop.svg" style="max-width:96px;">
-    <h3>Teardrop Icon</h3>
-    <p class="price">€1</p>
-    <a class="buy-btn" href="#">Buy</a>
-  </div>
+<section>
+  <h2>Available Icons</h2>
+  <p style="max-width:700px;">
+    Each icon is delivered as a clean SVG file and licensed for
+    commercial use. New icons are added regularly.
+  </p>
 
-  <div class="card" style="opacity:.35">Coming Soon</div>
-  <div class="card" style="opacity:.35">Coming Soon</div>
+  <div class="products">
+
+    <!-- Real Icon -->
+    <div class="card">
+      <img src="icons/teardrop.svg" alt="Teardrop Icon" style="max-width:96px;">
+      <h3>Teardrop</h3>
+      <p class="price">€1 — Commercial License</p>
+      <a class="buy-btn" href="#">Purchase Icon</a>
+    </div>
+
+    <!-- Placeholders -->
+    <div class="card" style="opacity:0.35;">Coming Soon</div>
+    <div class="card" style="opacity:0.35;">Coming Soon</div>
+    <div class="card" style="opacity:0.35;">Coming Soon</div>
+
+  </div>
 </section>
 
 <footer>
