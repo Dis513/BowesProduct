@@ -2,83 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Models – BowesProduct</title>
+  <title>BowesProduct – 3D Models</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Model Viewer -->
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-  </script>
-
   <link rel="stylesheet" href="style.css">
+
+  <!-- Model Viewer -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 
 <body>
 
-<!-- ======================
-     HEADER
-====================== -->
-
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">BowesProduct</div>
-
-    <nav class="main-nav">
+    <div class="brand">BowesProduct</div>
+    <nav class="nav-links">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
-      <a href="models.html" class="active">Models</a>
+      <a href="models.html">Models</a>
     </nav>
   </div>
 </header>
 
-<!-- ======================
-     HERO
-====================== -->
-
-<section class="hero">
+<main>
   <h1>3D Model Library</h1>
-  <p>Commercial-ready 3D assets for games, products & visualization</p>
-</section>
+  <p class="subtitle">Commercial-ready 3D assets for games, products & visualization</p>
 
-<!-- ======================
-     FILTERS
-====================== -->
-
-<section class="section light">
   <div class="filters">
-    <button class="filter active">All</button>
-    <button class="filter">Characters</button>
-    <button class="filter">Creatures</button>
-    <button class="filter">Props</button>
-    <button class="filter">Coming Soon</button>
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Characters</button>
+    <button class="filter-btn">Creatures</button>
+    <button class="filter-btn">Props</button>
+    <button class="filter-btn">Coming Soon</button>
   </div>
-</section>
 
-<!-- ======================
-     MODEL GRID
-====================== -->
+  <div class="grid">
 
-<section class="section">
-
-  <div class="model-grid">
-
-    <!-- WEREWOLF MODEL -->
-    <div class="model-card">
+    <!-- WEREWOLF -->
+    <div class="card">
       <model-viewer
         src="models/werewolf.glb"
-        alt="Werewolf 3D Model"
         camera-controls
         auto-rotate
-        shadow-intensity="1"
         exposure="1"
-        environment-image="neutral"
-        style="width:100%; height:320px;">
+        shadow-intensity="1">
       </model-viewer>
 
       <h3>Werewolf</h3>
       <p class="price">€15 — Commercial License</p>
 
-      <ul class="model-info">
+      <ul>
         <li>GLB format</li>
         <li>Game & render ready</li>
         <li>Commercial use allowed</li>
@@ -88,31 +61,35 @@
     </div>
 
     <!-- PLACEHOLDERS -->
-    <div class="model-card placeholder">Coming Soon</div>
-    <div class="model-card placeholder">Coming Soon</div>
-    <div class="model-card placeholder">Coming Soon</div>
+    <div class="card">
+      <div class="coming-soon">Coming Soon</div>
+    </div>
+
+    <div class="card">
+      <div class="coming-soon">Coming Soon</div>
+    </div>
+
+    <div class="card">
+      <div class="coming-soon">Coming Soon</div>
+    </div>
 
   </div>
-
-</section>
-
-<!-- ======================
-     FOOTER
-====================== -->
+</main>
 
 <footer class="site-footer">
-  <div class="footer-nav">
-    <a href="index.html">Home</a>
-    <a href="icons.html">Icons</a>
-    <a href="models.html">Models</a>
-    <a href="about.html">About</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html">Models</a>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refunds</a>
+    </div>
+    © 2025 BowesProduct
   </div>
-
-  <p>© 2025 BowesProduct</p>
 </footer>
 
 </body>
