@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>License – BowesProduct</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>License – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-blue">
 
@@ -14,37 +14,56 @@
     <a href="icons.html">Icons</a>
     <a href="about.html">About</a>
   </div>
-  <select id="themeSelect">
-    <option value="theme-blue">Blue</option>
-    <option value="theme-emerald">Emerald</option>
-    <option value="theme-violet">Violet</option>
-    <option value="theme-amber">Amber</option>
-  </select>
 </nav>
 
-<header class="hero"><h1>License</h1></header>
+<header class="hero">
+  <h1>License Agreement</h1>
+</header>
 
 <section>
-<p>All assets include a commercial license.</p>
-<p>You may use assets in client and commercial projects.</p>
-<p>You may not redistribute or resell assets standalone.</p>
+  <p>
+    All digital assets available from BowesProduct are provided under this
+    commercial usage license, giving you clarity and legal permission to use
+    them in your projects.
+  </p>
+
+  <h2>Permitted Use</h2>
+  <p>Once purchased, you may:</p>
+  <ul>
+    <li>Use assets in commercial and personal projects</li>
+    <li>Modify assets to suit your needs</li>
+    <li>Include assets in client deliverables</li>
+    <li>Use assets across multiple projects</li>
+  </ul>
+
+  <h2>Restrictions</h2>
+  <p>You may not:</p>
+  <ul>
+    <li>Redistribute, resell, or share the assets as standalone files</li>
+    <li>Include assets in icon packs or asset libraries for sale</li>
+    <li>Claim authorship of the assets</li>
+  </ul>
+
+  <h2>Ownership</h2>
+  <p>
+    All assets remain the intellectual property of BowesProduct. Purchasers
+    receive a license to use them, not ownership of the original files.
+  </p>
+
+  <h2>No Warranty</h2>
+  <p>
+    Assets are provided “as is” without warranty. BowesProduct shall not be
+    liable for any damage or loss arising from use of assets.
+  </p>
 </section>
 
 <footer>
-<a href="license.html">License</a>
-<a href="privacy.html">Privacy</a>
-<a href="terms.html">Terms</a>
-<a href="refund.html">Refund</a>
-<p>© 2025 BowesProduct</p>
+  <a href="license.html">License</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms</a>
+  <a href="refund.html">Refund</a>
+  <p>© 2025 BowesProduct</p>
 </footer>
-
-<script>
-const t=document.getElementById("themeSelect");
-const s=localStorage.getItem("theme")||"theme-blue";
-document.body.className=s;
-t.value=s;
-t.onchange=()=>{document.body.className=t.value;localStorage.setItem("theme",t.value);}
-</script>
 
 </body>
 </html>
