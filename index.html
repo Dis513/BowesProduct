@@ -2,123 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BowesProduct – Brand Kits & Icons</title>
+  <title>BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-
-  <script>
-    function setTheme(theme, label) {
-      document.body.className = "theme-" + theme;
-      localStorage.setItem("theme", theme);
-      document.getElementById("theme-label").innerText = label;
-    }
-
-    window.onload = () => {
-      const saved = localStorage.getItem("theme") || "blue";
-      setTheme(saved, saved.charAt(0).toUpperCase() + saved.slice(1));
-    };
-  </script>
 </head>
-
 <body>
 
-<nav class="top-nav">
-  <div>BowesProduct</div>
-  <div class="nav-right">
+<header>
+  <strong>BowesProduct</strong>
+  <nav>
     <a href="index.html">Home</a>
     <a href="icons.html">Icons</a>
     <a href="models.html">Models</a>
-
-    <button class="theme-btn" onclick="setTheme('blue','Blue')">Blue</button>
-    <button class="theme-btn" onclick="setTheme('purple','Purple')">Purple</button>
-    <button class="theme-btn" onclick="setTheme('green','Green')">Green</button>
-    <button class="theme-btn" onclick="setTheme('orange','Orange')">Orange</button>
-  </div>
-</nav>
-
-<header class="hero">
-  <h1>Commercial Brand Assets</h1>
-  <p>Brand identity kits and scalable icon assets for real businesses</p>
+  </nav>
 </header>
 
+<div class="hero">
+  <h1>Commercial Brand Assets</h1>
+  <p>Brand kits, icons & 3D models for real businesses</p>
+</div>
+
 <section>
-  <h2>Brand Identity Kits</h2>
-  <p style="max-width:700px;">
-    Our brand kits are designed from scratch for your business.
-    Every kit includes commercial usage rights and production-ready files.
-  </p>
+  <h2>Brand Kits</h2>
 
   <div class="products">
-
-    <!-- Starter -->
     <div class="card">
-      <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
+      <img src="Product-Starter-Brand-Kit.png">
       <h3>Starter Brand Kit</h3>
-      <p class="price">€250 — Commercial License</p>
-
-      <ul>
-        <li>Primary logo design</li>
-        <li>Colour palette</li>
-        <li>Font pairing guidance</li>
-        <li>Basic brand usage rules</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 14 days</p>
-      <a class="buy-btn" href="#">Purchase Starter</a>
+      <p class="price">€250</p>
+      <a class="btn" href="#">Buy</a>
     </div>
 
-    <!-- Pro -->
     <div class="card">
-      <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
+      <img src="Product-Pro-Brand-Kit.png">
       <h3>Pro Brand Kit</h3>
-      <p class="price">€500 — Commercial License</p>
-
-      <ul>
-        <li>Expanded logo system</li>
-        <li>Typography hierarchy</li>
-        <li>Social media assets</li>
-        <li>Brand usage guide</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 21 days</p>
-      <a class="buy-btn" href="#">Purchase Pro</a>
+      <p class="price">€500</p>
+      <a class="btn" href="#">Buy</a>
     </div>
 
-    <!-- Master -->
     <div class="card">
-      <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
+      <img src="Product-Master-Brand-Kit.png">
       <h3>Master Brand Kit</h3>
-      <p class="price">€1,500 — Commercial License</p>
-
-      <ul>
-        <li>Complete logo suite</li>
-        <li>Brand strategy overview</li>
-        <li>Marketing & social assets</li>
-        <li>Full brand manual</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 28 days</p>
-      <a class="buy-btn" href="#">Purchase Master</a>
+      <p class="price">€1500</p>
+      <a class="btn" href="#">Buy</a>
     </div>
-
   </div>
-</section>
-
-<section class="center">
-  <h2>Icon Library</h2>
-  <p>
-    A growing library of clean, pixel-perfect SVG icons
-    designed for commercial projects.
-  </p>
-
-  <a class="buy-btn" href="icons.html">Browse Icons</a>
 </section>
 
 <footer>
   <nav>
+    <a href="about.html">About</a>
+    <a href="license.html">License</a>
     <a href="privacy.html">Privacy</a>
     <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
     <a href="refund.html">Refunds</a>
   </nav>
   <p>© 2025 BowesProduct</p>
