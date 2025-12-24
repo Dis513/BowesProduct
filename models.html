@@ -2,70 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>3D Models – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  <title>Werewolf 3D Model – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --primary: #2563eb; --hero-bg: #eaf0ff; --text: #0f172a; }
-    body { margin: 0; font-family: system-ui, sans-serif; background: #f8fafc; color: var(--text); }
-    .site-header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 1rem 2rem; }
-    .header-inner { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-weight: 700; font-size: 1.4rem; }
-    .main-nav a { color: var(--text); text-decoration: none; margin-right: 1.5rem; font-weight: 500; }
-    .main-nav a.active { color: var(--primary); font-weight: 700; }
-    .hero { background: var(--hero-bg); padding: 4rem 2rem; text-align: center; }
-    .hero h1 { font-size: 2.5rem; margin: 0 0 0.5rem; }
-    .model-container { max-width: 1100px; height: 600px; margin: 3rem auto; background: #020617; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-    model-viewer { width: 100%; height: 100%; }
-    .model-info { max-width: 1100px; margin: 2rem auto; padding: 0 2rem; }
-    .price { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-    .btn { background: var(--primary); color: white; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-block; }
-    .site-footer { background: #fff; border-top: 1px solid #e5e7eb; padding: 2rem; text-align: center; }
-    @media (max-width: 768px) { .model-container { height: 400px; } }
+    body { margin: 0; font-family: system-ui, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+    .viewer-container { width: 100%; height: 70vh; max-width: 1200px; margin: 2rem auto; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .branding { text-align: center; padding: 2rem; background: rgba(255,255,255,0.95); }
+    .branding h1 { margin: 0; font-size: 2.5rem; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .price { font-size: 2rem; font-weight: 700; color: #10b981; }
+    .btn { background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; padding: 1rem 2rem; border: none; border-radius: 50px; font-weight: 600; text-decoration: none; display: inline-block; }
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">BowesProduct</div>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="icons.html">Icons</a>
-        <a href="models.html" class="active">Models</a>
-      </nav>
-    </div>
-  </header>
-
-  <section class="hero">
-    <h1>3D Models</h1>
-    <p>High-quality, rigged, commercial-ready GLB models</p>
-  </section>
-
-  <div class="model-container">
-    <model-viewer src="models/werewolf.glb" alt="Werewolf 3D Model" camera-controls auto-rotate shadow-intensity="1" exposure="1.2" ar ar-modes="webxr scene-viewer quick-look">
-      <div slot="progress-bar" style="color:white;padding:2rem;text-align:center;font-size:1.2rem;">Loading model...</div>
-    </model-viewer>
+  <!-- Online3DViewer CDN Embed -->
+  <div id="viewer" class="viewer-container" model="models/werewolf.glb"></div>
+  
+  <div class="branding">
+    <h1>Werewolf 3D Model</h1>
+    <p class="price">€49 — Commercial License</p>
+    <a href="#" class="btn">Buy Now (Coming Soon)</a>
   </div>
 
-  <section class="model-info">
-    <h2>Werewolf Model</h2>
-    <p class="price">€49 — Commercial License</p>
-    <ul>
-      <li>Optimized GLB format</li>
-      <li>PBR materials & full rigging</li>
-      <li>Ready for games, apps, and web</li>
-      <li>Immediate download after purchase</li>
-    </ul>
-    <a href="#" class="btn">Buy Model (Coming Soon)</a>
-  </section>
-
-  <footer class="site-footer">
-    <nav class="footer-nav" style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem;">
-      <a href="about.html">About</a>
-      <a href="license.html">License</a>
-      <a href="privacy.html">Privacy</a>
-    </nav>
-    <p>© 2025 BowesProduct. All rights reserved.</p>
-  </footer>
+  <!-- Load Online3DViewer from CDN -->
+  <script src="https://unpkg.com/online-3d-viewer@0.2.6/build/online-3d-viewer.min.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      OV.Init3DViewerElements();
+    });
+  </script>
 </body>
 </html>
