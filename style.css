@@ -1,74 +1,97 @@
-/* ======================
-   3D MODEL PAGE
-====================== */
-
-.model-page {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: auto;
-  padding: 3rem 1.5rem;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.viewer-container {
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f7fb;
+  color: #111;
+}
+
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
   background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border-bottom: 1px solid #ddd;
 }
 
-#viewer {
-  width: 100%;
-  height: 500px;
-  display: block;
+.top-nav a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 600;
 }
 
-.model-info {
+.hero {
+  background: #e8f0ff;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+section {
+  max-width: 1100px;
+  margin: auto;
+  padding: 2.5rem 1.5rem;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.card {
   background: #fff;
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
 }
 
-.model-info h2 {
-  margin-bottom: 0.5rem;
-}
-
-.model-info .price {
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-.materials {
+.icon-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.8rem;
-  margin-top: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
 }
 
-.materials button {
-  padding: 0.7rem;
-  border: none;
+.icon-card {
+  background: #fff;
+  padding: 1rem;
+  text-align: center;
   border-radius: 8px;
-  background: #ddd;
-  color: #666;
-  cursor: not-allowed;
 }
 
-.note {
-  font-size: 0.9rem;
-  opacity: 0.7;
-  margin-top: 1rem;
+.placeholder {
+  opacity: 0.4;
 }
 
-/* Mobile */
+.footer {
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.footer a {
+  color: #fff;
+  margin: 0 .5rem;
+  text-decoration: none;
+}
+
+.center {
+  text-align: center;
+}
+
+.placeholder-box {
+  padding: 3rem;
+  border: 2px dashed #aaa;
+  border-radius: 12px;
+}
+
 @media (max-width: 900px) {
-  .model-page {
+  .products {
     grid-template-columns: 1fr;
-  }
-
-  #viewer {
-    height: 350px;
   }
 }
