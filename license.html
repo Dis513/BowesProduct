@@ -2,58 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Thank You – BowesProduct</title>
+  <title>License – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    window.onload = () => {
+      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+    };
+  </script>
 </head>
+
 <body>
 
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">BowesProduct</div>
     <nav class="main-nav">
-      <div>
-        <a href="index.html">Home</a>
-        <a href="icons.html">Icons</a>
-        <a href="models.html">Models</a>
-      </div>
-      <select id="themeSelect">
-        <option value="theme-blue">Blue Theme</option>
-        <option value="theme-emerald">Emerald Theme</option>
-        <option value="theme-violet">Violet Theme</option>
-        <option value="theme-amber">Amber Theme</option>
-      </select>
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html">Models</a>
     </nav>
   </div>
 </header>
 
-<section class="hero" style="padding:8rem 2rem;">
-  <h2>Thank You</h2>
-  <p>Your purchase has been received. You'll receive a download link via email shortly.</p>
+<section class="hero">
+  <h1>License</h1>
+</section>
+
+<section class="section">
+  <p>
+    All BowesProduct assets are licensed for commercial use unless stated
+    otherwise. You may use purchased assets in client work, products,
+    marketing materials, and applications.
+  </p>
+
+  <p style="margin-top:1rem;">
+    Redistribution, resale, or sharing of raw files is prohibited.
+  </p>
 </section>
 
 <footer class="site-footer">
-  <nav class="footer-nav">
-    <a href="about.html">About</a>
-    <a href="license.html">License</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
-  <p class="copyright">© 2025 BowesProduct. All rights reserved.</p>
+  <p>© 2025 BowesProduct</p>
 </footer>
-
-<script>
-  const themeSelect = document.getElementById("themeSelect");
-  const savedTheme = localStorage.getItem("theme") || "theme-blue";
-  document.body.className = savedTheme;
-  themeSelect.value = savedTheme;
-  themeSelect.onchange = () => {
-    const newTheme = themeSelect.value;
-    document.body.className = newTheme;
-    localStorage.setItem("theme", newTheme);
-  };
-</script>
 
 </body>
 </html>
