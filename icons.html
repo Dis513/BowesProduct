@@ -2,63 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Icons – BowesProduct</title>
+  <title>Icon Library – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-
-  <script>
-    function setTheme(theme) {
-      document.body.className = "theme-" + theme;
-      localStorage.setItem("theme", theme);
-    }
-    window.onload = () => {
-      setTheme(localStorage.getItem("theme") || "blue");
-    };
-  </script>
 </head>
 
 <body>
 
-<nav class="top-nav">
-  <div>BowesProduct</div>
-  <div class="nav-right">
-    <a href="index.html">Home</a>
-    <a href="icons.html">Icons</a>
-    <a href="models.html">Models</a>
-  </div>
-</nav>
+<!-- ======================
+     HEADER
+====================== -->
 
-<header class="hero">
-  <h1>Icon Library</h1>
-  <p>Commercial SVG icons — €1 per icon</p>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">BowesProduct</div>
+
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="icons.html" class="active">Icons</a>
+      <a href="models.html">Models</a>
+    </nav>
+  </div>
 </header>
 
-<section>
-  <h2>Available Icons</h2>
-  <p style="max-width:700px;">
-    Each icon is delivered as a clean SVG file and licensed for
-    commercial use. New icons are added regularly.
+<!-- ======================
+     HERO
+====================== -->
+
+<section class="hero">
+  <h1>Icon Library</h1>
+  <p>Clean, scalable SVG icons for commercial use</p>
+</section>
+
+<!-- ======================
+     FILTERS
+====================== -->
+
+<section class="section light">
+  <h2>Browse Icons</h2>
+
+  <p style="margin-bottom:1rem; color:#64748b;">
+    Filter by category. More icons added weekly.
   </p>
+
+  <div style="margin-bottom:2rem;">
+    <a class="btn secondary">All</a>
+    <a class="btn secondary">UI</a>
+    <a class="btn secondary">Shapes</a>
+    <a class="btn secondary">Arrows</a>
+  </div>
+
+  <!-- ======================
+       ICON GRID
+  ====================== -->
 
   <div class="products">
 
-    <!-- Real Icon -->
+    <!-- ICON 1 (REAL / BUYABLE) -->
     <div class="card">
-      <img src="icons/teardrop.svg" alt="Teardrop Icon" style="max-width:96px;">
+      <img src="icons/teardrop.svg" alt="Teardrop Icon">
       <h3>Teardrop</h3>
       <p class="price">€1 — Commercial License</p>
-      <a class="buy-btn" href="#">Purchase Icon</a>
+
+      <ul>
+        <li>SVG format</li>
+        <li>Scalable & pixel-perfect</li>
+        <li>Commercial usage allowed</li>
+      </ul>
+
+      <a href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" class="btn">
+        Buy Icon
+      </a>
     </div>
 
-    <!-- Placeholders -->
-    <div class="card" style="opacity:0.35;">Coming Soon</div>
-    <div class="card" style="opacity:0.35;">Coming Soon</div>
-    <div class="card" style="opacity:0.35;">Coming Soon</div>
+    <!-- ICON 2 (PLACEHOLDER) -->
+    <div class="card">
+      <div style="
+        width:100%;
+        height:180px;
+        background:#e5e7eb;
+        border-radius:12px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#64748b;
+        font-weight:bold;
+      ">
+        Coming Soon
+      </div>
+
+      <h3>Icon #2</h3>
+      <p class="price">€1</p>
+
+      <ul>
+        <li>SVG format</li>
+        <li>Commercial license</li>
+        <li>Releases soon</li>
+      </ul>
+
+      <a class="btn secondary">Coming Soon</a>
+    </div>
+
+    <!-- ICON 3 (PLACEHOLDER) -->
+    <div class="card">
+      <div style="
+        width:100%;
+        height:180px;
+        background:#e5e7eb;
+        border-radius:12px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#64748b;
+        font-weight:bold;
+      ">
+        Coming Soon
+      </div>
+
+      <h3>Icon #3</h3>
+      <p class="price">€1</p>
+
+      <ul>
+        <li>SVG format</li>
+        <li>Commercial license</li>
+        <li>Releases soon</li>
+      </ul>
+
+      <a class="btn secondary">Coming Soon</a>
+    </div>
 
   </div>
 </section>
 
-<footer>
+<!-- ======================
+     FOOTER
+====================== -->
+
+<footer class="site-footer">
+  <div class="footer-nav">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="license.html">License</a>
+    <a href="refund.html">Refunds</a>
+  </div>
+
   <p>© 2025 BowesProduct</p>
 </footer>
 
