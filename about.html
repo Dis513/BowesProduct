@@ -1,51 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>About – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="About BowesProduct: commercial-ready digital assets for designers, developers, and businesses." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About BowesProduct: commercial-ready digital assets for designers, developers, and businesses.">
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f9fafb;
-      color: #1e293b;
+      background:#f9fafb;
+      color:#1e293b;
+      margin:0;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem;
+      background-image: url("/AboutBanner.jpg"); /* Updated hero image */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      position: relative;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.4); /* overlay for text contrast */
+      z-index: 0;
+    }
+    .hero h1, .hero p {
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    .hero p {
+      font-size: 1.25rem;
       margin: 0;
     }
 
+    /* Section & Cards */
     .section {
       max-width: 900px;
       margin: 3rem auto;
       padding: 0 1rem;
     }
 
-    /* Cards */
     .card {
-      background: white;
-      border-radius: 12px;
-      padding: 1.5rem 2rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      margin-bottom: 2rem;
+      background:white;
+      border-radius:12px;
+      padding:1.5rem 2rem;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom:2rem;
       transition: transform 0.2s, box-shadow 0.2s;
-      text-align: left;
+      text-align:left;
     }
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
     }
     .card h3 {
       text-align: left;
-      color: var(--primary); /* Now uses theme */
+      color: var(--primary); /* theme-aware */
       font-size: 1.6rem;
       margin-top: 0;
       margin-bottom: 1rem;
       font-weight: 700;
     }
-    .card p,
-    .card ul {
+    .card p, .card ul {
       text-align: left;
       margin-left: 0;
       margin-right: auto;
@@ -60,43 +93,64 @@
       color: #1e293b;
     }
     .card ul li {
-      margin-bottom: 0.6rem;
-    }
-
-    /* Hero section with centered title */
-    .hero {
-      text-align: center;
-      padding: 4rem 1rem;
-      background: linear-gradient(to right, #d8b4fe, #a5b4fc);
-      color: #1e293b;
-      border-bottom: 5px solid var(--primary);
-    }
-    .hero h1 {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-    .hero p {
-      font-size: 1.25rem;
-      margin: 0;
+      margin-bottom:0.6rem;
     }
 
     /* Footer */
     .site-footer {
       margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: var(--primary);
+      color: white;
     }
-    .btn {
-      color: #ffffff !important;
+    .footer-nav {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-bottom:1rem;
+    }
+    .footer-nav a {
+      margin:0.5rem 1rem;
+      color:white;
+      font-weight:500;
+      text-decoration:none;
+      transition:opacity 0.2s;
+    }
+    .footer-nav a:hover {
+      opacity:0.8;
     }
 
-    @media (max-width: 768px) {
-      .main-nav a {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-      }
-      .card p,
-      .card ul {
-        max-width: 100%;
-      }
+    /* Header */
+    .header-inner, .footer-inner {
+      max-width: 1200px;
+      margin:auto;
+      padding: 1rem;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .logo a {
+      font-weight:700;
+      font-size:1.5rem;
+      color:inherit;
+      text-decoration:none;
+    }
+    .main-nav a {
+      margin-left: 1rem;
+      text-decoration:none;
+      color: inherit;
+      font-weight:500;
+      padding:0.3rem 0.6rem;
+      border-radius:6px;
+      transition: background 0.2s;
+    }
+    .main-nav a:hover { background: rgba(255,255,255,0.2); }
+    #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
+
+    @media(max-width:768px){
+      .main-nav a { margin-left:0.5rem; margin-right:0.5rem; }
+      .card p, .card ul { max-width:100%; }
     }
   </style>
 
@@ -105,28 +159,22 @@
       const savedTheme = localStorage.getItem("theme") || "theme-emerald";
       document.body.className = savedTheme;
       const themeSelect = document.getElementById("themeSelect");
-      if (themeSelect) themeSelect.value = savedTheme;
+      if(themeSelect) themeSelect.value = savedTheme;
     };
   </script>
 </head>
 
 <body>
 
-  <!-- HEADER without About link -->
+  <!-- HEADER -->
   <header class="site-header">
     <div class="header-inner">
-      <div class="logo">
-        <a href="index.html" style="text-decoration:none;color:inherit;">
-          BowesProduct
-        </a>
-      </div>
-
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="icons.html">Icons</a>
         <a href="models.html">Models</a>
       </nav>
-
       <select id="themeSelect">
         <option value="theme-emerald">Emerald</option>
         <option value="theme-blue">Blue</option>
@@ -142,7 +190,7 @@
     <p>Commercial-ready digital assets for designers, developers, and businesses.</p>
   </section>
 
-  <!-- ABOUT CONTENT -->
+  <!-- ABOUT SECTION -->
   <section class="section">
     <div class="card">
       <h3>Our Mission</h3>
@@ -173,28 +221,23 @@
       </ul>
     </div>
 
-    <p style="text-align:center; margin-top: 2rem; color: #64748b; font-size: 0.9rem;">
-      Last updated: 1 January 2025
-    </p>
+    <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
   </section>
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
-    </nav>
-
-    <p class="copyright" style="text-align:center;">
-      Secure payments powered by Stripe<br />
-      © 2025 BowesProduct
-    </p>
+    <div class="footer-inner">
+      <nav class="footer-nav">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="license.html">License</a>
+        <a href="refund.html">Refund</a>
+      </nav>
+      <p style="text-align:center;">© 2025 BowesProduct</p>
+    </div>
   </footer>
 
-  <!-- Theme selector script -->
   <script>
     const themeSelect = document.getElementById("themeSelect");
     themeSelect.addEventListener("change", () => {
