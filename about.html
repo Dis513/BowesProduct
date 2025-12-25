@@ -14,32 +14,21 @@
       background:#f9fafb;
       color:#1e293b;
       margin:0;
+      overflow-x: hidden;
     }
 
-    /* Hero Section */
+    /* Hero Section with animated gradient */
     .hero {
       text-align: center;
-      padding: 4rem 1rem;
-      background-image: url("/AboutBanner.jpg"); /* Updated hero image */
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      color: white;
+      padding: 6rem 1rem;
       position: relative;
+      color: white;
+      overflow: hidden;
     }
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.4); /* overlay for text contrast */
-      z-index: 0;
-    }
+
     .hero h1, .hero p {
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
     .hero h1 {
       font-size: 3rem;
@@ -48,6 +37,37 @@
     .hero p {
       font-size: 1.25rem;
       margin: 0;
+    }
+
+    /* Animated background circles */
+    .hero::before, .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.4;
+      z-index: 1;
+      animation: float 20s linear infinite;
+    }
+    .hero::before {
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle at 30% 30%, #4ade80, transparent 70%);
+      top: -200px;
+      left: -200px;
+    }
+    .hero::after {
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle at 70% 70%, #2563eb, transparent 70%);
+      bottom: -300px;
+      right: -300px;
+      animation-duration: 25s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0,0) rotate(0deg);}
+      50% { transform: translate(50px, -50px) rotate(180deg);}
+      100% { transform: translate(0,0) rotate(360deg);}
     }
 
     /* Section & Cards */
@@ -72,7 +92,7 @@
     }
     .card h3 {
       text-align: left;
-      color: var(--primary); /* theme-aware */
+      color: var(--primary);
       font-size: 1.6rem;
       margin-top: 0;
       margin-bottom: 1rem;
