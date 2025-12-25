@@ -26,15 +26,67 @@
     /* Cards spacing */
     .card {
       text-align: center;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
     }
 
-    /* Footer spacing */
+    /* Model grid */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    /* Footer styling (match About/Icons) */
     .site-footer {
       margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .footer-nav a:hover {
+      opacity: 0.8;
+    }
+
+    /* Responsive adjustments */
+    @media(max-width:768px) {
+      .card img, model-viewer {
+        width: 100%;
+      }
     }
   </style>
 
-  <!-- Theme load (same logic as icons/index) -->
+  <!-- Theme load -->
   <script>
     window.onload = () => {
       const savedTheme = localStorage.getItem("theme") || "theme-emerald";
@@ -115,7 +167,7 @@
 
       <p class="delivery">
         Instant download · Commercial license<br>
-        <a href="license.html">View license</a>
+        <a href="license.html" style="color:white; text-decoration:underline;">View license</a>
       </p>
     </div>
 
@@ -135,7 +187,7 @@
 
       <p class="delivery">
         Instant download · Commercial license<br>
-        <a href="license.html">View license</a>
+        <a href="license.html" style="color:white; text-decoration:underline;">View license</a>
       </p>
     </div>
 
@@ -155,7 +207,7 @@
 
       <p class="delivery">
         Instant download · Commercial license<br>
-        <a href="license.html">View license</a>
+        <a href="license.html" style="color:white; text-decoration:underline;">View license</a>
       </p>
     </div>
 
@@ -175,7 +227,7 @@
 
       <p class="delivery">
         Instant download · Commercial license<br>
-        <a href="license.html">View license</a>
+        <a href="license.html" style="color:white; text-decoration:underline;">View license</a>
       </p>
     </div>
 
@@ -184,23 +236,21 @@
 
 <!-- FOOTER -->
 <footer class="site-footer">
-  <nav class="footer-nav">
-    <a href="about.html">About</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refund</a>
-  </nav>
-
-  <p class="copyright">
-    Secure payments powered by Stripe<br>
-    © 2025 BowesProduct
-  </p>
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
 </footer>
 
 <!-- SCRIPTS -->
 <script>
-  // Theme selector sync
+  // Theme selector
   const themeSelect = document.getElementById("themeSelect");
   themeSelect.value = document.body.className;
 
@@ -209,7 +259,7 @@
     localStorage.setItem("theme", themeSelect.value);
   });
 
-  // Model switching (reliable)
+  // Model switching
   const viewer = document.getElementById("mainViewer");
   document.querySelectorAll(".view-btn").forEach(btn => {
     btn.addEventListener("click", () => {
