@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Privacy – BowesProduct</title>
+  <title>Privacy Policy – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="style.css">
 
   <script>
     window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
     };
   </script>
 </head>
@@ -17,29 +21,81 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">BowesProduct</div>
+    <div class="logo">
+      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
+    </div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
     </nav>
+
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
   </div>
 </header>
 
 <section class="hero">
   <h1>Privacy Policy</h1>
+  <p>Your privacy matters</p>
 </section>
 
 <section class="section">
   <p>
-    We do not sell or share personal data. Payments are processed securely
-    via third-party providers. No customer data is stored on this website.
+    BowesProduct does not collect personal data beyond what is necessary
+    to process purchases and provide purchased assets.
+  </p>
+
+  <h3>Information Collected</h3>
+  <ul>
+    <li>Payment information is handled securely by Stripe</li>
+    <li>We do not store credit card details</li>
+    <li>Basic purchase records may be retained for legal purposes</li>
+  </ul>
+
+  <h3>Cookies</h3>
+  <p>
+    This site uses local storage only to remember theme preferences.
+    No tracking or advertising cookies are used.
+  </p>
+
+  <h3>Third Parties</h3>
+  <p>
+    Payments are processed through Stripe. Please refer to Stripe’s
+    privacy policy for details on their data handling.
+  </p>
+
+  <h3>Your Rights</h3>
+  <p>
+    You may request information about stored purchase records where
+    legally applicable.
   </p>
 </section>
 
 <footer class="site-footer">
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="license.html">License</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
+
   <p>© 2025 BowesProduct</p>
 </footer>
+
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+  });
+</script>
 
 </body>
 </html>
