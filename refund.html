@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Refunds – BowesProduct</title>
+  <title>Refund Policy – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="Refund policy for BowesProduct digital assets, brand kits, icons, and models. Learn when refunds apply for digital products.">
+
   <link rel="stylesheet" href="style.css">
 
   <script>
     window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
     };
   </script>
 </head>
@@ -17,29 +23,96 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">BowesProduct</div>
+    <div class="logo">
+      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
+    </div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
     </nav>
+
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
   </div>
 </header>
 
 <section class="hero">
   <h1>Refund Policy</h1>
+  <p>Clear terms for digital purchases</p>
 </section>
 
 <section class="section">
   <p>
-    Due to the digital and custom nature of our products, refunds are not
-    offered once work has begun or files are delivered.
+    BowesProduct sells digital goods and custom-prepared digital services.
+    Due to the nature of these products, refunds are limited and subject
+    to the conditions outlined below.
+  </p>
+
+  <h2>Digital Products</h2>
+  <p>
+    All icons, models, and downloadable digital assets are considered
+    delivered immediately upon purchase.
+  </p>
+
+  <p>
+    Once a digital product has been accessed or delivered, the purchase
+    is non-refundable.
+  </p>
+
+  <h2>Custom & Made-to-Order Products</h2>
+  <p>
+    Brand identity kits and other custom-prepared services are non-refundable
+    once work has begun.
+  </p>
+
+  <p>
+    If production has not yet started, a refund may be requested within
+    48 hours of purchase.
+  </p>
+
+  <h2>Exceptions</h2>
+  <ul>
+    <li>Duplicate charges caused by payment error</li>
+    <li>Failure to deliver the purchased asset</li>
+    <li>Corrupted or unusable files that cannot be replaced</li>
+  </ul>
+
+  <h2>Refund Process</h2>
+  <p>
+    Approved refunds are processed through the original payment method
+    via Stripe. Processing times depend on the payment provider.
+  </p>
+
+  <p style="margin-top:1.5rem;color:#64748b;">
+    By completing a purchase, you acknowledge and agree to this refund policy.
   </p>
 </section>
 
 <footer class="site-footer">
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="license.html">License</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
+
   <p>© 2025 BowesProduct</p>
 </footer>
+
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+  });
+</script>
 
 </body>
 </html>
