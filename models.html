@@ -5,110 +5,99 @@
   <title>3D Models – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
-
-  <!-- Shared Styles -->
   <link rel="stylesheet" href="style.css">
 
   <style>
-    .hero {
-      text-align: center;
-      padding: 4rem 2rem;
-    }
+    .hero { text-align:center; padding:4rem 2rem; }
 
     .model-container {
-      max-width: 1100px;
-      height: 600px;
-      margin: 2rem auto;
-      background: #020617;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+      max-width:1100px;
+      height:600px;
+      margin:2rem auto;
+      background:#020617;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 25px 60px rgba(0,0,0,0.35);
     }
 
-    model-viewer {
-      width: 100%;
-      height: 100%;
-    }
+    model-viewer { width:100%; height:100%; }
 
     .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.75rem;
-      margin-top: 2.5rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:1.75rem;
+      margin-top:2.5rem;
     }
 
     .card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 1.5rem;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
+      background:#ffffff;
+      border-radius:14px;
+      padding:1.5rem;
+      text-align:center;
+      box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      transition:transform 0.2s, box-shadow 0.2s;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+      transform:translateY(-4px);
+      box-shadow:0 18px 40px rgba(0,0,0,0.12);
     }
 
     .price {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin: 0.5rem 0 1rem;
+      font-size:1.1rem;
+      font-weight:700;
+      margin:0.5rem 0 1rem;
     }
 
     .delivery {
-      font-size: 0.85rem;
-      color: #475569;
-      margin-top: 0.75rem;
+      font-size:0.85rem;
+      color:#475569;
+      margin-top:0.75rem;
     }
 
     .btn {
-      display: inline-block;
-      width: 100%;
-      margin-top: 0.6rem;
-      padding: 0.65rem 1rem;
-      border-radius: 10px;
-      background: #2563eb;
-      color: #ffffff !important;
-      font-weight: 600;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
+      display:inline-block;
+      width:100%;
+      margin-top:0.6rem;
+      padding:0.65rem 1rem;
+      border-radius:10px;
+      background:#2563eb;
+      color:#ffffff !important;
+      font-weight:600;
+      text-decoration:none;
+      border:none;
+      cursor:pointer;
     }
 
-    .view-btn {
-      background: #0f172a;
-    }
+    .view-btn { background:#0f172a; }
 
     .site-footer {
-      margin-top: 4rem;
-      padding: 2rem 1rem;
-      background: #2563eb;
-      color: white;
+      margin-top:4rem;
+      padding:2rem 1rem;
+      background:#2563eb;
+      color:white;
     }
 
     .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
+      max-width:1200px;
+      margin:auto;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
     }
 
     .footer-nav {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
+      display:flex;
+      gap:1rem;
+      flex-wrap:wrap;
     }
 
     .footer-nav a {
-      color: white;
-      text-decoration: none;
+      color:white;
+      text-decoration:none;
     }
   </style>
 
@@ -147,72 +136,83 @@
 
 <section class="hero">
   <h1>3D Models</h1>
-  <p>Commercial-ready 3D assets with instant download (.glb and .fbx)</p>
+  <p>Commercial-ready 3D assets with instant download (.glb / .fbx)</p>
 </section>
 
 <div class="model-container">
   <model-viewer
     id="mainViewer"
-    src="models/werewolf.glb"
+    src="models/humanmale.glb"
     camera-controls
     auto-rotate
     shadow-intensity="1">
   </model-viewer>
 </div>
 
-<section class="section light" style="max-width:900px;margin:3rem auto;text-align:center;">
-  <h2>Rigged vs Not Rigged</h2>
-  <p style="color:#475569;font-size:0.95rem;line-height:1.6;">
-    Rigged models include a professionally built skeletal setup and are ready for animation.
-    Not rigged models are provided as clean meshes without skeletons, suitable for custom rigs
-    or other production workflows.
-  </p>
-</section>
-
-<!-- RIGGED -->
 <section class="section light">
   <h2 style="text-align:center;">Rigged Models</h2>
+
   <div class="products">
 
-    <div class="card" data-model="models/werewolf.glb">
-      <h3>Werewolf</h3>
-      <p class="price">€9.99</p>
-      <button class="btn view-btn">View Model</button>
-      <a href="https://buy.stripe.com/test_aFa3cu8sD3bO4pc73Q3Je04" target="_blank" class="btn">Buy Model</a>
-      <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
-    </div>
+<!-- FULL RIGGED MODEL LIST -->
+<!-- Humans -->
+<div class="card" data-model="models/humanmale.glb"><h3>Human Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/humanfemale.glb"><h3>Human Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
 
-    <div class="card" data-model="models/giantskeletonbunny.glb">
-      <h3>Giant Skeleton Bunny</h3>
-      <p class="price">€9.99</p>
-      <button class="btn view-btn">View Model</button>
-      <a href="https://buy.stripe.com/test_6oUfZg7oz9Ac6xkfAm3Je07" target="_blank" class="btn">Buy Model</a>
-      <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
-    </div>
+<!-- Serpent -->
+<div class="card" data-model="models/serpentmale.glb"><h3>Serpent Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/serpentfemale.glb"><h3>Serpent Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
 
-  </div>
-</section>
+<!-- Shark -->
+<div class="card" data-model="models/sharkmale.glb"><h3>Shark Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/sharkfemale.glb"><h3>Shark Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
 
-<!-- NOT RIGGED -->
-<section class="section light">
-  <h2 style="text-align:center;">Not Rigged Models</h2>
-  <div class="products">
+<!-- Bat -->
+<div class="card" data-model="models/batmale.glb"><h3>Bat Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/batfemale.glb"><h3>Bat Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
 
-    <div class="card" data-model="models/zombiewerewolf.glb">
-      <h3>Zombie Werewolf</h3>
-      <p class="price">€4.99</p>
-      <button class="btn view-btn">View Model</button>
-      <a href="https://buy.stripe.com/test_cNi4gy9wHh2E9JwgEq3Je05" target="_blank" class="btn">Buy Model</a>
-      <p class="delivery">Instant download · Not rigged · <a href="license.html">License</a></p>
-    </div>
+<!-- Avian -->
+<div class="card" data-model="models/avianmale.glb"><h3>Avian Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/avianfemale.glb"><h3>Avian Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
 
-    <div class="card" data-model="models/giantbunny.glb">
-      <h3>Giant Bunny</h3>
-      <p class="price">€4.99</p>
-      <button class="btn view-btn">View Model</button>
-      <a href="https://buy.stripe.com/test_9B68wO7oz6o0aNAbk63Je06" target="_blank" class="btn">Buy Model</a>
-      <p class="delivery">Instant download · Not rigged · <a href="license.html">License</a></p>
-    </div>
+<!-- Frog -->
+<div class="card" data-model="models/frogmale.glb"><h3>Frog Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/frogfemale.glb"><h3>Frog Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<!-- Crocodile -->
+<div class="card" data-model="models/crocodilemale.glb"><h3>Crocodile Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/crocodilefemale.glb"><h3>Crocodile Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<!-- Hyena -->
+<div class="card" data-model="models/hyenamale.glb"><h3>Hyena Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/hyenafemale.glb"><h3>Hyena Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<!-- Scorpion -->
+<div class="card" data-model="models/scorpionmale.glb"><h3>Scorpion Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/scorpionfemale.glb"><h3>Scorpion Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<!-- Rhino -->
+<div class="card" data-model="models/rhinomale.glb"><h3>Rhino Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/rhinofemale.glb"><h3>Rhino Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<!-- Energy / Alien / Fantasy -->
+<div class="card" data-model="models/energybeingmale.glb"><h3>Energy Being Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/energybeingfemale.glb"><h3>Energy Being Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<div class="card" data-model="models/alienstockymale.glb"><h3>Alien Stocky Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/alienstockyfemale.glb"><h3>Alien Stocky Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<div class="card" data-model="models/elfmale.glb"><h3>Elf Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/elffemale.glb"><h3>Elf Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<div class="card" data-model="models/dwarfmale.glb"><h3>Dwarf Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/dwarffemale.glb"><h3>Dwarf Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<div class="card" data-model="models/orcmale.glb"><h3>Orc Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/orcfemale.glb"><h3>Orc Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+
+<div class="card" data-model="models/goblinmale.glb"><h3>Goblin Male</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
+<div class="card" data-model="models/goblinfemale.glb"><h3>Goblin Female</h3><p class="price">€9.99</p><button class="btn view-btn">View Model</button><a href="#" class="btn">Buy Model</a><p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p></div>
 
   </div>
 </section>
@@ -248,4 +248,3 @@
 
 </body>
 </html>
-
