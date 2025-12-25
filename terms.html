@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Terms – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Terms of service for BowesProduct digital assets, including purchase, usage, and limitations.">
+  <meta name="description" content="Terms of service for BowesProduct digital assets, icons, models, and brand kits.">
 
   <link rel="stylesheet" href="style.css">
 
@@ -13,57 +13,28 @@
     .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
     .logo a { font-weight:700; font-size:1.5rem; color:inherit; text-decoration:none; }
     .main-nav a { margin-left:1rem; text-decoration:none; color:inherit; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
-    .main-nav a:hover, .main-nav a.active { background: rgba(0,0,0,0.05); }
+    .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
     #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
 
-    .hero { text-align:center; padding:4rem 1rem; border-bottom:5px solid #2563eb; }
+    .hero { text-align:center; padding:4rem 1rem; color:white; border-bottom:5px solid #2563eb; }
     .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
     .hero p { font-size:1.25rem; margin:0; }
 
     .section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
-    .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
+    .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; }
     .card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-    .card h3 { margin-top:0; color:#f97316; font-size:1.5rem; }
-    .card ul { margin:0.5rem 0 0 1.5rem; list-style:disc; }
+    .card h3 { margin-top:0; color:#2563eb; font-size:1.5rem; }
+    .card ul { margin:0.5rem 0 0 1.2rem; }
     .card ul li { margin-bottom:0.5rem; }
 
     /* Footer styling */
-    footer { padding:2rem 1rem; margin-top:3rem; }
+    .site-footer { margin-top:3rem; padding:2rem 1rem; color:white; }
     .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
-    .footer-nav a { margin:0.5rem 1rem; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
+    .footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
     .footer-nav a:hover { opacity:0.8; }
 
     @media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
   </style>
-
-  <script>
-    window.onload = () => {
-      const savedTheme = localStorage.getItem("theme") || "theme-emerald";
-      document.body.className = savedTheme;
-
-      const select = document.getElementById("themeSelect");
-      if (select) select.value = savedTheme;
-
-      applyThemeColors(savedTheme);
-    };
-
-    function applyThemeColors(theme) {
-      let primary="#4ade80", secondary="#2563eb"; // default Emerald
-      if(theme==="theme-blue"){ primary="#3b82f6"; secondary="#1e40af"; }
-      if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
-      if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
-
-      const header = document.querySelector(".site-header");
-      const hero = document.querySelector(".hero");
-      const footer = document.querySelector("footer");
-
-      if(header) header.style.background = `linear-gradient(90deg, ${primary}, ${secondary})`;
-      if(hero) hero.style.background = `linear-gradient(to right, ${primary}, ${secondary})`;
-      if(footer) footer.style.background = `linear-gradient(90deg, ${primary}, ${secondary})`;
-      document.querySelectorAll(".main-nav a").forEach(a=>a.style.color="white");
-      document.querySelectorAll(".footer-nav a").forEach(a=>a.style.color="white");
-    }
-  </script>
 </head>
 
 <body>
@@ -75,6 +46,8 @@
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html" class="active">Terms</a>
     </nav>
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
@@ -87,65 +60,91 @@
 
 <section class="hero">
   <h1>Terms of Service</h1>
-  <p>Rules, responsibilities, and limitations for using BowesProduct</p>
+  <p>Rules and guidelines for using BowesProduct services</p>
 </section>
 
 <section class="section">
   <div class="card">
     <h3>Acceptance of Terms</h3>
-    <p>By using BowesProduct, you agree to comply with all terms outlined here. Accessing products constitutes acceptance of these terms.</p>
+    <p>By using BowesProduct, you agree to these terms. Please read them carefully before making a purchase or using our services.</p>
   </div>
 
   <div class="card">
     <h3>Purchases and Payments</h3>
     <ul>
-      <li>All purchases are final unless stated in Refund Policy</li>
-      <li>Payments processed securely via Stripe</li>
-      <li>Users are responsible for maintaining correct billing info</li>
+      <li>All payments are processed securely via Stripe.</li>
+      <li>Prices are in Euros and may change without notice.</li>
+      <li>Access to purchased digital assets is granted after payment confirmation.</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>User Obligations</h3>
+    <h3>Licensing</h3>
     <ul>
-      <li>Do not resell or redistribute assets</li>
-      <li>Use assets only as allowed under License</li>
-      <li>Maintain compliance with applicable laws and copyright rules</li>
+      <li>All assets come with a commercial license.</li>
+      <li>You may use the assets for your own projects or clients.</li>
+      <li>Resale of the assets is prohibited unless explicitly allowed.</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>Limitation of Liability</h3>
-    <p>BowesProduct is not liable for indirect, incidental, or consequential damages. Use assets at your own discretion and ensure license compliance.</p>
-  </div>
-
-  <div class="card">
-    <h3>Modifications</h3>
-    <p>BowesProduct reserves the right to update these Terms at any time. Continued use constitutes acceptance of any changes.</p>
+    <h3>Refunds</h3>
+    <p>Refunds are only available according to our refund policy, see refund.html for details.</p>
   </div>
 
   <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
 </section>
 
-<footer>
+<footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
       <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
+      <a href="terms.html" class="active">Terms</a>
       <a href="license.html">License</a>
-      <a href="refund.html">Refunds</a>
+      <a href="refund.html">Refund</a>
     </nav>
     <p style="text-align:center;">© 2025 BowesProduct</p>
   </div>
 </footer>
 
 <script>
+  function applyThemeColors(theme){
+    let primary="#4ade80", secondary="#2563eb"; // Emerald default
+    if(theme==="theme-blue"){ primary="#3b82f6"; secondary="#1e40af"; }
+    if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
+    if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
+
+    const header = document.querySelector(".site-header");
+    const hero = document.querySelector(".hero");
+    const footer = document.querySelector(".site-footer");
+
+    if(header) header.style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
+    if(hero) hero.style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
+    if(footer) footer.style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
+
+    document.querySelectorAll(".main-nav a").forEach(a=>a.style.color="white");
+    document.querySelectorAll(".footer-nav a").forEach(a=>a.style.color="white");
+  }
+
+  window.onload = () => {
+    const savedTheme = localStorage.getItem("theme") || "theme-emerald";
+    document.body.className = savedTheme;
+
+    const themeSelect = document.getElementById("themeSelect");
+    if(themeSelect) themeSelect.value = savedTheme;
+
+    applyThemeColors(savedTheme);
+  };
+
   const themeSelect = document.getElementById("themeSelect");
-  themeSelect.addEventListener("change", () => {
-    document.body.className = themeSelect.value;
-    localStorage.setItem("theme", themeSelect.value);
-    applyThemeColors(themeSelect.value);
-  });
+  if(themeSelect){
+    themeSelect.addEventListener("change", () => {
+      document.body.className = themeSelect.value;
+      localStorage.setItem("theme", themeSelect.value);
+      applyThemeColors(themeSelect.value);
+    });
+  }
 </script>
 
 </body>
