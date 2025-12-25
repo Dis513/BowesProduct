@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Terms of Service – BowesProduct</title>
+  <title>Terms & Conditions – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 
@@ -13,26 +13,8 @@
     .main-nav a { margin-left:1rem; text-decoration:none; color:inherit; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
     .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
     #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
-
-    .hero { text-align:center; padding:4rem 1rem; color:white; position:relative; overflow:hidden; border-bottom:5px solid #2563eb; }
-    .hero h1, .hero p { position:relative; z-index:2; text-shadow:0 2px 8px rgba(0,0,0,0.7); }
-    .hero h1 { font-size:2.5rem; margin-bottom:0.5rem; }
-    .hero p { font-size:1.1rem; margin:0; }
-    .hero::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.4); z-index:1; }
-
-    .section { max-width:900px; margin:3rem auto; padding:0 1rem; text-align:left; }
-    .card { background:white; border-radius:12px; padding:1.5rem 2rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
-    .card:hover { transform:translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-    .card h3 { font-size:1.5rem; margin:0.5rem 0; color:#2563eb; }
-    .card p, .card ul { color:#1e293b; }
-    .card ul { padding-left:1.2rem; margin-top:0.5rem; }
-    .card ul li { margin-bottom:0.5rem; }
-
-    .btn { background:#2563eb; color:white !important; text-decoration:none; display:inline-block; padding:0.5rem 1rem; border-radius:6px; transition:opacity 0.2s; }
-    .btn.secondary { background:transparent; color:#2563eb !important; border:1px solid #2563eb; }
-    .btn:hover { opacity:0.9; }
-
-    footer { margin-top:4rem; padding:2rem 1rem; color:white; text-align:center; }
+    section { max-width:800px; margin:3rem auto; padding:0 1rem; }
+    footer { margin-top:4rem; padding:2rem 1rem; color:white; }
     .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; gap:1rem; }
     .footer-nav a { color:white; text-decoration:none; font-weight:500; transition:opacity 0.2s; }
     .footer-nav a:hover { opacity:0.8; }
@@ -45,7 +27,6 @@
       if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
       if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
       document.querySelector(".site-header").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
-      document.querySelector(".hero").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelector("footer").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelectorAll(".main-nav a").forEach(a=>a.style.color="white");
       document.querySelectorAll(".footer-nav a").forEach(a=>a.style.color="white");
@@ -62,7 +43,6 @@
 </head>
 
 <body>
-
 <header class="site-header">
   <div class="header-inner">
     <div class="logo"><a href="index.html">BowesProduct</a></div>
@@ -81,36 +61,21 @@
   </div>
 </header>
 
-<section class="hero">
-  <h1>Terms of Service</h1>
-  <p>Rules and guidelines for using BowesProduct services and assets.</p>
+<section>
+  <h1>Terms & Conditions</h1>
+  <p>By using our website, you agree to abide by the following terms and conditions:</p>
+  
+  <h2>General Terms</h2>
+  <p>You must be at least 18 years old to purchase our assets. All intellectual property rights to our assets remain with BowesProduct.</p>
+
+  <h2>Refund Policy</h2>
+  <p>Due to the nature of our products, refunds are not available once a purchase has been made.</p>
+
+  <h2>Changes to Terms</h2>
+  <p>We reserve the right to modify these terms at any time. Any changes will be reflected on this page.</p>
 </section>
 
-<section class="section">
-  <div class="card">
-    <h3>Use of Assets</h3>
-    <p>All digital products purchased from BowesProduct are licensed for commercial use according to the included license. Redistribution or resale is prohibited unless explicitly stated.</p>
-  </div>
-
-  <div class="card">
-    <h3>Payments</h3>
-    <p>Payments are processed securely via Stripe. Access to purchased assets is granted after successful payment confirmation.</p>
-  </div>
-
-  <div class="card">
-    <h3>Refund Policy</h3>
-    <p>Refunds are provided only under the conditions described in our refund policy. Please review that page before making a purchase.</p>
-  </div>
-
-  <div class="card">
-    <h3>Liability</h3>
-    <p>BowesProduct is not liable for damages arising from use of our products beyond the intended use as described in the license.</p>
-  </div>
-
-  <p style="margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 25 December 2025</p>
-</section>
-
-<footer class="site-footer">
+<footer>
   <div class="footer-inner">
     <nav class="footer-nav">
       <a href="about.html">About</a>
@@ -131,6 +96,5 @@
     applyThemeColors(themeSelect.value);
   });
 </script>
-
 </body>
 </html>
