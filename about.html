@@ -4,45 +4,38 @@
   <meta charset="UTF-8">
   <title>About – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="About BowesProduct: commercial-ready digital assets for designers, developers, and businesses.">
-
   <link rel="stylesheet" href="style.css">
 
   <style>
-    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
+    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; text-align:center; }
     .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
     .logo a { font-weight:700; font-size:1.5rem; color:inherit; text-decoration:none; }
     .main-nav a { margin-left:1rem; text-decoration:none; color:inherit; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
-    .main-nav a:hover { background: rgba(0,0,0,0.05); }
+    .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
     #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
 
-    .hero { text-align:center; padding:6rem 1rem; color:white; position:relative; overflow:hidden; border-bottom:5px solid #2563eb; }
+    .hero { text-align:center; padding:4rem 1rem; color:white; position:relative; overflow:hidden; border-bottom:5px solid #2563eb; }
     .hero h1, .hero p { position:relative; z-index:2; text-shadow:0 2px 8px rgba(0,0,0,0.7); }
-    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
-    .hero p { font-size:1.25rem; margin:0; }
-    .hero::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.5); z-index:1; }
+    .hero h1 { font-size:2.5rem; margin-bottom:0.5rem; }
+    .hero p { font-size:1.1rem; margin:0; }
+    .hero::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.4); z-index:1; }
 
-    .hero .circle1, .hero .circle2 { position:absolute; border-radius:50%; opacity:0.3; z-index:0; animation: float 20s linear infinite; }
-    .hero .circle1 { width:700px; height:700px; background:radial-gradient(circle at 30% 30%, #4ade80, transparent 70%); top:-200px; left:-200px; }
-    .hero .circle2 { width:900px; height:900px; background:radial-gradient(circle at 70% 70%, #2563eb, transparent 70%); bottom:-300px; right:-300px; animation-duration:25s; }
-
-    @keyframes float { 0% {transform:translate(0,0) rotate(0deg);} 50% {transform:translate(50px,-50px) rotate(180deg);} 100% {transform:translate(0,0) rotate(360deg);} }
-
-    .section { max-width:900px; margin:3rem auto; padding:0 1rem; }
+    .section { max-width:900px; margin:3rem auto; padding:0 1rem; text-align:left; }
     .card { background:white; border-radius:12px; padding:1.5rem 2rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
     .card:hover { transform:translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-    .card h3 { color:#f97316; font-size:1.6rem; margin-top:0; margin-bottom:1rem; font-weight:700; }
-    .card p, .card ul { margin:0; }
-    .card ul { padding-left:1.5rem; list-style:disc; margin-top:0; font-size:1.05rem; line-height:1.6; color:#1e293b; }
-    .card ul li { margin-bottom:0.6rem; }
+    .card h3 { font-size:1.5rem; margin:0.5rem 0; color:#2563eb; }
+    .card p, .card ul { color:#1e293b; }
+    .card ul { padding-left:1.2rem; margin-top:0.5rem; }
+    .card ul li { margin-bottom:0.5rem; }
 
-    /* Footer */
-    footer { margin-top:4rem; padding:2rem 1rem; color:white; }
-    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
-    .footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
+    .btn { background:#2563eb; color:white !important; text-decoration:none; display:inline-block; padding:0.5rem 1rem; border-radius:6px; transition:opacity 0.2s; }
+    .btn.secondary { background:transparent; color:#2563eb !important; border:1px solid #2563eb; }
+    .btn:hover { opacity:0.9; }
+
+    footer { margin-top:4rem; padding:2rem 1rem; color:white; text-align:center; }
+    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; gap:1rem; }
+    .footer-nav a { color:white; text-decoration:none; font-weight:500; transition:opacity 0.2s; }
     .footer-nav a:hover { opacity:0.8; }
-
-    @media(max-width:768px){ .main-nav a { margin-left:0.5rem; margin-right:0.5rem; } }
   </style>
 
   <script>
@@ -51,9 +44,8 @@
       if(theme==="theme-blue"){ primary="#3b82f6"; secondary="#1e40af"; }
       if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
       if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
-
       document.querySelector(".site-header").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
-      document.querySelector(".hero").style.background=`linear-gradient(to right, ${primary}, ${secondary})`;
+      document.querySelector(".hero").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelector("footer").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelectorAll(".main-nav a").forEach(a=>a.style.color="white");
       document.querySelectorAll(".footer-nav a").forEach(a=>a.style.color="white");
@@ -71,84 +63,83 @@
 
 <body>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo"><a href="index.html">BowesProduct</a></div>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="icons.html">Icons</a>
-        <a href="models.html">Models</a>
-      </nav>
-      <select id="themeSelect">
-        <option value="theme-emerald">Emerald</option>
-        <option value="theme-blue">Blue</option>
-        <option value="theme-violet">Violet</option>
-        <option value="theme-amber">Amber</option>
-      </select>
-    </div>
-  </header>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo"><a href="index.html">BowesProduct</a></div>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html">Models</a>
+      <a href="about.html" class="active">About</a>
+    </nav>
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
+  </div>
+</header>
 
-  <section class="hero">
-    <h1>BowesProduct</h1>
-    <p>Commercial-ready digital assets for designers, developers, and businesses.</p>
-    <div class="circle1"></div>
-    <div class="circle2"></div>
-  </section>
+<section class="hero">
+  <h1>About BowesProduct</h1>
+  <p>Commercial-ready digital assets for designers, developers, and businesses.</p>
+</section>
 
-  <section class="section">
-    <div class="card">
-      <h3>Our Mission</h3>
-      <p>BowesProduct creates digital assets that are production-ready, professionally designed, and licensed for commercial use. We focus on clarity, usability, and delivering assets that save you time and money.</p>
-    </div>
+<section class="section">
+  <div class="card">
+    <h3>Our Mission</h3>
+    <p>BowesProduct creates digital assets that are production-ready, professionally designed, and licensed for commercial use. We focus on clarity, usability, and delivering assets that save you time and money.</p>
+  </div>
 
-    <div class="card">
-      <h3>Our Philosophy</h3>
-      <p>We believe in clean, consistent, and scalable digital assets. Every product is designed for real-world use, with commercial licensing made simple and transparent.</p>
-    </div>
+  <div class="card">
+    <h3>Our Philosophy</h3>
+    <p>We believe in clean, consistent, and scalable digital assets. Every product is designed for real-world use, with commercial licensing made simple and transparent.</p>
+  </div>
 
-    <div class="card">
-      <h3>Who We Serve</h3>
-      <ul>
-        <li>Designers looking for ready-made icons and branding assets</li>
-        <li>Developers needing SVGs and 3D models for projects</li>
-        <li>Businesses who want professional brand identity kits</li>
-      </ul>
-    </div>
+  <div class="card">
+    <h3>Who We Serve</h3>
+    <ul>
+      <li>Designers looking for ready-made icons and branding assets</li>
+      <li>Developers needing SVGs and 3D models for projects</li>
+      <li>Businesses who want professional brand identity kits</li>
+    </ul>
+  </div>
 
-    <div class="card">
-      <h3>Why Choose Us</h3>
-      <ul>
-        <li>High-quality, pixel-perfect SVGs and 3D models</li>
-        <li>Clear commercial license with no hidden terms</li>
-        <li>Themeable site interface to preview products in different styles</li>
-        <li>Responsive customer support and fast delivery</li>
-      </ul>
-    </div>
+  <div class="card">
+    <h3>Why Choose Us</h3>
+    <ul>
+      <li>High-quality, pixel-perfect SVGs and 3D models</li>
+      <li>Clear commercial license with no hidden terms</li>
+      <li>Themeable site interface to preview products in different styles</li>
+      <li>Responsive customer support and fast delivery</li>
+    </ul>
+  </div>
 
-    <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
-  </section>
+  <p style="margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 25 December 2025</p>
+</section>
 
-  <footer>
-    <div class="footer-inner">
-      <nav class="footer-nav">
-        <a href="about.html">About</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="license.html">License</a>
-        <a href="refund.html">Refund</a>
-      </nav>
-      <p style="text-align:center;">© 2025 BowesProduct</p>
-    </div>
-  </footer>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
 
-  <script>
-    const themeSelect = document.getElementById("themeSelect");
-    themeSelect.addEventListener("change", () => {
-      document.body.className = themeSelect.value;
-      localStorage.setItem("theme", themeSelect.value);
-      applyThemeColors(themeSelect.value);
-    });
-  </script>
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+    applyThemeColors(themeSelect.value);
+  });
+</script>
 
 </body>
 </html>
