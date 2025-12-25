@@ -2,20 +2,155 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Terms – BowesProduct</title>
+  <title>Privacy – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Terms of service for BowesProduct digital assets, icons, models, and brand kits.">
+  <meta name="description" content="Privacy policy explaining how BowesProduct collects, uses, and protects your information.">
 
   <link rel="stylesheet" href="style.css">
 
   <style>
-    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
-    /* Same styling as in privacy.html */
-    /* ... (reuse the same CSS from privacy.html) ... */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafb;
+      color: #1e293b;
+      margin: 0;
+    }
+
+    .header-inner,
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo a {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #1e293b;
+      text-decoration: none;
+    }
+
+    .main-nav a {
+      margin-left: 1rem;
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 500;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .main-nav a:hover,
+    .main-nav a.active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    #themeSelect {
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 500;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem;
+      background: linear-gradient(to right, #34d399, #60a5fa);
+      color: #1e293b;
+      border-bottom: 5px solid #2563eb;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .section {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #10b981;
+      font-size: 1.5rem;
+    }
+
+    .card ul {
+      margin: 0.5rem 0 0 1.5rem;
+    }
+
+    .card ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* FOOTER (MATCHES HOMEPAGE) */
+    .site-footer {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
+    }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .footer-nav a:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .main-nav a {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+      }
+    }
   </style>
 
+  <!-- Load saved theme -->
   <script>
-    // Same script as privacy.html
+    window.onload = () => {
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
+    };
   </script>
 </head>
 
@@ -24,12 +159,14 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo"><a href="index.html">BowesProduct</a></div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
-      <a href="terms.html" class="active">Terms</a>
+      <a href="privacy.html" class="active">Privacy</a>
     </nav>
+
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
       <option value="theme-blue">Blue</option>
@@ -40,67 +177,73 @@
 </header>
 
 <section class="hero">
-  <h1>Terms of Service</h1>
-  <p>Rules and regulations for using BowesProduct services</p>
+  <h1>Privacy Policy</h1>
+  <p>How we collect, use, and protect your information</p>
 </section>
 
 <section class="section">
+
   <div class="card">
-    <h3>Acceptance of Terms</h3>
+    <h3>Information We Collect</h3>
     <ul>
-      <li>By accessing this site, you agree to these terms and conditions.</li>
-      <li>We may update these terms at any time; continued use constitutes acceptance.</li>
+      <li>Basic contact information when you communicate with us</li>
+      <li>Purchase details processed securely via Stripe</li>
+      <li>Anonymous analytics data to improve site performance</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>Purchases and Payments</h3>
+    <h3>How We Use Information</h3>
     <ul>
-      <li>All purchases are final unless otherwise stated in the Refund Policy.</li>
-      <li>Payments are processed securely through Stripe.</li>
-      <li>We do not store sensitive payment information on our servers.</li>
+      <li>To process transactions and deliver purchased assets</li>
+      <li>To respond to customer inquiries and support requests</li>
+      <li>To improve website functionality and content</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>License and Usage</h3>
+    <h3>Payment Security</h3>
     <ul>
-      <li>Purchased assets are for commercial or personal use according to the license.</li>
-      <li>Redistribution or resale of assets without permission is prohibited.</li>
-      <li>License details can be viewed on the <a href="license.html">License page</a>.</li>
+      <li>All payments are handled by Stripe</li>
+      <li>We never store credit card or banking details</li>
+      <li>Stripe complies with PCI-DSS standards</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>User Responsibilities</h3>
+    <h3>Cookies & Analytics</h3>
     <ul>
-      <li>You must comply with all applicable laws when using the products.</li>
-      <li>Do not attempt to hack, copy, or modify the site unlawfully.</li>
-      <li>Report any security vulnerabilities responsibly.</li>
+      <li>Cookies may be used for basic site functionality</li>
+      <li>Anonymous analytics help us understand site usage</li>
+      <li>You can disable cookies in your browser settings</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>Limitation of Liability</h3>
+    <h3>Your Rights</h3>
     <ul>
-      <li>BowesProduct is not responsible for indirect damages from using our assets.</li>
-      <li>We strive to ensure content quality, but assets are provided “as is.”</li>
+      <li>You may request access to or deletion of your data</li>
+      <li>You may contact us with privacy-related questions</li>
+      <li>We comply with applicable data protection regulations</li>
     </ul>
   </div>
 
-  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
+  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">
+    Last updated: 1 January 2025
+  </p>
+
 </section>
 
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
       <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html" class="active">Terms</a>
+      <a href="privacy.html" class="active">Privacy</a>
+      <a href="terms.html">Terms</a>
       <a href="license.html">License</a>
-      <a href="refund.html">Refunds</a>
+      <a href="refund.html">Refund</a>
     </nav>
-    <p style="text-align:center;">© 2025 BowesProduct</p>
+    <p>© 2025 BowesProduct</p>
   </div>
 </footer>
 
