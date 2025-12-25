@@ -5,33 +5,52 @@
   <title>3D Models – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Shared styles -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Model Viewer (GLB only – FBX is delivered, not previewed) -->
+  <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
-  <script>
-    window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
-    };
-  </script>
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Ensure footer never disappears */
-    .models-grid {
-      padding-bottom: 4rem;
+    /* ===== SAFETY FIXES (DO NOT BREAK THEMES) ===== */
+
+    .btn {
+      color: #ffffff !important;
+      background: var(--primary);
     }
 
+    .btn:hover {
+      opacity: 0.95;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary) !important;
+    }
+
+    .price {
+      color: var(--primary);
+    }
+
+    /* Cards */
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.4rem;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    /* Model Viewer container */
     .model-container {
-      width: 100%;
       max-width: 1100px;
       height: 620px;
       margin: 2.5rem auto;
       background: #020617;
       border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.35);
     }
 
     model-viewer {
@@ -39,76 +58,65 @@
       height: 100%;
     }
 
-    .models-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    .grid {
+    /* Products grid */
+    .products {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 2rem;
+      margin-top: 2rem;
     }
 
-    .grid-item {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 1.6rem;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    /* License text inside cards */
+    .license-note {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      color: #475569;
     }
 
-    .grid-item h3 {
-      margin-bottom: 0.5rem;
-      font-size: 1.3rem;
+    .license-note a {
+      color: var(--primary);
+      text-decoration: underline;
     }
 
-    .model-meta {
-      font-size: 0.9rem;
-      opacity: 0.75;
+    /* Footer (always visible + readable) */
+    .site-footer {
+      margin-top: 4rem;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.4rem;
       margin-bottom: 1rem;
     }
 
-    .btn-view {
-      display: inline-block;
-      width: 100%;
-      margin-top: 0.6rem;
-      padding: 0.8rem;
-      background: var(--primary);
-      color: white;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-view:hover {
-      background: color-mix(in srgb, var(--primary) 90%, black);
-    }
-
-    .btn-buy {
-      display: inline-block;
-      width: 100%;
-      margin-top: 0.6rem;
-      padding: 0.8rem;
-      background: #10b981;
-      color: white;
-      border-radius: 10px;
-      font-weight: 700;
+    .footer-nav a {
+      color: #e5e7eb;
       text-decoration: none;
+      font-weight: 500;
     }
 
-    .btn-buy:hover {
-      background: #059669;
+    .footer-nav a:hover {
+      text-decoration: underline;
     }
 
+    /* Mobile */
     @media (max-width: 768px) {
       .model-container {
         height: 420px;
       }
     }
   </style>
+
+  <script>
+    window.onload = () => {
+      document.body.className = localStorage.getItem("theme") || "theme-emerald";
+    };
+  </script>
 </head>
 
 <body>
@@ -116,20 +124,29 @@
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">BowesProduct</div>
+    <div class="logo">
+      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
+    </div>
 
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html" class="active">Models</a>
     </nav>
+
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
   <h1>3D Models</h1>
-  <p>Production-ready assets for games, apps & visualization</p>
+  <p>Commercial-ready 3D assets · GLB preview · FBX included</p>
 </section>
 
 <!-- MODEL VIEWER -->
@@ -138,7 +155,6 @@
     <model-viewer
       id="mainViewer"
       src="models/werewolf.glb"
-      alt="3D Model Preview"
       camera-controls
       auto-rotate
       shadow-intensity="1">
@@ -150,45 +166,74 @@
 </section>
 
 <!-- MODELS GRID -->
-<section class="models-grid">
-  <h2 style="text-align:center;margin-bottom:2rem;">Available Models</h2>
+<section class="section light">
+  <h2>Available Models</h2>
 
-  <div class="grid">
+  <div class="products">
 
-    <div class="grid-item" data-model="models/werewolf.glb">
+    <!-- CARD TEMPLATE -->
+    <div class="card" data-model="models/werewolf.glb">
       <h3>Werewolf</h3>
-      <div class="model-meta">GLB preview · GLB + FBX download</div>
-      <button class="btn-view">View Model</button>
-      <a class="btn-buy" href="https://buy.stripe.com/test_aFa3cu8sD3bO4pc73Q3Je04" target="_blank">
-        Buy Model — €10
+      <p class="price">€10</p>
+
+      <button class="btn view-btn">View Model</button>
+
+      <a href="https://buy.stripe.com/test_aFa3cu8sD3bO4pc73Q3Je04" target="_blank" class="btn">
+        Buy Model
       </a>
+
+      <div class="license-note">
+        GLB + FBX · Commercial license ·
+        <a href="license.html">View license</a>
+      </div>
     </div>
 
-    <div class="grid-item" data-model="models/zombiewerewolf.glb">
+    <div class="card" data-model="models/zombiewerewolf.glb">
       <h3>Zombie Werewolf</h3>
-      <div class="model-meta">GLB preview · GLB + FBX download</div>
-      <button class="btn-view">View Model</button>
-      <a class="btn-buy" href="https://buy.stripe.com/test_cNi4gy9wHh2E9JwgEq3Je05" target="_blank">
-        Buy Model — €10
+      <p class="price">€10</p>
+
+      <button class="btn view-btn">View Model</button>
+
+      <a href="https://buy.stripe.com/test_cNi4gy9wHh2E9JwgEq3Je05" target="_blank" class="btn">
+        Buy Model
       </a>
+
+      <div class="license-note">
+        GLB + FBX · Commercial license ·
+        <a href="license.html">View license</a>
+      </div>
     </div>
 
-    <div class="grid-item" data-model="models/giantbunny.glb">
+    <div class="card" data-model="models/giantbunny.glb">
       <h3>Giant Bunny</h3>
-      <div class="model-meta">GLB preview · GLB + FBX download</div>
-      <button class="btn-view">View Model</button>
-      <a class="btn-buy" href="https://buy.stripe.com/test_9B68wO7oz6o0aNAbk63Je06" target="_blank">
-        Buy Model — €10
+      <p class="price">€10</p>
+
+      <button class="btn view-btn">View Model</button>
+
+      <a href="https://buy.stripe.com/test_9B68wO7oz6o0aNAbk63Je06" target="_blank" class="btn">
+        Buy Model
       </a>
+
+      <div class="license-note">
+        GLB + FBX · Commercial license ·
+        <a href="license.html">View license</a>
+      </div>
     </div>
 
-    <div class="grid-item" data-model="models/giantskeletonbunny.glb">
+    <div class="card" data-model="models/giantskeletonbunny.glb">
       <h3>Giant Skeleton Bunny</h3>
-      <div class="model-meta">GLB preview · GLB + FBX download</div>
-      <button class="btn-view">View Model</button>
-      <a class="btn-buy" href="https://buy.stripe.com/test_6oUfZg7oz9Ac6xkfAm3Je07" target="_blank">
-        Buy Model — €10
+      <p class="price">€10</p>
+
+      <button class="btn view-btn">View Model</button>
+
+      <a href="https://buy.stripe.com/test_6oUfZg7oz9Ac6xkfAm3Je07" target="_blank" class="btn">
+        Buy Model
       </a>
+
+      <div class="license-note">
+        GLB + FBX · Commercial license ·
+        <a href="license.html">View license</a>
+      </div>
     </div>
 
   </div>
@@ -201,21 +246,30 @@
     <a href="privacy.html">Privacy</a>
     <a href="terms.html">Terms</a>
     <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
+    <a href="refund.html">Refund</a>
   </div>
-  <p>© 2025 BowesProduct</p>
+  <p style="text-align:center;">© 2025 BowesProduct</p>
 </footer>
 
-<!-- SCRIPTS -->
+<!-- JS -->
 <script>
-  const viewer = document.getElementById('mainViewer');
+  const viewer = document.getElementById("mainViewer");
 
-  document.querySelectorAll('.grid-item').forEach(item => {
-    item.querySelector('.btn-view').addEventListener('click', () => {
-      viewer.setAttribute('src', item.dataset.model);
+  document.querySelectorAll(".view-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const model = btn.closest(".card").dataset.model;
+      viewer.src = model;
       viewer.reload();
-      window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
+      window.scrollTo({ top: viewer.offsetTop - 80, behavior: "smooth" });
     });
+  });
+
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.value = document.body.className;
+
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
   });
 </script>
 
