@@ -17,7 +17,7 @@
       overflow-x: hidden;
     }
 
-    /* Hero Section with animated gradient */
+    /* Hero Section with readable text */
     .hero {
       text-align: center;
       padding: 6rem 1rem;
@@ -29,6 +29,7 @@
     .hero h1, .hero p {
       position: relative;
       z-index: 2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
     }
     .hero h1 {
       font-size: 3rem;
@@ -39,23 +40,31 @@
       margin: 0;
     }
 
-    /* Animated background circles */
-    .hero::before, .hero::after {
+    /* Overlay behind text */
+    .hero::before {
       content: "";
       position: absolute;
-      border-radius: 50%;
-      opacity: 0.4;
+      inset: 0;
+      background: rgba(0,0,0,0.5); /* Darker overlay for readability */
       z-index: 1;
+    }
+
+    /* Animated background circles */
+    .hero .circle1, .hero .circle2 {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.3;
+      z-index: 0;
       animation: float 20s linear infinite;
     }
-    .hero::before {
+    .hero .circle1 {
       width: 700px;
       height: 700px;
       background: radial-gradient(circle at 30% 30%, #4ade80, transparent 70%);
       top: -200px;
       left: -200px;
     }
-    .hero::after {
+    .hero .circle2 {
       width: 900px;
       height: 900px;
       background: radial-gradient(circle at 70% 70%, #2563eb, transparent 70%);
@@ -116,7 +125,7 @@
       margin-bottom:0.6rem;
     }
 
-    /* Footer */
+    /* Footer (dark, like models page) */
     .site-footer {
       margin-top: 4rem;
       padding: 2rem 1rem;
@@ -208,6 +217,8 @@
   <section class="hero">
     <h1>BowesProduct</h1>
     <p>Commercial-ready digital assets for designers, developers, and businesses.</p>
+    <div class="circle1"></div>
+    <div class="circle2"></div>
   </section>
 
   <!-- ABOUT SECTION -->
