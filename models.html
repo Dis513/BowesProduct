@@ -5,111 +5,197 @@
   <title>3D Models – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+
+  <!-- Main Styles -->
   <link rel="stylesheet" href="style.css">
 
+  <!-- Theme load (FIXED) -->
   <script>
     window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+      const savedTheme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = savedTheme;
     };
   </script>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo"><a href="index.html">BowesProduct</a></div>
+    <div class="logo">
+      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
+    </div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html" class="active">Models</a>
     </nav>
+
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
-  <h1>3D Models</h1>
-  <p>Preview models and purchase commercial licenses</p>
+  <h1>3D Model Library</h1>
+  <p>Commercial-ready 3D assets with included license</p>
 </section>
 
-<section style="max-width:1100px;margin:2rem auto;">
-  <model-viewer
-    id="viewer"
-    src="models/werewolf.glb"
-    camera-controls
-    auto-rotate
-    style="width:100%;height:600px;background:#020617;border-radius:20px;">
-  </model-viewer>
+<!-- MODEL VIEWER -->
+<section>
+  <div class="model-container">
+    <model-viewer
+      id="mainViewer"
+      src="models/werewolf.glb"
+      alt="3D Model Viewer"
+      camera-controls
+      auto-rotate
+      shadow-intensity="1"
+      style="background:#020617;">
+      <div slot="progress-bar" class="progress-message">
+        Loading model…
+      </div>
+    </model-viewer>
+  </div>
 </section>
 
-<section class="section">
+<!-- MODELS GRID -->
+<section class="section light">
+  <h2>Available Models</h2>
+
   <div class="products">
 
+    <!-- Werewolf -->
     <div class="card" data-model="models/werewolf.glb">
       <h3>Werewolf</h3>
       <p class="price">€10</p>
-      <button class="btn view">View</button>
-      <a class="btn"
-         href="https://buy.stripe.com/test_aFa3cu8sD3bO4pc73Q3Je04"
-         target="_blank"
-         rel="noopener">
-        Buy
+
+      <button class="btn view-btn">View Model</button>
+
+      <a
+        href="https://buy.stripe.com/test_aFa3cu8sD3bO4pc73Q3Je04"
+        target="_blank"
+        class="btn">
+        Buy Model
       </a>
+
+      <p class="delivery">
+        ✔ Instant download<br>
+        ✔ Commercial license included<br>
+        <a href="license.html">View license</a>
+      </p>
     </div>
 
+    <!-- Zombie Werewolf -->
     <div class="card" data-model="models/zombiewerewolf.glb">
       <h3>Zombie Werewolf</h3>
       <p class="price">€10</p>
-      <button class="btn view">View</button>
-      <a class="btn"
-         href="https://buy.stripe.com/test_cNi4gy9wHh2E9JwgEq3Je05"
-         target="_blank"
-         rel="noopener">
-        Buy
+
+      <button class="btn view-btn">View Model</button>
+
+      <a
+        href="https://buy.stripe.com/test_cNi4gy9wHh2E9JwgEq3Je05"
+        target="_blank"
+        class="btn">
+        Buy Model
       </a>
+
+      <p class="delivery">
+        ✔ Instant download<br>
+        ✔ Commercial license included<br>
+        <a href="license.html">View license</a>
+      </p>
     </div>
 
+    <!-- Giant Bunny -->
     <div class="card" data-model="models/giantbunny.glb">
       <h3>Giant Bunny</h3>
       <p class="price">€10</p>
-      <button class="btn view">View</button>
-      <a class="btn"
-         href="https://buy.stripe.com/test_9B68wO7oz6o0aNAbk63Je06"
-         target="_blank"
-         rel="noopener">
-        Buy
+
+      <button class="btn view-btn">View Model</button>
+
+      <a
+        href="https://buy.stripe.com/test_9B68wO7oz6o0aNAbk63Je06"
+        target="_blank"
+        class="btn">
+        Buy Model
       </a>
+
+      <p class="delivery">
+        ✔ Instant download<br>
+        ✔ Commercial license included<br>
+        <a href="license.html">View license</a>
+      </p>
     </div>
 
-    <div class="card" data-model="models/giantzombiebunny.glb">
-      <h3>Giant Zombie Bunny</h3>
+    <!-- Giant Skeleton Bunny -->
+    <div class="card" data-model="models/giantskeletonbunny.glb">
+      <h3>Giant Skeleton Bunny</h3>
       <p class="price">€10</p>
-      <button class="btn view">View</button>
-      <a class="btn"
-         href="https://buy.stripe.com/test_6oUfZg7oz9Ac6xkfAm3Je07"
-         target="_blank"
-         rel="noopener">
-        Buy
+
+      <button class="btn view-btn">View Model</button>
+
+      <a
+        href="https://buy.stripe.com/test_6oUfZg7oz9Ac6xkfAm3Je07"
+        target="_blank"
+        class="btn">
+        Buy Model
       </a>
+
+      <p class="delivery">
+        ✔ Instant download<br>
+        ✔ Commercial license included<br>
+        <a href="license.html">View license</a>
+      </p>
     </div>
 
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="site-footer">
-  <p>© 2025 BowesProduct</p>
+  <nav class="footer-nav">
+    <a href="index.html">Home</a>
+    <a href="icons.html">Icons</a>
+    <a href="models.html">Models</a>
+    <a href="license.html">License</a>
+  </nav>
+
+  <p class="copyright">
+    Secure payments powered by Stripe<br>
+    © 2025 BowesProduct
+  </p>
 </footer>
 
+<!-- SCRIPTS -->
 <script>
-  const viewer = document.getElementById("viewer");
+  // Theme selector
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.value = document.body.className;
 
-  document.querySelectorAll(".card").forEach(card => {
-    card.querySelector(".view").onclick = () => {
-      viewer.src = card.dataset.model;
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+  });
+
+  // Model switching (FIXED — always works)
+  const viewer = document.getElementById("mainViewer");
+  document.querySelectorAll(".view-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const model = btn.closest(".card").dataset.model;
+      viewer.src = model;
       viewer.reload();
-      window.scrollTo({ top: 200, behavior: "smooth" });
-    };
+      window.scrollTo({ top: viewer.offsetTop - 80, behavior: "smooth" });
+    });
   });
 </script>
 
