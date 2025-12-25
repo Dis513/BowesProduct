@@ -13,26 +13,8 @@
     .main-nav a { margin-left:1rem; text-decoration:none; color:inherit; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
     .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
     #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
-
-    .hero { text-align:center; padding:4rem 1rem; color:white; position:relative; overflow:hidden; border-bottom:5px solid #2563eb; }
-    .hero h1, .hero p { position:relative; z-index:2; text-shadow:0 2px 8px rgba(0,0,0,0.7); }
-    .hero h1 { font-size:2.5rem; margin-bottom:0.5rem; }
-    .hero p { font-size:1.1rem; margin:0; }
-    .hero::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.4); z-index:1; }
-
-    .section { max-width:900px; margin:3rem auto; padding:0 1rem; text-align:left; }
-    .card { background:white; border-radius:12px; padding:1.5rem 2rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
-    .card:hover { transform:translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-    .card h3 { font-size:1.5rem; margin:0.5rem 0; color:#2563eb; }
-    .card p, .card ul { color:#1e293b; }
-    .card ul { padding-left:1.2rem; margin-top:0.5rem; }
-    .card ul li { margin-bottom:0.5rem; }
-
-    .btn { background:#2563eb; color:white !important; text-decoration:none; display:inline-block; padding:0.5rem 1rem; border-radius:6px; transition:opacity 0.2s; }
-    .btn.secondary { background:transparent; color:#2563eb !important; border:1px solid #2563eb; }
-    .btn:hover { opacity:0.9; }
-
-    footer { margin-top:4rem; padding:2rem 1rem; color:white; text-align:center; }
+    section { max-width:800px; margin:3rem auto; padding:0 1rem; }
+    footer { margin-top:4rem; padding:2rem 1rem; color:white; }
     .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; gap:1rem; }
     .footer-nav a { color:white; text-decoration:none; font-weight:500; transition:opacity 0.2s; }
     .footer-nav a:hover { opacity:0.8; }
@@ -45,7 +27,6 @@
       if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
       if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
       document.querySelector(".site-header").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
-      document.querySelector(".hero").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelector("footer").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelectorAll(".main-nav a").forEach(a=>a.style.color="white");
       document.querySelectorAll(".footer-nav a").forEach(a=>a.style.color="white");
@@ -62,7 +43,6 @@
 </head>
 
 <body>
-
 <header class="site-header">
   <div class="header-inner">
     <div class="logo"><a href="index.html">BowesProduct</a></div>
@@ -81,40 +61,21 @@
   </div>
 </header>
 
-<section class="hero">
+<section>
   <h1>Privacy Policy</h1>
-  <p>Your data, your rights — how we handle your information at BowesProduct.</p>
+  <p>At BowesProduct, we value your privacy. This privacy policy outlines the information we collect, how it's used, and your rights as a user.</p>
+  
+  <h2>Information We Collect</h2>
+  <p>We collect personal information when you use our website, place orders, or sign up for our newsletter. This includes your name, email address, and payment details.</p>
+
+  <h2>How We Use Your Information</h2>
+  <p>We use your personal information to process orders, improve our services, and send you promotional content if you opt-in. We do not sell your information to third parties.</p>
+
+  <h2>Your Rights</h2>
+  <p>You have the right to access, correct, or delete your personal information. You can also opt-out of marketing communications at any time.</p>
 </section>
 
-<section class="section">
-  <div class="card">
-    <h3>Information Collection</h3>
-    <p>We collect minimal personal data needed to process orders and provide services. This may include name, email, and payment information.</p>
-  </div>
-
-  <div class="card">
-    <h3>Data Usage</h3>
-    <p>We only use your data to deliver purchased products, provide support, and improve our services. We do not sell or share your information with third parties for marketing purposes.</p>
-  </div>
-
-  <div class="card">
-    <h3>Cookies</h3>
-    <p>Our website may use cookies for site functionality and analytics, but personal identification via cookies is never shared.</p>
-  </div>
-
-  <div class="card">
-    <h3>Your Rights</h3>
-    <ul>
-      <li>Access and review your personal data</li>
-      <li>Request corrections or deletions</li>
-      <li>Opt-out of marketing communications</li>
-    </ul>
-  </div>
-
-  <p style="margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 25 December 2025</p>
-</section>
-
-<footer class="site-footer">
+<footer>
   <div class="footer-inner">
     <nav class="footer-nav">
       <a href="about.html">About</a>
@@ -135,6 +96,5 @@
     applyThemeColors(themeSelect.value);
   });
 </script>
-
 </body>
 </html>
