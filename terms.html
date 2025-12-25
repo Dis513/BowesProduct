@@ -1,168 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Terms – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Terms of service for BowesProduct digital assets, including purchase, usage, and limitations.">
+<meta charset="UTF-8">
+<title>Terms – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Terms of service for BowesProduct digital assets, including purchase, usage, and limitations.">
+<link rel="stylesheet" href="style.css">
 
-  <link rel="stylesheet" href="style.css">
+<style>
+body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
 
-  <style>
-    body {
-      font-family:'Segoe UI',sans-serif;
-      background:#f9fafb;
-      color:#1e293b;
-      margin:0;
-    }
+.header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+.logo a { font-weight:700; font-size:1.5rem; color:#1e293b; text-decoration:none; }
+.main-nav a { margin-left:1rem; text-decoration:none; color:#1e293b; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
+.main-nav a:hover, .main-nav a.active { background: rgba(0,0,0,0.05); }
 
-    .header-inner, .footer-inner {
-      max-width:1200px;
-      margin:auto;
-      padding:1rem;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-    }
+#themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
 
-    .logo a {
-      font-weight:700;
-      font-size:1.5rem;
-      color:#1e293b;
-      text-decoration:none;
-    }
+.hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#fbbf24,#f87171); color:#1e293b; border-bottom:5px solid #2563eb; }
+.hero h1 { font-size:3rem; margin-bottom:0.5rem; }
+.hero p { font-size:1.25rem; margin:0; }
 
-    .main-nav a {
-      margin-left:1rem;
-      text-decoration:none;
-      color:#1e293b;
-      font-weight:500;
-      padding:0.3rem 0.6rem;
-      border-radius:6px;
-      transition:background 0.2s;
-    }
+.section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
+.card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
+.card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
+.card h3 { margin-top:0; color:#f97316; font-size:1.5rem; }
+.card ul { margin:0.5rem 0 0 1.5rem; padding:0; list-style: disc; }
+.card ul li { margin-bottom:0.5rem; }
 
-    .main-nav a:hover, .main-nav a.active {
-      background: rgba(0,0,0,0.05);
-    }
+footer { padding:3rem 1rem; margin-top:3rem; }
+.footer-inner { display:flex; flex-direction:column; align-items:center; }
+.footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
+.footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
+.footer-nav a:hover { opacity:0.8; }
+.copyright { text-align:center; font-size:0.9rem; color:white; }
 
-    #themeSelect {
-      padding:0.3rem 0.5rem;
-      border-radius:6px;
-      border:none;
-      font-weight:500;
-    }
+@media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
+</style>
 
-    .hero {
-      text-align:center;
-      padding:4rem 1rem;
-      background:linear-gradient(to right,#fbbf24,#f87171);
-      color:#1e293b;
-      border-bottom:5px solid #2563eb;
-    }
+<script>
+window.onload = () => {
+  const theme = localStorage.getItem("theme") || "theme-emerald";
+  document.body.className = theme;
+  const select = document.getElementById("themeSelect");
+  if (select) select.value = theme;
+};
+</script>
 
-    .hero h1 {
-      font-size:3rem;
-      margin-bottom:0.5rem;
-    }
-
-    .hero p {
-      font-size:1.25rem;
-      margin:0;
-    }
-
-    .section {
-      max-width:1000px;
-      margin:3rem auto;
-      padding:0 1rem;
-    }
-
-    .card {
-      background:white;
-      border-radius:12px;
-      padding:1.5rem;
-      box-shadow:0 4px 12px rgba(0,0,0,0.08);
-      margin-bottom:2rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      text-align:left;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow:0 8px 16px rgba(0,0,0,0.12);
-    }
-
-    .card h3 {
-      margin-top:0;
-      color:#f97316;
-      font-size:1.5rem;
-    }
-
-    .card ul {
-      margin:0.5rem 0 0 1.5rem;
-      padding:0;
-      list-style: disc;
-    }
-
-    .card ul li {
-      margin-bottom:0.5rem;
-    }
-
-    /* Footer same as About page */
-    footer {
-      background:#2563eb;
-      color:white;
-      padding:3rem 1rem;
-      margin-top:3rem;
-    }
-
-    .footer-inner {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-    }
-
-    .footer-nav {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      margin-bottom:1rem;
-    }
-
-    .footer-nav a {
-      margin:0.5rem 1rem;
-      color:white;
-      font-weight:500;
-      text-decoration:none;
-      transition:opacity 0.2s;
-    }
-
-    .footer-nav a:hover {
-      opacity:0.8;
-    }
-
-    .copyright {
-      text-align:center;
-      font-size:0.9rem;
-      color:white;
-    }
-
-    @media(max-width:768px){
-      .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; }
-    }
-  </style>
-
-  <script>
-    window.onload = () => {
-      const theme = localStorage.getItem("theme") || "theme-emerald";
-      document.body.className = theme;
-      const select = document.getElementById("themeSelect");
-      if (select) select.value = theme;
-    };
-  </script>
 </head>
-
 <body>
 
 <header class="site-header">
@@ -172,7 +57,6 @@
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
-      <a href="terms.html" class="active">Terms</a>
     </nav>
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
@@ -182,6 +66,11 @@
     </select>
   </div>
 </header>
+
+<section class="hero">
+  <h1>Terms of Service</h1>
+  <p>Rules, responsibilities, and limitations for using BowesProduct</p>
+</section>
 
 <section class="section">
   <div class="card">
@@ -225,7 +114,7 @@
     <nav class="footer-nav">
       <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
-      <a href="terms.html" class="active">Terms</a>
+      <a href="terms.html">Terms</a>
       <a href="license.html">License</a>
       <a href="refund.html">Refunds</a>
     </nav>
@@ -234,11 +123,11 @@
 </footer>
 
 <script>
-  const themeSelect = document.getElementById("themeSelect");
-  themeSelect.addEventListener("change", () => {
-    document.body.className = themeSelect.value;
-    localStorage.setItem("theme", themeSelect.value);
-  });
+const themeSelect = document.getElementById("themeSelect");
+themeSelect.addEventListener("change", () => {
+  document.body.className = themeSelect.value;
+  localStorage.setItem("theme", themeSelect.value);
+});
 </script>
 
 </body>
