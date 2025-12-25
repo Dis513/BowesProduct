@@ -5,10 +5,11 @@
   <title>3D Models – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Model Viewer -->
-  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
-
+  <!-- Shared styles -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Model Viewer (GLB only – FBX is delivered, not previewed) -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
   <script>
     window.onload = () => {
@@ -17,13 +18,20 @@
   </script>
 
   <style>
+    /* Ensure footer never disappears */
+    .models-grid {
+      padding-bottom: 4rem;
+    }
+
     .model-container {
+      width: 100%;
       max-width: 1100px;
-      height: 560px;
-      margin: 2rem auto;
+      height: 620px;
+      margin: 2.5rem auto;
       background: #020617;
-      border-radius: 20px;
+      border-radius: 18px;
       overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
     }
 
     model-viewer {
@@ -33,55 +41,61 @@
 
     .models-grid {
       max-width: 1200px;
-      margin: 3rem auto;
+      margin: 0 auto;
       padding: 0 2rem;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
+      gap: 2rem;
     }
 
     .grid-item {
-      background: #f8fafc;
+      background: #ffffff;
       border-radius: 16px;
-      padding: 1.5rem;
+      padding: 1.6rem;
       text-align: center;
-      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
 
-    .badge {
-      display: inline-block;
-      background: #0ea5e9;
-      color: #fff;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
+    .grid-item h3 {
       margin-bottom: 0.5rem;
+      font-size: 1.3rem;
+    }
+
+    .model-meta {
+      font-size: 0.9rem;
+      opacity: 0.75;
+      margin-bottom: 1rem;
     }
 
     .btn-view {
-      display: block;
-      margin: 0.75rem 0;
-      background: #2563eb;
-      color: #fff;
-      padding: 0.6rem;
-      border-radius: 8px;
-      font-weight: 700;
-      border: none;
+      display: inline-block;
+      width: 100%;
+      margin-top: 0.6rem;
+      padding: 0.8rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
+      border: none;
+    }
+
+    .btn-view:hover {
+      background: color-mix(in srgb, var(--primary) 90%, black);
     }
 
     .btn-buy {
-      display: block;
-      margin-top: 0.5rem;
+      display: inline-block;
+      width: 100%;
+      margin-top: 0.6rem;
+      padding: 0.8rem;
       background: #10b981;
-      color: #ffffff;
-      padding: 0.7rem;
-      border-radius: 8px;
-      font-weight: 800;
+      color: white;
+      border-radius: 10px;
+      font-weight: 700;
       text-decoration: none;
     }
 
@@ -89,10 +103,10 @@
       background: #059669;
     }
 
-    .model-notes {
-      font-size: 0.85rem;
-      color: #475569;
-      margin-top: 0.75rem;
+    @media (max-width: 768px) {
+      .model-container {
+        height: 420px;
+      }
     }
   </style>
 </head>
@@ -103,6 +117,7 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">BowesProduct</div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
@@ -113,88 +128,67 @@
 
 <!-- HERO -->
 <section class="hero">
-  <h1>3D Model Library</h1>
-  <p>Preview models in-browser. Download professional files after purchase.</p>
+  <h1>3D Models</h1>
+  <p>Production-ready assets for games, apps & visualization</p>
 </section>
 
-<!-- VIEWER -->
+<!-- MODEL VIEWER -->
 <section>
-  <h2 style="text-align:center;">Model Preview</h2>
   <div class="model-container">
     <model-viewer
-      id="viewer"
+      id="mainViewer"
       src="models/werewolf.glb"
-      auto-rotate
+      alt="3D Model Preview"
       camera-controls
+      auto-rotate
       shadow-intensity="1">
+      <div slot="progress-bar" style="color:white;font-size:1.2rem;padding:2rem;">
+        Loading model…
+      </div>
     </model-viewer>
   </div>
 </section>
 
-<!-- MODELS -->
+<!-- MODELS GRID -->
 <section class="models-grid">
-  <h2 style="text-align:center;">Available Models</h2>
+  <h2 style="text-align:center;margin-bottom:2rem;">Available Models</h2>
 
   <div class="grid">
 
-    <!-- Werewolf -->
     <div class="grid-item" data-model="models/werewolf.glb">
-      <span class="badge">Includes FBX</span>
       <h3>Werewolf</h3>
+      <div class="model-meta">GLB preview · GLB + FBX download</div>
       <button class="btn-view">View Model</button>
       <a class="btn-buy" href="https://buy.stripe.com/test_aFa3cu8sD3bO4pc73Q3Je04" target="_blank">
         Buy Model — €10
       </a>
-      <p class="model-notes">
-        Preview: GLB<br>
-        Download: FBX + GLB<br>
-        Commercial license
-      </p>
     </div>
 
-    <!-- Zombie Werewolf -->
     <div class="grid-item" data-model="models/zombiewerewolf.glb">
-      <span class="badge">Includes FBX</span>
       <h3>Zombie Werewolf</h3>
+      <div class="model-meta">GLB preview · GLB + FBX download</div>
       <button class="btn-view">View Model</button>
       <a class="btn-buy" href="https://buy.stripe.com/test_cNi4gy9wHh2E9JwgEq3Je05" target="_blank">
         Buy Model — €10
       </a>
-      <p class="model-notes">
-        Preview: GLB<br>
-        Download: FBX + GLB<br>
-        Commercial license
-      </p>
     </div>
 
-    <!-- Giant Bunny -->
     <div class="grid-item" data-model="models/giantbunny.glb">
-      <span class="badge">Includes FBX</span>
       <h3>Giant Bunny</h3>
+      <div class="model-meta">GLB preview · GLB + FBX download</div>
       <button class="btn-view">View Model</button>
       <a class="btn-buy" href="https://buy.stripe.com/test_9B68wO7oz6o0aNAbk63Je06" target="_blank">
         Buy Model — €10
       </a>
-      <p class="model-notes">
-        Preview: GLB<br>
-        Download: FBX + GLB<br>
-        Commercial license
-      </p>
     </div>
 
-    <!-- Giant Skeleton Bunny -->
     <div class="grid-item" data-model="models/giantskeletonbunny.glb">
-      <span class="badge">Includes FBX</span>
       <h3>Giant Skeleton Bunny</h3>
+      <div class="model-meta">GLB preview · GLB + FBX download</div>
       <button class="btn-view">View Model</button>
       <a class="btn-buy" href="https://buy.stripe.com/test_6oUfZg7oz9Ac6xkfAm3Je07" target="_blank">
         Buy Model — €10
       </a>
-      <p class="model-notes">
-        Preview: GLB<br>
-        Download: FBX + GLB<br>
-        Commercial license
-      </p>
     </div>
 
   </div>
@@ -207,19 +201,20 @@
     <a href="privacy.html">Privacy</a>
     <a href="terms.html">Terms</a>
     <a href="license.html">License</a>
-    <a href="refund.html">Refund</a>
+    <a href="refund.html">Refunds</a>
   </div>
   <p>© 2025 BowesProduct</p>
 </footer>
 
-<!-- SCRIPT -->
+<!-- SCRIPTS -->
 <script>
-  const viewer = document.getElementById("viewer");
+  const viewer = document.getElementById('mainViewer');
 
-  document.querySelectorAll(".grid-item").forEach(item => {
-    item.querySelector(".btn-view").addEventListener("click", () => {
-      viewer.src = item.dataset.model;
-      viewer.scrollIntoView({ behavior: "smooth" });
+  document.querySelectorAll('.grid-item').forEach(item => {
+    item.querySelector('.btn-view').addEventListener('click', () => {
+      viewer.setAttribute('src', item.dataset.model);
+      viewer.reload();
+      window.scrollTo({ top: viewer.offsetTop - 80, behavior: 'smooth' });
     });
   });
 </script>
