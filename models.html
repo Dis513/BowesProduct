@@ -11,7 +11,6 @@
   <!-- Shared Styles -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Page fixes -->
   <style>
     /* HERO */
     .hero {
@@ -85,28 +84,24 @@
     }
 
     .btn:hover {
-      background: #1d4ed8;
+      opacity: 0.9;
     }
 
     .view-btn {
       background: #0f172a;
     }
 
-    .view-btn:hover {
-      background: #020617;
-    }
-
-    /* FOOTER */
+    /* FOOTER – MATCH INDEX EXACTLY */
     .site-footer {
       margin-top: 4rem;
-      background: #020617;
-      color: #e5e7eb;
-      padding: 2.5rem 1.5rem;
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
     }
 
     .footer-inner {
       max-width: 1200px;
-      margin: 0 auto;
+      margin: auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -117,32 +112,30 @@
     .footer-nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
     }
 
     .footer-nav a {
-      color: #e5e7eb;
+      color: white;
       text-decoration: none;
       font-weight: 500;
+      transition: opacity 0.2s;
     }
 
     .footer-nav a:hover {
-      color: #60a5fa;
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      opacity: 0.8;
     }
   </style>
 
-  <!-- Theme load -->
+  <!-- Load saved theme -->
   <script>
     window.onload = () => {
-      document.body.className = localStorage.getItem("theme") || "theme-emerald";
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
     };
   </script>
 </head>
@@ -245,16 +238,12 @@
 
 <!-- SCRIPTS -->
 <script>
-  // Theme switch
   const themeSelect = document.getElementById("themeSelect");
-  themeSelect.value = document.body.className;
-
   themeSelect.addEventListener("change", () => {
     document.body.className = themeSelect.value;
     localStorage.setItem("theme", themeSelect.value);
   });
 
-  // Model switching
   const viewer = document.getElementById("mainViewer");
   document.querySelectorAll(".view-btn").forEach(btn => {
     btn.addEventListener("click", () => {
