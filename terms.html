@@ -2,11 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Terms of Service – BowesProduct</title>
+  <title>Terms – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Terms of service for purchasing and using BowesProduct digital assets.">
+  <meta name="description" content="Terms of service for BowesProduct digital assets, including purchase, usage, and limitations.">
 
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    body { font-family:'Segoe UI',sans-serif; background:#f3f4f6; color:#1e293b; margin:0; }
+    header, footer { background: linear-gradient(90deg, #4ade80, #2563eb); color:white; }
+    .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .logo a { font-weight:700; font-size:1.5rem; color:white; text-decoration:none; }
+    .main-nav a { margin-left:1rem; text-decoration:none; color:white; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
+    .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
+    #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
+
+    .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#fbbf24,#f87171); color:#1e293b; border-bottom:5px solid #2563eb; }
+    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
+    .hero p { font-size:1.25rem; margin:0; }
+
+    .section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
+    .section h2 { font-size:2rem; color:#2563eb; margin-bottom:1rem; text-align:center; }
+    .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; }
+    .card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
+    .card h3 { margin-top:0; color:#f97316; font-size:1.5rem; }
+    .card ul { margin:0.5rem 0 0 1.2rem; }
+    .card ul li { margin-bottom:0.5rem; }
+
+    footer { color:white; padding:2rem 1rem; margin-top:3rem; }
+    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
+    .footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
+    .footer-nav a:hover { opacity:0.8; }
+
+    @media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
+  </style>
 
   <script>
     window.onload = () => {
@@ -22,16 +51,13 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">
-      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
-    </div>
-
+    <div class="logo"><a href="index.html">BowesProduct</a></div>
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
+      <a href="terms.html" class="active">Terms</a>
     </nav>
-
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
       <option value="theme-blue">Blue</option>
@@ -43,54 +69,57 @@
 
 <section class="hero">
   <h1>Terms of Service</h1>
-  <p>Conditions for using BowesProduct</p>
+  <p>Rules, responsibilities, and limitations for using BowesProduct</p>
 </section>
 
 <section class="section">
-  <p>
-    By purchasing or using BowesProduct products, you agree to these terms.
-  </p>
+  <div class="card">
+    <h3>Acceptance of Terms</h3>
+    <p>By using BowesProduct, you agree to comply with all terms outlined here. Accessing products constitutes acceptance of these terms.</p>
+  </div>
 
-  <h2>Products & Delivery</h2>
-  <p>
-    All products are digital and delivered electronically or prepared within
-    the stated timeframe.
-  </p>
+  <div class="card">
+    <h3>Purchases and Payments</h3>
+    <ul>
+      <li>All purchases are final unless stated in Refund Policy</li>
+      <li>Payments processed securely via Stripe</li>
+      <li>Users are responsible for maintaining correct billing info</li>
+    </ul>
+  </div>
 
-  <h2>Payments</h2>
-  <p>
-    Payments are processed securely via Stripe. Prices are listed in Euros
-    unless otherwise stated.
-  </p>
+  <div class="card">
+    <h3>User Obligations</h3>
+    <ul>
+      <li>Do not resell or redistribute assets</li>
+      <li>Use assets only as allowed under License</li>
+      <li>Maintain compliance with applicable laws and copyright rules</li>
+    </ul>
+  </div>
 
-  <h2>Limitation of Liability</h2>
-  <p>
-    BowesProduct is not liable for damages arising from misuse of assets or
-    incompatibility with specific workflows.
-  </p>
+  <div class="card">
+    <h3>Limitation of Liability</h3>
+    <p>BowesProduct is not liable for indirect, incidental, or consequential damages. Use assets at your own discretion and ensure license compliance.</p>
+  </div>
 
-  <h2>EU Digital Content Notice</h2>
-  <p>
-    In accordance with EU consumer protection law, you expressly consent to
-    the immediate delivery of digital content and acknowledge that your right
-    of withdrawal is waived once delivery begins.
-  </p>
+  <div class="card">
+    <h3>Modifications</h3>
+    <p>BowesProduct reserves the right to update these Terms at any time. Continued use constitutes acceptance of any changes.</p>
+  </div>
 
-  <p style="margin-top:1.5rem;font-size:0.85rem;color:#64748b;">
-    Last updated: 1 January 2025
-  </p>
+  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
 </section>
 
 <footer class="site-footer">
-  <nav class="footer-nav">
-    <a href="about.html">About</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
-
-  <p>© 2025 BowesProduct</p>
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refunds</a>
+    </nav>
+    <p style="text-align:center;">© 2025 BowesProduct</p>
+  </div>
 </footer>
 
 <script>
