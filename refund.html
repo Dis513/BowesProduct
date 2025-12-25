@@ -37,3 +37,93 @@
     @media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
   </style>
 
+  <script>
+    window.onload = () => {
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
+    };
+  </script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo"><a href="index.html">BowesProduct</a></div>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html">Models</a>
+      <a href="refund.html" class="active">Refunds</a>
+    </nav>
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Refund Policy</h1>
+  <p>Clear and simple rules for refunds on BowesProduct assets</p>
+</section>
+
+<section class="section">
+  <div class="card">
+    <h3>Eligibility</h3>
+    <p>Refunds are only provided in exceptional cases such as duplicate charges, accidental purchases, or technical issues preventing delivery. Digital products cannot be returned once delivered.</p>
+  </div>
+
+  <div class="card">
+    <h3>How to Request a Refund</h3>
+    <ul>
+      <li>Contact support@bowesproduct.com within 7 days of purchase</li>
+      <li>Provide purchase receipt and description of issue</li>
+      <li>Refund requests are reviewed on a case-by-case basis</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Processing Refunds</h3>
+    <p>Approved refunds are processed via the original payment method. It may take 5–10 business days for the refund to reflect.</p>
+  </div>
+
+  <div class="card">
+    <h3>Non-Refundable Cases</h3>
+    <ul>
+      <li>Change of mind after download</li>
+      <li>Partial usage of digital assets</li>
+      <li>Violation of License or Terms</li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refunds</a>
+    </nav>
+    <p style="text-align:center;">© 2025 BowesProduct</p>
+  </div>
+</footer>
+
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+  });
+</script>
+
+</body>
+</html>
