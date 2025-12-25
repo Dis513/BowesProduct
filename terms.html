@@ -1,66 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Terms – BowesProduct</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Terms of service for BowesProduct digital assets, including purchase, usage, and limitations.">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Terms – BowesProduct</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Terms of service for BowesProduct digital assets, including purchase, usage, and limitations.">
 
-<style>
-body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; transition: background 0.3s, color 0.3s; }
+  <link rel="stylesheet" href="style.css">
 
-.header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-.logo a { font-weight:700; font-size:1.5rem; color:white; text-decoration:none; }
-.main-nav a { margin-left:1rem; text-decoration:none; color:white; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
-.main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
+  <style>
+    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
+    .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .logo a { font-weight:700; font-size:1.5rem; color:inherit; text-decoration:none; }
+    .main-nav a { margin-left:1rem; text-decoration:none; color:inherit; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
+    .main-nav a:hover, .main-nav a.active { background: rgba(0,0,0,0.05); }
+    #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
 
-#themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
+    .hero { text-align:center; padding:4rem 1rem; border-bottom:5px solid #2563eb; }
+    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
+    .hero p { font-size:1.25rem; margin:0; }
 
-.hero { text-align:center; padding:4rem 1rem; color:#1e293b; border-bottom:5px solid; }
-.hero h1 { font-size:3rem; margin-bottom:0.5rem; }
-.hero p { font-size:1.25rem; margin:0; }
+    .section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
+    .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
+    .card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
+    .card h3 { margin-top:0; color:#f97316; font-size:1.5rem; }
+    .card ul { margin:0.5rem 0 0 1.5rem; list-style:disc; }
+    .card ul li { margin-bottom:0.5rem; }
 
-.section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
-.card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
-.card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-.card h3 { margin-top:0; color:#f97316; font-size:1.5rem; }
-.card ul { margin:0.5rem 0 0 1.5rem; padding:0; list-style: disc; }
-.card ul li { margin-bottom:0.5rem; }
+    /* Footer styling */
+    footer { padding:2rem 1rem; margin-top:3rem; }
+    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
+    .footer-nav a { margin:0.5rem 1rem; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
+    .footer-nav a:hover { opacity:0.8; }
 
-footer { padding:3rem 1rem; margin-top:3rem; transition: background 0.3s; }
-.footer-inner { display:flex; flex-direction:column; align-items:center; }
-.footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
-.footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
-.footer-nav a:hover { opacity:0.8; }
-footer .copyright { text-align:center; font-size:0.9rem; color:white; }
+    @media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
+  </style>
 
-@media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
-</style>
+  <script>
+    window.onload = () => {
+      const savedTheme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = savedTheme;
 
-<script>
-function applyTheme(theme) {
-  const colors = {
-    emerald: { gradient: 'linear-gradient(to right,#34d399,#60a5fa)', border: '#2563eb', footer: '#34d399' },
-    blue: { gradient: 'linear-gradient(to right,#60a5fa,#3b82f6)', border: '#2563eb', footer: '#3b82f6' },
-    violet: { gradient: 'linear-gradient(to right,#a78bfa,#8b5cf6)', border: '#7c3aed', footer: '#8b5cf6' },
-    amber: { gradient: 'linear-gradient(to right,#fbbf24,#f97316)', border: '#f59e0b', footer: '#f97316' }
-  };
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = savedTheme;
 
-  document.body.className = theme;
-  document.querySelector('.hero').style.background = colors[theme].gradient;
-  document.querySelector('.hero').style.borderBottomColor = colors[theme].border;
-  document.querySelector('footer').style.background = colors[theme].footer;
-}
+      applyThemeColors(savedTheme);
+    };
 
-window.onload = () => {
-  const theme = localStorage.getItem("theme") || "emerald";
-  applyTheme(theme);
-  document.getElementById("themeSelect").value = theme;
-};
-</script>
+    function applyThemeColors(theme) {
+      let primary="#4ade80", secondary="#2563eb"; // default Emerald
+      if(theme==="theme-blue"){ primary="#3b82f6"; secondary="#1e40af"; }
+      if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
+      if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
 
+      const header = document.querySelector(".site-header");
+      const hero = document.querySelector(".hero");
+      const footer = document.querySelector("footer");
+
+      if(header) header.style.background = `linear-gradient(90deg, ${primary}, ${secondary})`;
+      if(hero) hero.style.background = `linear-gradient(to right, ${primary}, ${secondary})`;
+      if(footer) footer.style.background = `linear-gradient(90deg, ${primary}, ${secondary})`;
+      document.querySelectorAll(".main-nav a").forEach(a=>a.style.color="white");
+      document.querySelectorAll(".footer-nav a").forEach(a=>a.style.color="white");
+    }
+  </script>
 </head>
+
 <body>
 
 <header class="site-header">
@@ -71,11 +76,11 @@ window.onload = () => {
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
     </nav>
-    <select id="themeSelect" onchange="applyTheme(this.value); localStorage.setItem('theme', this.value);">
-      <option value="emerald">Emerald</option>
-      <option value="blue">Blue</option>
-      <option value="violet">Violet</option>
-      <option value="amber">Amber</option>
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
     </select>
   </div>
 </header>
@@ -127,13 +132,21 @@ window.onload = () => {
     <nav class="footer-nav">
       <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
       <a href="license.html">License</a>
       <a href="refund.html">Refunds</a>
     </nav>
-    <p class="copyright">© 2025 BowesProduct</p>
+    <p style="text-align:center;">© 2025 BowesProduct</p>
   </div>
 </footer>
+
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+    applyThemeColors(themeSelect.value);
+  });
+</script>
 
 </body>
 </html>
