@@ -27,7 +27,6 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       margin-bottom: 2rem;
       transition: transform 0.2s, box-shadow 0.2s;
-      text-align: left;
     }
     .card:hover {
       transform: translateY(-4px);
@@ -41,17 +40,25 @@
       margin-bottom: 1rem;
       font-weight: 700;
     }
+    /* Left align all text content inside card, paragraphs and ul */
+    .card p,
+    .card ul {
+      text-align: left;
+      margin-left: 0;
+      max-width: 720px;
+      margin-right: auto;
+      margin-left: auto;
+    }
     .card ul {
       list-style-position: inside;
       padding-left: 0;
-      margin: 0 0 0 1.2rem;
+      margin-top: 0;
       font-size: 1.05rem;
       line-height: 1.6;
       color: #1e293b;
     }
     .card ul li {
       margin-bottom: 0.6rem;
-      text-align: left;
     }
 
     .hero {
@@ -79,6 +86,12 @@
       .main-nav a {
         margin-left: 0.5rem;
         margin-right: 0.5rem;
+      }
+      .card p,
+      .card ul {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
       }
     }
   </style>
