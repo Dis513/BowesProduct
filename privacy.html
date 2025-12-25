@@ -5,7 +5,6 @@
 <title>Privacy – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Privacy policy for BowesProduct digital assets, icons, models, and brand kits.">
-
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -40,14 +39,6 @@ footer .copyright { text-align:center; font-size:0.9rem; color:white; }
 </style>
 
 <script>
-window.onload = () => {
-  const theme = localStorage.getItem("theme") || "emerald";
-  applyTheme(theme);
-
-  const select = document.getElementById("themeSelect");
-  if (select) select.value = theme;
-};
-
 function applyTheme(theme) {
   const colors = {
     emerald: { gradient: 'linear-gradient(to right,#34d399,#60a5fa)', border: '#2563eb', footer: '#34d399' },
@@ -61,6 +52,12 @@ function applyTheme(theme) {
   document.querySelector('.hero').style.borderBottomColor = colors[theme].border;
   document.querySelector('footer').style.background = colors[theme].footer;
 }
+
+window.onload = () => {
+  const theme = localStorage.getItem("theme") || "emerald";
+  applyTheme(theme);
+  document.getElementById("themeSelect").value = theme;
+};
 </script>
 
 </head>
