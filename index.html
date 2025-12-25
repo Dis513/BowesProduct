@@ -4,132 +4,84 @@
   <meta charset="UTF-8">
   <title>BowesProduct – Commercial Brand Assets</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Force readable buttons everywhere */
-    .btn {
-      background: #2563eb;
-      color: #ffffff !important;
-      text-decoration: none;
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: opacity 0.2s;
-    }
+    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
+    .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .logo a { font-weight:700; font-size:1.5rem; color:inherit; text-decoration:none; }
+    .main-nav a { margin-left:1rem; text-decoration:none; color:inherit; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
+    .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
+    #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
 
-    .btn.secondary {
-      background: transparent;
-      color: #2563eb !important;
-      border: 1px solid #2563eb;
-    }
+    .hero { text-align:center; padding:6rem 1rem; color:white; position:relative; overflow:hidden; border-bottom:5px solid #2563eb; }
+    .hero h1, .hero p { position:relative; z-index:2; text-shadow:0 2px 8px rgba(0,0,0,0.7); }
+    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
+    .hero p { font-size:1.25rem; margin:0; }
+    .hero::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.4); z-index:1; }
 
-    .btn:hover {
-      opacity: 0.9;
-    }
+    .section { max-width:900px; margin:3rem auto; padding:0 1rem; }
+    .card { background:white; border-radius:12px; padding:1.5rem 2rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
+    .card:hover { transform:translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
+    .card img { width:100%; height:180px; object-fit:contain; border-radius:8px; }
+    .card h3 { font-size:1.5rem; margin:0.5rem 0; }
+    .card ul { padding-left:1.2rem; margin-top:0.5rem; color:#1e293b; }
+    .card ul li { margin-bottom:0.5rem; }
+    .price { font-weight:700; margin-top:0.5rem; }
+    .delivery { font-size:0.9rem; color:#64748b; margin-top:0.5rem; }
 
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: contain;
-    }
+    .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; margin-top:2rem; }
+    .step { background:#fff; border-radius:14px; padding:1.5rem; box-shadow:0 10px 25px rgba(0,0,0,0.06); }
+    .step span { font-size:0.85rem; font-weight:600; color:#2563eb; text-transform:uppercase; letter-spacing:0.05em; }
+    .step h3 { margin:0.5rem 0; }
+    .step p { color:#64748b; font-size:0.95rem; }
 
-    /* Clean steps layout */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
+    .btn { background:#2563eb; color:white !important; text-decoration:none; display:inline-block; padding:0.5rem 1rem; border-radius:6px; transition:opacity 0.2s; }
+    .btn.secondary { background:transparent; color:#2563eb !important; border:1px solid #2563eb; }
+    .btn:hover { opacity:0.9; }
 
-    .step {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 1.5rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-    }
+    footer { margin-top:4rem; padding:2rem 1rem; color:white; }
+    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; gap:1rem; }
+    .footer-nav a { color:white; text-decoration:none; font-weight:500; transition:opacity 0.2s; }
+    .footer-nav a:hover { opacity:0.8; }
 
-    .step span {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #2563eb;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .step h3 {
-      margin: 0.5rem 0;
-    }
-
-    .step p {
-      color: #64748b;
-      font-size: 0.95rem;
-    }
-
-    /* Footer adjustments for index page */
-    .site-footer {
-      margin-top: 4rem;
-      padding: 2rem 1rem;
-      background: #2563eb;
-      color: white;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
-    .footer-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 1rem;
-      gap: 1rem;
-    }
-    .footer-nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: opacity 0.2s;
-    }
-    .footer-nav a:hover {
-      opacity: 0.8;
-    }
+    @media(max-width:768px){ .main-nav a { margin-left:0.5rem; margin-right:0.5rem; } }
   </style>
 
-  <!-- Load saved theme -->
   <script>
-    window.onload = () => {
-      const theme = localStorage.getItem("theme") || "theme-emerald";
-      document.body.className = theme;
+    function applyThemeColors(theme){
+      let primary="#4ade80", secondary="#2563eb"; 
+      if(theme==="theme-blue"){ primary="#3b82f6"; secondary="#1e40af"; }
+      if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
+      if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
 
-      const select = document.getElementById("themeSelect");
-      if (select) select.value = theme;
+      document.querySelector(".site-header").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
+      document.querySelector(".hero").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
+      document.querySelector("footer").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
+      document.querySelectorAll(".main-nav a").forEach(a=>a.style.color="white");
+      document.querySelectorAll(".footer-nav a").forEach(a=>a.style.color="white");
+    }
+
+    window.onload = () => {
+      const savedTheme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = savedTheme;
+      const themeSelect = document.getElementById("themeSelect");
+      if(themeSelect) themeSelect.value = savedTheme;
+      applyThemeColors(savedTheme);
     };
   </script>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">
-      <a href="index.html" style="text-decoration:none;color:inherit;">
-        BowesProduct
-      </a>
-    </div>
-
+    <div class="logo"><a href="index.html">BowesProduct</a></div>
     <nav class="main-nav">
       <a href="index.html" class="active">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
     </nav>
-
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
       <option value="theme-blue">Blue</option>
@@ -139,23 +91,18 @@
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <h1>Commercial Brand Assets</h1>
   <p>Brand kits, icons & 3D models built for real businesses</p>
 </section>
 
-<!-- BRAND KITS -->
 <section class="section">
   <h2>Brand Identity Kits</h2>
-
   <div class="products">
-
     <div class="card">
       <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
       <h3>Starter Brand Kit</h3>
       <p class="price">€250</p>
-
       <ul>
         <li>Primary logo design</li>
         <li>Color palette</li>
@@ -163,19 +110,14 @@
         <li>Basic brand guidelines</li>
         <li>Commercial usage rights</li>
       </ul>
-
       <p class="delivery">Delivery: minimum 14 days</p>
-
-      <a href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00" class="btn" target="_blank">
-        Buy Starter Kit
-      </a>
+      <a href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00" class="btn" target="_blank">Buy Starter Kit</a>
     </div>
 
     <div class="card">
       <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
       <h3>Pro Brand Kit</h3>
       <p class="price">€500</p>
-
       <ul>
         <li>Expanded logo system</li>
         <li>Typography hierarchy</li>
@@ -183,19 +125,14 @@
         <li>Brand usage guide</li>
         <li>Commercial usage rights</li>
       </ul>
-
       <p class="delivery">Delivery: minimum 21 days</p>
-
-      <a href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01" class="btn" target="_blank">
-        Buy Pro Kit
-      </a>
+      <a href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01" class="btn" target="_blank">Buy Pro Kit</a>
     </div>
 
     <div class="card">
       <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
       <h3>Master Brand Kit</h3>
       <p class="price">€1,500</p>
-
       <ul>
         <li>Complete logo suite</li>
         <li>Brand strategy overview</li>
@@ -203,47 +140,34 @@
         <li>Full brand manual</li>
         <li>Commercial usage rights</li>
       </ul>
-
       <p class="delivery">Delivery: minimum 28 days</p>
-
-      <a href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02" class="btn" target="_blank">
-        Buy Master Kit
-      </a>
+      <a href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02" class="btn" target="_blank">Buy Master Kit</a>
     </div>
-
   </div>
 </section>
 
-<!-- ASSET LIBRARIES -->
 <section class="section light">
   <h2>Asset Libraries</h2>
-  <p style="margin-bottom:2rem;color:#64748b;">
-    Ready-made assets you can license instantly for commercial use.
-  </p>
-
+  <p style="margin-bottom:2rem;color:#64748b;">Ready-made assets you can license instantly for commercial use.</p>
   <div style="display:flex;gap:1rem;flex-wrap:wrap;">
     <a href="icons.html" class="btn secondary">Browse Icons</a>
     <a href="models.html" class="btn secondary">Browse Models</a>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
 <section class="section">
   <h2>How It Works</h2>
-
   <div class="steps">
     <div class="step">
       <span>Step 1</span>
       <h3>Choose an Asset</h3>
       <p>Select a brand kit, icon, or model that fits your business needs.</p>
     </div>
-
     <div class="step">
       <span>Step 2</span>
       <h3>Secure Checkout</h3>
       <p>Complete payment through Stripe with instant confirmation.</p>
     </div>
-
     <div class="step">
       <span>Step 3</span>
       <h3>Commercial Delivery</h3>
@@ -252,7 +176,6 @@
   </div>
 </section>
 
-<!-- FOOTER (NEW) -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
@@ -266,12 +189,12 @@
   </div>
 </footer>
 
-<!-- THEME SCRIPT -->
 <script>
   const themeSelect = document.getElementById("themeSelect");
   themeSelect.addEventListener("change", () => {
     document.body.className = themeSelect.value;
     localStorage.setItem("theme", themeSelect.value);
+    applyThemeColors(themeSelect.value);
   });
 </script>
 
