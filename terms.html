@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Terms – BowesProduct</title>
+  <title>Terms of Service – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="style.css">
 
   <script>
     window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
     };
   </script>
 </head>
@@ -17,29 +21,85 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">BowesProduct</div>
+    <div class="logo">
+      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
+    </div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
     </nav>
+
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
   </div>
 </header>
 
 <section class="hero">
-  <h1>Terms & Conditions</h1>
+  <h1>Terms of Service</h1>
+  <p>Conditions for using BowesProduct</p>
 </section>
 
 <section class="section">
   <p>
-    By purchasing from BowesProduct you agree to the licensing terms,
-    delivery timelines, and usage limitations outlined on this site.
+    By purchasing or using BowesProduct assets, you agree to these terms.
+  </p>
+
+  <h3>Products & Delivery</h3>
+  <p>
+    Digital products are delivered electronically or prepared within the
+    stated delivery timeframe.
+  </p>
+
+  <h3>Payments</h3>
+  <p>
+    All payments are processed securely through Stripe. Prices are listed
+    in Euros unless otherwise stated.
+  </p>
+
+  <h3>Refunds</h3>
+  <p>
+    Due to the digital nature of products, refunds are issued only as
+    described in the Refund Policy.
+  </p>
+
+  <h3>Limitation of Liability</h3>
+  <p>
+    BowesProduct is not liable for damages arising from misuse of assets
+    or failure to meet specific project requirements.
+  </p>
+
+  <h3>Changes</h3>
+  <p>
+    These terms may be updated at any time. Continued use constitutes
+    acceptance of the revised terms.
   </p>
 </section>
 
 <footer class="site-footer">
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="license.html">License</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
+
   <p>© 2025 BowesProduct</p>
 </footer>
+
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+  });
+</script>
 
 </body>
 </html>
