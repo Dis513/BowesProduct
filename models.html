@@ -8,10 +8,33 @@
   <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
-  <!-- Main Styles -->
+  <!-- Shared Styles -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Theme load (FIXED) -->
+  <!-- Page-specific fixes -->
+  <style>
+    /* Ensure buttons are always readable */
+    .btn {
+      color: #ffffff !important;
+    }
+
+    .btn.secondary {
+      color: var(--primary) !important;
+      background: transparent;
+    }
+
+    /* Cards spacing */
+    .card {
+      text-align: center;
+    }
+
+    /* Footer spacing */
+    .site-footer {
+      margin-top: 4rem;
+    }
+  </style>
+
+  <!-- Theme load (same logic as icons/index) -->
   <script>
     window.onload = () => {
       const savedTheme = localStorage.getItem("theme") || "theme-emerald";
@@ -26,7 +49,9 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">
-      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
+      <a href="index.html" style="text-decoration:none;color:inherit;">
+        BowesProduct
+      </a>
     </div>
 
     <nav class="main-nav">
@@ -46,8 +71,8 @@
 
 <!-- HERO -->
 <section class="hero">
-  <h1>3D Model Library</h1>
-  <p>Commercial-ready 3D assets with included license</p>
+  <h1>3D Models</h1>
+  <p>Commercial-ready 3D assets with a clear license</p>
 </section>
 
 <!-- MODEL VIEWER -->
@@ -89,8 +114,7 @@
       </a>
 
       <p class="delivery">
-        ✔ Instant download<br>
-        ✔ Commercial license included<br>
+        Instant download · Commercial license<br>
         <a href="license.html">View license</a>
       </p>
     </div>
@@ -110,8 +134,7 @@
       </a>
 
       <p class="delivery">
-        ✔ Instant download<br>
-        ✔ Commercial license included<br>
+        Instant download · Commercial license<br>
         <a href="license.html">View license</a>
       </p>
     </div>
@@ -131,8 +154,7 @@
       </a>
 
       <p class="delivery">
-        ✔ Instant download<br>
-        ✔ Commercial license included<br>
+        Instant download · Commercial license<br>
         <a href="license.html">View license</a>
       </p>
     </div>
@@ -152,8 +174,7 @@
       </a>
 
       <p class="delivery">
-        ✔ Instant download<br>
-        ✔ Commercial license included<br>
+        Instant download · Commercial license<br>
         <a href="license.html">View license</a>
       </p>
     </div>
@@ -164,10 +185,11 @@
 <!-- FOOTER -->
 <footer class="site-footer">
   <nav class="footer-nav">
-    <a href="index.html">Home</a>
-    <a href="icons.html">Icons</a>
-    <a href="models.html">Models</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
     <a href="license.html">License</a>
+    <a href="refund.html">Refund</a>
   </nav>
 
   <p class="copyright">
@@ -178,7 +200,7 @@
 
 <!-- SCRIPTS -->
 <script>
-  // Theme selector
+  // Theme selector sync
   const themeSelect = document.getElementById("themeSelect");
   themeSelect.value = document.body.className;
 
@@ -187,7 +209,7 @@
     localStorage.setItem("theme", themeSelect.value);
   });
 
-  // Model switching (FIXED — always works)
+  // Model switching (reliable)
   const viewer = document.getElementById("mainViewer");
   document.querySelectorAll(".view-btn").forEach(btn => {
     btn.addEventListener("click", () => {
