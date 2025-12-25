@@ -7,6 +7,7 @@
 
   <link rel="stylesheet" href="style.css">
 
+  <!-- Load saved theme -->
   <script>
     window.onload = () => {
       document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
@@ -16,9 +17,12 @@
 
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">BowesProduct</div>
+    <div class="logo">
+      <a href="index.html">BowesProduct</a>
+    </div>
 
     <nav class="main-nav">
       <a href="index.html" class="active">Home</a>
@@ -28,16 +32,19 @@
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <h1>Commercial Brand Assets</h1>
   <p>Brand kits, icons & 3D models built for real businesses</p>
 </section>
 
+<!-- BRAND KITS -->
 <section class="section">
   <h2>Brand Identity Kits</h2>
 
   <div class="products">
 
+    <!-- STARTER -->
     <div class="card">
       <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
       <h3>Starter Brand Kit</h3>
@@ -53,9 +60,17 @@
 
       <p class="delivery">Delivery: minimum 14 days</p>
 
-      <a href="#" class="btn">Buy Starter Kit</a>
+      <a
+        href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00"
+        class="btn"
+        target="_blank"
+        rel="noopener"
+      >
+        Buy Starter Kit
+      </a>
     </div>
 
+    <!-- PRO -->
     <div class="card">
       <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
       <h3>Pro Brand Kit</h3>
@@ -71,9 +86,17 @@
 
       <p class="delivery">Delivery: minimum 21 days</p>
 
-      <a href="#" class="btn">Buy Pro Kit</a>
+      <a
+        href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01"
+        class="btn"
+        target="_blank"
+        rel="noopener"
+      >
+        Buy Pro Kit
+      </a>
     </div>
 
+    <!-- MASTER -->
     <div class="card">
       <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
       <h3>Master Brand Kit</h3>
@@ -89,12 +112,20 @@
 
       <p class="delivery">Delivery: minimum 28 days</p>
 
-      <a href="#" class="btn">Buy Master Kit</a>
+      <a
+        href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02"
+        class="btn"
+        target="_blank"
+        rel="noopener"
+      >
+        Buy Master Kit
+      </a>
     </div>
 
   </div>
 </section>
 
+<!-- ICONS PROMO -->
 <section class="section light">
   <h2>Icon Library</h2>
   <p>
@@ -105,17 +136,19 @@
   <a href="icons.html" class="btn secondary">Browse Icons</a>
 </section>
 
+<!-- HOW IT WORKS -->
 <section class="section">
   <h2>How It Works</h2>
 
   <ol class="process">
     <li>Select a product or asset</li>
-    <li>Complete secure checkout</li>
+    <li>Complete secure Stripe checkout</li>
     <li>Assets are prepared or created</li>
     <li>Files delivered for commercial use</li>
   </ol>
 </section>
 
+<!-- FOOTER -->
 <footer class="site-footer">
   <nav class="footer-nav">
     <a href="about.html">About</a>
@@ -125,9 +158,7 @@
     <a href="refund.html">Refunds</a>
   </nav>
 
-  <p class="copyright">
-    © 2025 BowesProduct. All rights reserved.
-  </p>
+  <p>© 2025 BowesProduct. All rights reserved.</p>
 </footer>
 
 </body>
