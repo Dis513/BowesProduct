@@ -2,31 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Terms – BowesProduct</title>
+  <title>Terms of Service – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 
   <style>
-    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
+    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; text-align:center; }
     .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
     .logo a { font-weight:700; font-size:1.5rem; color:inherit; text-decoration:none; }
     .main-nav a { margin-left:1rem; text-decoration:none; color:inherit; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
+    .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
     #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
+
     .hero { text-align:center; padding:4rem 1rem; color:white; position:relative; overflow:hidden; border-bottom:5px solid #2563eb; }
-    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
-    .hero p { font-size:1.25rem; margin:0; }
-    .section { max-width:900px; margin:3rem auto; padding:0 1rem; }
+    .hero h1, .hero p { position:relative; z-index:2; text-shadow:0 2px 8px rgba(0,0,0,0.7); }
+    .hero h1 { font-size:2.5rem; margin-bottom:0.5rem; }
+    .hero p { font-size:1.1rem; margin:0; }
+    .hero::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.4); z-index:1; }
+
+    .section { max-width:900px; margin:3rem auto; padding:0 1rem; text-align:left; }
     .card { background:white; border-radius:12px; padding:1.5rem 2rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
     .card:hover { transform:translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-    .card h3 { font-size:1.5rem; margin-top:0; margin-bottom:0.5rem; color:#2563eb; }
-    .card ul { padding-left:1.2rem; margin-top:0.5rem; color:#1e293b; }
+    .card h3 { font-size:1.5rem; margin:0.5rem 0; color:#2563eb; }
+    .card p, .card ul { color:#1e293b; }
+    .card ul { padding-left:1.2rem; margin-top:0.5rem; }
     .card ul li { margin-bottom:0.5rem; }
-    p.center { text-align:center; color:#64748b; font-size:0.9rem; }
-    footer { margin-top:4rem; padding:2rem 1rem; color:white; }
+
+    .btn { background:#2563eb; color:white !important; text-decoration:none; display:inline-block; padding:0.5rem 1rem; border-radius:6px; transition:opacity 0.2s; }
+    .btn.secondary { background:transparent; color:#2563eb !important; border:1px solid #2563eb; }
+    .btn:hover { opacity:0.9; }
+
+    footer { margin-top:4rem; padding:2rem 1rem; color:white; text-align:center; }
     .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; gap:1rem; }
     .footer-nav a { color:white; text-decoration:none; font-weight:500; transition:opacity 0.2s; }
     .footer-nav a:hover { opacity:0.8; }
-    @media(max-width:768px){ .main-nav a { margin-left:0.5rem; margin-right:0.5rem; } }
   </style>
 
   <script>
@@ -35,7 +44,6 @@
       if(theme==="theme-blue"){ primary="#3b82f6"; secondary="#1e40af"; }
       if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
       if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
-
       document.querySelector(".site-header").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelector(".hero").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelector("footer").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
@@ -54,6 +62,7 @@
 </head>
 
 <body>
+
 <header class="site-header">
   <div class="header-inner">
     <div class="logo"><a href="index.html">BowesProduct</a></div>
@@ -61,6 +70,7 @@
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
+      <a href="terms.html" class="active">Terms</a>
     </nav>
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
@@ -72,40 +82,32 @@
 </header>
 
 <section class="hero">
-  <h1>Terms & Conditions</h1>
-  <p>Rules and guidelines for using BowesProduct services</p>
+  <h1>Terms of Service</h1>
+  <p>Rules and guidelines for using BowesProduct services and assets.</p>
 </section>
 
 <section class="section">
   <div class="card">
-    <h3>Acceptance of Terms</h3>
-    <p>By accessing our website, you agree to comply with these terms and conditions.</p>
+    <h3>Use of Assets</h3>
+    <p>All digital products purchased from BowesProduct are licensed for commercial use according to the included license. Redistribution or resale is prohibited unless explicitly stated.</p>
   </div>
 
   <div class="card">
-    <h3>Usage License</h3>
-    <ul>
-      <li>Assets purchased are licensed for commercial use.</li>
-      <li>Redistribution or resale of assets is prohibited.</li>
-      <li>All intellectual property remains with BowesProduct.</li>
-    </ul>
+    <h3>Payments</h3>
+    <p>Payments are processed securely via Stripe. Access to purchased assets is granted after successful payment confirmation.</p>
   </div>
 
   <div class="card">
-    <h3>Payment & Refunds</h3>
-    <ul>
-      <li>Payments are processed securely via Stripe.</li>
-      <li>Refunds are only available according to our refund policy.</li>
-      <li>All prices are in Euros and include applicable taxes.</li>
-    </ul>
+    <h3>Refund Policy</h3>
+    <p>Refunds are provided only under the conditions described in our refund policy. Please review that page before making a purchase.</p>
   </div>
 
   <div class="card">
-    <h3>Limitation of Liability</h3>
-    <p>BowesProduct is not liable for any damages resulting from use of purchased assets.</p>
+    <h3>Liability</h3>
+    <p>BowesProduct is not liable for damages arising from use of our products beyond the intended use as described in the license.</p>
   </div>
 
-  <p class="center">Last updated: 1 January 2025</p>
+  <p style="margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 25 December 2025</p>
 </section>
 
 <footer class="site-footer">
@@ -129,5 +131,6 @@
     applyThemeColors(themeSelect.value);
   });
 </script>
+
 </body>
 </html>
