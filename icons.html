@@ -8,10 +8,15 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Force readable buttons everywhere */
+    /* Buttons */
     .btn {
       background: #2563eb;
       color: #ffffff !important;
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: opacity 0.2s;
     }
 
     .btn.secondary {
@@ -24,13 +29,98 @@
       opacity: 0.9;
     }
 
+    /* Icon card grid */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
     .card img {
-      width: 100%;
-      height: 180px;
+      width: 100px;
+      height: 100px;
       object-fit: contain;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      margin: 0.5rem 0;
+      font-size: 1.25rem;
+      color: #1e293b;
+    }
+
+    .card p.price {
+      color: #2563eb;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1rem 0;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+    .card ul li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Footer styling (match About page) */
+    .site-footer {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .footer-nav a:hover {
+      opacity: 0.8;
+    }
+
+    @media(max-width:768px) {
+      .card img {
+        width: 80px;
+        height: 80px;
+      }
     }
   </style>
 
+  <!-- Load saved theme -->
   <script>
     window.onload = () => {
       const theme = localStorage.getItem("theme") || "theme-emerald";
@@ -48,9 +138,7 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">
-      <a href="index.html" style="text-decoration:none;color:inherit;">
-        BowesProduct
-      </a>
+      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
     </div>
 
     <nav class="main-nav">
@@ -77,7 +165,6 @@
 <!-- ICON GRID -->
 <section class="section light">
   <h2>Available Icons</h2>
-
   <p style="margin-bottom:1.5rem;color:#64748b;">
     All icons include a commercial license. SVG format.
   </p>
@@ -87,75 +174,45 @@
     <!-- ICON 1 -->
     <div class="card">
       <img src="icons/teardrop.svg" alt="Teardrop Icon">
-
       <h3>Teardrop</h3>
       <p class="price">€1 — Commercial License</p>
-
       <ul>
         <li>SVG format</li>
         <li>Pixel-perfect</li>
         <li>Unlimited commercial use</li>
       </ul>
-
-      <a
-        href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03"
-        target="_blank"
-        class="btn">
+      <a href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" target="_blank" class="btn">
         Buy Icon
       </a>
     </div>
 
     <!-- COMING SOON -->
     <div class="card">
-      <div style="
-        width:100%;
-        height:180px;
-        background:#e5e7eb;
-        border-radius:12px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-weight:600;
-        color:#64748b;">
+      <div style="width:100%;height:100px;background:#e5e7eb;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:600;color:#64748b;margin-bottom:1rem;">
         Coming Soon
       </div>
-
       <h3>Icon #2</h3>
       <p class="price">€1</p>
-
       <ul>
         <li>SVG format</li>
         <li>Commercial license</li>
         <li>Releases soon</li>
       </ul>
-
       <a class="btn secondary">Coming Soon</a>
     </div>
 
     <!-- COMING SOON -->
     <div class="card">
-      <div style="
-        width:100%;
-        height:180px;
-        background:#e5e7eb;
-        border-radius:12px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-weight:600;
-        color:#64748b;">
+      <div style="width:100%;height:100px;background:#e5e7eb;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:600;color:#64748b;margin-bottom:1rem;">
         Coming Soon
       </div>
-
       <h3>Icon #3</h3>
       <p class="price">€1</p>
-
       <ul>
         <li>SVG format</li>
         <li>Commercial license</li>
         <li>Releases soon</li>
       </ul>
-
       <a class="btn secondary">Coming Soon</a>
     </div>
 
@@ -164,15 +221,16 @@
 
 <!-- FOOTER -->
 <footer class="site-footer">
-  <nav class="footer-nav">
-    <a href="about.html">About</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
-
-  <p>© 2025 BowesProduct</p>
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
 </footer>
 
 <!-- THEME SCRIPT -->
