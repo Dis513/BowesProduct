@@ -6,61 +6,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="About BowesProduct: commercial-ready digital assets for designers, developers, and businesses.">
 
+  <!-- Shared CSS -->
   <link rel="stylesheet" href="style.css">
 
+  <!-- Page-specific styles -->
   <style>
     body { font-family: 'Segoe UI', sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
-    header, footer { background: linear-gradient(90deg, #4ade80, #2563eb); color:white; }
-    .header-inner, .footer-inner { max-width: 1200px; margin: auto; padding: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-    .logo a { font-weight: 700; font-size: 1.5rem; color:white; text-decoration:none; }
-    .main-nav a { margin-left: 1rem; text-decoration:none; color:white; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition: background 0.2s; }
-    .main-nav a:hover { background: rgba(255,255,255,0.2); }
-    #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
-
-    .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#d8b4fe,#a5b4fc); color:#1e293b; border-bottom:5px solid #2563eb; }
-    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
-    .hero p { font-size:1.25rem; margin:0; }
-
-    .section { max-width: 1000px; margin: 3rem auto; padding:0 1rem; }
+    .section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
     .section h2 { font-size:2rem; color:#2563eb; margin-bottom:1rem; text-align:center; }
-    .section p { line-height:1.7; font-size:1.05rem; margin-bottom:1rem; }
+    .section p, .section ul { line-height:1.7; font-size:1.05rem; margin-bottom:1rem; }
     .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; }
     .card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
     .card h3 { margin-top:0; color:#2563eb; font-size:1.5rem; }
     .card ul { margin:0.5rem 0 0 1.2rem; }
     .card ul li { margin-bottom:0.5rem; }
 
-    footer { color:white; padding:2rem 1rem; margin-top:3rem; }
-    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
-    .footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
-    .footer-nav a:hover { opacity:0.8; }
+    /* Footer spacing */
+    .site-footer { margin-top:4rem; }
+
+    /* Hero */
+    .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#d8b4fe,#a5b4fc); color:#1e293b; border-bottom:5px solid #2563eb; }
+    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
+    .hero p { font-size:1.25rem; margin:0; }
+
+    /* Buttons & links override */
+    .btn { color: #ffffff !important; }
 
     @media(max-width:768px){
       .main-nav a { margin-left:0.5rem; margin-right:0.5rem; }
     }
   </style>
 
+  <!-- Theme load -->
   <script>
     window.onload = () => {
-      const theme = localStorage.getItem("theme") || "theme-emerald";
-      document.body.className = theme;
-      const select = document.getElementById("themeSelect");
-      if (select) select.value = theme;
+      const savedTheme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = savedTheme;
+      const themeSelect = document.getElementById("themeSelect");
+      if (themeSelect) themeSelect.value = savedTheme;
     };
   </script>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo"><a href="index.html">BowesProduct</a></div>
+    <div class="logo">
+      <a href="index.html" style="text-decoration:none;color:inherit;">
+        BowesProduct
+      </a>
+    </div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
       <a href="about.html" class="active">About</a>
     </nav>
+
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
       <option value="theme-blue">Blue</option>
@@ -70,11 +75,13 @@
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <h1>About BowesProduct</h1>
   <p>Commercial-ready digital assets for designers, developers, and businesses.</p>
 </section>
 
+<!-- ABOUT SECTION -->
 <section class="section">
   <div class="card">
     <h3>Our Mission</h3>
@@ -108,20 +115,25 @@
   <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
 </section>
 
+<!-- FOOTER -->
 <footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refunds</a>
-    </nav>
-    <p style="text-align:center;">© 2025 BowesProduct</p>
-  </div>
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="license.html">License</a>
+    <a href="refund.html">Refund</a>
+  </nav>
+
+  <p class="copyright" style="text-align:center;">
+    Secure payments powered by Stripe<br>
+    © 2025 BowesProduct
+  </p>
 </footer>
 
+<!-- SCRIPTS -->
 <script>
+  // Theme selector sync
   const themeSelect = document.getElementById("themeSelect");
   themeSelect.addEventListener("change", () => {
     document.body.className = themeSelect.value;
