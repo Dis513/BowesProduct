@@ -2,70 +2,121 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Icon Library – BowesProduct</title>
+  <title>Icons – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Force readable buttons everywhere */
+    .btn {
+      background: #2563eb;
+      color: #ffffff !important;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: #2563eb !important;
+      border: 1px solid #2563eb;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+    }
+  </style>
 
   <script>
     window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
     };
   </script>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">BowesProduct</div>
+    <div class="logo">
+      <a href="index.html" style="text-decoration:none;color:inherit;">
+        BowesProduct
+      </a>
+    </div>
 
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html" class="active">Icons</a>
       <a href="models.html">Models</a>
     </nav>
+
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <h1>Icon Library</h1>
   <p>Clean, scalable SVG icons for commercial use</p>
 </section>
 
+<!-- ICON GRID -->
 <section class="section light">
-  <h2>Browse Icons</h2>
+  <h2>Available Icons</h2>
 
-  <p style="margin-bottom:1rem; color:#64748b;">
-    Filter by category. More icons added weekly.
+  <p style="margin-bottom:1.5rem;color:#64748b;">
+    All icons include a commercial license. SVG format.
   </p>
-
-  <div style="margin-bottom:2rem;">
-    <a class="btn secondary">All</a>
-    <a class="btn secondary">UI</a>
-    <a class="btn secondary">Shapes</a>
-    <a class="btn secondary">Arrows</a>
-  </div>
 
   <div class="products">
 
+    <!-- ICON 1 -->
     <div class="card">
       <img src="icons/teardrop.svg" alt="Teardrop Icon">
+
       <h3>Teardrop</h3>
       <p class="price">€1 — Commercial License</p>
 
       <ul>
         <li>SVG format</li>
-        <li>Scalable & pixel-perfect</li>
-        <li>Commercial usage allowed</li>
+        <li>Pixel-perfect</li>
+        <li>Unlimited commercial use</li>
       </ul>
 
-      <a href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" class="btn">
+      <a
+        href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03"
+        target="_blank"
+        class="btn">
         Buy Icon
       </a>
     </div>
 
+    <!-- COMING SOON -->
     <div class="card">
-      <div style="width:100%;height:180px;background:#e5e7eb;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:bold;">
+      <div style="
+        width:100%;
+        height:180px;
+        background:#e5e7eb;
+        border-radius:12px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:600;
+        color:#64748b;">
         Coming Soon
       </div>
 
@@ -81,8 +132,18 @@
       <a class="btn secondary">Coming Soon</a>
     </div>
 
+    <!-- COMING SOON -->
     <div class="card">
-      <div style="width:100%;height:180px;background:#e5e7eb;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:bold;">
+      <div style="
+        width:100%;
+        height:180px;
+        background:#e5e7eb;
+        border-radius:12px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:600;
+        color:#64748b;">
         Coming Soon
       </div>
 
@@ -101,16 +162,27 @@
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="site-footer">
-  <div class="footer-nav">
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
     <a href="privacy.html">Privacy</a>
     <a href="terms.html">Terms</a>
     <a href="license.html">License</a>
     <a href="refund.html">Refunds</a>
-  </div>
+  </nav>
 
   <p>© 2025 BowesProduct</p>
 </footer>
+
+<!-- THEME SCRIPT -->
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+  });
+</script>
 
 </body>
 </html>
