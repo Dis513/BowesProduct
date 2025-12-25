@@ -5,7 +5,7 @@
   <title>License – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="BowesProduct License Agreement: Terms and conditions for the use of our digital assets.">
-  
+
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -16,7 +16,8 @@
       margin: 0;
     }
 
-    .header-inner, .footer-inner {
+    .header-inner,
+    .footer-inner {
       max-width: 1200px;
       margin: auto;
       padding: 1rem;
@@ -43,7 +44,8 @@
       transition: background 0.2s;
     }
 
-    .main-nav a:hover, .main-nav a.active {
+    .main-nav a:hover,
+    .main-nav a.active {
       background: rgba(0, 0, 0, 0.05);
     }
 
@@ -78,26 +80,18 @@
       padding: 0 1rem;
     }
 
-    .section h2 {
-      font-size: 2rem;
-      color: #2563eb;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
     .card {
       background: white;
       border-radius: 12px;
       padding: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       margin-bottom: 2rem;
       transition: transform 0.2s, box-shadow 0.2s;
-      text-align: left;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
     }
 
     .card h3 {
@@ -108,19 +102,18 @@
 
     .card ul {
       margin: 0.5rem 0 0 1.5rem;
-      padding-left: 0;
-      text-align: left;
     }
 
     .card ul li {
       margin-bottom: 0.5rem;
     }
 
-    footer {
+    /* FOOTER — MATCHES HOMEPAGE */
+    .site-footer {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
       background: #2563eb;
       color: white;
-      padding: 2rem 1rem;
-      margin-top: 3rem;
     }
 
     .footer-nav {
@@ -128,17 +121,18 @@
       flex-wrap: wrap;
       justify-content: center;
       margin-bottom: 1rem;
+      gap: 1rem;
     }
 
     .footer-nav a {
-      margin: 0.5rem 1rem;
       color: white;
-      font-weight: 500;
       text-decoration: none;
+      font-weight: 500;
       transition: opacity 0.2s;
     }
 
-    .footer-nav a:hover, .footer-nav a.active {
+    .footer-nav a:hover,
+    .footer-nav a.active {
       opacity: 0.8;
     }
 
@@ -150,6 +144,7 @@
     }
   </style>
 
+  <!-- Load saved theme -->
   <script>
     window.onload = () => {
       const theme = localStorage.getItem("theme") || "theme-emerald";
@@ -165,12 +160,14 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo"><a href="index.html">BowesProduct</a></div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
       <a href="license.html" class="active">License</a>
     </nav>
+
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
       <option value="theme-blue">Blue</option>
@@ -182,43 +179,55 @@
 
 <section class="hero">
   <h1>License Agreement</h1>
-  <p>By purchasing and using our assets, you agree to the following licensing terms:</p>
+  <p>Terms governing the use of BowesProduct digital assets</p>
 </section>
 
 <section class="section">
+
   <div class="card">
-    <h3>License Rights</h3>
+    <h3>License Grant</h3>
     <ul>
-      <li>You may use the purchased assets for commercial purposes.</li>
-      <li>Reselling, redistributing, or sublicensing the assets in their original or modified form is prohibited.</li>
+      <li>You are granted a non-exclusive, non-transferable license.</li>
+      <li>Assets may be used for personal and commercial projects.</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>Usage Restrictions</h3>
+    <h3>Prohibited Uses</h3>
     <ul>
-      <li>You may not use the assets for illegal purposes.</li>
-      <li>You may not use the assets in ways that infringe upon the intellectual property rights of others.</li>
+      <li>Resale, redistribution, or sublicensing of assets is prohibited.</li>
+      <li>Assets may not be offered as standalone products.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Intellectual Property</h3>
+    <ul>
+      <li>All intellectual property rights remain with BowesProduct.</li>
+      <li>Purchasing a product does not transfer ownership.</li>
     </ul>
   </div>
 
   <div class="card">
     <h3>Termination</h3>
     <ul>
-      <li>If you violate the terms of this agreement, your license may be revoked.</li>
-      <li>You must immediately cease using the assets if your license is revoked.</li>
+      <li>Violation of these terms results in immediate license termination.</li>
+      <li>Use of assets must cease upon termination.</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>Changes to the License</h3>
+    <h3>License Updates</h3>
     <ul>
-      <li>We reserve the right to update these terms.</li>
-      <li>Any changes will be communicated via the website, and your continued use of the assets signifies your acceptance of the updated terms.</li>
+      <li>License terms may be updated at any time.</li>
+      <li>Continued use constitutes acceptance of updated terms.</li>
     </ul>
   </div>
 
-  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
+  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">
+    Last updated: 1 January 2025
+  </p>
+
 </section>
 
 <footer class="site-footer">
