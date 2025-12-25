@@ -21,15 +21,12 @@
     .card ul { margin:0.5rem 0 0 1.2rem; }
     .card ul li { margin-bottom:0.5rem; }
 
-    /* Footer spacing */
-    .site-footer { margin-top:4rem; }
-
-    /* Hero */
     .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#d8b4fe,#a5b4fc); color:#1e293b; border-bottom:5px solid #2563eb; }
     .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
     .hero p { font-size:1.25rem; margin:0; }
 
-    /* Buttons & links override */
+    .site-footer { margin-top:4rem; }
+
     .btn { color: #ffffff !important; }
 
     @media(max-width:768px){
@@ -50,7 +47,7 @@
 
 <body>
 
-<!-- HEADER -->
+<!-- HEADER (from models page) -->
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">
@@ -63,7 +60,7 @@
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
-      <a href="about.html" class="active">About</a>
+      <a href="about.html">About</a>
     </nav>
 
     <select id="themeSelect">
@@ -115,7 +112,7 @@
   <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
 </section>
 
-<!-- FOOTER -->
+<!-- FOOTER (from models page) -->
 <footer class="site-footer">
   <nav class="footer-nav">
     <a href="about.html">About</a>
@@ -131,9 +128,8 @@
   </p>
 </footer>
 
-<!-- SCRIPTS -->
+<!-- SCRIPT (theme selector) -->
 <script>
-  // Theme selector sync
   const themeSelect = document.getElementById("themeSelect");
   themeSelect.addEventListener("change", () => {
     document.body.className = themeSelect.value;
