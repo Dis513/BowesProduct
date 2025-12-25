@@ -4,48 +4,158 @@
   <meta charset="UTF-8">
   <title>About – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="style.css">
 
+  <style>
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .about-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    }
+
+    .about-card h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .about-card p {
+      color: #64748b;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .about-intro {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .about-intro p {
+      color: #64748b;
+      font-size: 1.05rem;
+      margin-top: 1rem;
+    }
+  </style>
+
+  <!-- Load saved theme -->
   <script>
     window.onload = () => {
-      document.body.className = "theme-" + (localStorage.getItem("theme") || "blue");
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
     };
   </script>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">BowesProduct</div>
+    <div class="logo">
+      <a href="index.html" style="text-decoration:none;color:inherit;">
+        BowesProduct
+      </a>
+    </div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
     </nav>
+
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
-  <h1>About</h1>
+  <h1>About BowesProduct</h1>
+  <p>Commercial-grade digital assets built for real-world use</p>
 </section>
 
+<!-- INTRO -->
 <section class="section">
-  <p>
-    BowesProduct creates commercial-ready digital assets for designers,
-    developers, and businesses. Our focus is clarity, licensing simplicity,
-    and assets that work in real production environments.
-  </p>
+  <div class="about-intro">
+    <p>
+      BowesProduct creates clean, scalable, and legally simple digital assets
+      for designers, developers, and businesses who value quality and clarity.
+    </p>
+  </div>
 
-  <p style="margin-top:1rem;">
-    All products are designed with scalability, consistency, and
-    professional usage in mind.
-  </p>
+  <div class="about-grid">
+
+    <div class="about-card">
+      <h3>Our Mission</h3>
+      <p>
+        To provide high-quality brand assets with clear commercial licensing,
+        no subscriptions, and no confusion — just usable products.
+      </p>
+    </div>
+
+    <div class="about-card">
+      <h3>What We Create</h3>
+      <p>
+        Brand identity kits, SVG icon libraries, and 3D models designed to
+        integrate smoothly into production workflows.
+      </p>
+    </div>
+
+    <div class="about-card">
+      <h3>Built for Professionals</h3>
+      <p>
+        Every asset is designed for scalability, consistency, and commercial
+        deployment across web, print, and digital products.
+      </p>
+    </div>
+
+    <div class="about-card">
+      <h3>Simple Licensing</h3>
+      <p>
+        One-time purchases with clear commercial rights. No royalties.
+        No subscriptions. No hidden terms.
+      </p>
+    </div>
+
+  </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="site-footer">
+  <nav class="footer-nav">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="license.html">License</a>
+    <a href="refund.html">Refunds</a>
+  </nav>
+
   <p>© 2025 BowesProduct</p>
 </footer>
+
+<!-- THEME SCRIPT -->
+<script>
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem("theme", themeSelect.value);
+  });
+</script>
 
 </body>
 </html>
