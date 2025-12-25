@@ -4,184 +4,45 @@
   <meta charset="UTF-8">
   <title>Privacy – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Privacy policy for BowesProduct digital assets, icons, models, and brand kits.">
+
   <link rel="stylesheet" href="style.css">
 
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9fafb;
-      color: #1e293b;
-      margin: 0;
-      text-align: center;
-    }
+    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
+    .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .logo a { font-weight:700; font-size:1.5rem; color:#1e293b; text-decoration:none; }
+    .main-nav a { margin-left:1rem; text-decoration:none; color:#1e293b; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
+    .main-nav a:hover, .main-nav a.active { background: rgba(0,0,0,0.05); }
+    #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
 
-    .header-inner, .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#34d399,#60a5fa); color:#1e293b; border-bottom:5px solid #2563eb; }
+    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
+    .hero p { font-size:1.25rem; margin:0; }
 
-    .logo a {
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: inherit;
-      text-decoration: none;
-    }
+    .section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
+    .section h2 { font-size:2rem; color:#2563eb; margin-bottom:1rem; text-align:center; }
+    .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; }
+    .card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
+    .card h3 { margin-top:0; color:#10b981; font-size:1.5rem; }
+    .card ul { margin:0.5rem 0 0 1.2rem; }
+    .card ul li { margin-bottom:0.5rem; }
 
-    .main-nav a {
-      margin-left: 1rem;
-      text-decoration: none;
-      color: inherit;
-      font-weight: 500;
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      transition: background 0.2s;
-    }
+    /* Footer styling */
+    footer { background:#2563eb; color:white; padding:2rem 1rem; margin-top:3rem; }
+    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
+    .footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
+    .footer-nav a:hover, .footer-nav a.active { opacity:0.8; }
 
-    .main-nav a:hover, .main-nav a.active {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    #themeSelect {
-      padding: 0.3rem 0.5rem;
-      border-radius: 6px;
-      border: none;
-      font-weight: 500;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 6rem 1rem;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      border-bottom: 5px solid #2563eb;
-    }
-
-    .hero h1, .hero p {
-      position: relative;
-      z-index: 2;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
-    }
-
-    .hero h1 {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      margin: 0;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 1;
-    }
-
-    .section {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1rem;
-    }
-
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      text-align: left;
-      border: 2px solid #2563eb;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-    }
-
-    .card h3 {
-      font-size: 1.5rem;
-      margin: 0.5rem 0;
-      color: #2563eb;
-    }
-
-    .card p, .card ul {
-      font-size: 1.1rem;
-      color: #1e293b;
-      line-height: 1.8;
-    }
-
-    .footer-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 1rem;
-      gap: 1rem;
-    }
-
-    .footer-nav a {
-      margin: 0.5rem 1rem;
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: opacity 0.2s;
-    }
-
-    .footer-nav a:hover {
-      opacity: 0.8;
-    }
-
-    footer {
-      background: #2563eb;
-      color: white;
-      padding: 2rem 1rem;
-      text-align: center;
-    }
-
-    footer p {
-      font-size: 1rem;
-    }
-
-    @media(max-width:768px) {
-      .main-nav a {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-      }
-      .card p, .card ul {
-        max-width: 100%;
-      }
-    }
+    @media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
   </style>
 
   <script>
-    function applyThemeColors(theme){
-      let primary = "#4ade80", secondary = "#2563eb";
-      if (theme === "theme-blue") { primary = "#3b82f6"; secondary = "#1e40af"; }
-      if (theme === "theme-violet") { primary = "#8b5cf6"; secondary = "#5b21b6"; }
-      if (theme === "theme-amber") { primary = "#f59e0b"; secondary = "#b45309"; }
-
-      document.querySelector(".site-header").style.background = `linear-gradient(90deg, ${primary}, ${secondary})`;
-      document.querySelector(".hero").style.background = `linear-gradient(90deg, ${primary}, ${secondary})`;
-      document.querySelector("footer").style.background = `linear-gradient(90deg, ${primary}, ${secondary})`;
-      document.querySelectorAll(".main-nav a").forEach(a => a.style.color = "white");
-      document.querySelectorAll(".footer-nav a").forEach(a => a.style.color = "white");
-    }
-
     window.onload = () => {
-      const savedTheme = localStorage.getItem("theme") || "theme-emerald";
-      document.body.className = savedTheme;
-      const themeSelect = document.getElementById("themeSelect");
-      if (themeSelect) themeSelect.value = savedTheme;
-      applyThemeColors(savedTheme);
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
     };
   </script>
 </head>
@@ -206,36 +67,68 @@
   </div>
 </header>
 
-<section>
+<section class="hero">
   <h1>Privacy Policy</h1>
-  <p>Your privacy is important to us. This policy outlines the types of personal information we collect and how we use, protect, and share it.</p>
-  
-  <h2>Information We Collect</h2>
-  <p>We collect personal information when you create an account, make a purchase, or contact us for support. This may include your name, email address, billing information, and any other relevant data necessary to process transactions and support requests.</p>
-
-  <h2>How We Use Your Information</h2>
-  <p>Your personal information is used to process payments, deliver purchased products, and improve our services. We may also use your information to contact you with updates or promotional offers related to our products, with an option to opt-out.</p>
-
-  <h2>Data Security</h2>
-  <p>We take security seriously and use encryption to protect sensitive data during transactions. We do not store payment details on our servers. Any information shared is stored securely and only accessible to authorized personnel.</p>
-
-  <h2>Your Rights</h2>
-  <p>You have the right to access, modify, or delete your personal data. If you wish to exercise any of these rights, please contact us at support@bowesproduct.com.</p>
-
-  <h2>Third-Party Services</h2>
-  <p>We may share your information with third-party services, such as payment processors or email service providers, to assist in fulfilling your order or communicating with you. These services are obligated to use your information solely for those purposes.</p>
+  <p>How we collect, use, and protect your information</p>
 </section>
 
-<footer>
+<section class="section">
+  <div class="card">
+    <h3>Information We Collect</h3>
+    <ul>
+      <li>Email and contact information for purchases or support</li>
+      <li>Payment details (processed securely by Stripe)</li>
+      <li>Cookies and analytics to improve site experience</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>How We Use Your Information</h3>
+    <ul>
+      <li>Process transactions and deliver purchased assets</li>
+      <li>Provide support and respond to inquiries</li>
+      <li>Improve our services and website</li>
+      <li>Send relevant updates and announcements (with opt-out available)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Data Security</h3>
+    <p>We use modern security measures to protect your data. Payment info is processed securely via Stripe. We do not store sensitive card details on our servers.</p>
+  </div>
+
+  <div class="card">
+    <h3>Third-Party Services</h3>
+    <ul>
+      <li>Stripe for payment processing</li>
+      <li>Analytics platforms for site improvement</li>
+      <li>Email delivery services for notifications</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Your Rights</h3>
+    <ul>
+      <li>Request access to your personal data</li>
+      <li>Request deletion of your data</li>
+      <li>Opt-out of marketing emails</li>
+      <li>Contact support for privacy concerns at support@bowesproduct.com</li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
+</section>
+
+<footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
       <a href="about.html">About</a>
       <a href="privacy.html" class="active">Privacy</a>
       <a href="terms.html">Terms</a>
       <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
+      <a href="refund.html">Refunds</a>
     </nav>
-    <p>© 2025 BowesProduct</p>
+    <p style="text-align:center;">© 2025 BowesProduct</p>
   </div>
 </footer>
 
@@ -244,7 +137,6 @@
   themeSelect.addEventListener("change", () => {
     document.body.className = themeSelect.value;
     localStorage.setItem("theme", themeSelect.value);
-    applyThemeColors(themeSelect.value);
   });
 </script>
 
