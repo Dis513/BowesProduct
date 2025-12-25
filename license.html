@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>License – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BowesProduct License Agreement: Terms and conditions for the use of our digital assets.">
+  
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -12,15 +14,149 @@
       background: #f9fafb;
       color: #1e293b;
       margin: 0;
+    }
+
+    .header-inner, .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo a {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #1e293b;
+      text-decoration: none;
+    }
+
+    .main-nav a {
+      margin-left: 1rem;
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 500;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .main-nav a:hover, .main-nav a.active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    #themeSelect {
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 500;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem;
+      background: linear-gradient(to right, #34d399, #60a5fa);
+      color: #1e293b;
+      border-bottom: 5px solid #2563eb;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .section {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      color: #2563eb;
+      margin-bottom: 1rem;
       text-align: center;
     }
 
-    /* Same CSS as Privacy and Terms pages */
-    /* ... (reuse the same CSS as in the previous examples) ... */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-align: left;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #10b981;
+      font-size: 1.5rem;
+    }
+
+    .card ul {
+      margin: 0.5rem 0 0 1.5rem;
+      padding-left: 0;
+      text-align: left;
+    }
+
+    .card ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      background: #2563eb;
+      color: white;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
+    }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .footer-nav a {
+      margin: 0.5rem 1rem;
+      color: white;
+      font-weight: 500;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .footer-nav a:hover, .footer-nav a.active {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .main-nav a {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+      }
+    }
   </style>
 
   <script>
-    // Same script as Privacy and Terms to handle theme selection and application
+    window.onload = () => {
+      const theme = localStorage.getItem("theme") || "theme-emerald";
+      document.body.className = theme;
+      const select = document.getElementById("themeSelect");
+      if (select) select.value = theme;
+    };
   </script>
 </head>
 
@@ -44,24 +180,48 @@
   </div>
 </header>
 
-<section>
+<section class="hero">
   <h1>License Agreement</h1>
   <p>By purchasing and using our assets, you agree to the following licensing terms:</p>
-
-  <h2>License Rights</h2>
-  <p>You may use the purchased assets for commercial purposes, but you are prohibited from reselling, redistributing, or sublicensing the assets in their original or modified form.</p>
-
-  <h2>Usage Restrictions</h2>
-  <p>Do not use the assets for illegal purposes, nor in a manner that infringes upon the intellectual property rights of others.</p>
-
-  <h2>Termination</h2>
-  <p>If you violate the terms of this agreement, your license may be revoked and you must immediately cease using the assets.</p>
-
-  <h2>Changes to the License</h2>
-  <p>We reserve the right to update these terms. Any changes will be communicated via the website, and your continued use of the assets signifies your acceptance of the updated terms.</p>
 </section>
 
-<footer>
+<section class="section">
+  <div class="card">
+    <h3>License Rights</h3>
+    <ul>
+      <li>You may use the purchased assets for commercial purposes.</li>
+      <li>Reselling, redistributing, or sublicensing the assets in their original or modified form is prohibited.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Usage Restrictions</h3>
+    <ul>
+      <li>You may not use the assets for illegal purposes.</li>
+      <li>You may not use the assets in ways that infringe upon the intellectual property rights of others.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Termination</h3>
+    <ul>
+      <li>If you violate the terms of this agreement, your license may be revoked.</li>
+      <li>You must immediately cease using the assets if your license is revoked.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Changes to the License</h3>
+    <ul>
+      <li>We reserve the right to update these terms.</li>
+      <li>Any changes will be communicated via the website, and your continued use of the assets signifies your acceptance of the updated terms.</li>
+    </ul>
+  </div>
+
+  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
+</section>
+
+<footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
       <a href="about.html">About</a>
@@ -79,7 +239,6 @@
   themeSelect.addEventListener("change", () => {
     document.body.className = themeSelect.value;
     localStorage.setItem("theme", themeSelect.value);
-    applyThemeColors(themeSelect.value);
   });
 </script>
 
