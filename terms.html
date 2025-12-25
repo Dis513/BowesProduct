@@ -9,34 +9,142 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    body { font-family:'Segoe UI',sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
-    .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-    .logo a { font-weight:700; font-size:1.5rem; color:#1e293b; text-decoration:none; }
-    .main-nav a { margin-left:1rem; text-decoration:none; color:#1e293b; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
-    .main-nav a:hover, .main-nav a.active { background: rgba(0,0,0,0.05); }
-    #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafb;
+      color: #1e293b;
+      margin: 0;
+    }
 
-    .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#34d399,#60a5fa); color:#1e293b; border-bottom:5px solid #2563eb; }
-    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
-    .hero p { font-size:1.25rem; margin:0; }
+    .header-inner,
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-    .section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
-    .section h2 { font-size:2rem; color:#2563eb; margin-bottom:1rem; text-align:center; }
-    .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
-    .card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-    .card h3 { margin-top:0; color:#10b981; font-size:1.5rem; }
-    .card ul { margin:0.5rem 0 0 1.5rem; padding-left:0; text-align:left; }
-    .card ul li { margin-bottom:0.5rem; }
+    .logo a {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #1e293b;
+      text-decoration: none;
+    }
 
-    /* Footer styling */
-    footer { background:#2563eb; color:white; padding:2rem 1rem; margin-top:3rem; }
-    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
-    .footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
-    .footer-nav a:hover, .footer-nav a.active { opacity:0.8; }
+    .main-nav a {
+      margin-left: 1rem;
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 500;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
 
-    @media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
+    .main-nav a:hover,
+    .main-nav a.active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    #themeSelect {
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 500;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem;
+      background: linear-gradient(to right, #34d399, #60a5fa);
+      color: #1e293b;
+      border-bottom: 5px solid #2563eb;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .section {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #10b981;
+      font-size: 1.5rem;
+    }
+
+    .card ul {
+      margin: 0.5rem 0 0 1.5rem;
+    }
+
+    .card ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* FOOTER — MATCHES HOMEPAGE */
+    .site-footer {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
+    }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .footer-nav a:hover,
+    .footer-nav a.active {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .main-nav a {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+      }
+    }
   </style>
 
+  <!-- Load saved theme -->
   <script>
     window.onload = () => {
       const theme = localStorage.getItem("theme") || "theme-emerald";
@@ -52,12 +160,14 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo"><a href="index.html">BowesProduct</a></div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
       <a href="terms.html" class="active">Terms</a>
     </nav>
+
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
       <option value="theme-blue">Blue</option>
@@ -73,50 +183,54 @@
 </section>
 
 <section class="section">
+
   <div class="card">
     <h3>Acceptance of Terms</h3>
     <ul>
-      <li>By accessing this site, you agree to these terms and conditions.</li>
-      <li>We may update these terms at any time; continued use constitutes acceptance.</li>
+      <li>By accessing or purchasing from BowesProduct, you agree to these terms.</li>
+      <li>Continued use after updates constitutes acceptance of revised terms.</li>
     </ul>
   </div>
 
   <div class="card">
     <h3>Purchases and Payments</h3>
     <ul>
-      <li>All purchases are final unless otherwise stated in the Refund Policy.</li>
-      <li>Payments are processed securely through Stripe.</li>
-      <li>We do not store sensitive payment information on our servers.</li>
+      <li>All payments are processed securely via Stripe.</li>
+      <li>Purchases are final unless stated otherwise in the Refund Policy.</li>
+      <li>BowesProduct does not store payment credentials.</li>
     </ul>
   </div>
 
   <div class="card">
     <h3>License and Usage</h3>
     <ul>
-      <li>Purchased assets are for commercial or personal use according to the license.</li>
-      <li>Redistribution or resale of assets without permission is prohibited.</li>
-      <li>License details can be viewed on the <a href="license.html">License page</a>.</li>
+      <li>Assets are licensed for commercial or personal use as defined on the License page.</li>
+      <li>Redistribution, resale, or sublicensing without permission is prohibited.</li>
+      <li>See full terms on the <a href="license.html">License page</a>.</li>
     </ul>
   </div>
 
   <div class="card">
     <h3>User Responsibilities</h3>
     <ul>
-      <li>You must comply with all applicable laws when using the products.</li>
-      <li>Do not attempt to hack, copy, or modify the site unlawfully.</li>
-      <li>Report any security vulnerabilities responsibly.</li>
+      <li>You agree to comply with all applicable laws and regulations.</li>
+      <li>You may not attempt to disrupt or misuse the website.</li>
+      <li>Security concerns should be reported responsibly.</li>
     </ul>
   </div>
 
   <div class="card">
     <h3>Limitation of Liability</h3>
     <ul>
-      <li>BowesProduct is not responsible for indirect damages from using our assets.</li>
-      <li>We strive to ensure content quality, but assets are provided “as is.”</li>
+      <li>Assets are provided “as is” without warranties of any kind.</li>
+      <li>BowesProduct is not liable for indirect or consequential damages.</li>
     </ul>
   </div>
 
-  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
+  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">
+    Last updated: 1 January 2025
+  </p>
+
 </section>
 
 <footer class="site-footer">
@@ -126,9 +240,9 @@
       <a href="privacy.html">Privacy</a>
       <a href="terms.html" class="active">Terms</a>
       <a href="license.html">License</a>
-      <a href="refund.html">Refunds</a>
+      <a href="refund.html">Refund</a>
     </nav>
-    <p style="text-align:center;">© 2025 BowesProduct</p>
+    <p>© 2025 BowesProduct</p>
   </div>
 </footer>
 
