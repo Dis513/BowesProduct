@@ -13,26 +13,8 @@
     .main-nav a { margin-left:1rem; text-decoration:none; color:inherit; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
     .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
     #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
-
-    .hero { text-align:center; padding:4rem 1rem; color:white; position:relative; overflow:hidden; border-bottom:5px solid #2563eb; }
-    .hero h1, .hero p { position:relative; z-index:2; text-shadow:0 2px 8px rgba(0,0,0,0.7); }
-    .hero h1 { font-size:2.5rem; margin-bottom:0.5rem; }
-    .hero p { font-size:1.1rem; margin:0; }
-    .hero::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.4); z-index:1; }
-
-    .section { max-width:900px; margin:3rem auto; padding:0 1rem; text-align:left; }
-    .card { background:white; border-radius:12px; padding:1.5rem 2rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; text-align:left; }
-    .card:hover { transform:translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-    .card h3 { font-size:1.5rem; margin:0.5rem 0; color:#2563eb; }
-    .card p, .card ul { color:#1e293b; }
-    .card ul { padding-left:1.2rem; margin-top:0.5rem; }
-    .card ul li { margin-bottom:0.5rem; }
-
-    .btn { background:#2563eb; color:white !important; text-decoration:none; display:inline-block; padding:0.5rem 1rem; border-radius:6px; transition:opacity 0.2s; }
-    .btn.secondary { background:transparent; color:#2563eb !important; border:1px solid #2563eb; }
-    .btn:hover { opacity:0.9; }
-
-    footer { margin-top:4rem; padding:2rem 1rem; color:white; text-align:center; }
+    section { max-width:800px; margin:3rem auto; padding:0 1rem; }
+    footer { margin-top:4rem; padding:2rem 1rem; color:white; }
     .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; gap:1rem; }
     .footer-nav a { color:white; text-decoration:none; font-weight:500; transition:opacity 0.2s; }
     .footer-nav a:hover { opacity:0.8; }
@@ -45,7 +27,6 @@
       if(theme==="theme-violet"){ primary="#8b5cf6"; secondary="#5b21b6"; }
       if(theme==="theme-amber"){ primary="#f59e0b"; secondary="#b45309"; }
       document.querySelector(".site-header").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
-      document.querySelector(".hero").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelector("footer").style.background=`linear-gradient(90deg, ${primary}, ${secondary})`;
       document.querySelectorAll(".main-nav a").forEach(a=>a.style.color="white");
       document.querySelectorAll(".footer-nav a").forEach(a=>a.style.color="white");
@@ -62,7 +43,6 @@
 </head>
 
 <body>
-
 <header class="site-header">
   <div class="header-inner">
     <div class="logo"><a href="index.html">BowesProduct</a></div>
@@ -81,45 +61,13 @@
   </div>
 </header>
 
-<section class="hero">
+<section>
   <h1>About BowesProduct</h1>
-  <p>Commercial-ready digital assets for designers, developers, and businesses.</p>
+  <p>BowesProduct creates high-quality brand kits, scalable icons, and 3D models for businesses and designers. We focus on clean, professional assets ready for commercial use.</p>
+  <p>Our mission is to make professional branding accessible and easy to integrate across all platforms.</p>
 </section>
 
-<section class="section">
-  <div class="card">
-    <h3>Our Mission</h3>
-    <p>BowesProduct creates digital assets that are production-ready, professionally designed, and licensed for commercial use. We focus on clarity, usability, and delivering assets that save you time and money.</p>
-  </div>
-
-  <div class="card">
-    <h3>Our Philosophy</h3>
-    <p>We believe in clean, consistent, and scalable digital assets. Every product is designed for real-world use, with commercial licensing made simple and transparent.</p>
-  </div>
-
-  <div class="card">
-    <h3>Who We Serve</h3>
-    <ul>
-      <li>Designers looking for ready-made icons and branding assets</li>
-      <li>Developers needing SVGs and 3D models for projects</li>
-      <li>Businesses who want professional brand identity kits</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Why Choose Us</h3>
-    <ul>
-      <li>High-quality, pixel-perfect SVGs and 3D models</li>
-      <li>Clear commercial license with no hidden terms</li>
-      <li>Themeable site interface to preview products in different styles</li>
-      <li>Responsive customer support and fast delivery</li>
-    </ul>
-  </div>
-
-  <p style="margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 25 December 2025</p>
-</section>
-
-<footer class="site-footer">
+<footer>
   <div class="footer-inner">
     <nav class="footer-nav">
       <a href="about.html">About</a>
@@ -140,6 +88,5 @@
     applyThemeColors(themeSelect.value);
   });
 </script>
-
 </body>
 </html>
