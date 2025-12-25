@@ -13,12 +13,10 @@
   <style>
     body { font-family: 'Segoe UI', sans-serif; background:#f9fafb; color:#1e293b; margin:0; }
     .section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
-    .section h2 { font-size:2rem; color:#2563eb; margin-bottom:1rem; text-align:center; }
-    .section p, .section ul { line-height:1.7; font-size:1.05rem; margin-bottom:1rem; }
     .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; }
     .card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
     .card h3 { margin-top:0; color:#2563eb; font-size:1.5rem; }
-    .card ul { margin:0.5rem 0 0 1.2rem; }
+    .card ul { margin:0.5rem 0 0 1.5rem; } /* Left-aligned bullets */
     .card ul li { margin-bottom:0.5rem; }
 
     .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#d8b4fe,#a5b4fc); color:#1e293b; border-bottom:5px solid #2563eb; }
@@ -26,8 +24,6 @@
     .hero p { font-size:1.25rem; margin:0; }
 
     .site-footer { margin-top:4rem; }
-
-    .btn { color: #ffffff !important; }
 
     @media(max-width:768px){
       .main-nav a { margin-left:0.5rem; margin-right:0.5rem; }
@@ -47,7 +43,7 @@
 
 <body>
 
-<!-- HEADER (exact copy from models page) -->
+<!-- HEADER (from models page, no About link) -->
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">
@@ -79,11 +75,14 @@
 
 <!-- ABOUT SECTION -->
 <section class="section">
+  <!-- Combined Mission & Philosophy -->
   <div class="card">
-    <h3>Our Mission</h3>
+    <h3>Our Mission & Philosophy</h3>
     <p>BowesProduct creates digital assets that are production-ready, professionally designed, and licensed for commercial use. We focus on clarity, usability, and delivering assets that save you time and money.</p>
+    <p>We believe in clean, consistent, and scalable digital assets. Every product is designed for real-world use, with commercial licensing made simple and transparent.</p>
   </div>
 
+  <!-- Who We Serve -->
   <div class="card">
     <h3>Who We Serve</h3>
     <ul>
@@ -93,11 +92,7 @@
     </ul>
   </div>
 
-  <div class="card">
-    <h3>Our Philosophy</h3>
-    <p>We believe in clean, consistent, and scalable digital assets. Every product is designed for real-world use, with commercial licensing made simple and transparent.</p>
-  </div>
-
+  <!-- Why Choose Us -->
   <div class="card">
     <h3>Why Choose Us</h3>
     <ul>
@@ -111,7 +106,7 @@
   <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
 </section>
 
-<!-- FOOTER (from models page) -->
+<!-- FOOTER -->
 <footer class="site-footer">
   <nav class="footer-nav">
     <a href="about.html">About</a>
@@ -127,7 +122,7 @@
   </p>
 </footer>
 
-<!-- SCRIPT (theme selector) -->
+<!-- Theme selector script -->
 <script>
   const themeSelect = document.getElementById("themeSelect");
   themeSelect.addEventListener("change", () => {
