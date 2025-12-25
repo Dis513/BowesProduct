@@ -12,6 +12,11 @@
     .btn {
       background: #2563eb;
       color: #ffffff !important;
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: opacity 0.2s;
     }
 
     .btn.secondary {
@@ -60,6 +65,39 @@
     .step p {
       color: #64748b;
       font-size: 0.95rem;
+    }
+
+    /* Footer adjustments for index page */
+    .site-footer {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .footer-nav a:hover {
+      opacity: 0.8;
     }
   </style>
 
@@ -189,7 +227,7 @@
   </div>
 </section>
 
-<!-- HOW IT WORKS (CLEAN) -->
+<!-- HOW IT WORKS -->
 <section class="section">
   <h2>How It Works</h2>
 
@@ -214,17 +252,18 @@
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- FOOTER (NEW) -->
 <footer class="site-footer">
-  <nav class="footer-nav">
-    <a href="about.html">About</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-    <a href="license.html">License</a>
-    <a href="refund.html">Refunds</a>
-  </nav>
-
-  <p>© 2025 BowesProduct</p>
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
 </footer>
 
 <!-- THEME SCRIPT -->
