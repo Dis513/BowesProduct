@@ -9,34 +9,142 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    body { font-family:'Segoe UI',sans-serif; background:#f3f4f6; color:#1e293b; margin:0; }
-    header, footer { background: linear-gradient(90deg, #4ade80, #2563eb); color:white; }
-    .header-inner, .footer-inner { max-width:1200px; margin:auto; padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-    .logo a { font-weight:700; font-size:1.5rem; color:white; text-decoration:none; }
-    .main-nav a { margin-left:1rem; text-decoration:none; color:white; font-weight:500; padding:0.3rem 0.6rem; border-radius:6px; transition:background 0.2s; }
-    .main-nav a:hover, .main-nav a.active { background: rgba(255,255,255,0.2); }
-    #themeSelect { padding:0.3rem 0.5rem; border-radius:6px; border:none; font-weight:500; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafb;
+      color: #1e293b;
+      margin: 0;
+    }
 
-    .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(to right,#f87171,#fb7185); color:#1e293b; border-bottom:5px solid #2563eb; }
-    .hero h1 { font-size:3rem; margin-bottom:0.5rem; }
-    .hero p { font-size:1.25rem; margin:0; }
+    .header-inner,
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-    .section { max-width:1000px; margin:3rem auto; padding:0 1rem; }
-    .section h2 { font-size:2rem; color:#2563eb; margin-bottom:1rem; text-align:center; }
-    .card { background:white; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:2rem; transition: transform 0.2s, box-shadow 0.2s; }
-    .card:hover { transform: translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,0.12); }
-    .card h3 { margin-top:0; color:#f43f5e; font-size:1.5rem; }
-    .card ul { margin:0.5rem 0 0 1.2rem; }
-    .card ul li { margin-bottom:0.5rem; }
+    .logo a {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #1e293b;
+      text-decoration: none;
+    }
 
-    footer { color:white; padding:2rem 1rem; margin-top:3rem; }
-    .footer-nav { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
-    .footer-nav a { margin:0.5rem 1rem; color:white; font-weight:500; text-decoration:none; transition:opacity 0.2s; }
-    .footer-nav a:hover { opacity:0.8; }
+    .main-nav a {
+      margin-left: 1rem;
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 500;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
 
-    @media(max-width:768px){ .main-nav a{ margin-left:0.5rem; margin-right:0.5rem; } }
+    .main-nav a:hover,
+    .main-nav a.active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    #themeSelect {
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 500;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem;
+      background: linear-gradient(to right, #fb7185, #f87171);
+      color: #1e293b;
+      border-bottom: 5px solid #2563eb;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .section {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #f43f5e;
+      font-size: 1.5rem;
+    }
+
+    .card ul {
+      margin: 0.5rem 0 0 1.5rem;
+    }
+
+    .card ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* FOOTER — MATCHES OTHER PAGES */
+    .site-footer {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
+    }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .footer-nav a:hover,
+    .footer-nav a.active {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .main-nav a {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+      }
+    }
   </style>
 
+  <!-- Load saved theme -->
   <script>
     window.onload = () => {
       const theme = localStorage.getItem("theme") || "theme-emerald";
@@ -52,12 +160,14 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo"><a href="index.html">BowesProduct</a></div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
       <a href="refund.html" class="active">Refunds</a>
     </nav>
+
     <select id="themeSelect">
       <option value="theme-emerald">Emerald</option>
       <option value="theme-blue">Blue</option>
@@ -69,39 +179,49 @@
 
 <section class="hero">
   <h1>Refund Policy</h1>
-  <p>Clear and simple rules for refunds on BowesProduct assets</p>
+  <p>How refunds are handled for BowesProduct digital assets</p>
 </section>
 
 <section class="section">
+
   <div class="card">
     <h3>Eligibility</h3>
-    <p>Refunds are only provided in exceptional cases such as duplicate charges, accidental purchases, or technical issues preventing delivery. Digital products cannot be returned once delivered.</p>
+    <p>
+      Due to the nature of digital products, refunds are only granted in exceptional circumstances,
+      such as duplicate charges, accidental purchases, or technical issues preventing access.
+    </p>
   </div>
 
   <div class="card">
-    <h3>How to Request a Refund</h3>
+    <h3>Requesting a Refund</h3>
     <ul>
       <li>Contact support@bowesproduct.com within 7 days of purchase</li>
-      <li>Provide purchase receipt and description of issue</li>
-      <li>Refund requests are reviewed on a case-by-case basis</li>
+      <li>Include proof of purchase and a description of the issue</li>
+      <li>All requests are reviewed on a case-by-case basis</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>Processing Refunds</h3>
-    <p>Approved refunds are processed via the original payment method. It may take 5–10 business days for the refund to reflect.</p>
+    <h3>Refund Processing</h3>
+    <p>
+      Approved refunds are issued to the original payment method.
+      Processing times typically range from 5–10 business days.
+    </p>
   </div>
 
   <div class="card">
-    <h3>Non-Refundable Cases</h3>
+    <h3>Non-Refundable Situations</h3>
     <ul>
-      <li>Change of mind after download</li>
-      <li>Partial usage of digital assets</li>
-      <li>Violation of License or Terms</li>
+      <li>Change of mind after download or access</li>
+      <li>Partial or full use of digital assets</li>
+      <li>Violations of the License or Terms of Service</li>
     </ul>
   </div>
 
-  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">Last updated: 1 January 2025</p>
+  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">
+    Last updated: 1 January 2025
+  </p>
+
 </section>
 
 <footer class="site-footer">
@@ -111,9 +231,9 @@
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
       <a href="license.html">License</a>
-      <a href="refund.html">Refunds</a>
+      <a href="refund.html" class="active">Refunds</a>
     </nav>
-    <p style="text-align:center;">© 2025 BowesProduct</p>
+    <p>© 2025 BowesProduct</p>
   </div>
 </footer>
 
