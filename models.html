@@ -7,20 +7,89 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        .hero { text-align:center; padding:4rem 2rem; }
-        .model-container { max-width:1100px; height:600px; margin:2rem auto; background:#020617; border-radius:18px; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.35); }
+        .hero { 
+            text-align:center; 
+            padding:4rem 2rem; 
+        }
+        .model-container { 
+            max-width:1100px; 
+            height:600px; 
+            margin:2rem auto; 
+            background:#020617; 
+            border-radius:18px; 
+            overflow:hidden; 
+            box-shadow:0 25px 60px rgba(0,0,0,0.35); 
+        }
         model-viewer { width:100%; height:100%; }
-        .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.75rem; margin-top:2.5rem; }
-        .card { background:#ffffff; border-radius:14px; padding:1.5rem; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.08); transition:transform 0.2s, box-shadow 0.2s; }
-        .card:hover { transform:translateY(-4px); box-shadow:0 18px 40px rgba(0,0,0,0.12); }
-        .price { font-size:1.1rem; font-weight:700; margin:0.5rem 0 1rem; }
-        .delivery { font-size:0.85rem; color:#475569; margin-top:0.75rem; }
-        .btn { display:inline-block; width:100%; margin-top:0.6rem; padding:0.65rem 1rem; border-radius:10px; background:#2563eb; color:#ffffff !important; font-weight:600; text-decoration:none; border:none; cursor:pointer; }
+
+        .products { 
+            display:grid; 
+            grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); 
+            gap:1.75rem; 
+            margin-top:2.5rem; 
+        }
+        .card { 
+            background:#ffffff; 
+            border-radius:14px; 
+            padding:1.5rem; 
+            text-align:center; 
+            box-shadow:0 10px 25px rgba(0,0,0,0.08); 
+            transition:transform 0.2s, box-shadow 0.2s; 
+        }
+        .card:hover { 
+            transform:translateY(-4px); 
+            box-shadow:0 18px 40px rgba(0,0,0,0.12); 
+        }
+        .price { 
+            font-size:1.1rem; 
+            font-weight:700; 
+            margin:0.5rem 0 1rem; 
+        }
+        .delivery { 
+            font-size:0.85rem; 
+            color:#475569; 
+            margin-top:0.75rem; 
+        }
+        .btn { 
+            display:inline-block; 
+            width:100%; 
+            margin-top:0.6rem; 
+            padding:0.65rem 1rem; 
+            border-radius:10px; 
+            background:#2563eb; 
+            color:#ffffff !important; 
+            font-weight:600; 
+            text-decoration:none; 
+            border:none; 
+            cursor:pointer; 
+        }
         .view-btn { background:#0f172a; }
-        .site-footer { margin-top:4rem; padding:2rem 1rem; background:#2563eb; color:white; }
-        .footer-inner { max-width:1200px; margin:auto; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem; }
-        .footer-nav { display:flex; gap:1rem; flex-wrap:wrap; }
-        .footer-nav a { color:white; text-decoration:none; }
+
+        .site-footer { 
+            margin-top:4rem; 
+            padding:2rem 1rem; 
+            background:#2563eb; 
+            color:white; 
+        }
+        .footer-inner { 
+            max-width:1200px; 
+            margin:auto; 
+            display:flex; 
+            flex-wrap:wrap; 
+            justify-content:space-between; 
+            align-items:center; 
+            gap:1rem; 
+        }
+        .footer-nav { 
+            display:flex; 
+            gap:1rem; 
+            flex-wrap:wrap; 
+        }
+        .footer-nav a { 
+            color:white; 
+            text-decoration:none; 
+        }
+
         /* Section navigation buttons */
         .section-nav {
             text-align: center;
@@ -41,12 +110,88 @@
             background: #1d4ed8;
             transform: translateY(-3px);
         }
+
         /* Coming soon placeholder for Packs */
         .coming-soon {
             text-align: center;
             padding: 4rem 2rem;
             color: #64748b;
             font-size: 1.2rem;
+        }
+
+        /* Mobile-friendly improvements */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2.5rem 1rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .model-container {
+                height: 320px;
+                margin: 1.5rem 1rem;
+                border-radius: 14px;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+                margin-top: 1.5rem;
+                padding: 0 0.75rem;
+            }
+
+            .card {
+                padding: 1.2rem;
+            }
+
+            .section-nav {
+                margin: 2rem 0 2.5rem;
+            }
+            .section-nav a {
+                display: block;
+                width: 80%;
+                max-width: 320px;
+                margin: 0.8rem auto;
+                padding: 1rem;
+            }
+
+            .coming-soon {
+                padding: 3rem 1rem;
+            }
+
+            .site-footer {
+                margin-top: 3rem;
+            }
+
+            /* Header stacking on mobile */
+            .header-inner {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+                text-align: center;
+            }
+            .main-nav {
+                order: 2;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            #themeSelect {
+                order: 3;
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+                padding: 0.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
     <script>
@@ -60,7 +205,7 @@
 </head>
 <body>
     <header class="site-header">
-        <div class="header-inner">
+        <div class="header-inner" style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:auto; flex-wrap:wrap;">
             <div class="logo">
                 <a href="index.html" style="color:inherit;text-decoration:none;">BowesProduct</a>
             </div>
@@ -77,20 +222,24 @@
             </select>
         </div>
     </header>
+
     <section class="hero">
         <h1>3D Models</h1>
         <p>Commercial-ready 3D assets with instant download (.glb / .fbx)</p>
     </section>
+
     <!-- Quick section navigation -->
     <div class="section-nav">
         <a href="#rigged-models">Rigged Models</a>
         <a href="#props">Props</a>
         <a href="#packs">Packs</a>
     </div>
+
     <div class="model-container" id="modelContainer">
         <model-viewer id="mainViewer" src="models/humanmale.glb" camera-controls auto-rotate shadow-intensity="1">
         </model-viewer>
     </div>
+
     <section class="section light" id="rigged-models">
         <h2 style="text-align:center;">Rigged Models</h2>
         <div class="products">
@@ -344,6 +493,7 @@
             </div>
         </div>
     </section>
+
     <section class="section light" id="props">
         <h2 style="text-align:center;">Props</h2>
         <div class="products">
@@ -447,6 +597,7 @@
             </div>
         </div>
     </section>
+
     <!-- New Packs section added -->
     <section class="section light" id="packs">
         <h2 style="text-align:center;">Packs</h2>
@@ -455,6 +606,7 @@
             <p>Stay tuned for bundled deals on multiple models and props.</p>
         </div>
     </section>
+
     <footer class="site-footer">
         <div class="footer-inner">
             <nav class="footer-nav">
@@ -467,6 +619,7 @@
             <p>© 2025 BowesProduct</p>
         </div>
     </footer>
+
     <script>
         /* =========================
            THEME HANDLING (UNCHANGED)
@@ -478,6 +631,7 @@
                 localStorage.setItem("theme", themeSelect.value);
             });
         }
+
         /* =========================
            MODEL VIEWER LOGIC (FIXED)
         ========================= */
@@ -486,6 +640,7 @@
         // Save original location so layout stays intact
         const originalParent = modelContainer.parentNode;
         const originalNextSibling = modelContainer.nextSibling;
+
         document.querySelectorAll(".view-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 const card = btn.closest(".card");
