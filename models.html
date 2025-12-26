@@ -7,7 +7,12 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        .hero { text-align:center; padding:4rem 2rem; }
+        .card.active {
+    outline: 3px solid #2563eb;
+    outline-offset: -3px;
+    box-shadow: 0 20px 45px rgba(37, 99, 235, 0.25);
+    transform: translateY(-2px);
+   .hero { text-align:center; padding:4rem 2rem; }
         .model-container { max-width:1100px; height:600px; margin:2rem auto; background:#020617; border-radius:18px; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.35); }
         model-viewer { width:100%; height:100%; }
         .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.75rem; margin-top:2.5rem; }
@@ -323,49 +328,57 @@
             <p>© 2025 BowesProduct</p>
         </div>
     </footer>
+;
 <script>
-    /* =========================
-       THEME HANDLING (UNCHANGED)
-    ========================= */
-    const themeSelect = document.getElementById("themeSelect");
-    if (themeSelect) {
-        themeSelect.addEventListener("change", () => {
-            document.body.className = themeSelect.value;
-            localStorage.setItem("theme", themeSelect.value);
-        });
-    }
-
-    /* =========================
-       MODEL VIEWER LOGIC (FIXED)
-    ========================= */
-    const viewer = document.getElementById("mainViewer");
-    const modelContainer = document.getElementById("modelContainer");
-
-    // Save original location so layout stays intact
-    const originalParent = modelContainer.parentNode;
-    const originalNextSibling = modelContainer.nextSibling;
-
-    document.querySelectorAll(".view-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const card = btn.closest(".card");
-            const newModel = card.dataset.model;
-
-            // Update model
-            viewer.src = newModel;
-
-            // Move viewer just ABOVE the clicked card
-            card.parentNode.insertBefore(modelContainer, card);
-
-            // Smoothly scroll viewer into view
-            modelContainer.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-        });
+/* =========================
+   THEME HANDLING
+========================= */
+const themeSelect = document.getElementById("themeSelect");
+if (themeSelect) {
+    themeSelect.addEventListener("change", () => {
+        document.body.className = themeSelect.value;
+        localStorage.setItem("theme", themeSelect.value);
     });
+}
+
+/* =========================
+   MODEL VIEWER + ACTIVE CARD
+========================= */
+const viewer = document.getElementById("mainViewer");
+const modelContainer = document.getElementById("modelContainer");
+
+let activeCard = null;
+
+document.querySelectorAll(".view-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const card = btn.closest(".card");
+        const newModel = card.dataset.model;
+
+        // Update model source
+        viewer.src = newModel;
+
+        // Move viewer just above the clicked card
+        card.parentNode.insertBefore(modelContainer, card);
+
+        // Smooth scroll to viewer
+        modelContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        // -------- ACTIVE CARD HIGHLIGHT --------
+        if (activeCard) {
+            activeCard.classList.remove("active");
+        }
+        card.classList.add("active");
+        activeCard = card;
+    });
+});
 </script>
+
    
 </body>
 </html>
+
 
 
