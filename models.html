@@ -325,42 +325,49 @@
     </footer>
 
     <script>
-        // Theme handling
-        const themeSelect = document.getElementById("themeSelect");
-        if (themeSelect) {
-            themeSelect.addEventListener("change", () => {
-                document.body.className = themeSelect.value;
-                localStorage.setItem("theme", themeSelect.value);
-            });
-        }
+    // Theme handling (UNCHANGED)
+    const themeSelect = document.getElementById("themeSelect");
+    if (themeSelect) {
+        themeSelect.addEventListener("change", () => {
+            document.body.className = themeSelect.value;
+            localStorage.setItem("theme", themeSelect.value);
+        });
+    }
 
-        // Model viewer logic
-        const viewer = document.getElementById("mainViewer");
-        const modelContainer = document.getElementById("modelContainer");
+    // Model viewer logic (UPDATED – functionality preserved)
+    const viewer = document.getElementById("mainViewer");
+    const modelContainer = document.getElementById("modelContainer");
 
-        document.querySelectorAll(".view-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const newModel = btn.closest(".card").dataset.model;
+    document.querySelectorAll(".view-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const card = btn.closest(".card");
+            const newModel = card.dataset.model;
 
-                // Load the model first
-                viewer.src = newModel;
+            // Save current scroll position
+            const currentScrollY = window.scrollY;
 
-                // Force a tiny reflow to ensure the src change is registered before scrolling
-                viewer.offsetHeight;
+            // Load model
+            viewer.src = newModel;
 
-                // Scroll the container to the top of the viewport smoothly
-                modelContainer.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                    inline: "nearest"
-                });
+            // Force reflow so model-viewer updates correctly
+            viewer.offsetHeight;
 
-                // Small upward adjustment to account for any fixed header (adjust -60 if your header is taller/shorter)
-                setTimeout(() => {
-                    window.scrollBy(0, -60);
-                }, 700); // Slightly longer delay to let smooth scroll finish
+            // Get positions
+            const cardRect = card.getBoundingClientRect();
+            const viewerRect = modelContainer.getBoundingClientRect();
+
+            // Calculate how much to move to align viewer near the clicked card
+            const offset =
+                cardRect.top - viewerRect.top - 80; // 80px spacing for comfort
+
+            // Scroll relative to current position (NOT to top of page)
+            window.scrollTo({
+                top: currentScrollY + offset,
+                behavior: "smooth"
             });
         });
-    </script>
+    });
+</script>
 </body>
 </html>
+
