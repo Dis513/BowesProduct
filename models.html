@@ -7,6 +7,68 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
+        body { margin: 0; }
+
+        /* Header base styles */
+        .site-header {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 1rem 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .site-header.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo a {
+            color: inherit;
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .main-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .main-nav a:hover, .main-nav a.active {
+            color: #60a5fa;
+        }
+
+        #themeSelect {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: none;
+            background: #1e293b;
+            color: white;
+        }
+
         .hero { 
             text-align:center; 
             padding:4rem 2rem; 
@@ -90,7 +152,6 @@
             text-decoration:none; 
         }
 
-        /* Section navigation buttons */
         .section-nav {
             text-align: center;
             margin: 3rem 0 4rem;
@@ -111,7 +172,6 @@
             transform: translateY(-3px);
         }
 
-        /* Coming soon placeholder for Packs */
         .coming-soon {
             text-align: center;
             padding: 4rem 2rem;
@@ -119,7 +179,7 @@
             font-size: 1.2rem;
         }
 
-        /* Mobile improvements – show 2 columns when possible */
+        /* Mobile Optimizations */
         @media (max-width: 768px) {
             .hero {
                 padding: 2.5rem 1rem;
@@ -134,8 +194,9 @@
                 border-radius: 14px;
             }
 
+            /* 2-column grid on mobile */
             .products {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Allows 2 columns on most phones */
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
                 gap: 1rem;
                 margin-top: 1.5rem;
                 padding: 0 0.5rem;
@@ -185,22 +246,46 @@
                 margin-top: 3rem;
             }
 
-            /* Header on mobile */
+            /* Mobile header: keep horizontal layout, allow horizontal scroll if needed */
             .header-inner {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-                text-align: center;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding: 0 0.5rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none; /* Hide scrollbar Firefox */
             }
+            .header-inner::-webkit-scrollbar {
+                display: none; /* Hide scrollbar Chrome/Safari */
+            }
+
             .main-nav {
-                flex-direction: column;
-                gap: 0.8rem;
+                gap: 1.2rem;
+                flex-shrink: 0;
             }
+
+            .logo a {
+                font-size: 1.4rem;
+            }
+
             #themeSelect {
-                width: 100%;
-                max-width: 300px;
-                margin: 0 auto;
-                padding: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            .site-header.scrolled .logo a {
+                font-size: 1.3rem;
+            }
+
+            .site-header.scrolled .main-nav {
+                gap: 1rem;
+            }
+
+            .site-header.scrolled .main-nav a {
+                font-size: 0.95rem;
+            }
+
+            .site-header.scrolled #themeSelect {
+                padding: 0.4rem;
+                font-size: 0.9rem;
             }
         }
 
@@ -210,20 +295,12 @@
             }
         }
     </style>
-    <script>
-        window.onload = () => {
-            const theme = localStorage.getItem("theme") || "theme-emerald";
-            document.body.className = theme;
-            const select = document.getElementById("themeSelect");
-            if (select) select.value = theme;
-        };
-    </script>
 </head>
 <body>
     <header class="site-header">
-        <div class="header-inner" style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:auto; flex-wrap:wrap;">
+        <div class="header-inner">
             <div class="logo">
-                <a href="index.html" style="color:inherit;text-decoration:none;">BowesProduct</a>
+                <a href="index.html">BowesProduct</a>
             </div>
             <nav class="main-nav">
                 <a href="index.html">Home</a>
@@ -244,7 +321,6 @@
         <p>Commercial-ready 3D assets with instant download (.glb / .fbx)</p>
     </section>
 
-    <!-- Quick section navigation -->
     <div class="section-nav">
         <a href="#rigged-models">Rigged Models</a>
         <a href="#props">Props</a>
@@ -252,14 +328,12 @@
     </div>
 
     <div class="model-container" id="modelContainer">
-        <model-viewer id="mainViewer" src="models/humanmale.glb" camera-controls auto-rotate shadow-intensity="1">
-        </model-viewer>
+        <model-viewer id="mainViewer" src="models/humanmale.glb" camera-controls auto-rotate shadow-intensity="1"></model-viewer>
     </div>
 
     <section class="section light" id="rigged-models">
         <h2 style="text-align:center;">Rigged Models</h2>
         <div class="products">
-            <!-- Humans -->
             <div class="card" data-model="models/humanmale.glb">
                 <h3>Human male</h3>
                 <p class="price">€9.99</p>
@@ -274,7 +348,6 @@
                 <a href="https://buy.stripe.com/test_eVq14mfV5cMo4pc73Q3Je09" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Serpent -->
             <div class="card" data-model="models/serpentmale.glb">
                 <h3>Serpent Male</h3>
                 <p class="price">€9.99</p>
@@ -289,7 +362,6 @@
                 <a href="https://buy.stripe.com/test_00w7sKbEPdQsbREbk63Je0b" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Shark -->
             <div class="card" data-model="models/sharkmale.glb">
                 <h3>Shark Male</h3>
                 <p class="price">€9.99</p>
@@ -297,7 +369,6 @@
                 <a href="https://buy.stripe.com/test_bJeeVc8sD5jW6xkag23Je0c" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Bat -->
             <div class="card" data-model="models/batmale.glb">
                 <h3>Bat Male</h3>
                 <p class="price">€9.99</p>
@@ -312,7 +383,6 @@
                 <a href="https://buy.stripe.com/test_bJe00i7ozbIk3l81Jw3Je0e" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Avian -->
             <div class="card" data-model="models/avianmale.glb">
                 <h3>Avian Male</h3>
                 <p class="price">€9.99</p>
@@ -327,7 +397,6 @@
                 <a href="https://buy.stripe.com/test_fZu7sK7oz9Ac1d0gEq3Je0g" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Frog -->
             <div class="card" data-model="models/frogmale.glb">
                 <h3>Frog Male</h3>
                 <p class="price">€9.99</p>
@@ -342,7 +411,6 @@
                 <a href="https://buy.stripe.com/test_8x28wOdMX7s46xk9bY3Je0i" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Crocodile -->
             <div class="card" data-model="models/crocodilemale.glb">
                 <h3>Crocodile Male</h3>
                 <p class="price">€9.99</p>
@@ -357,7 +425,6 @@
                 <a href="https://buy.stripe.com/test_4gM28qdMX9AcaNAbk63Je0k" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Hyena -->
             <div class="card" data-model="models/hyenamale.glb">
                 <h3>Hyena Male</h3>
                 <p class="price">€9.99</p>
@@ -372,7 +439,6 @@
                 <a href="https://buy.stripe.com/test_aFa7sK24fcMobREgEq3Je0m" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Scorpion -->
             <div class="card" data-model="models/scorpionmale.glb">
                 <h3>Scorpion Male</h3>
                 <p class="price">€9.99</p>
@@ -387,7 +453,6 @@
                 <a href="https://buy.stripe.com/test_14A8wO10beUw8Fs1Jw3Je0o" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Rhino -->
             <div class="card" data-model="models/rhinomale.glb">
                 <h3>Rhino Male</h3>
                 <p class="price">€9.99</p>
@@ -402,7 +467,6 @@
                 <a href="https://buy.stripe.com/test_3cI8wOdMXeUw4pcewi3Je0q" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Energy Being -->
             <div class="card" data-model="models/energybeingmale.glb">
                 <h3>Energy Being Male</h3>
                 <p class="price">€9.99</p>
@@ -417,7 +481,6 @@
                 <a href="https://buy.stripe.com/test_bJe6oGfV59Ac5tg9bY3Je0s" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Elf -->
             <div class="card" data-model="models/elfmale.glb">
                 <h3>Elf Male</h3>
                 <p class="price">€9.99</p>
@@ -432,7 +495,6 @@
                 <a href="https://buy.stripe.com/test_eVqcN410bbIk7Boag23Je0w" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Alien Stocky -->
             <div class="card" data-model="models/alienstockymale.glb">
                 <h3>Alien Stocky Male</h3>
                 <p class="price">€9.99</p>
@@ -447,7 +509,6 @@
                 <a href="https://buy.stripe.com/test_cNi14mdMXdQs8Fs2NA3Je0u" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Dwarf -->
             <div class="card" data-model="models/dwarfmale.glb">
                 <h3>Dwarf Male</h3>
                 <p class="price">€9.99</p>
@@ -462,7 +523,6 @@
                 <a href="https://buy.stripe.com/test_00w28qdMXh2EdZMag23Je0y" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Orc -->
             <div class="card" data-model="models/orcmale.glb">
                 <h3>Orc Male</h3>
                 <p class="price">€9.99</p>
@@ -477,7 +537,6 @@
                 <a href="https://buy.stripe.com/test_5kQcN410b9Acg7U3RE3Je0A" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Goblin -->
             <div class="card" data-model="models/goblinmale.glb">
                 <h3>Goblin Male</h3>
                 <p class="price">€9.99</p>
@@ -492,7 +551,6 @@
                 <a href="https://buy.stripe.com/test_dRmaEW4cn5jW08W9bY3Je0C" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · Rigged · <a href="license.html">License</a></p>
             </div>
-            <!-- Minotaurs -->
             <div class="card" data-model="models/animatronicminotaurmale.glb">
                 <h3>Animatronic Minotaur Male</h3>
                 <p class="price">€9.99</p>
@@ -614,7 +672,6 @@
         </div>
     </section>
 
-    <!-- New Packs section added -->
     <section class="section light" id="packs">
         <h2 style="text-align:center;">Packs</h2>
         <div class="coming-soon">
@@ -637,9 +694,24 @@
     </footer>
 
     <script>
-        /* =========================
-           THEME HANDLING (UNCHANGED)
-        ========================= */
+        /* Sticky header shrink effect */
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.site-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        /* Theme handling */
+        window.onload = () => {
+            const theme = localStorage.getItem("theme") || "theme-emerald";
+            document.body.className = theme;
+            const select = document.getElementById("themeSelect");
+            if (select) select.value = theme;
+        };
+
         const themeSelect = document.getElementById("themeSelect");
         if (themeSelect) {
             themeSelect.addEventListener("change", () => {
@@ -648,13 +720,9 @@
             });
         }
 
-        /* =========================
-           MODEL VIEWER LOGIC (FIXED)
-        ========================= */
+        /* Model viewer logic */
         const viewer = document.getElementById("mainViewer");
         const modelContainer = document.getElementById("modelContainer");
-        const originalParent = modelContainer.parentNode;
-        const originalNextSibling = modelContainer.nextSibling;
 
         document.querySelectorAll(".view-btn").forEach(btn => {
             btn.addEventListener("click", () => {
