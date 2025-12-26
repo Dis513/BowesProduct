@@ -323,9 +323,10 @@
             <p>© 2025 BowesProduct</p>
         </div>
     </footer>
-
-    <script>
-    // Theme handling (UNCHANGED)
+<script>
+    /* =========================
+       THEME HANDLING (UNCHANGED)
+    ========================= */
     const themeSelect = document.getElementById("themeSelect");
     if (themeSelect) {
         themeSelect.addEventListener("change", () => {
@@ -334,40 +335,37 @@
         });
     }
 
-    // Model viewer logic (UPDATED – functionality preserved)
+    /* =========================
+       MODEL VIEWER LOGIC (FIXED)
+    ========================= */
     const viewer = document.getElementById("mainViewer");
     const modelContainer = document.getElementById("modelContainer");
+
+    // Save original location so layout stays intact
+    const originalParent = modelContainer.parentNode;
+    const originalNextSibling = modelContainer.nextSibling;
 
     document.querySelectorAll(".view-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const card = btn.closest(".card");
             const newModel = card.dataset.model;
 
-            // Save current scroll position
-            const currentScrollY = window.scrollY;
-
-            // Load model
+            // Update model
             viewer.src = newModel;
 
-            // Force reflow so model-viewer updates correctly
-            viewer.offsetHeight;
+            // Move viewer just ABOVE the clicked card
+            card.parentNode.insertBefore(modelContainer, card);
 
-            // Get positions
-            const cardRect = card.getBoundingClientRect();
-            const viewerRect = modelContainer.getBoundingClientRect();
-
-            // Calculate how much to move to align viewer near the clicked card
-            const offset =
-                cardRect.top - viewerRect.top - 80; // 80px spacing for comfort
-
-            // Scroll relative to current position (NOT to top of page)
-            window.scrollTo({
-                top: currentScrollY + offset,
-                behavior: "smooth"
+            // Smoothly scroll viewer into view
+            modelContainer.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
             });
         });
     });
 </script>
+   
 </body>
 </html>
+
 
