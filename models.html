@@ -10,14 +10,18 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.bowesproduct.com/models.html">
     <meta property="og:image" content="https://www.bowesproduct.com/thumbs/humanmale.jpg">
-
     <!-- Reliable Model Viewer loading (latest official path + legacy fallback) -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
-
     <link rel="stylesheet" href="style.css">
     <style>
-        body { margin: 0; }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body { 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
         /* Header - compact */
         .site-header {
             position: sticky;
@@ -71,7 +75,6 @@
             color: white;
             font-size: 0.85rem;
         }
-
         /* Mobile: horizontal navigation */
         @media (max-width: 768px) {
             .header-inner {
@@ -90,7 +93,6 @@
             .site-header { padding: 0.35rem 0; }
             .site-header.scrolled { padding: 0.2rem 0; }
         }
-
         .hero { text-align:center; padding:4rem 2rem; }
         .model-container {
             max-width:1100px;
@@ -247,18 +249,15 @@
             </select>
         </div>
     </header>
-
     <section class="hero">
         <h1>3D Models</h1>
         <p>Commercial-ready 3D assets with instant download (.glb / .fbx)</p>
     </section>
-
     <div class="section-nav">
         <a href="#rigged-models">Rigged Models</a>
         <a href="#props">Props</a>
         <a href="#packs">Packs</a>
     </div>
-
     <!-- Model viewer with fixes for reliable loading and switching -->
     <div class="model-container" id="modelContainer">
         <model-viewer id="mainViewer"
@@ -279,7 +278,6 @@
                       reveal="interaction">
         </model-viewer>
     </div>
-
     <section class="section light" id="rigged-models">
         <h2 style="text-align:center;">Rigged Models</h2>
         <div class="filters">
@@ -297,7 +295,6 @@
                 <option value="alien">Alien</option>
             </select>
         </div>
-
         <div class="products" id="riggedProducts">
             <!-- All 34 rigged models with thumbnails, details, data attributes, and original test links -->
             <div class="card" data-model="models/humanmale.glb" data-gender="male" data-category="humanoid">
@@ -599,7 +596,6 @@
             </div>
         </div>
     </section>
-
     <section class="section light" id="props">
         <h2 style="text-align:center;">Props</h2>
         <div class="products">
@@ -717,13 +713,11 @@
             </div>
         </div>
     </section>
-
     <div class="coming-soon" id="packs">
         <h2 style="text-align:center;">Packs</h2>
         <p>Product packs coming soon!</p>
         <p>Stay tuned for bundled deals on multiple models and props.</p>
     </div>
-
     <footer class="site-footer">
         <div class="footer-inner">
             <nav class="footer-nav">
@@ -736,7 +730,6 @@
             <p>© 2025 BowesProduct</p>
         </div>
     </footer>
-
     <script>
         /* Sticky header */
         window.addEventListener('scroll', () => {
@@ -747,7 +740,6 @@
                 header.classList.remove('scrolled');
             }
         });
-
         /* Theme handling */
         window.onload = () => {
             const theme = localStorage.getItem("theme") || "theme-emerald";
@@ -759,10 +751,8 @@
             document.body.className = e.target.value;
             localStorage.setItem("theme", e.target.value);
         });
-
         /* Model viewer logic - reliable loading and switching */
         const viewer = document.getElementById("mainViewer");
-
         document.querySelectorAll(".view-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 const card = btn.closest(".card");
@@ -774,19 +764,16 @@
                 modelContainer.scrollIntoView({ behavior: "smooth", block: "center" });
             });
         });
-
         /* Filtering */
         const searchInput = document.getElementById("searchInput");
         const genderFilter = document.getElementById("genderFilter");
         const categoryFilter = document.getElementById("categoryFilter");
         const productsContainer = document.getElementById("riggedProducts");
-
         function filterModels() {
             const searchTerm = searchInput.value.toLowerCase();
             const gender = genderFilter.value;
             const category = categoryFilter.value;
             const cards = productsContainer.querySelectorAll(".card");
-
             cards.forEach(card => {
                 const title = card.querySelector("h3").textContent.toLowerCase();
                 const cardGender = card.dataset.gender || "";
@@ -797,7 +784,6 @@
                 card.style.display = matches ? "" : "none";
             });
         }
-
         searchInput?.addEventListener("input", filterModels);
         genderFilter?.addEventListener("change", filterModels);
         categoryFilter?.addEventListener("change", filterModels);
