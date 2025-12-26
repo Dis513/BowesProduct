@@ -233,7 +233,7 @@
             .price { font-size: 1rem; }
             .btn { padding: 0.65rem 0.8rem; font-size: 0.9rem; }
             .delivery { font-size: 0.78rem; }
-            .filters select, .filters input { display:block; width:90%; margin:0. 5rem auto; }
+            .filters select, .filters input { display:block; width:90%; margin:0.5rem auto; }
             .section-nav a { display: block; width: 80%; max-width: 320px; margin: 0.8rem auto; padding: 1rem; }
             .inline-viewer-container { height: 300px; } /* Smaller on mobile */
         }
@@ -292,6 +292,7 @@
         </div>
 
         <div class="products" id="riggedProducts">
+            <!-- ALL 34 rigged models - every single one from your original list with inline viewer -->
             <div class="card" data-model="models/humanmale.glb" data-gender="male" data-category="humanoid">
                 <img class="thumbnail" src="thumbs/humanmale.jpg" alt="Human Male">
                 <h3>Human Male</h3>
@@ -437,11 +438,788 @@
                 </div>
             </div>
 
-            <!-- Continue this exact pattern for every single rigged model from your original list -->
-            <!-- All 34 rigged models are now included with their own inline viewer -->
-            <!-- (Only first 5 shown here for brevity – copy the pattern for the rest) -->
+            <div class="card" data-model="models/batmale.glb" data-gender="male" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/batmale.jpg" alt="Bat Male">
+                <h3>Bat Male</h3>
+                <p class="details">Poly: ~17k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_eVq3cu38jdQs2h43RE3Je0d" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
 
-            <!-- ... ALL OTHER RIGGED MODELS FOLLOW THE SAME STRUCTURE ... -->
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/batmale.glb"
+                        poster="thumbs/batmale.jpg"
+                        alt="Bat Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/batfemale.glb" data-gender="female" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/batfemale.jpg" alt="Bat Female">
+                <h3>Bat Female</h3>
+                <p class="details">Poly: ~17k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_bJe00i7ozbIk3l81Jw3Je0e" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/batfemale.glb"
+                        poster="thumbs/batfemale.jpg"
+                        alt="Bat Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/avianmale.glb" data-gender="male" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/avianmale.jpg" alt="Avian Male">
+                <h3>Avian Male</h3>
+                <p class="details">Poly: ~19k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_9B6cN49wH6o02h4fAm3Je0f" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/avianmale.glb"
+                        poster="thumbs/avianmale.jpg"
+                        alt="Avian Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/avianfemale.glb" data-gender="female" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/avianfemale.jpg" alt="Avian Female">
+                <h3>Avian Female</h3>
+                <p class="details">Poly: ~19k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_fZu7sK7oz9Ac1d0gEq3Je0g" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/avianfemale.glb"
+                        poster="thumbs/avianfemale.jpg"
+                        alt="Avian Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/frogmale.glb" data-gender="male" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/frogmale.jpg" alt="Frog Male">
+                <h3>Frog Male</h3>
+                <p class="details">Poly: ~16k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_aFa00i5grcMo1d0gEq3Je0h" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/frogmale.glb"
+                        poster="thumbs/frogmale.jpg"
+                        alt="Frog Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/frogfemale.glb" data-gender="female" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/frogfemale.jpg" alt="Frog Female">
+                <h3>Frog Female</h3>
+                <p class="details">Poly: ~16k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_8x28wOdMX7s46xk9bY3Je0i" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/frogfemale.glb"
+                        poster="thumbs/frogfemale.jpg"
+                        alt="Frog Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/crocodilemale.glb" data-gender="male" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/crocodilemale.jpg" alt="Crocodile Male">
+                <h3>Crocodile Male</h3>
+                <p class="details">Poly: ~21k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_eVq14mdMX8w8g7Udse3Je0j" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/crocodilemale.glb"
+                        poster="thumbs/crocodilemale.jpg"
+                        alt="Crocodile Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/crocodilefemale.glb" data-gender="female" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/crocodilefemale.jpg" alt="Crocodile Female">
+                <h3>Crocodile Female</h3>
+                <p class="details">Poly: ~21k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_4gM28qdMX9AcaNAbk63Je0k" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/crocodilefemale.glb"
+                        poster="thumbs/crocodilefemale.jpg"
+                        alt="Crocodile Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/hyenamale.glb" data-gender="male" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/hyenamale.jpg" alt="Hyena Male">
+                <h3>Hyena Male</h3>
+                <p class="details">Poly: ~18k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_8x29AScIT8w8aNAbk63Je0l" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/hyenamale.glb"
+                        poster="thumbs/hyenamale.jpg"
+                        alt="Hyena Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/hyenafemale.glb" data-gender="female" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/hyenafemale.jpg" alt="Hyena Female">
+                <h3>Hyena Female</h3>
+                <p class="details">Poly: ~18k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_aFa7sK24fcMobREgEq3Je0m" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/hyenafemale.glb"
+                        poster="thumbs/hyenafemale.jpg"
+                        alt="Hyena Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/scorpionmale.glb" data-gender="male" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/scorpionmale.jpg" alt="Scorpion Male">
+                <h3>Scorpion Male</h3>
+                <p class="details">Poly: ~22k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_9B614mgZ95jW8Fsag23Je0n" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/scorpionmale.glb"
+                        poster="thumbs/scorpionmale.jpg"
+                        alt="Scorpion Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/scorpionfemale.glb" data-gender="female" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/scorpionfemale.jpg" alt="Scorpion Female">
+                <h3>Scorpion Female</h3>
+                <p class="details">Poly: ~22k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_14A8wO10beUw8Fs1Jw3Je0o" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/scorpionfemale.glb"
+                        poster="thumbs/scorpionfemale.jpg"
+                        alt="Scorpion Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/rhinomale.glb" data-gender="male" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/rhinomale.jpg" alt="Rhino Male">
+                <h3>Rhino Male</h3>
+                <p class="details">Poly: ~20k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_cNi28q8sDdQsaNA3RE3Je0p" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/rhinomale.glb"
+                        poster="thumbs/rhinomale.jpg"
+                        alt="Rhino Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/rhinofemale.glb" data-gender="female" data-category="anthropomorphic">
+                <img class="thumbnail" src="thumbs/rhinofemale.jpg" alt="Rhino Female">
+                <h3>Rhino Female</h3>
+                <p class="details">Poly: ~20k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_3cI8wOdMXeUw4pcewi3Je0q" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/rhinofemale.glb"
+                        poster="thumbs/rhinofemale.jpg"
+                        alt="Rhino Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/energybeingmale.glb" data-gender="male" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/energybeingmale.jpg" alt="Energy Being Male">
+                <h3>Energy Being Male</h3>
+                <p class="details">Poly: ~14k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_8x2cN410bh2EaNAewi3Je0r" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/energybeingmale.glb"
+                        poster="thumbs/energybeingmale.jpg"
+                        alt="Energy Being Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/energybeingfemale.glb" data-gender="female" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/energybeingfemale.jpg" alt="Energy Being Female">
+                <h3>Energy Being Female</h3>
+                <p class="details">Poly: ~14k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_bJe6oGfV59Ac5tg9bY3Je0s" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/energybeingfemale.glb"
+                        poster="thumbs/energybeingfemale.jpg"
+                        alt="Energy Being Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/elfmale.glb" data-gender="male" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/elfmale.jpg" alt="Elf Male">
+                <h3>Elf Male</h3>
+                <p class="details">Poly: ~16k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_bJe28qcIT6o0g7Uag23Je0v" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/elfmale.glb"
+                        poster="thumbs/elfmale.jpg"
+                        alt="Elf Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/elffemale.glb" data-gender="female" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/elffemale.jpg" alt="Elf Female">
+                <h3>Elf Female</h3>
+                <p class="details">Poly: ~16k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_eVqcN410bbIk7Boag23Je0w" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/elffemale.glb"
+                        poster="thumbs/elffemale.jpg"
+                        alt="Elf Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/alienstockymale.glb" data-gender="male" data-category="alien">
+                <img class="thumbnail" src="thumbs/alienstockymale.jpg" alt="Alien Stocky Male">
+                <h3>Alien Stocky Male</h3>
+                <p class="details">Poly: ~17k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_bJe9ASfV54fS1d03RE3Je0t" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/alienstockymale.glb"
+                        poster="thumbs/alienstockymale.jpg"
+                        alt="Alien Stocky Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/alienstockyfemale.glb" data-gender="female" data-category="alien">
+                <img class="thumbnail" src="thumbs/alienstockyfemale.jpg" alt="Alien Stocky Female">
+                <h3>Alien Stocky Female</h3>
+                <p class="details">Poly: ~17k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_cNi14mdMXdQs8Fs2NA3Je0u" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/alienstockyfemale.glb"
+                        poster="thumbs/alienstockyfemale.jpg"
+                        alt="Alien Stocky Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/dwarfmale.glb" data-gender="male" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/dwarfmale.jpg" alt="Dwarf Male">
+                <h3>Dwarf Male</h3>
+                <p class="details">Poly: ~15k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_fZufZg10beUwf3Qbk63Je0x" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/dwarfmale.glb"
+                        poster="thumbs/dwarfmale.jpg"
+                        alt="Dwarf Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/dwarffemale.glb" data-gender="female" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/dwarffemale.jpg" alt="Dwarf Female">
+                <h3>Dwarf Female</h3>
+                <p class="details">Poly: ~15k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_00w28qdMXh2EdZMag23Je0y" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/dwarffemale.glb"
+                        poster="thumbs/dwarffemale.jpg"
+                        alt="Dwarf Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/orcmale.glb" data-gender="male" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/orcmale.jpg" alt="Orc Male">
+                <h3>Orc Male</h3>
+                <p class="details">Poly: ~18k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_bJe4gy9wHh2E1d02NA3Je0z" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/orcmale.glb"
+                        poster="thumbs/orcmale.jpg"
+                        alt="Orc Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/orcfemale.glb" data-gender="female" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/orcfemale.jpg" alt="Orc Female">
+                <h3>Orc Female</h3>
+                <p class="details">Poly: ~18k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_5kQcN410b9Acg7U3RE3Je0A" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/orcfemale.glb"
+                        poster="thumbs/orcfemale.jpg"
+                        alt="Orc Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/goblinmale.glb" data-gender="male" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/goblinmale.jpg" alt="Goblin Male">
+                <h3>Goblin Male</h3>
+                <p class="details">Poly: ~14k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_14A28q24f9Ac2h487U3Je0B" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/goblinmale.glb"
+                        poster="thumbs/goblinmale.jpg"
+                        alt="Goblin Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/goblinfemale.glb" data-gender="female" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/goblinfemale.jpg" alt="Goblin Female">
+                <h3>Goblin Female</h3>
+                <p class="details">Poly: ~14k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_dRmaEW4cn5jW08W9bY3Je0C" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/goblinfemale.glb"
+                        poster="thumbs/goblinfemale.jpg"
+                        alt="Goblin Female 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/animatronicminotaurmale.glb" data-gender="male" data-category="fantasy">
+                <img class="thumbnail" src="thumbs/animatronicminotaurmale.jpg" alt="Animatronic Minotaur Male">
+                <h3>Animatronic Minotaur Male</h3>
+                <p class="details">Poly: ~25k | Textures: 4K | Rigged</p>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_00w14mfV5eUw2h42NA3Je0D" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/animatronicminotaurmale.glb"
+                        poster="thumbs/animatronicminotaurmale.jpg"
+                        alt="Animatronic Minotaur Male 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
 
             <div class="card" data-model="models/minotaurmale.glb" data-gender="male" data-category="fantasy">
                 <img class="thumbnail" src="thumbs/minotaurmale.jpg" alt="Minotaur Male">
@@ -492,6 +1270,9 @@
                         alt="Crate 3D Model"
                         camera-controls
                         auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
                         shadow-intensity="1"
                         exposure="0.9"
                         environment-image="neutral"
@@ -500,11 +1281,317 @@
                 </div>
             </div>
 
-            <!-- Repeat the same pattern for all 14 props -->
-            <!-- All props now have their own inline viewer -->
-            <!-- (Only first one shown – copy pattern for the rest) -->
+            <div class="card" data-model="models/bed.glb">
+                <img class="thumbnail" src="thumbs/bed.jpg" alt="Bed">
+                <h3>Bed</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_14A9AS10b9Ac5tg3RE3Je0G" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
 
-            <!-- ... ALL OTHER PROPS FOLLOW THE SAME STRUCTURE ... -->
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/bed.glb"
+                        poster="thumbs/bed.jpg"
+                        alt="Bed 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/sleepingbag.glb">
+                <img class="thumbnail" src="thumbs/sleepingbag.jpg" alt="Sleeping Bag">
+                <h3>Sleeping Bag</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_dRm28qgZ98w85tgdse3Je0H" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/sleepingbag.glb"
+                        poster="thumbs/sleepingbag.jpg"
+                        alt="Sleeping Bag 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/anvil.glb">
+                <img class="thumbnail" src="thumbs/anvil.jpg" alt="Anvil">
+                <h3>Anvil</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_3cI00i7ozh2Ef3Q5ZM3Je0I" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/anvil.glb"
+                        poster="thumbs/anvil.jpg"
+                        alt="Anvil 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/healthpotion.glb">
+                <img class="thumbnail" src="thumbs/healthpotion.jpg" alt="Health Potion">
+                <h3>Health Potion</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_3cIeVc38jh2E3l80Fs3Je0J" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/healthpotion.glb"
+                        poster="thumbs/healthpotion.jpg"
+                        alt="Health Potion 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/manapotion.glb">
+                <img class="thumbnail" src="thumbs/manapotion.jpg" alt="Mana Potion">
+                <h3>Mana Potion</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_28EcN4gZ9dQs2h4gEq3Je0K" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/manapotion.glb"
+                        poster="thumbs/manapotion.jpg"
+                        alt="Mana Potion 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/dungeonkey.glb">
+                <img class="thumbnail" src="thumbs/dungeonkey.jpg" alt="Dungeon Key">
+                <h3>Dungeon Key</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_9B628q38j3bOaNAag23Je0L" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/dungeonkey.glb"
+                        poster="thumbs/dungeonkey.jpg"
+                        alt="Dungeon Key 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/torch.glb">
+                <img class="thumbnail" src="thumbs/torch.jpg" alt="Torch">
+                <h3>Torch</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_cNi3cufV5eUw2h45ZM3Je0M" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/torch.glb"
+                        poster="thumbs/torch.jpg"
+                        alt="Torch 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/campfire.glb">
+                <img class="thumbnail" src="thumbs/campfire.jpg" alt="Campfire">
+                <h3>Campfire</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_8x23cuaAL4fS9Jw73Q3Je0N" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/campfire.glb"
+                        poster="thumbs/campfire.jpg"
+                        alt="Campfire 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/barrel.glb">
+                <img class="thumbnail" src="thumbs/barrel.jpg" alt="Barrel">
+                <h3>Barrel</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_dRm7sK7oz4fS08W4VI3Je0O" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/barrel.glb"
+                        poster="thumbs/barrel.jpg"
+                        alt="Barrel 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/pressureplate.glb">
+                <img class="thumbnail" src="thumbs/pressureplate.jpg" alt="Pressure Plate">
+                <h3>Pressure Plate</h3>
+                <p class="price">€3.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_14A28qbEP6o05tgdse3Je0R" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/pressureplate.glb"
+                        poster="thumbs/pressureplate.jpg"
+                        alt="Pressure Plate 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/skullpile.glb">
+                <img class="thumbnail" src="thumbs/skullpile.jpg" alt="Skull Pile">
+                <h3>Skull Pile</h3>
+                <p class="price">€1.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_3cI6oG9wH5jWdZMcoa3Je0P" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/skullpile.glb"
+                        poster="thumbs/skullpile.jpg"
+                        alt="Skull Pile 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
+
+            <div class="card" data-model="models/ritualaltar.glb">
+                <img class="thumbnail" src="thumbs/ritualaltar.jpg" alt="Ritual Altar">
+                <h3>Ritual Altar</h3>
+                <p class="price">€1.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_bJe9AS24f9AcaNAdse3Je0Q" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+
+                <div class="inline-viewer-container">
+                    <model-viewer
+                        src="models/ritualaltar.glb"
+                        poster="thumbs/ritualaltar.jpg"
+                        alt="Ritual Altar 3D Model"
+                        camera-controls
+                        auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
+                        shadow-intensity="1"
+                        exposure="0.9"
+                        environment-image="neutral"
+                        loading="eager">
+                    </model-viewer>
+                </div>
+            </div>
 
             <div class="card" data-model="models/stoneurn.glb">
                 <img class="thumbnail" src="thumbs/stoneurn.jpg" alt="Stone Urn">
@@ -521,6 +1608,9 @@
                         alt="Stone Urn 3D Model"
                         camera-controls
                         auto-rotate
+                        auto-rotate-delay="0"
+                        rotation-per-second="30deg"
+                        interaction-prompt="auto"
                         shadow-intensity="1"
                         exposure="0.9"
                         environment-image="neutral"
@@ -575,12 +1665,11 @@
             localStorage.setItem("theme", e.target.value);
         });
 
-        /* Inline viewer toggle - appears directly below the clicked card */
+        /* Inline viewer toggle */
         document.querySelectorAll(".view-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const card = btn.closest(".card");
                 const container = card.querySelector(".inline-viewer-container");
-                const viewer = container.querySelector("model-viewer");
 
                 // Close all other open viewers
                 document.querySelectorAll(".inline-viewer-container.active").forEach(open => {
@@ -588,16 +1677,14 @@
                 });
 
                 // Toggle current
+                container.classList.toggle("active");
                 if (container.classList.contains("active")) {
-                    container.classList.remove("active");
-                } else {
-                    container.classList.add("active");
                     container.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 }
             });
         });
 
-        /* Filtering for Rigged Models */
+        /* Filtering */
         const searchInput = document.getElementById("searchInput");
         const genderFilter = document.getElementById("genderFilter");
         const categoryFilter = document.getElementById("categoryFilter");
