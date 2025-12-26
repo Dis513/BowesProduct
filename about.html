@@ -2,139 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>About – BowesProduct</title>
+  <title>License – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Learn about BowesProduct: commercial-ready digital assets for designers, developers, and businesses.">
-
+  <meta name="description" content="Commercial license terms for all BowesProduct assets including icons, 3D models, and brand kits.">
   <link rel="stylesheet" href="style.css">
-
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9fafb;
-      color: #1e293b;
-      margin: 0;
+    body { margin: 0; }
+
+    /* Header – identical to models.html, index.html, icons.html */
+    .site-header {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      padding: 1rem 0;
+      border-bottom: 1px solid #334155;
     }
 
-    .header-inner,
-    .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      padding: 1rem;
+    .site-header.scrolled {
+      padding: 0.5rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .header-inner {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .logo a {
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: #1e293b;
-      text-decoration: none;
-    }
-
-    .main-nav a {
-      margin-left: 1rem;
-      text-decoration: none;
-      color: #1e293b;
-      font-weight: 500;
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      transition: background 0.2s;
-    }
-
-    .main-nav a:hover,
-    .main-nav a.active {
-      background: rgba(0, 0, 0, 0.05);
-    }
-
-    #themeSelect {
-      padding: 0.3rem 0.5rem;
-      border-radius: 6px;
-      border: none;
-      font-weight: 500;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 4rem 1rem;
-      background: linear-gradient(to right, #34d399, #60a5fa);
-      color: #1e293b;
-      border-bottom: 5px solid #2563eb;
-    }
-
-    .hero h1 {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      margin: 0;
-    }
-
-    .section {
-      max-width: 1000px;
-      margin: 3rem auto;
+      max-width: 1200px;
+      margin: auto;
       padding: 0 1rem;
-    }
-
-    .section h2 {
-      font-size: 2rem;
-      color: #2563eb;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      margin-bottom: 2rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-    }
-
-    .card h3 {
-      margin-top: 0;
-      color: #10b981;
-      font-size: 1.5rem;
-    }
-
-    .card ul {
-      margin: 0.5rem 0 0 1.5rem;
-    }
-
-    .card ul li {
-      margin-bottom: 0.5rem;
-    }
-
-    /* FOOTER (MATCHES HOMEPAGE) */
-    .site-footer {
-      margin-top: 4rem;
-      padding: 2rem 1rem;
-      background: #2563eb;
-      color: white;
-    }
-
-    .footer-nav {
-      display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 1rem;
       gap: 1rem;
     }
 
-    .footer-nav a {
+    .logo a {
+      color: inherit;
+      text-decoration: none;
+      font-size: 1.6rem;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .main-nav a {
       color: white;
       text-decoration: none;
       font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .main-nav a:hover, .main-nav a.active {
+      color: #60a5fa;
+    }
+
+    #themeSelect {
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: none;
+      background: #1e293b;
+      color: white;
+    }
+
+    /* Hero */
+    .hero { 
+      text-align:center; 
+      padding:4rem 2rem; 
+    }
+
+    /* Content section */
+    .content {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+      line-height: 1.7;
+      color: #1e293b;
+    }
+
+    .content h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: #2563eb;
+    }
+
+    .content h2 {
+      font-size: 1.8rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: #2563eb;
+    }
+
+    .content p {
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .content ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .content li {
+      margin-bottom: 0.6rem;
+    }
+
+    .content strong {
+      color: #1e293b;
+    }
+
+    .update-note {
+      text-align: center;
+      margin-top: 3rem;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .site-footer { 
+      margin-top:4rem; 
+      padding:2rem 1rem; 
+      background:#2563eb; 
+      color:white; 
+    }
+
+    .footer-inner { 
+      max-width:1200px; 
+      margin:auto; 
+      display:flex; 
+      flex-wrap:wrap; 
+      justify-content:space-between; 
+      align-items:center; 
+      gap:1rem; 
+    }
+
+    .footer-nav { 
+      display:flex; 
+      gap:1rem; 
+      flex-wrap:wrap; 
+      justify-content: center;
+    }
+
+    .footer-nav a { 
+      color:white; 
+      text-decoration:none; 
+      font-weight:500;
       transition: opacity 0.2s;
     }
 
@@ -142,117 +159,183 @@
       opacity: 0.8;
     }
 
+    /* Mobile Optimizations */
     @media (max-width: 768px) {
-      .main-nav a {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
+      .hero {
+        padding: 2.5rem 1rem;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .content {
+        padding: 0 0.75rem;
+      }
+
+      .content h1 {
+        font-size: 2.2rem;
+      }
+
+      .content h2 {
+        font-size: 1.6rem;
+      }
+
+      .site-footer {
+        margin-top: 3rem;
+      }
+
+      /* Mobile header */
+      .header-inner {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 0 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .header-inner::-webkit-scrollbar {
+        display: none;
+      }
+
+      .main-nav {
+        gap: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .logo a {
+        font-size: 1.4rem;
+      }
+
+      #themeSelect {
+        flex-shrink: 0;
+      }
+
+      .site-header.scrolled .logo a {
+        font-size: 1.3rem;
+      }
+
+      .site-header.scrolled .main-nav {
+        gap: 1rem;
+      }
+
+      .site-header.scrolled .main-nav a {
+        font-size: 0.95rem;
+      }
+
+      .site-header.scrolled #themeSelect {
+        padding: 0.4rem;
+        font-size: 0.9rem;
       }
     }
   </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <a href="index.html">BowesProduct</a>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="icons.html">Icons</a>
+        <a href="models.html">Models</a>
+        <a href="license.html" class="active">License</a>
+      </nav>
+      <select id="themeSelect">
+        <option value="theme-emerald">Emerald</option>
+        <option value="theme-blue">Blue</option>
+        <option value="theme-violet">Violet</option>
+        <option value="theme-amber">Amber</option>
+      </select>
+    </div>
+  </header>
 
-  <!-- Load saved theme -->
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Commercial License</h1>
+    <p>Clear, straightforward terms for all BowesProduct assets</p>
+  </section>
+
+  <!-- LICENSE CONTENT -->
+  <div class="content">
+    <h1>BowesProduct Commercial License</h1>
+    
+    <p>By purchasing any asset (icons, 3D models, brand kits) from BowesProduct, you are granted a <strong>non-exclusive, worldwide, perpetual commercial license</strong> to use the asset in your personal and commercial projects.</p>
+
+    <h2>What You Can Do</h2>
+    <ul>
+      <li>Use the asset in unlimited personal and commercial projects</li>
+      <li>Modify, edit, or combine the asset with other works</li>
+      <li>Use in websites, apps, games, videos, print, and digital products</li>
+      <li>Use in client work and projects you sell</li>
+      <li>Distribute as part of templates, themes, or products (with limitations below)</li>
+    </ul>
+
+    <h2>What You Cannot Do</h2>
+    <ul>
+      <li>Resell or redistribute the original asset "as-is" (e.g., as a standalone icon pack or 3D model file)</li>
+      <li>Claim trademark or exclusive ownership of the asset</li>
+      <li>Use in products whose primary value is the asset itself (e.g., selling the raw SVG or GLB file)</li>
+      <li>Use in on-demand printing services where the asset is the main design element</li>
+    </ul>
+
+    <h2>Brand Kits (Additional Terms)</h2>
+    <p>Brand kits are delivered as custom work. Once delivered and paid for:</p>
+    <ul>
+      <li>You receive full commercial usage rights</li>
+      <li>You own the final deliverables</li>
+      <li>BowesProduct retains the right to showcase the work in our portfolio</li>
+    </ul>
+
+    <h2>Support & Updates</h2>
+    <p>Instant-download assets (icons, models) include any future minor updates at no extra cost. Major revisions may be sold separately.</p>
+
+    <h2>Refunds</h2>
+    <p>See our <a href="refund.html">Refund Policy</a> for details.</p>
+
+    <p class="update-note">Last updated: December 26, 2025</p>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav class="footer-nav">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="license.html">License</a>
+        <a href="refund.html">Refund</a>
+      </nav>
+      <p>© 2025 BowesProduct</p>
+    </div>
+  </footer>
+
   <script>
+    /* Sticky header shrink effect */
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.site-header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    /* Theme handling */
     window.onload = () => {
       const theme = localStorage.getItem("theme") || "theme-emerald";
       document.body.className = theme;
       const select = document.getElementById("themeSelect");
       if (select) select.value = theme;
     };
+
+    const themeSelect = document.getElementById("themeSelect");
+    if (themeSelect) {
+      themeSelect.addEventListener("change", () => {
+        document.body.className = themeSelect.value;
+        localStorage.setItem("theme", themeSelect.value);
+      });
+    }
   </script>
-</head>
-
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="logo">
-      <a href="index.html">BowesProduct</a>
-    </div>
-
-    <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="icons.html">Icons</a>
-      <a href="models.html">Models</a>
-      <a href="about.html" class="active">About</a>
-    </nav>
-
-    <select id="themeSelect">
-      <option value="theme-emerald">Emerald</option>
-      <option value="theme-blue">Blue</option>
-      <option value="theme-violet">Violet</option>
-      <option value="theme-amber">Amber</option>
-    </select>
-  </div>
-</header>
-
-<section class="hero">
-  <h1>About BowesProduct</h1>
-  <p>Commercial-ready digital assets for designers, developers, and businesses.</p>
-</section>
-
-<section class="section">
-
-  <div class="card">
-    <h3>Our Mission</h3>
-    <ul>
-      <li>Create production-ready digital assets licensed for commercial use</li>
-      <li>Help businesses launch faster with professional design systems</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Our Philosophy</h3>
-    <ul>
-      <li>Clean, scalable, and consistent design</li>
-      <li>No confusing licenses or hidden limitations</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Who We Serve</h3>
-    <ul>
-      <li>Designers needing icons and branding</li>
-      <li>Developers using SVGs and 3D models</li>
-      <li>Businesses building a strong visual identity</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Why Choose Us</h3>
-    <ul>
-      <li>Pixel-perfect assets</li>
-      <li>Clear commercial licensing</li>
-      <li>Themeable previews</li>
-      <li>Reliable delivery timelines</li>
-    </ul>
-  </div>
-
-  <p style="text-align:center;margin-top:2rem;color:#64748b;font-size:0.9rem;">
-    Last updated: 1 January 2025
-  </p>
-
-</section>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
-    </nav>
-    <p>© 2025 BowesProduct</p>
-  </div>
-</footer>
-
-<script>
-  const themeSelect = document.getElementById("themeSelect");
-  themeSelect.addEventListener("change", () => {
-    document.body.className = themeSelect.value;
-    localStorage.setItem("theme", themeSelect.value);
-  });
-</script>
-
 </body>
 </html>
