@@ -41,6 +41,13 @@
             background: #1d4ed8;
             transform: translateY(-3px);
         }
+        /* Coming soon placeholder for Packs */
+        .coming-soon {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #64748b;
+            font-size: 1.2rem;
+        }
     </style>
     <script>
         window.onload = () => {
@@ -78,6 +85,7 @@
     <div class="section-nav">
         <a href="#rigged-models">Rigged Models</a>
         <a href="#props">Props</a>
+        <a href="#packs">Packs</a>
     </div>
     <div class="model-container" id="modelContainer">
         <model-viewer id="mainViewer" src="models/humanmale.glb" camera-controls auto-rotate shadow-intensity="1">
@@ -437,6 +445,14 @@
                 <a href="https://buy.stripe.com/test_5kQ4gy10baEgdZM9bY3Je0S" class="btn">Buy Model</a>
                 <p class="delivery">Instant download · <a href="license.html">License</a></p>
             </div>
+        </div>
+    </section>
+    <!-- New Packs section added -->
+    <section class="section light" id="packs">
+        <h2 style="text-align:center;">Packs</h2>
+        <div class="coming-soon">
+            <p>Product packs coming soon!</p>
+            <p>Stay tuned for bundled deals on multiple models and props.</p>
         </div>
     </section>
     <footer class="site-footer">
