@@ -311,6 +311,84 @@
             </div>
         </div>
     </section>
+
+    <!-- NEW PROPS SECTION -->
+    <section class="section light">
+        <h2 style="text-align:center;">Props</h2>
+        <div class="products">
+            <div class="card" data-model="models/crate.glb">
+                <h3>Crate</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_9B68wOfV5fYAf3QgEq3Je0F" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/bed.glb">
+                <h3>Bed</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_14A9AS10b9Ac5tg3RE3Je0G" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/sleepingbag.glb">
+                <h3>Sleeping Bag</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_dRm28qgZ98w85tgdse3Je0H" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/anvil.glb">
+                <h3>Anvil</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_3cI00i7ozh2Ef3Q5ZM3Je0I" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/healthpotion.glb">
+                <h3>Health Potion</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_3cIeVc38jh2E3l80Fs3Je0J" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/manapotion.glb">
+                <h3>Mana Potion</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_28EcN4gZ9dQs2h4gEq3Je0K" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/dungeonkey.glb">
+                <h3>Dungeon Key</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_9B628q38j3bOaNAag23Je0L" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/torch.glb">
+                <h3>Torch</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_cNi3cufV5eUw2h45ZM3Je0M" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/campfire.glb">
+                <h3>Campfire</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_8x23cuaAL4fS9Jw73Q3Je0N" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+            <div class="card" data-model="models/barrel.glb">
+                <h3>Barrel</h3>
+                <p class="price">€9.99</p>
+                <button class="btn view-btn">View Model</button>
+                <a href="https://buy.stripe.com/test_dRm7sK7oz4fS08W4VI3Je0O" class="btn">Buy Model</a>
+                <p class="delivery">Instant download · <a href="license.html">License</a></p>
+            </div>
+        </div>
+    </section>
+
     <footer class="site-footer">
         <div class="footer-inner">
             <nav class="footer-nav">
@@ -323,49 +401,40 @@
             <p>© 2025 BowesProduct</p>
         </div>
     </footer>
-<script>
-    /* =========================
-       THEME HANDLING (UNCHANGED)
-    ========================= */
-    const themeSelect = document.getElementById("themeSelect");
-    if (themeSelect) {
-        themeSelect.addEventListener("change", () => {
-            document.body.className = themeSelect.value;
-            localStorage.setItem("theme", themeSelect.value);
-        });
-    }
-
-    /* =========================
-       MODEL VIEWER LOGIC (FIXED)
-    ========================= */
-    const viewer = document.getElementById("mainViewer");
-    const modelContainer = document.getElementById("modelContainer");
-
-    // Save original location so layout stays intact
-    const originalParent = modelContainer.parentNode;
-    const originalNextSibling = modelContainer.nextSibling;
-
-    document.querySelectorAll(".view-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const card = btn.closest(".card");
-            const newModel = card.dataset.model;
-
-            // Update model
-            viewer.src = newModel;
-
-            // Move viewer just ABOVE the clicked card
-            card.parentNode.insertBefore(modelContainer, card);
-
-            // Smoothly scroll viewer into view
-            modelContainer.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
+    <script>
+        /* =========================
+           THEME HANDLING (UNCHANGED)
+        ========================= */
+        const themeSelect = document.getElementById("themeSelect");
+        if (themeSelect) {
+            themeSelect.addEventListener("change", () => {
+                document.body.className = themeSelect.value;
+                localStorage.setItem("theme", themeSelect.value);
+            });
+        }
+        /* =========================
+           MODEL VIEWER LOGIC (FIXED)
+        ========================= */
+        const viewer = document.getElementById("mainViewer");
+        const modelContainer = document.getElementById("modelContainer");
+        // Save original location so layout stays intact
+        const originalParent = modelContainer.parentNode;
+        const originalNextSibling = modelContainer.nextSibling;
+        document.querySelectorAll(".view-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const card = btn.closest(".card");
+                const newModel = card.dataset.model;
+                // Update model
+                viewer.src = newModel;
+                // Move viewer just ABOVE the clicked card
+                card.parentNode.insertBefore(modelContainer, card);
+                // Smoothly scroll viewer into view
+                modelContainer.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
             });
         });
-    });
-</script>
-   
+    </script>
 </body>
 </html>
-
-
