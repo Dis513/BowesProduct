@@ -4,243 +4,416 @@
   <meta charset="UTF-8">
   <title>Icons – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
-
   <style>
-    /* Buttons */
-    .btn {
-      background: #2563eb;
-      color: #ffffff !important;
-      text-decoration: none;
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: opacity 0.2s;
+    body { margin: 0; }
+
+    /* Header – identical to models.html and updated index.html */
+    .site-header {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      padding: 1rem 0;
+      border-bottom: 1px solid #334155;
     }
 
-    .btn.secondary {
-      background: transparent;
-      color: #2563eb !important;
-      border: 1px solid #2563eb;
+    .site-header.scrolled {
+      padding: 0.5rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo a {
+      color: inherit;
+      text-decoration: none;
+      font-size: 1.6rem;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .main-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .main-nav a:hover, .main-nav a.active {
+      color: #60a5fa;
+    }
+
+    #themeSelect {
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: none;
+      background: #1e293b;
+      color: white;
+    }
+
+    /* Hero */
+    .hero { 
+      text-align:center; 
+      padding:4rem 2rem; 
+    }
+
+    /* Products grid – matching models.html */
+    .products { 
+      display:grid; 
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); 
+      gap:1.75rem; 
+      margin-top:2.5rem; 
+      padding: 0 1rem;
+    }
+
+    .card { 
+      background:#ffffff; 
+      border-radius:14px; 
+      padding:1.5rem; 
+      text-align:center; 
+      box-shadow:0 10px 25px rgba(0,0,0,0.08); 
+      transition:transform 0.2s, box-shadow 0.2s; 
+    }
+
+    .card:hover { 
+      transform:translateY(-4px); 
+      box-shadow:0 18px 40px rgba(0,0,0,0.12); 
+    }
+
+    .card img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      background: #f8fafc;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .price { 
+      font-size:1.1rem; 
+      font-weight:700; 
+      margin:0.5rem 0 1rem; 
+      color: #2563eb;
+    }
+
+    .delivery { 
+      font-size:0.85rem; 
+      color:#475569; 
+      margin-top:0.75rem; 
+    }
+
+    .btn { 
+      display:inline-block; 
+      width:100%; 
+      margin-top:0.6rem; 
+      padding:0.65rem 1rem; 
+      border-radius:10px; 
+      background:#2563eb; 
+      color:#ffffff !important; 
+      font-weight:600; 
+      text-decoration:none; 
+      border:none; 
+      cursor:pointer; 
+      transition: opacity 0.2s;
     }
 
     .btn:hover {
       opacity: 0.9;
     }
 
-    /* Icon card grid */
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
+    .btn.secondary {
+      background: transparent;
+      color: #2563eb !important;
+      border: 1px solid #2563eb;
+      cursor: not-allowed;
     }
 
-    .card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-    }
-
-    .card img {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-      margin-bottom: 1rem;
-    }
-
-    .card h3 {
-      margin: 0.5rem 0;
-      font-size: 1.25rem;
-      color: #1e293b;
-    }
-
-    .card p.price {
-      color: #2563eb;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .card ul {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 1rem 0;
-      color: #64748b;
-      font-size: 0.9rem;
-    }
-    .card ul li {
-      margin-bottom: 0.4rem;
-    }
-
-    /* Footer styling (match About page) */
-    .site-footer {
-      margin-top: 4rem;
-      padding: 2rem 1rem;
-      background: #2563eb;
-      color: white;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: auto;
+    /* Coming soon placeholder */
+    .coming-soon-placeholder {
+      width: 120px;
+      height: 120px;
+      background: #e5e7eb;
+      border-radius: 10px;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
       align-items: center;
-      gap: 1rem;
-    }
-    .footer-nav {
-      display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 1rem;
-      gap: 1rem;
+      font-weight: 600;
+      color: #64748b;
+      margin: 0 auto 1rem;
     }
-    .footer-nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
+
+    /* Footer */
+    .site-footer { 
+      margin-top:4rem; 
+      padding:2rem 1rem; 
+      background:#2563eb; 
+      color:white; 
+    }
+
+    .footer-inner { 
+      max-width:1200px; 
+      margin:auto; 
+      display:flex; 
+      flex-wrap:wrap; 
+      justify-content:space-between; 
+      align-items:center; 
+      gap:1rem; 
+    }
+
+    .footer-nav { 
+      display:flex; 
+      gap:1rem; 
+      flex-wrap:wrap; 
+      justify-content: center;
+    }
+
+    .footer-nav a { 
+      color:white; 
+      text-decoration:none; 
+      font-weight:500;
       transition: opacity 0.2s;
     }
+
     .footer-nav a:hover {
       opacity: 0.8;
     }
 
-    @media(max-width:768px) {
+    /* Mobile Optimizations – identical to models.html */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2.5rem 1rem;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .products {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding: 0 0.5rem;
+      }
+
+      .card {
+        padding: 1rem 0.8rem;
+      }
+
       .card img {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
+      }
+
+      .coming-soon-placeholder {
+        width: 100px;
+        height: 100px;
+      }
+
+      .card h3 {
+        font-size: 1rem;
+        margin: 0.4rem 0;
+      }
+
+      .price {
+        font-size: 1rem;
+        margin: 0.4rem 0 0.8rem;
+      }
+
+      .btn {
+        padding: 0.65rem 0.8rem;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+
+      .site-footer {
+        margin-top: 3rem;
+      }
+
+      /* Mobile header */
+      .header-inner {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 0 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .header-inner::-webkit-scrollbar {
+        display: none;
+      }
+
+      .main-nav {
+        gap: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .logo a {
+        font-size: 1.4rem;
+      }
+
+      #themeSelect {
+        flex-shrink: 0;
+      }
+
+      .site-header.scrolled .logo a {
+        font-size: 1.3rem;
+      }
+
+      .site-header.scrolled .main-nav {
+        gap: 1rem;
+      }
+
+      .site-header.scrolled .main-nav a {
+        font-size: 0.95rem;
+      }
+
+      .site-header.scrolled #themeSelect {
+        padding: 0.4rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .products {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <a href="index.html">BowesProduct</a>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="icons.html" class="active">Icons</a>
+        <a href="models.html">Models</a>
+      </nav>
+      <select id="themeSelect">
+        <option value="theme-emerald">Emerald</option>
+        <option value="theme-blue">Blue</option>
+        <option value="theme-violet">Violet</option>
+        <option value="theme-amber">Amber</option>
+      </select>
+    </div>
+  </header>
 
-  <!-- Load saved theme -->
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Icon Library</h1>
+    <p>Clean, scalable SVG icons for commercial use</p>
+  </section>
+
+  <!-- ICON GRID -->
+  <section class="section light">
+    <h2 style="text-align:center;">Available Icons</h2>
+    <p style="text-align:center; margin-bottom:2.5rem; color:#64748b; max-width:800px; margin-left:auto; margin-right:auto;">
+      All icons include a commercial license. SVG format.
+    </p>
+    <div class="products">
+      <!-- ICON 1 -->
+      <div class="card">
+        <img src="icons/teardrop.svg" alt="Teardrop Icon">
+        <h3>Teardrop</h3>
+        <p class="price">€1 — Commercial License</p>
+        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem; list-style:disc;">
+          <li>SVG format</li>
+          <li>Pixel-perfect</li>
+          <li>Unlimited commercial use</li>
+        </ul>
+        <a href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" target="_blank" class="btn">
+          Buy Icon
+        </a>
+      </div>
+      <!-- COMING SOON -->
+      <div class="card">
+        <div class="coming-soon-placeholder">
+          Coming Soon
+        </div>
+        <h3>Icon #2</h3>
+        <p class="price">€1</p>
+        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem; list-style:disc;">
+          <li>SVG format</li>
+          <li>Commercial license</li>
+          <li>Releases soon</li>
+        </ul>
+        <a class="btn secondary">Coming Soon</a>
+      </div>
+      <!-- COMING SOON -->
+      <div class="card">
+        <div class="coming-soon-placeholder">
+          Coming Soon
+        </div>
+        <h3>Icon #3</h3>
+        <p class="price">€1</p>
+        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem; list-style:disc;">
+          <li>SVG format</li>
+          <li>Commercial license</li>
+          <li>Releases soon</li>
+        </ul>
+        <a class="btn secondary">Coming Soon</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav class="footer-nav">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="license.html">License</a>
+        <a href="refund.html">Refund</a>
+      </nav>
+      <p>© 2025 BowesProduct</p>
+    </div>
+  </footer>
+
   <script>
+    /* Sticky header shrink effect */
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.site-header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    /* Theme handling */
     window.onload = () => {
       const theme = localStorage.getItem("theme") || "theme-emerald";
       document.body.className = theme;
-
       const select = document.getElementById("themeSelect");
       if (select) select.value = theme;
     };
+
+    const themeSelect = document.getElementById("themeSelect");
+    if (themeSelect) {
+      themeSelect.addEventListener("change", () => {
+        document.body.className = themeSelect.value;
+        localStorage.setItem("theme", themeSelect.value);
+      });
+    }
   </script>
-</head>
-
-<body>
-
-<!-- HEADER -->
-<header class="site-header">
-  <div class="header-inner">
-    <div class="logo">
-      <a href="index.html" style="text-decoration:none;color:inherit;">BowesProduct</a>
-    </div>
-
-    <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="icons.html" class="active">Icons</a>
-      <a href="models.html">Models</a>
-    </nav>
-
-    <select id="themeSelect">
-      <option value="theme-emerald">Emerald</option>
-      <option value="theme-blue">Blue</option>
-      <option value="theme-violet">Violet</option>
-      <option value="theme-amber">Amber</option>
-    </select>
-  </div>
-</header>
-
-<!-- HERO -->
-<section class="hero">
-  <h1>Icon Library</h1>
-  <p>Clean, scalable SVG icons for commercial use</p>
-</section>
-
-<!-- ICON GRID -->
-<section class="section light">
-  <h2>Available Icons</h2>
-  <p style="margin-bottom:1.5rem;color:#64748b;">
-    All icons include a commercial license. SVG format.
-  </p>
-
-  <div class="products">
-
-    <!-- ICON 1 -->
-    <div class="card">
-      <img src="icons/teardrop.svg" alt="Teardrop Icon">
-      <h3>Teardrop</h3>
-      <p class="price">€1 — Commercial License</p>
-      <ul>
-        <li>SVG format</li>
-        <li>Pixel-perfect</li>
-        <li>Unlimited commercial use</li>
-      </ul>
-      <a href="https://buy.stripe.com/test_cNi7sK38jaEgf3Qewi3Je03" target="_blank" class="btn">
-        Buy Icon
-      </a>
-    </div>
-
-    <!-- COMING SOON -->
-    <div class="card">
-      <div style="width:100%;height:100px;background:#e5e7eb;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:600;color:#64748b;margin-bottom:1rem;">
-        Coming Soon
-      </div>
-      <h3>Icon #2</h3>
-      <p class="price">€1</p>
-      <ul>
-        <li>SVG format</li>
-        <li>Commercial license</li>
-        <li>Releases soon</li>
-      </ul>
-      <a class="btn secondary">Coming Soon</a>
-    </div>
-
-    <!-- COMING SOON -->
-    <div class="card">
-      <div style="width:100%;height:100px;background:#e5e7eb;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:600;color:#64748b;margin-bottom:1rem;">
-        Coming Soon
-      </div>
-      <h3>Icon #3</h3>
-      <p class="price">€1</p>
-      <ul>
-        <li>SVG format</li>
-        <li>Commercial license</li>
-        <li>Releases soon</li>
-      </ul>
-      <a class="btn secondary">Coming Soon</a>
-    </div>
-
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
-    </nav>
-    <p>© 2025 BowesProduct</p>
-  </div>
-</footer>
-
-<!-- THEME SCRIPT -->
-<script>
-  const themeSelect = document.getElementById("themeSelect");
-  themeSelect.addEventListener("change", () => {
-    document.body.className = themeSelect.value;
-    localStorage.setItem("theme", themeSelect.value);
-  });
-</script>
-
 </body>
 </html>
