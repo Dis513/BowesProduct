@@ -323,28 +323,42 @@
             <p>© 2025 BowesProduct</p>
         </div>
     </footer>
-    <script>
-        const themeSelect = document.getElementById("themeSelect");
-        themeSelect.addEventListener("change", () => {
-            document.body.className = themeSelect.value;
-            localStorage.setItem("theme", themeSelect.value);
-        });
 
+    <script>
+        // Theme handling
+        const themeSelect = document.getElementById("themeSelect");
+        if (themeSelect) {
+            themeSelect.addEventListener("change", () => {
+                document.body.className = themeSelect.value;
+                localStorage.setItem("theme", themeSelect.value);
+            });
+        }
+
+        // Model viewer logic
         const viewer = document.getElementById("mainViewer");
         const modelContainer = document.getElementById("modelContainer");
 
         document.querySelectorAll(".view-btn").forEach(btn => {
             btn.addEventListener("click", () => {
-                // Load the selected model
-                viewer.src = btn.closest(".card").dataset.model;
+                const newModel = btn.closest(".card").dataset.model;
 
-                // Smoothly scroll the 3D viewer to the very top of the viewport
-                modelContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+                // Load the model first
+                viewer.src = newModel;
 
-                // Optional small upward nudge (adjust or remove if you prefer exact top alignment)
+                // Force a tiny reflow to ensure the src change is registered before scrolling
+                viewer.offsetHeight;
+
+                // Scroll the container to the top of the viewport smoothly
+                modelContainer.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest"
+                });
+
+                // Small upward adjustment to account for any fixed header (adjust -60 if your header is taller/shorter)
                 setTimeout(() => {
-                    window.scrollBy(0, -30);
-                }, 600);
+                    window.scrollBy(0, -60);
+                }, 700); // Slightly longer delay to let smooth scroll finish
             });
         });
     </script>
