@@ -4,19 +4,138 @@
   <meta charset="UTF-8">
   <title>BowesProduct – Commercial Brand Assets</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
-
   <style>
-    /* Force readable buttons everywhere */
-    .btn {
-      background: #2563eb;
-      color: #ffffff !important;
+    body { margin: 0; }
+
+    /* Header – matching models.html exactly */
+    .site-header {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      padding: 1rem 0;
+      border-bottom: 1px solid #334155;
+    }
+
+    .site-header.scrolled {
+      padding: 0.5rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo a {
+      color: inherit;
       text-decoration: none;
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
+      font-size: 1.6rem;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .main-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .main-nav a:hover, .main-nav a.active {
+      color: #60a5fa;
+    }
+
+    #themeSelect {
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: none;
+      background: #1e293b;
+      color: white;
+    }
+
+    /* Hero */
+    .hero { 
+      text-align:center; 
+      padding:4rem 2rem; 
+    }
+
+    /* Products grid */
+    .products { 
+      display:grid; 
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); 
+      gap:1.75rem; 
+      margin-top:2.5rem; 
+      padding: 0 1rem;
+    }
+
+    .card { 
+      background:#ffffff; 
+      border-radius:14px; 
+      padding:1.5rem; 
+      text-align:center; 
+      box-shadow:0 10px 25px rgba(0,0,0,0.08); 
+      transition:transform 0.2s, box-shadow 0.2s; 
+    }
+
+    .card:hover { 
+      transform:translateY(-4px); 
+      box-shadow:0 18px 40px rgba(0,0,0,0.12); 
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      background: #f8fafc;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .price { 
+      font-size:1.1rem; 
+      font-weight:700; 
+      margin:0.5rem 0 1rem; 
+      color: #2563eb;
+    }
+
+    .delivery { 
+      font-size:0.85rem; 
+      color:#475569; 
+      margin-top:0.75rem; 
+    }
+
+    .btn { 
+      display:inline-block; 
+      width:100%; 
+      margin-top:0.6rem; 
+      padding:0.65rem 1rem; 
+      border-radius:10px; 
+      background:#2563eb; 
+      color:#ffffff !important; 
+      font-weight:600; 
+      text-decoration:none; 
+      border:none; 
+      cursor:pointer; 
       transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
     }
 
     .btn.secondary {
@@ -25,29 +144,21 @@
       border: 1px solid #2563eb;
     }
 
-    .btn:hover {
-      opacity: 0.9;
-    }
-
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: contain;
-    }
-
-    /* Clean steps layout */
+    /* Steps section */
     .steps {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.75rem;
+      margin-top: 2.5rem;
+      padding: 0 1rem;
     }
 
     .step {
       background: #ffffff;
       border-radius: 14px;
       padding: 1.5rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      text-align: center;
     }
 
     .step span {
@@ -59,7 +170,7 @@
     }
 
     .step h3 {
-      margin: 0.5rem 0;
+      margin: 0.8rem 0;
     }
 
     .step p {
@@ -67,213 +178,326 @@
       font-size: 0.95rem;
     }
 
-    /* Footer adjustments for index page */
-    .site-footer {
-      margin-top: 4rem;
-      padding: 2rem 1rem;
-      background: #2563eb;
-      color: white;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: auto;
+    /* Asset libraries buttons */
+    .asset-buttons {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
       gap: 1rem;
-    }
-    .footer-nav {
-      display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 1rem;
-      gap: 1rem;
+      margin: 2rem 0;
     }
-    .footer-nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
+
+    /* Footer */
+    .site-footer { 
+      margin-top:4rem; 
+      padding:2rem 1rem; 
+      background:#2563eb; 
+      color:white; 
+    }
+
+    .footer-inner { 
+      max-width:1200px; 
+      margin:auto; 
+      display:flex; 
+      flex-wrap:wrap; 
+      justify-content:space-between; 
+      align-items:center; 
+      gap:1rem; 
+    }
+
+    .footer-nav { 
+      display:flex; 
+      gap:1rem; 
+      flex-wrap:wrap; 
+      justify-content: center;
+    }
+
+    .footer-nav a { 
+      color:white; 
+      text-decoration:none; 
+      font-weight:500;
       transition: opacity 0.2s;
     }
+
     .footer-nav a:hover {
       opacity: 0.8;
     }
-  </style>
 
-  <!-- Load saved theme -->
+    /* Mobile Optimizations – same as models.html */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2.5rem 1rem;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .products {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding: 0 0.5rem;
+      }
+
+      .card {
+        padding: 1rem 0.8rem;
+      }
+
+      .card img {
+        height: 160px;
+      }
+
+      .card h3 {
+        font-size: 1rem;
+        margin: 0.4rem 0;
+      }
+
+      .price {
+        font-size: 1rem;
+        margin: 0.4rem 0 0.8rem;
+      }
+
+      .btn {
+        padding: 0.65rem 0.8rem;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+
+      .delivery {
+        font-size: 0.78rem;
+        margin-top: 0.5rem;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 0.5rem;
+      }
+
+      .asset-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .asset-buttons .btn {
+        width: 80%;
+        max-width: 320px;
+        text-align: center;
+      }
+
+      .site-footer {
+        margin-top: 3rem;
+      }
+
+      /* Mobile header – horizontal with hidden scrollbar */
+      .header-inner {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 0 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .header-inner::-webkit-scrollbar {
+        display: none;
+      }
+
+      .main-nav {
+        gap: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .logo a {
+        font-size: 1.4rem;
+      }
+
+      #themeSelect {
+        flex-shrink: 0;
+      }
+
+      .site-header.scrolled .logo a {
+        font-size: 1.3rem;
+      }
+
+      .site-header.scrolled .main-nav {
+        gap: 1rem;
+      }
+
+      .site-header.scrolled .main-nav a {
+        font-size: 0.95rem;
+      }
+
+      .site-header.scrolled #themeSelect {
+        padding: 0.4rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .products {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER – identical to models.html -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <a href="index.html">BowesProduct</a>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html" class="active">Home</a>
+        <a href="icons.html">Icons</a>
+        <a href="models.html">Models</a>
+      </nav>
+      <select id="themeSelect">
+        <option value="theme-emerald">Emerald</option>
+        <option value="theme-blue">Blue</option>
+        <option value="theme-violet">Violet</option>
+        <option value="theme-amber">Amber</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Commercial Brand Assets</h1>
+    <p>Brand kits, icons & 3D models built for real businesses</p>
+  </section>
+
+  <!-- BRAND KITS -->
+  <section class="section">
+    <h2 style="text-align:center;">Brand Identity Kits</h2>
+    <div class="products">
+      <div class="card">
+        <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
+        <h3>Starter Brand Kit</h3>
+        <p class="price">€250</p>
+        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem;">
+          <li>Primary logo design</li>
+          <li>Color palette</li>
+          <li>Font pairing guidance</li>
+          <li>Basic brand guidelines</li>
+          <li>Commercial usage rights</li>
+        </ul>
+        <p class="delivery">Delivery: minimum 14 days</p>
+        <a href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00" class="btn" target="_blank">
+          Buy Starter Kit
+        </a>
+      </div>
+      <div class="card">
+        <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
+        <h3>Pro Brand Kit</h3>
+        <p class="price">€500</p>
+        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem;">
+          <li>Expanded logo system</li>
+          <li>Typography hierarchy</li>
+          <li>Social media assets</li>
+          <li>Brand usage guide</li>
+          <li>Commercial usage rights</li>
+        </ul>
+        <p class="delivery">Delivery: minimum 21 days</p>
+        <a href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01" class="btn" target="_blank">
+          Buy Pro Kit
+        </a>
+      </div>
+      <div class="card">
+        <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
+        <h3>Master Brand Kit</h3>
+        <p class="price">€1,500</p>
+        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem;">
+          <li>Complete logo suite</li>
+          <li>Brand strategy overview</li>
+          <li>Marketing & social assets</li>
+          <li>Full brand manual</li>
+          <li>Commercial usage rights</li>
+        </ul>
+        <p class="delivery">Delivery: minimum 28 days</p>
+        <a href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02" class="btn" target="_blank">
+          Buy Master Kit
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSET LIBRARIES -->
+  <section class="section light">
+    <h2 style="text-align:center;">Asset Libraries</h2>
+    <p style="text-align:center; margin-bottom:2rem; color:#64748b; max-width:800px; margin-left:auto; margin-right:auto;">
+      Ready-made assets you can license instantly for commercial use.
+    </p>
+    <div class="asset-buttons">
+      <a href="icons.html" class="btn secondary">Browse Icons</a>
+      <a href="models.html" class="btn secondary">Browse Models</a>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <h2 style="text-align:center;">How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <span>Step 1</span>
+        <h3>Choose an Asset</h3>
+        <p>Select a brand kit, icon, or model that fits your business needs.</p>
+      </div>
+      <div class="step">
+        <span>Step 2</span>
+        <h3>Secure Checkout</h3>
+        <p>Complete payment through Stripe with instant confirmation.</p>
+      </div>
+      <div class="step">
+        <span>Step 3</span>
+        <h3>Commercial Delivery</h3>
+        <p>Your licensed assets are delivered or prepared for use.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav class="footer-nav">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="license.html">License</a>
+        <a href="refund.html">Refund</a>
+      </nav>
+      <p>© 2025 BowesProduct</p>
+    </div>
+  </footer>
+
   <script>
+    /* Sticky header shrink effect */
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.site-header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    /* Theme handling */
     window.onload = () => {
       const theme = localStorage.getItem("theme") || "theme-emerald";
       document.body.className = theme;
-
       const select = document.getElementById("themeSelect");
       if (select) select.value = theme;
     };
+
+    const themeSelect = document.getElementById("themeSelect");
+    if (themeSelect) {
+      themeSelect.addEventListener("change", () => {
+        document.body.className = themeSelect.value;
+        localStorage.setItem("theme", themeSelect.value);
+      });
+    }
   </script>
-</head>
-
-<body>
-
-<!-- HEADER -->
-<header class="site-header">
-  <div class="header-inner">
-    <div class="logo">
-      <a href="index.html" style="text-decoration:none;color:inherit;">
-        BowesProduct
-      </a>
-    </div>
-
-    <nav class="main-nav">
-      <a href="index.html" class="active">Home</a>
-      <a href="icons.html">Icons</a>
-      <a href="models.html">Models</a>
-    </nav>
-
-    <select id="themeSelect">
-      <option value="theme-emerald">Emerald</option>
-      <option value="theme-blue">Blue</option>
-      <option value="theme-violet">Violet</option>
-      <option value="theme-amber">Amber</option>
-    </select>
-  </div>
-</header>
-
-<!-- HERO -->
-<section class="hero">
-  <h1>Commercial Brand Assets</h1>
-  <p>Brand kits, icons & 3D models built for real businesses</p>
-</section>
-
-<!-- BRAND KITS -->
-<section class="section">
-  <h2>Brand Identity Kits</h2>
-
-  <div class="products">
-
-    <div class="card">
-      <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
-      <h3>Starter Brand Kit</h3>
-      <p class="price">€250</p>
-
-      <ul>
-        <li>Primary logo design</li>
-        <li>Color palette</li>
-        <li>Font pairing guidance</li>
-        <li>Basic brand guidelines</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 14 days</p>
-
-      <a href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00" class="btn" target="_blank">
-        Buy Starter Kit
-      </a>
-    </div>
-
-    <div class="card">
-      <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
-      <h3>Pro Brand Kit</h3>
-      <p class="price">€500</p>
-
-      <ul>
-        <li>Expanded logo system</li>
-        <li>Typography hierarchy</li>
-        <li>Social media assets</li>
-        <li>Brand usage guide</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 21 days</p>
-
-      <a href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01" class="btn" target="_blank">
-        Buy Pro Kit
-      </a>
-    </div>
-
-    <div class="card">
-      <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
-      <h3>Master Brand Kit</h3>
-      <p class="price">€1,500</p>
-
-      <ul>
-        <li>Complete logo suite</li>
-        <li>Brand strategy overview</li>
-        <li>Marketing & social assets</li>
-        <li>Full brand manual</li>
-        <li>Commercial usage rights</li>
-      </ul>
-
-      <p class="delivery">Delivery: minimum 28 days</p>
-
-      <a href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02" class="btn" target="_blank">
-        Buy Master Kit
-      </a>
-    </div>
-
-  </div>
-</section>
-
-<!-- ASSET LIBRARIES -->
-<section class="section light">
-  <h2>Asset Libraries</h2>
-  <p style="margin-bottom:2rem;color:#64748b;">
-    Ready-made assets you can license instantly for commercial use.
-  </p>
-
-  <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-    <a href="icons.html" class="btn secondary">Browse Icons</a>
-    <a href="models.html" class="btn secondary">Browse Models</a>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="section">
-  <h2>How It Works</h2>
-
-  <div class="steps">
-    <div class="step">
-      <span>Step 1</span>
-      <h3>Choose an Asset</h3>
-      <p>Select a brand kit, icon, or model that fits your business needs.</p>
-    </div>
-
-    <div class="step">
-      <span>Step 2</span>
-      <h3>Secure Checkout</h3>
-      <p>Complete payment through Stripe with instant confirmation.</p>
-    </div>
-
-    <div class="step">
-      <span>Step 3</span>
-      <h3>Commercial Delivery</h3>
-      <p>Your licensed assets are delivered or prepared for use.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER (NEW) -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
-    </nav>
-    <p>© 2025 BowesProduct</p>
-  </div>
-</footer>
-
-<!-- THEME SCRIPT -->
-<script>
-  const themeSelect = document.getElementById("themeSelect");
-  themeSelect.addEventListener("change", () => {
-    document.body.className = themeSelect.value;
-    localStorage.setItem("theme", themeSelect.value);
-  });
-</script>
-
 </body>
 </html>
