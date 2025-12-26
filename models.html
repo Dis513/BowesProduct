@@ -119,33 +119,51 @@
             font-size: 1.2rem;
         }
 
-        /* Mobile-friendly improvements */
+        /* Mobile improvements – show 2 columns when possible */
         @media (max-width: 768px) {
             .hero {
                 padding: 2.5rem 1rem;
             }
             .hero h1 {
-                font-size: 2rem;
-            }
-            .hero p {
-                font-size: 1.1rem;
+                font-size: 2.2rem;
             }
 
             .model-container {
                 height: 320px;
-                margin: 1.5rem 1rem;
+                margin: 1.2rem 0.8rem 1.8rem;
                 border-radius: 14px;
             }
 
             .products {
-                grid-template-columns: 1fr;
-                gap: 1.2rem;
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Allows 2 columns on most phones */
+                gap: 1rem;
                 margin-top: 1.5rem;
-                padding: 0 0.75rem;
+                padding: 0 0.5rem;
             }
 
             .card {
-                padding: 1.2rem;
+                padding: 1rem 0.8rem;
+            }
+
+            .card h3 {
+                font-size: 1rem;
+                margin: 0.4rem 0;
+            }
+
+            .price {
+                font-size: 1rem;
+                margin: 0.4rem 0 0.8rem;
+            }
+
+            .btn {
+                padding: 0.65rem 0.8rem;
+                font-size: 0.9rem;
+                margin-top: 0.5rem;
+            }
+
+            .delivery {
+                font-size: 0.78rem;
+                margin-top: 0.5rem;
             }
 
             .section-nav {
@@ -167,7 +185,7 @@
                 margin-top: 3rem;
             }
 
-            /* Header stacking on mobile */
+            /* Header on mobile */
             .header-inner {
                 flex-direction: column;
                 gap: 1rem;
@@ -175,12 +193,10 @@
                 text-align: center;
             }
             .main-nav {
-                order: 2;
                 flex-direction: column;
                 gap: 0.8rem;
             }
             #themeSelect {
-                order: 3;
                 width: 100%;
                 max-width: 300px;
                 margin: 0 auto;
@@ -190,7 +206,7 @@
 
         @media (min-width: 769px) and (max-width: 1024px) {
             .products {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
         }
     </style>
@@ -637,7 +653,6 @@
         ========================= */
         const viewer = document.getElementById("mainViewer");
         const modelContainer = document.getElementById("modelContainer");
-        // Save original location so layout stays intact
         const originalParent = modelContainer.parentNode;
         const originalNextSibling = modelContainer.nextSibling;
 
@@ -645,11 +660,8 @@
             btn.addEventListener("click", () => {
                 const card = btn.closest(".card");
                 const newModel = card.dataset.model;
-                // Update model
                 viewer.src = newModel;
-                // Move viewer just ABOVE the clicked card
                 card.parentNode.insertBefore(modelContainer, card);
-                // Smoothly scroll viewer into view
                 modelContainer.scrollIntoView({
                     behavior: "smooth",
                     block: "center"
