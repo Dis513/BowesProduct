@@ -21,6 +21,27 @@
         .footer-inner { max-width:1200px; margin:auto; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem; }
         .footer-nav { display:flex; gap:1rem; flex-wrap:wrap; }
         .footer-nav a { color:white; text-decoration:none; }
+
+        /* Section navigation buttons */
+        .section-nav {
+            text-align: center;
+            margin: 3rem 0 4rem;
+        }
+        .section-nav a {
+            display: inline-block;
+            margin: 0 1rem;
+            padding: 0.9rem 2rem;
+            background: #2563eb;
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .section-nav a:hover {
+            background: #1d4ed8;
+            transform: translateY(-3px);
+        }
     </style>
     <script>
         window.onload = () => {
@@ -54,11 +75,19 @@
         <h1>3D Models</h1>
         <p>Commercial-ready 3D assets with instant download (.glb / .fbx)</p>
     </section>
+
+    <!-- Quick section navigation -->
+    <div class="section-nav">
+        <a href="#rigged-models">Rigged Models</a>
+        <a href="#props">Props</a>
+    </div>
+
     <div class="model-container" id="modelContainer">
         <model-viewer id="mainViewer" src="models/humanmale.glb" camera-controls auto-rotate shadow-intensity="1">
         </model-viewer>
     </div>
-    <section class="section light">
+
+    <section class="section light" id="rigged-models">
         <h2 style="text-align:center;">Rigged Models</h2>
         <div class="products">
             <!-- Humans -->
@@ -312,8 +341,7 @@
         </div>
     </section>
 
-    <!-- NEW PROPS SECTION -->
-    <section class="section light">
+    <section class="section light" id="props">
         <h2 style="text-align:center;">Props</h2>
         <div class="products">
             <div class="card" data-model="models/crate.glb">
@@ -438,4 +466,3 @@
     </script>
 </body>
 </html>
-
