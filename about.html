@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>License – BowesProduct</title>
+  <title>About – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Commercial license terms for all BowesProduct assets including icons, 3D models, and brand kits.">
+  <meta name="description" content="Learn about BowesProduct and our mission to deliver high-quality commercial icons and 3D assets.">
   <link rel="stylesheet" href="style.css">
   <style>
     body { margin: 0; }
 
-    /* Header – identical to models.html, index.html, icons.html */
+    /* Header */
     .site-header {
       position: sticky;
       top: 0;
@@ -57,7 +57,8 @@
       transition: color 0.2s;
     }
 
-    .main-nav a:hover, .main-nav a.active {
+    .main-nav a:hover,
+    .main-nav a.active {
       color: #60a5fa;
     }
 
@@ -70,12 +71,12 @@
     }
 
     /* Hero */
-    .hero { 
-      text-align:center; 
-      padding:4rem 2rem; 
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
     }
 
-    /* Content section */
+    /* Content */
     .content {
       max-width: 900px;
       margin: 3rem auto;
@@ -103,67 +104,43 @@
       font-size: 1.05rem;
     }
 
-    .content ul {
-      padding-left: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .content li {
-      margin-bottom: 0.6rem;
-    }
-
-    .content strong {
-      color: #1e293b;
-    }
-
-    .update-note {
-      text-align: center;
-      margin-top: 3rem;
-      color: #64748b;
-      font-size: 0.9rem;
-    }
-
     /* Footer */
-    .site-footer { 
-      margin-top:4rem; 
-      padding:2rem 1rem; 
-      background:#2563eb; 
-      color:white; 
+    .site-footer {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
     }
 
-    .footer-inner { 
-      max-width:1200px; 
-      margin:auto; 
-      display:flex; 
-      flex-wrap:wrap; 
-      justify-content:space-between; 
-      align-items:center; 
-      gap:1rem; 
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
     }
 
-    .footer-nav { 
-      display:flex; 
-      gap:1rem; 
-      flex-wrap:wrap; 
+    .footer-nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
       justify-content: center;
     }
 
-    .footer-nav a { 
-      color:white; 
-      text-decoration:none; 
-      font-weight:500;
-      transition: opacity 0.2s;
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
     }
 
-    .footer-nav a:hover {
-      opacity: 0.8;
-    }
-
-    /* Mobile Optimizations */
+    /* Mobile */
     @media (max-width: 768px) {
       .hero {
         padding: 2.5rem 1rem;
       }
+
       .hero h1 {
         font-size: 2.2rem;
       }
@@ -172,28 +149,11 @@
         padding: 0 0.75rem;
       }
 
-      .content h1 {
-        font-size: 2.2rem;
-      }
-
-      .content h2 {
-        font-size: 1.6rem;
-      }
-
-      .site-footer {
-        margin-top: 3rem;
-      }
-
-      /* Mobile header */
       .header-inner {
         flex-wrap: nowrap;
         overflow-x: auto;
         padding: 0 0.5rem;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      .header-inner::-webkit-scrollbar {
-        display: none;
       }
 
       .main-nav {
@@ -204,138 +164,85 @@
       .logo a {
         font-size: 1.4rem;
       }
-
-      #themeSelect {
-        flex-shrink: 0;
-      }
-
-      .site-header.scrolled .logo a {
-        font-size: 1.3rem;
-      }
-
-      .site-header.scrolled .main-nav {
-        gap: 1rem;
-      }
-
-      .site-header.scrolled .main-nav a {
-        font-size: 0.95rem;
-      }
-
-      .site-header.scrolled #themeSelect {
-        padding: 0.4rem;
-        font-size: 0.9rem;
-      }
     }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <a href="index.html">BowesProduct</a>
-      </div>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="icons.html">Icons</a>
-        <a href="models.html">Models</a>
-        <a href="license.html" class="active">License</a>
-      </nav>
-      <select id="themeSelect">
-        <option value="theme-emerald">Emerald</option>
-        <option value="theme-blue">Blue</option>
-        <option value="theme-violet">Violet</option>
-        <option value="theme-amber">Amber</option>
-      </select>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">
+      <a href="index.html">BowesProduct</a>
     </div>
-  </header>
-
-  <!-- HERO -->
-  <section class="hero">
-    <h1>Commercial License</h1>
-    <p>Clear, straightforward terms for all BowesProduct assets</p>
-  </section>
-
-  <!-- LICENSE CONTENT -->
-  <div class="content">
-    <h1>BowesProduct Commercial License</h1>
-    
-    <p>By purchasing any asset (icons, 3D models, brand kits) from BowesProduct, you are granted a <strong>non-exclusive, worldwide, perpetual commercial license</strong> to use the asset in your personal and commercial projects.</p>
-
-    <h2>What You Can Do</h2>
-    <ul>
-      <li>Use the asset in unlimited personal and commercial projects</li>
-      <li>Modify, edit, or combine the asset with other works</li>
-      <li>Use in websites, apps, games, videos, print, and digital products</li>
-      <li>Use in client work and projects you sell</li>
-      <li>Distribute as part of templates, themes, or products (with limitations below)</li>
-    </ul>
-
-    <h2>What You Cannot Do</h2>
-    <ul>
-      <li>Resell or redistribute the original asset "as-is" (e.g., as a standalone icon pack or 3D model file)</li>
-      <li>Claim trademark or exclusive ownership of the asset</li>
-      <li>Use in products whose primary value is the asset itself (e.g., selling the raw SVG or GLB file)</li>
-      <li>Use in on-demand printing services where the asset is the main design element</li>
-    </ul>
-
-    <h2>Brand Kits (Additional Terms)</h2>
-    <p>Brand kits are delivered as custom work. Once delivered and paid for:</p>
-    <ul>
-      <li>You receive full commercial usage rights</li>
-      <li>You own the final deliverables</li>
-      <li>BowesProduct retains the right to showcase the work in our portfolio</li>
-    </ul>
-
-    <h2>Support & Updates</h2>
-    <p>Instant-download assets (icons, models) include any future minor updates at no extra cost. Major revisions may be sold separately.</p>
-
-    <h2>Refunds</h2>
-    <p>See our <a href="refund.html">Refund Policy</a> for details.</p>
-
-    <p class="update-note">Last updated: December 26, 2025</p>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="icons.html">Icons</a>
+      <a href="models.html">Models</a>
+      <a href="license.html">License</a>
+    </nav>
+    <select id="themeSelect">
+      <option value="theme-emerald">Emerald</option>
+      <option value="theme-blue">Blue</option>
+      <option value="theme-violet">Violet</option>
+      <option value="theme-amber">Amber</option>
+    </select>
   </div>
+</header>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <nav class="footer-nav">
-        <a href="about.html">About</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="license.html">License</a>
-        <a href="refund.html">Refund</a>
-      </nav>
-      <p>© 2025 BowesProduct</p>
-    </div>
-  </footer>
+<!-- HERO -->
+<section class="hero">
+  <h1>About BowesProduct</h1>
+  <p>High-quality digital assets built for real-world products</p>
+</section>
 
-  <script>
-    /* Sticky header shrink effect */
-    window.addEventListener('scroll', () => {
-      const header = document.querySelector('.site-header');
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-    });
+<!-- CONTENT -->
+<div class="content">
+  <h1>Our Mission</h1>
 
-    /* Theme handling */
-    window.onload = () => {
-      const theme = localStorage.getItem("theme") || "theme-emerald";
-      document.body.className = theme;
-      const select = document.getElementById("themeSelect");
-      if (select) select.value = theme;
-    };
+  <p>BowesProduct creates clean, modern icons, 3D models, and digital assets designed specifically for commercial use. Everything is built with clarity, consistency, and usability in mind.</p>
 
-    const themeSelect = document.getElementById("themeSelect");
-    if (themeSelect) {
-      themeSelect.addEventListener("change", () => {
-        document.body.className = themeSelect.value;
-        localStorage.setItem("theme", themeSelect.value);
-      });
-    }
-  </script>
+  <h2>Built for Builders</h2>
+  <p>Our assets are used by developers, designers, founders, and teams shipping real products. No fluff, no filler — just practical, professional-grade resources.</p>
+
+  <h2>Commercial First</h2>
+  <p>Every asset is licensed for commercial use by default, so you can confidently use them in client work, products, apps, and businesses.</p>
+
+  <h2>Independent & Focused</h2>
+  <p>BowesProduct is independently built and maintained, allowing full focus on quality, updates, and long-term value.</p>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('.site-header');
+    header.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  window.onload = () => {
+    const theme = localStorage.getItem("theme") || "theme-emerald";
+    document.body.className = theme;
+    document.getElementById("themeSelect").value = theme;
+  };
+
+  document.getElementById("themeSelect").addEventListener("change", e => {
+    document.body.className = e.target.value;
+    localStorage.setItem("theme", e.target.value);
+  });
+</script>
+
 </body>
 </html>
