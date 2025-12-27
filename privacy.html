@@ -1,196 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Privacy Policy – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Privacy policy for BowesProduct – how we handle your data when you visit our site or purchase 3D assets.">
-
-  <style>
-    /* ================= GLOBAL FIX ================= */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
-
-    html, body {
-      width: 100%;
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-
-    /* ================= BASE ================= */
-    body {
-      margin: 0;
-      background: #020617;
-      color: white;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    /* ================= HEADER (MATCHES ABOUT) ================= */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(2,6,23,0.9);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid #1e293b;
-      transition: box-shadow 0.3s ease;
-    }
-    .site-header.scrolled {
-      box-shadow: 0 6px 30px rgba(0,0,0,0.4);
-    }
-    .header-inner {
-      max-width: 1200px;
-      margin: auto;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-    .logo a {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-    }
-    .main-nav {
-      display: flex;
-      gap: 2rem;
-    }
-    .main-nav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .main-nav a:hover,
-    .main-nav a.active {
-      color: #60a5fa;
-    }
-
-    /* ================= HERO ================= */
-    .hero {
-      position: relative;
-      min-height: 70svh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 1.25rem;
-      text-align: center;
-      background:
-        linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-        url("./images/heroprivacy.jpg");
-      background-size: cover;
-      background-position: center;
-    }
-    .hero-content {
-      max-width: 900px;
-    }
-    .hero h1 {
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      font-weight: 800;
-      margin-bottom: 1rem;
-    }
-    .hero p {
-      font-size: clamp(1.1rem, 2.8vw, 1.3rem);
-      color: #cbd5f5;
-      line-height: 1.6;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    /* ================= CONTENT ================= */
-    .content {
-      max-width: 900px;
-      margin: 7rem auto 6rem;
-      padding: 2rem 1.5rem 4rem;
-      line-height: 1.8;
-    }
-    .content h1 {
-      text-align: center;
-      font-size: 2.4rem;
-      margin-bottom: 2rem;
-      color: #60a5fa;
-    }
-    .content h2 {
-      font-size: 1.8rem;
-      margin: 3rem 0 1rem;
-      color: #60a5fa;
-    }
-    .content p,
-    .content li {
-      font-size: 1.05rem;
-      color: #cbd5e1;
-      margin-bottom: 1.2rem;
-    }
-    .content ul {
-      padding-left: 1.8rem;
-    }
-    .update-note {
-      text-align: center;
-      margin-top: 4rem;
-      font-size: 0.95rem;
-      color: #64748b;
-    }
-
-    /* ================= FOOTER ================= */
-    .site-footer {
-      background: rgba(2,6,23,0.9);
-      backdrop-filter: blur(10px);
-      border-top: 1px solid #1e293b;
-      color: #e5e7eb;
-      padding: 3rem 1rem;
-      margin-top: 6rem;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .footer-nav {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .footer-nav a {
-      color: #cbd5e1;
-      text-decoration: none;
-    }
-    .footer-nav a:hover {
-      color: #60a5fa;
-    }
-    .site-footer p {
-      margin: 0;
-      color: #94a3b8;
-    }
-
-    /* ================= MOBILE (MATCHES ABOUT) ================= */
-    @media (max-width: 768px) {
-      .header-inner {
-        flex-wrap: wrap;
-        padding: 0.8rem 1rem;
-      }
-      .main-nav {
-        width: 100%;
-        justify-content: center;
-        gap: 1.25rem;
-      }
-      .hero {
-        min-height: 60svh;
-        padding: 5rem 1rem;
-      }
-      .content {
-        padding: 1.5rem 1rem 4rem;
-        margin: 5rem auto;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Privacy Policy – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Privacy policy for BowesProduct – how we handle your data when you visit our site or purchase 3D assets.">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ================= BASE ================= */
+body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #1e293b;
+  transition: box-shadow 0.3s ease;
+}
+.site-header.scrolled {
+  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.logo a {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+}
+.main-nav {
+  display: flex;
+  gap: 2rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+.main-nav a:hover,
+.main-nav a.active {
+  color: #60a5fa;
+}
+/* ================= HERO ================= */
+.hero {
+  position: relative;
+  min-height: 70svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
+    url("./images/hero.jpg"); /* optional background */
+  background-size: cover;
+  background-position: center;
+}
+.hero-content {
+  max-width: 900px;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+.hero p {
+  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+  color: #cbd5f5;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0 auto;
+}
+/* ================= CONTENT ================= */
+.content {
+  max-width: 900px;
+  margin: 5rem auto;
+  padding: 0 1.5rem;
+  line-height: 1.8;
+}
+.content h1 {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  color: #60a5fa;
+}
+.content h2 {
+  font-size: 1.8rem;
+  margin: 3rem 0 1rem;
+  color: #60a5fa;
+}
+.content p {
+  font-size: 1.05rem;
+  color: #cbd5e1;
+  margin-bottom: 1.2rem;
+}
+.content ul {
+  padding-left: 1.8rem;
+  margin: 1rem 0;
+}
+.content li {
+  margin-bottom: 0.8rem;
+  color: #cbd5e1;
+}
+.update-note {
+  text-align: center;
+  margin-top: 4rem;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+/* ================= FOOTER ================= */
+.site-footer {
+  background: #2563eb;
+  color: white;
+  padding: 3rem 1rem;
+  margin-top: 6rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: white;
+  text-decoration: none;
+}
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .header-inner {
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0.8rem 1rem;
+  }
+  .header-inner::-webkit-scrollbar { display: none; }
+  .main-nav { gap: 1.5rem; }
+  .hero { min-height: 60svh; padding: 5rem 1rem; }
+  .content { padding: 0 1rem; margin: 4rem auto; }
+}
+</style>
 </head>
 <body>
 
@@ -220,41 +191,46 @@
 <!-- CONTENT -->
 <div class="content">
   <h1>Privacy Policy</h1>
-
   <p>This Privacy Policy explains how BowesProduct ("we", "us", or "our") collects, uses, and protects your information when you visit our website or purchase our 3D assets. Last updated: December 27, 2025.</p>
 
   <h2>1. Information We Collect</h2>
+  <p>We collect only the information necessary to process purchases and improve our service:</p>
   <ul>
-    <li><strong>Purchase information:</strong> Email address, transaction ID, purchased items (via Stripe).</li>
-    <li><strong>Analytics:</strong> Anonymous traffic data only.</li>
-    <li>No accounts, no tracking cookies.</li>
+    <li><strong>Purchase information:</strong> When you buy an asset via Stripe (our payment processor), we receive your email address, transaction ID, and purchased items. We do not store or have access to your payment details (credit card, etc.).</li>
+    <li><strong>Website analytics:</strong> We use basic analytics (via Plausible or similar privacy-friendly tools) to understand site traffic and usage patterns. No personal identifiers or cookies are used for tracking individuals.</li>
+    <li><strong>No account registration:</strong> You do not need to create an account. Purchases are linked to the email provided during checkout.</li>
   </ul>
 
   <h2>2. How We Use Your Information</h2>
   <ul>
-    <li>Deliver purchased assets</li>
-    <li>Send transactional emails</li>
-    <li>Legal compliance</li>
+    <li>To deliver purchased assets (instant download links are sent via email).</li>
+    <li>To send transactional emails (purchase confirmation, download links).</li>
+    <li>To improve our website and product offerings based on anonymous usage data.</li>
+    <li>To comply with legal obligations.</li>
   </ul>
 
-  <h2>3. What We Do Not Collect</h2>
+  <h2>3. Information We Do Not Collect</h2>
   <ul>
-    <li>No ads or tracking</li>
-    <li>No profiling</li>
-    <li>No data resale</li>
+    <li>No cookies for advertising or cross-site tracking.</li>
+    <li>No personal data beyond what is required for purchase fulfillment.</li>
+    <li>No sale or sharing of your data with third parties for marketing purposes.</li>
   </ul>
 
-  <h2>4. Third Parties</h2>
-  <ul>
-    <li>Stripe (payments)</li>
-    <li>Static hosting providers</li>
-  </ul>
+  <h2>4. Third-Party Services</h2>
+  <p><strong>Stripe:</strong> Payments are processed securely by Stripe. Their privacy policy applies to data handled during payment: <a href="https://stripe.com/privacy" style="color:#60a5fa;">https://stripe.com/privacy</a></p>
+  <p><strong>Hosting:</strong> The website is hosted on a static hosting provider (e.g., Vercel/Netlify). They may log standard server access data but do not share personal information.</p>
 
-  <h2>5. Security</h2>
-  <p>We use industry-standard security practices but cannot guarantee 100% security.</p>
+  <h2>5. Data Security</h2>
+  <p>We implement reasonable security measures to protect your information. However, no method of transmission over the internet is 100% secure.</p>
 
   <h2>6. Your Rights</h2>
-  <p>You may request access, correction, or deletion of your data at any time.</p>
+  <p>You may request access to or deletion of your personal data by contacting us at the email below. We will respond within a reasonable timeframe.</p>
+
+  <h2>7. Changes to This Policy</h2>
+  <p>We may update this policy occasionally. Changes will be posted on this page with an updated "Last updated" date.</p>
+
+  <h2>8. Contact Us</h2>
+  <p>If you have questions about this Privacy Policy, please contact us via the contact form on our site or appropriate channels.</p>
 
   <p class="update-note">Last updated: December 27, 2025</p>
 </div>
@@ -274,11 +250,10 @@
 </footer>
 
 <script>
-  window.addEventListener('scroll', () => {
-    document.querySelector('.site-header')
-      .classList.toggle('scrolled', window.scrollY > 40);
-  });
+// Sticky header effect
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+});
 </script>
-
 </body>
 </html>
