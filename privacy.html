@@ -93,7 +93,7 @@
     /* ================= CONTENT ================= */
     .content {
       max-width: 900px;
-      margin: 5rem auto;
+      margin: 5rem auto 6rem;
       padding: 0 1.5rem;
       line-height: 1.8;
     }
@@ -128,62 +128,25 @@
       color: #64748b;
     }
 
-    /* ================= NEW: IMAGE STYLING (FIXED & CONSISTENT) ================= */
+    /* ================= FIXED IMAGE STYLING ================= */
     .content img {
-      display: block;
+      display: block;                /* Removes bottom gap & fixes alignment */
       max-width: 100%;
       height: auto;
-      margin: 2.5rem auto;
+      margin: 2.5rem auto;           /* Perfect centering + spacing */
       border-radius: 16px;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.3s ease;
     }
     .content img:hover {
       transform: translateY(-6px);
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     }
 
-    /* Optional: smaller decorative images */
+    /* Optional smaller images */
     .content img.small {
-      max-width: 320px;
-      margin: 1.8rem auto;
-    }
-
-    /* Mobile adjustments */
-    @media (max-width: 768px) {
-      .content img {
-        margin: 2rem auto;
-        border-radius: 12px;
-      }
-      .content img.small {
-        max-width: 100%;
-      }
-    }
-
-    /* ================= FOOTER ================= */
-    .site-footer {
-      background: #2563eb;
-      color: white;
-      padding: 3rem 1rem;
-      margin-top: 6rem;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .footer-nav {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .footer-nav a {
-      color: white;
-      text-decoration: none;
+      max-width: 380px;
+      margin: 2rem auto;
     }
 
     /* ================= MOBILE ================= */
@@ -196,7 +159,17 @@
       .header-inner::-webkit-scrollbar { display: none; }
       .main-nav { gap: 1.5rem; }
       .hero { min-height: 60svh; padding: 5rem 1rem; }
-      .content { padding: 0 1rem; margin: 4rem auto; }
+      .content { 
+        padding: 0 1rem; 
+        margin: 4rem auto 5rem; 
+      }
+      .content img {
+        margin: 2rem auto;
+        border-radius: 14px;
+      }
+      .content img.small {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -230,48 +203,47 @@
     <h1>Privacy Policy</h1>
     <p>This Privacy Policy explains how BowesProduct ("we", "us", or "our") collects, uses, and protects your information when you visit our website or purchase our 3D assets. Last updated: December 27, 2025.</p>
 
-    <!-- Example: Add your images like this -->
-    <img src="./images/privacy-illustration.jpg" alt="Privacy and data protection">
+    <!-- Add your images normally – they will now look perfect -->
+    <img src="./images/privacy-main.jpg" alt="Privacy and security illustration">
 
     <h2>1. Information We Collect</h2>
     <p>We collect only the information necessary to process purchases and improve our service:</p>
     <ul>
-      <li><strong>Purchase information:</strong> When you buy an asset via Stripe, we receive your email address, transaction ID, and purchased items. We do not store payment details.</li>
-      <li><strong>Website analytics:</strong> We use privacy-friendly analytics. No personal tracking.</li>
-      <li><strong>No account needed:</strong> Purchases are linked only to your checkout email.</li>
+      <li><strong>Purchase information:</strong> Email, transaction ID, and items purchased via Stripe.</li>
+      <li><strong>Analytics:</strong> Anonymous usage data only – no personal tracking.</li>
+      <li><strong>No accounts:</strong> No login required.</li>
     </ul>
 
-    <!-- Another image example -->
-    <img src="./images/data-minimal.png" alt="Minimal data collection" class="small">
+    <img src="./images/data-minimal.jpg" alt="Minimal data collection" class="small">
 
     <h2>2. How We Use Your Information</h2>
     <ul>
-      <li>To deliver your purchased assets via email</li>
-      <li>To send transactional emails only</li>
-      <li>To improve our site based on anonymous data</li>
+      <li>Deliver your downloads</li>
+      <li>Send purchase confirmations</li>
+      <li>Improve the site anonymously</li>
     </ul>
 
-    <!-- More content... (your existing text) -->
+    <!-- Rest of your content -->
     <h2>3. Information We Do Not Collect</h2>
     <ul>
-      <li>No advertising cookies</li>
-      <li>No personal data sold or shared</li>
+      <li>No cookies for ads</li>
+      <li>No selling your data</li>
     </ul>
 
     <h2>4. Third-Party Services</h2>
-    <p><strong>Stripe:</strong> Payments processed securely. See their policy: <a href="https://stripe.com/privacy" style="color:#60a5fa;">stripe.com/privacy</a></p>
+    <p><strong>Stripe:</strong> Secure payments. <a href="https://stripe.com/privacy" style="color:#60a5fa;">Their policy</a></p>
 
     <h2>5. Data Security</h2>
-    <p>We use reasonable measures to protect your data.</p>
+    <p>Reasonable measures in place.</p>
 
     <h2>6. Your Rights</h2>
     <p>Contact us to access or delete your data.</p>
 
-    <h2>7. Changes to This Policy</h2>
-    <p>Updates will be posted here.</p>
+    <h2>7. Changes</h2>
+    <p>Updates posted here.</p>
 
-    <h2>8. Contact Us</h2>
-    <p>Reach out via our contact channels with any questions.</p>
+    <h2>8. Contact</h2>
+    <p>Reach out with questions.</p>
 
     <p class="update-note">Last updated: December 27, 2025</p>
   </div>
