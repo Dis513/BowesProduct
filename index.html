@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BowesProduct – Commercial Brand Assets</title>
+  <title>BowesProduct – Commercial 3D Models</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+
   <style>
     body { margin: 0; }
 
-    /* Header – matching models.html exactly */
+    /* ================= HEADER ================= */
     .site-header {
       position: sticky;
       top: 0;
@@ -22,7 +23,7 @@
 
     .site-header.scrolled {
       padding: 0.5rem 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
     .header-inner {
@@ -32,12 +33,12 @@
       max-width: 1200px;
       margin: auto;
       padding: 0 1rem;
-      flex-wrap: wrap;
       gap: 1rem;
+      flex-wrap: wrap;
     }
 
     .logo a {
-      color: inherit;
+      color: white;
       text-decoration: none;
       font-size: 1.6rem;
       font-weight: bold;
@@ -53,10 +54,10 @@
       color: white;
       text-decoration: none;
       font-weight: 500;
-      transition: color 0.2s;
     }
 
-    .main-nav a:hover, .main-nav a.active {
+    .main-nav a:hover,
+    .main-nav a.active {
       color: #60a5fa;
     }
 
@@ -68,235 +69,154 @@
       color: white;
     }
 
-    /* Hero */
-    .hero { 
-      text-align:center; 
-      padding:4rem 2rem; 
+    /* ================= HERO ================= */
+    .hero {
+      min-height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 1.5rem;
+      background:
+        linear-gradient(rgba(15,23,42,0.65), rgba(15,23,42,0.85)),
+        url("images/hero-3d.jpg") center / cover no-repeat;
+      color: white;
     }
 
-    /* Products grid */
-    .products { 
-      display:grid; 
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); 
-      gap:1.75rem; 
-      margin-top:2.5rem; 
-      padding: 0 1rem;
+    .hero-inner {
+      max-width: 900px;
     }
 
-    .card { 
-      background:#ffffff; 
-      border-radius:14px; 
-      padding:1.5rem; 
-      text-align:center; 
-      box-shadow:0 10px 25px rgba(0,0,0,0.08); 
-      transition:transform 0.2s, box-shadow 0.2s; 
-    }
-
-    .card:hover { 
-      transform:translateY(-4px); 
-      box-shadow:0 18px 40px rgba(0,0,0,0.12); 
-    }
-
-    .card img {
-      width: 100%;
-      height: 200px;
-      object-fit: contain;
-      background: #f8fafc;
-      border-radius: 10px;
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 3.6rem);
       margin-bottom: 1rem;
     }
 
-    .price { 
-      font-size:1.1rem; 
-      font-weight:700; 
-      margin:0.5rem 0 1rem; 
-      color: #2563eb;
+    .hero p {
+      font-size: 1.15rem;
+      color: #cbd5f5;
+      margin-bottom: 2rem;
+      line-height: 1.6;
     }
 
-    .delivery { 
-      font-size:0.85rem; 
-      color:#475569; 
-      margin-top:0.75rem; 
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
-    .btn { 
-      display:inline-block; 
-      width:100%; 
-      margin-top:0.6rem; 
-      padding:0.65rem 1rem; 
-      border-radius:10px; 
-      background:#2563eb; 
-      color:#ffffff !important; 
-      font-weight:600; 
-      text-decoration:none; 
-      border:none; 
-      cursor:pointer; 
-      transition: opacity 0.2s;
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.6rem;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
     }
 
     .btn:hover {
       opacity: 0.9;
+      transform: translateY(-2px);
     }
 
     .btn.secondary {
       background: transparent;
-      color: #2563eb !important;
-      border: 1px solid #2563eb;
+      border: 1px solid #60a5fa;
+      color: #60a5fa;
     }
 
-    /* Steps section */
-    .steps {
+    /* ================= VALUE SECTION ================= */
+    .section {
+      padding: 4rem 1.5rem;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .section h2 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.75rem;
-      margin-top: 2.5rem;
-      padding: 0 1rem;
     }
 
-    .step {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 1.5rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    .feature {
+      background: white;
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       text-align: center;
     }
 
-    .step span {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #2563eb;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+    .feature h3 {
+      margin-bottom: 0.5rem;
     }
 
-    .step h3 {
-      margin: 0.8rem 0;
-    }
-
-    .step p {
+    .feature p {
       color: #64748b;
       font-size: 0.95rem;
+      line-height: 1.6;
     }
 
-    /* Asset libraries buttons */
-    .asset-buttons {
+    /* ================= FOOTER ================= */
+    .site-footer {
+      padding: 2rem 1rem;
+      background: #2563eb;
+      color: white;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .footer-nav {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
-      justify-content: center;
-      margin: 2rem 0;
     }
 
-    /* Footer */
-    .site-footer { 
-      margin-top:4rem; 
-      padding:2rem 1rem; 
-      background:#2563eb; 
-      color:white; 
-    }
-
-    .footer-inner { 
-      max-width:1200px; 
-      margin:auto; 
-      display:flex; 
-      flex-wrap:wrap; 
-      justify-content:space-between; 
-      align-items:center; 
-      gap:1rem; 
-    }
-
-    .footer-nav { 
-      display:flex; 
-      gap:1rem; 
-      flex-wrap:wrap; 
-      justify-content: center;
-    }
-
-    .footer-nav a { 
-      color:white; 
-      text-decoration:none; 
-      font-weight:500;
-      transition: opacity 0.2s;
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
     }
 
     .footer-nav a:hover {
       opacity: 0.8;
     }
 
-    /* Mobile Optimizations – same as models.html */
+    /* ================= MOBILE ================= */
     @media (max-width: 768px) {
       .hero {
-        padding: 2.5rem 1rem;
-      }
-      .hero h1 {
-        font-size: 2.2rem;
+        padding: 3rem 1rem;
       }
 
-      .products {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 1rem;
-        margin-top: 1.5rem;
-        padding: 0 0.5rem;
+      .hero p {
+        font-size: 1.05rem;
       }
 
-      .card {
-        padding: 1rem 0.8rem;
-      }
-
-      .card img {
-        height: 160px;
-      }
-
-      .card h3 {
-        font-size: 1rem;
-        margin: 0.4rem 0;
-      }
-
-      .price {
-        font-size: 1rem;
-        margin: 0.4rem 0 0.8rem;
-      }
-
-      .btn {
-        padding: 0.65rem 0.8rem;
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
-      }
-
-      .delivery {
-        font-size: 0.78rem;
-        margin-top: 0.5rem;
-      }
-
-      .steps {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 0 0.5rem;
-      }
-
-      .asset-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .asset-buttons .btn {
-        width: 80%;
-        max-width: 320px;
-        text-align: center;
-      }
-
-      .site-footer {
-        margin-top: 3rem;
-      }
-
-      /* Mobile header – horizontal with hidden scrollbar */
       .header-inner {
         flex-wrap: nowrap;
         overflow-x: auto;
-        padding: 0 0.5rem;
-        -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
       }
+
       .header-inner::-webkit-scrollbar {
         display: none;
       }
@@ -305,45 +225,13 @@
         gap: 1.2rem;
         flex-shrink: 0;
       }
-
-      .logo a {
-        font-size: 1.4rem;
-      }
-
-      #themeSelect {
-        flex-shrink: 0;
-      }
-
-      .site-header.scrolled .logo a {
-        font-size: 1.3rem;
-      }
-
-      .site-header.scrolled .main-nav {
-        gap: 1rem;
-      }
-
-      .site-header.scrolled .main-nav a {
-        font-size: 0.95rem;
-      }
-
-      .site-header.scrolled #themeSelect {
-        padding: 0.4rem;
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .products {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .steps {
-        grid-template-columns: repeat(2, 1fr);
-      }
     }
   </style>
 </head>
+
 <body>
-  <!-- HEADER – identical to models.html -->
+
+  <!-- HEADER -->
   <header class="site-header">
     <div class="header-inner">
       <div class="logo">
@@ -351,7 +239,6 @@
       </div>
       <nav class="main-nav">
         <a href="index.html" class="active">Home</a>
-        <a href="icons.html">Icons</a>
         <a href="models.html">Models</a>
       </nav>
       <select id="themeSelect">
@@ -365,95 +252,41 @@
 
   <!-- HERO -->
   <section class="hero">
-    <h1>Commercial Brand Assets</h1>
-    <p>Brand kits, icons & 3D models built for real businesses</p>
-  </section>
-
-  <!-- BRAND KITS -->
-  <section class="section">
-    <h2 style="text-align:center;">Brand Identity Kits</h2>
-    <div class="products">
-      <div class="card">
-        <img src="Product-Starter-Brand-Kit.png" alt="Starter Brand Kit">
-        <h3>Starter Brand Kit</h3>
-        <p class="price">€250</p>
-        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem;">
-          <li>Primary logo design</li>
-          <li>Color palette</li>
-          <li>Font pairing guidance</li>
-          <li>Basic brand guidelines</li>
-          <li>Commercial usage rights</li>
-        </ul>
-        <p class="delivery">Delivery: minimum 14 days</p>
-        <a href="https://buy.stripe.com/test_6oUaEW6kv3bO7Bo87U3Je00" class="btn" target="_blank">
-          Buy Starter Kit
-        </a>
-      </div>
-      <div class="card">
-        <img src="Product-Pro-Brand-Kit.png" alt="Pro Brand Kit">
-        <h3>Pro Brand Kit</h3>
-        <p class="price">€500</p>
-        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem;">
-          <li>Expanded logo system</li>
-          <li>Typography hierarchy</li>
-          <li>Social media assets</li>
-          <li>Brand usage guide</li>
-          <li>Commercial usage rights</li>
-        </ul>
-        <p class="delivery">Delivery: minimum 21 days</p>
-        <a href="https://buy.stripe.com/test_dRm00i38jh2E1d02NA3Je01" class="btn" target="_blank">
-          Buy Pro Kit
-        </a>
-      </div>
-      <div class="card">
-        <img src="Product-Master-Brand-Kit.png" alt="Master Brand Kit">
-        <h3>Master Brand Kit</h3>
-        <p class="price">€1,500</p>
-        <ul style="text-align:left; padding-left:1.2rem; color:#475569; font-size:0.95rem;">
-          <li>Complete logo suite</li>
-          <li>Brand strategy overview</li>
-          <li>Marketing & social assets</li>
-          <li>Full brand manual</li>
-          <li>Commercial usage rights</li>
-        </ul>
-        <p class="delivery">Delivery: minimum 28 days</p>
-        <a href="https://buy.stripe.com/test_8x2bJ0dMX3bO2h43RE3Je02" class="btn" target="_blank">
-          Buy Master Kit
-        </a>
+    <div class="hero-inner">
+      <h1>Commercial-Ready 3D Models</h1>
+      <p>
+        High-quality humanoid and creature models built for games,
+        simulations, animation, and real-world production pipelines.
+        View every model live in our interactive 3D viewer.
+      </p>
+      <div class="hero-actions">
+        <a href="models.html" class="btn">Browse 3D Models</a>
+        <a href="models.html#viewer" class="btn secondary">Open Viewer</a>
       </div>
     </div>
   </section>
 
-  <!-- ASSET LIBRARIES -->
-  <section class="section light">
-    <h2 style="text-align:center;">Asset Libraries</h2>
-    <p style="text-align:center; margin-bottom:2rem; color:#64748b; max-width:800px; margin-left:auto; margin-right:auto;">
-      Ready-made assets you can license instantly for commercial use.
-    </p>
-    <div class="asset-buttons">
-      <a href="icons.html" class="btn secondary">Browse Icons</a>
-      <a href="models.html" class="btn secondary">Browse Models</a>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
+  <!-- VALUE PROPS -->
   <section class="section">
-    <h2 style="text-align:center;">How It Works</h2>
-    <div class="steps">
-      <div class="step">
-        <span>Step 1</span>
-        <h3>Choose an Asset</h3>
-        <p>Select a brand kit, icon, or model that fits your business needs.</p>
-      </div>
-      <div class="step">
-        <span>Step 2</span>
-        <h3>Secure Checkout</h3>
-        <p>Complete payment through Stripe with instant confirmation.</p>
-      </div>
-      <div class="step">
-        <span>Step 3</span>
-        <h3>Commercial Delivery</h3>
-        <p>Your licensed assets are delivered or prepared for use.</p>
+    <div class="section-inner">
+      <h2>Built for Production</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>Humanoid & Creature Rigs</h3>
+          <p>Clean rigs compatible with standard animation pipelines and engines.</p>
+        </div>
+        <div class="feature">
+          <h3>Live 3D Viewer</h3>
+          <p>Inspect topology, scale, and proportions directly in the browser.</p>
+        </div>
+        <div class="feature">
+          <h3>Commercial Use</h3>
+          <p>Use models in games, apps, films, simulations, and client work.</p>
+        </div>
+        <div class="feature">
+          <h3>Focused Library</h3>
+          <p>No icons, no packs — just high-quality 3D characters.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -473,17 +306,11 @@
   </footer>
 
   <script>
-    /* Sticky header shrink effect */
     window.addEventListener('scroll', () => {
       const header = document.querySelector('.site-header');
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
+      header.classList.toggle('scrolled', window.scrollY > 50);
     });
 
-    /* Theme handling */
     window.onload = () => {
       const theme = localStorage.getItem("theme") || "theme-emerald";
       document.body.className = theme;
@@ -491,13 +318,11 @@
       if (select) select.value = theme;
     };
 
-    const themeSelect = document.getElementById("themeSelect");
-    if (themeSelect) {
-      themeSelect.addEventListener("change", () => {
-        document.body.className = themeSelect.value;
-        localStorage.setItem("theme", themeSelect.value);
-      });
-    }
+    document.getElementById("themeSelect")?.addEventListener("change", e => {
+      document.body.className = e.target.value;
+      localStorage.setItem("theme", e.target.value);
+    });
   </script>
+
 </body>
 </html>
