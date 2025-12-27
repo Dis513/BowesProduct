@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <title>BowesProduct – Commercial 3D Models</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="description" content="High-quality commercial-ready 3D character models and props for games, animation, and production.">
 <link rel="stylesheet" href="style.css">
-
 <style>
 /* ================= BASE ================= */
 body {
@@ -16,7 +15,6 @@ body {
   overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
-
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -27,11 +25,9 @@ body {
   border-bottom: 1px solid #1e293b;
   transition: box-shadow 0.3s ease;
 }
-
 .site-header.scrolled {
   box-shadow: 0 6px 30px rgba(0,0,0,0.4);
 }
-
 .header-inner {
   max-width: 1200px;
   margin: auto;
@@ -41,203 +37,165 @@ body {
   justify-content: space-between;
   gap: 1rem;
 }
-
 .logo a {
   font-size: 1.6rem;
   font-weight: 700;
   color: white;
   text-decoration: none;
 }
-
 .main-nav {
   display: flex;
   gap: 2rem;
 }
-
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
   font-weight: 500;
 }
-
 .main-nav a:hover,
 .main-nav a.active {
   color: #60a5fa;
 }
-
-#themeSelect {
-  background: #020617;
-  color: white;
-  border-radius: 8px;
-  padding: 0.4rem;
-  border: 1px solid #334155;
-}
-
 /* ================= HERO ================= */
 .hero {
-  position: relative;                 /* 🔑 REQUIRED */
-  min-height: 100svh;                 /* mobile-safe viewport */
+  position: relative;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4rem 1.25rem;
   text-align: center;
   overflow: hidden;
-
-  /* ✅ SIMPLE, FAIL-SAFE BACKGROUND */
   background:
-    linear-gradient(
-      rgba(2,6,23,0.88),
-      rgba(2,6,23,0.88)
-    ),
-    url("./images/hero.jpg");
-
+    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
+    url("./images/hero.jpg"); /* replace with your actual hero image */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-
 .hero-content {
   max-width: 900px;
 }
-
 .hero h1 {
-  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
   font-weight: 800;
   margin-bottom: 1rem;
 }
-
 .hero p {
-  font-size: clamp(1rem, 2.8vw, 1.25rem);
+  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
   color: #cbd5f5;
   line-height: 1.6;
   max-width: 720px;
   margin: 0 auto 2rem;
 }
-
 /* ================= HERO BUTTONS ================= */
 .hero-actions {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
-
 .btn {
-  padding: 0.9rem 1.4rem;
+  padding: 0.9rem 1.6rem;
   border-radius: 12px;
   font-weight: 600;
   text-decoration: none;
   transition: transform 0.2s ease, opacity 0.2s ease;
   display: inline-block;
 }
-
 .btn.primary {
   background: #2563eb;
   color: white;
 }
-
 .btn.primary:hover {
   background: #1d4ed8;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
-
 .btn.secondary {
   border: 1px solid #60a5fa;
   color: #60a5fa;
   background: transparent;
 }
-
 .btn.secondary:hover {
   background: rgba(96,165,250,0.15);
+  transform: translateY(-3px);
 }
-
 /* ================= VALUE STRIP ================= */
 .value-strip {
   background: #020617;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
 }
-
 .values {
   max-width: 1200px;
   margin: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
 }
-
 .value {
   border: 1px solid #1e293b;
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 2rem;
   text-align: center;
+  transition: transform 0.2s;
 }
-
+.value:hover {
+  transform: translateY(-8px);
+}
 .value h3 {
-  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
 }
-
 .value p {
   color: #94a3b8;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  line-height: 1.6;
 }
-
 /* ================= FOOTER ================= */
 .site-footer {
   background: #2563eb;
   color: white;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem;
+  margin-top: 4rem;
 }
-
 .footer-inner {
   max-width: 1200px;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: space-between;
   align-items: center;
 }
-
 .footer-nav {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
-
 .footer-nav a {
   color: white;
   text-decoration: none;
+  font-weight: 500;
 }
-
-/* ================= MOBILE FIXES ================= */
+.footer-nav a:hover {
+  opacity: 0.8;
+}
+/* ================= MOBILE ================= */
 @media (max-width: 768px) {
   .header-inner {
     overflow-x: auto;
     scrollbar-width: none;
+    padding: 0.8rem 1rem;
   }
-
-  .header-inner::-webkit-scrollbar {
-    display: none;
-  }
-
-  .hero {
-    padding-top: 5rem;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-    max-width: 320px;
-    margin: auto;
-  }
+  .header-inner::-webkit-scrollbar { display: none; }
+  .main-nav { gap: 1.5rem; }
+  .hero { padding-top: 5rem; min-height: 90svh; }
+  .hero-actions { flex-direction: column; }
+  .btn { width: 100%; max-width: 320px; margin: auto; }
+  .values { grid-template-columns: 1fr; }
 }
 </style>
 </head>
-
 <body>
 
 <!-- HEADER -->
@@ -249,13 +207,8 @@ body {
     <nav class="main-nav">
       <a href="index.html" class="active">Home</a>
       <a href="models.html">Models</a>
+      <a href="about.html">About</a>
     </nav>
-    <select id="themeSelect">
-      <option value="theme-emerald">Emerald</option>
-      <option value="theme-blue">Blue</option>
-      <option value="theme-violet">Violet</option>
-      <option value="theme-amber">Amber</option>
-    </select>
   </div>
 </header>
 
@@ -264,30 +217,29 @@ body {
   <div class="hero-content">
     <h1>Commercial-Ready 3D Character Models</h1>
     <p>
-      High-quality humanoid and creature 3D models built for games,
-      animation, simulations, and production pipelines.
+      High-quality rigged humanoid, anthropomorphic, and fantasy 3D models built for games, animation, VR/AR, simulations, and production pipelines.
     </p>
     <div class="hero-actions">
-      <a href="models.html" class="btn primary">Browse 3D Models</a>
-      <a href="models.html#viewer" class="btn secondary">Open 3D Viewer</a>
+      <a href="models.html" class="btn primary">Browse All Models</a>
+      <a href="models.html#modelContainer" class="btn secondary">View 3D Preview</a>
     </div>
   </div>
 </section>
 
-<!-- VALUE -->
+<!-- VALUE STRIP -->
 <section class="value-strip">
   <div class="values">
     <div class="value">
       <h3>Production-Ready</h3>
-      <p>Clean topology, correct rigs, export-ready formats.</p>
+      <p>Clean topology, HumanIK-compatible rigs, 4K PBR textures, and optimized export formats (.glb / .fbx).</p>
     </div>
     <div class="value">
-      <h3>Humanoid Focus</h3>
-      <p>Designed for animation and game engines.</p>
+      <h3>Game & Animation Focused</h3>
+      <p>Designed for real-time engines and offline rendering with consistent quality across all assets.</p>
     </div>
     <div class="value">
-      <h3>Commercial License</h3>
-      <p>Use in shipped products with no royalties.</p>
+      <h3>Full Commercial License</h3>
+      <p>Use in shipped products, client work, or monetized projects — no royalties or attribution required.</p>
     </div>
   </div>
 </section>
@@ -300,27 +252,16 @@ body {
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
       <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
     </nav>
     <p>© 2025 BowesProduct</p>
   </div>
 </footer>
 
 <script>
+// Sticky header effect
 window.addEventListener('scroll', () => {
-  document
-    .querySelector('.site-header')
-    .classList.toggle('scrolled', window.scrollY > 40);
-});
-
-window.onload = () => {
-  const theme = localStorage.getItem("theme") || "theme-emerald";
-  document.body.className = theme;
-  document.getElementById("themeSelect").value = theme;
-};
-
-document.getElementById("themeSelect").addEventListener("change", e => {
-  document.body.className = e.target.value;
-  localStorage.setItem("theme", e.target.value);
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
 </script>
 
