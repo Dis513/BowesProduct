@@ -90,12 +90,14 @@
       margin: 0 auto;
     }
 
-    /* ================= CONTENT ================= */
+    /* ================= CONTENT - FIXED POSITIONING ================= */
     .content {
       max-width: 900px;
-      margin: 5rem auto 6rem;
-      padding: 0 1.5rem;
+      margin: 7rem auto 6rem;     /* More top space after hero */
+      padding: 2rem 1.5rem 4rem;  /* Extra top padding to clear sticky header */
       line-height: 1.8;
+      position: relative;
+      z-index: 1;                 /* Ensures content stays above any overlaps */
     }
     .content h1 {
       text-align: center;
@@ -128,12 +130,12 @@
       color: #64748b;
     }
 
-    /* ================= FIXED IMAGE STYLING ================= */
+    /* ================= IMAGE STYLING - PERFECT NOW ================= */
     .content img {
-      display: block;                /* Removes bottom gap & fixes alignment */
+      display: block;
       max-width: 100%;
       height: auto;
-      margin: 2.5rem auto;           /* Perfect centering + spacing */
+      margin: 3rem auto;          /* Generous, balanced spacing */
       border-radius: 16px;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
       transition: all 0.3s ease;
@@ -142,11 +144,9 @@
       transform: translateY(-6px);
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     }
-
-    /* Optional smaller images */
     .content img.small {
       max-width: 380px;
-      margin: 2rem auto;
+      margin: 2.5rem auto;
     }
 
     /* ================= MOBILE ================= */
@@ -160,16 +160,42 @@
       .main-nav { gap: 1.5rem; }
       .hero { min-height: 60svh; padding: 5rem 1rem; }
       .content { 
-        padding: 0 1rem; 
-        margin: 4rem auto 5rem; 
+        margin: 5rem auto 5rem;
+        padding: 1.5rem 1rem 4rem; 
       }
       .content img {
-        margin: 2rem auto;
+        margin: 2.5rem auto;
         border-radius: 14px;
       }
       .content img.small {
         max-width: 100%;
       }
+    }
+
+    /* ================= FOOTER ================= */
+    .site-footer {
+      background: #2563eb;
+      color: white;
+      padding: 3rem 1rem;
+      margin-top: 6rem;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-nav {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .footer-nav a {
+      color: white;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -203,8 +229,18 @@
     <h1>Privacy Policy</h1>
     <p>This Privacy Policy explains how BowesProduct ("we", "us", or "our") collects, uses, and protects your information when you visit our website or purchase our 3D assets. Last updated: December 27, 2025.</p>
 
-    <!-- Add your images normally – they will now look perfect -->
-    <img src="./images/privacy-main.jpg" alt="Privacy and security illustration">
+    <!-- Example images - replace with your own paths -->
+
+<grok-card data-id="872bf5" data-type="image_card"  data-arg-size="LARGE" ></grok-card>
+
+
+
+<grok-card data-id="0e8fa4" data-type="image_card"  data-arg-size="LARGE" ></grok-card>
+
+
+
+<grok-card data-id="dbfd2c" data-type="image_card"  data-arg-size="LARGE" ></grok-card>
+
 
     <h2>1. Information We Collect</h2>
     <p>We collect only the information necessary to process purchases and improve our service:</p>
@@ -214,7 +250,8 @@
       <li><strong>No accounts:</strong> No login required.</li>
     </ul>
 
-    <img src="./images/data-minimal.jpg" alt="Minimal data collection" class="small">
+<grok-card data-id="8fdfdb" data-type="image_card"  data-arg-size="LARGE" ></grok-card>
+
 
     <h2>2. How We Use Your Information</h2>
     <ul>
@@ -223,7 +260,7 @@
       <li>Improve the site anonymously</li>
     </ul>
 
-    <!-- Rest of your content -->
+    <!-- Your full content continues here... -->
     <h2>3. Information We Do Not Collect</h2>
     <ul>
       <li>No cookies for ads</li>
