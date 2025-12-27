@@ -1,171 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>About – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Learn about BowesProduct and our mission to deliver high-quality commercial icons and 3D assets.">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body { margin: 0; }
-
-    /* Header */
-    .site-header {
-      position: sticky;
-      top: 0;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(10px);
-      z-index: 1000;
-      transition: all 0.3s ease;
-      padding: 1rem 0;
-      border-bottom: 1px solid #334155;
-    }
-
-    .site-header.scrolled {
-      padding: 0.5rem 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 1rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .logo a {
-      color: inherit;
-      text-decoration: none;
-      font-size: 1.6rem;
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .main-nav {
-      display: flex;
-      gap: 2rem;
-    }
-
-    .main-nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    .main-nav a:hover,
-    .main-nav a.active {
-      color: #60a5fa;
-    }
-
-    #themeSelect {
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: none;
-      background: #1e293b;
-      color: white;
-    }
-
-    /* Hero */
-    .hero {
-      text-align: center;
-      padding: 4rem 2rem;
-    }
-
-    /* Content */
-    .content {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1rem;
-      line-height: 1.7;
-      color: #1e293b;
-    }
-
-    .content h1 {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      color: #2563eb;
-    }
-
-    .content h2 {
-      font-size: 1.8rem;
-      margin-top: 2.5rem;
-      margin-bottom: 1rem;
-      color: #2563eb;
-    }
-
-    .content p {
-      margin-bottom: 1rem;
-      font-size: 1.05rem;
-    }
-
-    /* Footer */
-    .site-footer {
-      margin-top: 4rem;
-      padding: 2rem 1rem;
-      background: #2563eb;
-      color: white;
-    }
-
-    .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .footer-nav {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .footer-nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    /* Mobile */
-    @media (max-width: 768px) {
-      .hero {
-        padding: 2.5rem 1rem;
-      }
-
-      .hero h1 {
-        font-size: 2.2rem;
-      }
-
-      .content {
-        padding: 0 0.75rem;
-      }
-
-      .header-inner {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding: 0 0.5rem;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .main-nav {
-        gap: 1.2rem;
-        flex-shrink: 0;
-      }
-
-      .logo a {
-        font-size: 1.4rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>About – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Learn about BowesProduct and our mission to deliver high-quality commercial 3D models and props for games and animation.">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ================= BASE ================= */
+body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #1e293b;
+  transition: box-shadow 0.3s ease;
+}
+.site-header.scrolled {
+  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.logo a {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+}
+.main-nav {
+  display: flex;
+  gap: 2rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+.main-nav a:hover,
+.main-nav a.active {
+  color: #60a5fa;
+}
+/* ================= HERO ================= */
+.hero {
+  position: relative;
+  min-height: 80svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
+    url("./images/hero.jpg"); /* optional hero background */
+  background-size: cover;
+  background-position: center;
+}
+.hero-content {
+  max-width: 900px;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+.hero p {
+  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+  color: #cbd5f5;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0 auto;
+}
+/* ================= CONTENT ================= */
+.content {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 0 1.5rem;
+  line-height: 1.8;
+}
+.content h1 {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  color: #60a5fa;
+}
+.content h2 {
+  font-size: 1.8rem;
+  margin: 3rem 0 1rem;
+  color: #60a5fa;
+}
+.content p {
+  font-size: 1.05rem;
+  color: #cbd5e1;
+  margin-bottom: 1.2rem;
+}
+/* ================= FOOTER ================= */
+.site-footer {
+  background: #2563eb;
+  color: white;
+  padding: 3rem 1rem;
+  margin-top: 6rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: white;
+  text-decoration: none;
+}
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .header-inner {
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0.8rem 1rem;
+  }
+  .header-inner::-webkit-scrollbar { display: none; }
+  .main-nav { gap: 1.5rem; }
+  .hero { min-height: 70svh; padding: 5rem 1rem; }
+  .content { padding: 0 1rem; margin: 3rem auto; }
+}
+</style>
 </head>
 <body>
 
@@ -177,39 +159,37 @@
     </div>
     <nav class="main-nav">
       <a href="index.html">Home</a>
-      <a href="icons.html">Icons</a>
       <a href="models.html">Models</a>
-      <a href="license.html">License</a>
+      <a href="about.html" class="active">About</a>
     </nav>
-    <select id="themeSelect">
-      <option value="theme-emerald">Emerald</option>
-      <option value="theme-blue">Blue</option>
-      <option value="theme-violet">Violet</option>
-      <option value="theme-amber">Amber</option>
-    </select>
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <h1>About BowesProduct</h1>
-  <p>High-quality digital assets built for real-world products</p>
+  <div class="hero-content">
+    <h1>About BowesProduct</h1>
+    <p>High-quality commercial-ready 3D models and props built for real-world production</p>
+  </div>
 </section>
 
 <!-- CONTENT -->
 <div class="content">
   <h1>Our Mission</h1>
 
-  <p>BowesProduct creates clean, modern icons, 3D models, and digital assets designed specifically for commercial use. Everything is built with clarity, consistency, and usability in mind.</p>
+  <p>BowesProduct creates professional, rigged 3D character models and props designed specifically for commercial use in games, animation, simulations, and production pipelines. Every asset is built with clean topology, optimized performance, and usability in mind.</p>
 
-  <h2>Built for Builders</h2>
-  <p>Our assets are used by developers, designers, founders, and teams shipping real products. No fluff, no filler — just practical, professional-grade resources.</p>
+  <h2>Built for Creators</h2>
+  <p>Our models are used by indie developers, studios, animators, and teams shipping real products. No fluff — just practical, production-ready assets that save time and integrate seamlessly into your workflow.</p>
 
   <h2>Commercial First</h2>
-  <p>Every asset is licensed for commercial use by default, so you can confidently use them in client work, products, apps, and businesses.</p>
+  <p>Every asset comes with a clear commercial license by default, allowing unlimited use in client projects, shipped games, apps, films, and commercial products — with no royalties or attribution required.</p>
+
+  <h2>Quality & Consistency</h2>
+  <p>All models feature consistent rigging (HumanIK compatible where applicable), 4K PBR textures, clean edge flow, and optimized polygon counts suitable for real-time and offline rendering.</p>
 
   <h2>Independent & Focused</h2>
-  <p>BowesProduct is independently built and maintained, allowing full focus on quality, updates, and long-term value.</p>
+  <p>BowesProduct is independently created and maintained, ensuring full focus on quality, regular updates, and long-term value for customers.</p>
 </div>
 
 <!-- FOOTER -->
@@ -227,22 +207,10 @@
 </footer>
 
 <script>
-  window.addEventListener('scroll', () => {
-    const header = document.querySelector('.site-header');
-    header.classList.toggle('scrolled', window.scrollY > 50);
-  });
-
-  window.onload = () => {
-    const theme = localStorage.getItem("theme") || "theme-emerald";
-    document.body.className = theme;
-    document.getElementById("themeSelect").value = theme;
-  };
-
-  document.getElementById("themeSelect").addEventListener("change", e => {
-    document.body.className = e.target.value;
-    localStorage.setItem("theme", e.target.value);
-  });
+// Sticky header effect
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+});
 </script>
-
 </body>
 </html>
