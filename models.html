@@ -30,7 +30,7 @@ body {
   z-index: 1000;
   background: rgba(2,6,23,0.9);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #1e293b;
+  border-bottom: 1px solid #334155;
   transition: box-shadow 0.3s ease;
 }
 .site-header.scrolled {
@@ -117,16 +117,6 @@ body {
   background: #1d4ed8;
   transform: translateY(-3px);
 }
-.btn.view-btn {
-  background: transparent;
-  color: #60a5fa;
-  border: 1.5px solid #60a5fa;
-  margin-bottom: 0.8rem;
-}
-.btn.view-btn:hover {
-  background: rgba(96,165,250,0.15);
-  transform: translateY(-3px);
-}
 /* ================= MODEL VIEWER ================= */
 .model-container {
   max-width: 1100px;
@@ -142,7 +132,7 @@ model-viewer {
   height: 100%;
   background: #020617;
 }
-/* ================= PRODUCTS ================= */
+/* ================= PRODUCTS & CARDS ================= */
 .products {
   max-width: 1200px;
   margin: auto;
@@ -188,6 +178,33 @@ model-viewer {
   font-weight: 700;
   color: #60a5fa;
   margin: 0.8rem 0;
+}
+/* Improved card buttons – smaller, balanced */
+.card-content .btn {
+  padding: 0.75rem 1.2rem;
+  font-size: 0.95rem;
+  margin: 0.5rem auto 0;
+  width: 100%;
+  max-width: 220px;
+  box-sizing: border-box;
+}
+.card-content .btn.primary {
+  background: #2563eb;
+  color: white;
+}
+.card-content .btn.primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+.card-content .btn.view-btn {
+  background: transparent;
+  color: #60a5fa;
+  border: 1.5px solid #60a5fa;
+  margin-bottom: 0.8rem;
+}
+.card-content .btn.view-btn:hover {
+  background: rgba(96,165,250,0.15);
+  transform: translateY(-2px);
 }
 .delivery {
   font-size: 0.85rem;
@@ -270,6 +287,7 @@ model-viewer {
   .section-nav a { display: block; width: 80%; max-width: 320px; margin: 1rem auto; }
   .hero-actions { flex-direction: column; }
   .btn { width: 100%; max-width: 320px; margin: auto; }
+  .card-content .btn { max-width: 200px; padding: 0.7rem 1rem; font-size: 0.92rem; }
 }
 </style>
 </head>
