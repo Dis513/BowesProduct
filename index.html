@@ -8,23 +8,24 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* ---------------- BASE ---------------- */
+/* ================= BASE ================= */
 body {
   margin: 0;
-  color: white;
   background: #020617;
+  color: white;
   overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* ---------------- HEADER ---------------- */
+/* ================= HEADER ================= */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(2,6,23,0.85);
+  background: rgba(2,6,23,0.9);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #1e293b;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
 
 .site-header.scrolled {
@@ -59,8 +60,8 @@ body {
   font-weight: 500;
 }
 
-.main-nav a.active,
-.main-nav a:hover {
+.main-nav a:hover,
+.main-nav a.active {
   color: #60a5fa;
 }
 
@@ -72,33 +73,28 @@ body {
   border: 1px solid #334155;
 }
 
-/* ---------------- HERO ---------------- */
+/* ================= HERO ================= */
 .hero {
-  position: relative;
-  min-height: 100svh; /* mobile-safe viewport */
+  position: relative;                 /* 🔑 REQUIRED */
+  min-height: 100svh;                 /* mobile-safe viewport */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4rem 1.25rem;
   text-align: center;
   overflow: hidden;
-}
 
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
+  /* ✅ SIMPLE, FAIL-SAFE BACKGROUND */
   background:
     linear-gradient(
-      to bottom,
-      rgba(2,6,23,0.9),
-      rgba(2,6,23,0.75),
-      rgba(2,6,23,0.9)
+      rgba(2,6,23,0.88),
+      rgba(2,6,23,0.88)
     ),
-    url("hero-3d-background.png");
+    url("./images/hero.jpg");
+
   background-size: cover;
   background-position: center;
-  z-index: -1;
+  background-repeat: no-repeat;
 }
 
 .hero-content {
@@ -115,11 +111,11 @@ body {
   font-size: clamp(1rem, 2.8vw, 1.25rem);
   color: #cbd5f5;
   line-height: 1.6;
-  max-width: 700px;
+  max-width: 720px;
   margin: 0 auto 2rem;
 }
 
-/* ---------------- HERO BUTTONS ---------------- */
+/* ================= HERO BUTTONS ================= */
 .hero-actions {
   display: flex;
   justify-content: center;
@@ -132,7 +128,7 @@ body {
   border-radius: 12px;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
   display: inline-block;
 }
 
@@ -143,6 +139,7 @@ body {
 
 .btn.primary:hover {
   background: #1d4ed8;
+  transform: translateY(-2px);
 }
 
 .btn.secondary {
@@ -155,7 +152,7 @@ body {
   background: rgba(96,165,250,0.15);
 }
 
-/* ---------------- VALUE STRIP ---------------- */
+/* ================= VALUE STRIP ================= */
 .value-strip {
   background: #020617;
   padding: 3rem 1rem;
@@ -170,7 +167,6 @@ body {
 }
 
 .value {
-  background: #020617;
   border: 1px solid #1e293b;
   border-radius: 16px;
   padding: 1.5rem;
@@ -186,7 +182,7 @@ body {
   font-size: 0.95rem;
 }
 
-/* ---------------- FOOTER ---------------- */
+/* ================= FOOTER ================= */
 .site-footer {
   background: #2563eb;
   color: white;
@@ -214,7 +210,7 @@ body {
   text-decoration: none;
 }
 
-/* ---------------- MOBILE FIXES ---------------- */
+/* ================= MOBILE FIXES ================= */
 @media (max-width: 768px) {
   .header-inner {
     overflow-x: auto;
@@ -244,9 +240,12 @@ body {
 
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo"><a href="index.html">BowesProduct</a></div>
+    <div class="logo">
+      <a href="index.html">BowesProduct</a>
+    </div>
     <nav class="main-nav">
       <a href="index.html" class="active">Home</a>
       <a href="models.html">Models</a>
@@ -265,12 +264,12 @@ body {
   <div class="hero-content">
     <h1>Commercial-Ready 3D Character Models</h1>
     <p>
-      Professionally built humanoid 3D models for games, animation,
-      visualization and real-world production — licensed for commercial use.
+      High-quality humanoid and creature 3D models built for games,
+      animation, simulations, and production pipelines.
     </p>
     <div class="hero-actions">
       <a href="models.html" class="btn primary">Browse 3D Models</a>
-      <a href="viewer.html" class="btn secondary">Open 3D Viewer</a>
+      <a href="models.html#viewer" class="btn secondary">Open 3D Viewer</a>
     </div>
   </div>
 </section>
@@ -284,7 +283,7 @@ body {
     </div>
     <div class="value">
       <h3>Humanoid Focus</h3>
-      <p>Game-ready characters built for animation pipelines.</p>
+      <p>Designed for animation and game engines.</p>
     </div>
     <div class="value">
       <h3>Commercial License</h3>
@@ -293,6 +292,7 @@ body {
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
@@ -307,7 +307,8 @@ body {
 
 <script>
 window.addEventListener('scroll', () => {
-  document.querySelector('.site-header')
+  document
+    .querySelector('.site-header')
     .classList.toggle('scrolled', window.scrollY > 40);
 });
 
