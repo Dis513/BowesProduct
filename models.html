@@ -10,6 +10,7 @@
   <meta property="og:description" content="High-quality rigged fantasy and anthropomorphic 3D models with instant download.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.bowesproduct.com/models.html">
+  <meta property="og:image" content="https://www.bowesproduct.com/thumbs/humanmale.jpg">
   <!-- Reliable Model Viewer loading (latest official path + legacy fallback) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
@@ -262,25 +263,26 @@
   </div>
 
   <!-- Model viewer -->
- <div class="model-container" id="modelContainer">
-  <model-viewer id="mainViewer"
-    src="./models/humanmale.glb"
-    poster="./thumbs/humanmale.jpg"
-    alt="Human Male 3D Model"
-    camera-controls
-    auto-rotate
-    auto-rotate-delay="0"
-    rotation-per-second="30deg"
-    interaction-prompt="auto"
-    shadow-intensity="1"
-    exposure="0.9"
-    environment-image="neutral"
-    ar
-    ar-modes="webxr scene-viewer quick-look"
-    loading="eager"
-    reveal="auto">
-  </model-viewer>
-</div>
+  <div class="model-container" id="modelContainer">
+    <model-viewer id="mainViewer"
+      src="./models/humanmale.glb"
+      poster="./thumbs/humanmale.jpg"
+      alt="Human Male 3D Model"
+      camera-controls
+      auto-rotate
+      auto-rotate-delay="0"
+      rotation-per-second="30deg"
+      interaction-prompt="auto"
+      shadow-intensity="1"
+      exposure="0.9"
+      environment-image="neutral"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      loading="eager"
+      reveal="interaction">
+    </model-viewer>
+  </div>
+
   <section class="section light" id="rigged-models">
     <h2 style="text-align:center;">Rigged Models</h2>
     <div class="filters">
@@ -848,6 +850,3 @@
   </script>
 </body>
 </html>
-
-
-
