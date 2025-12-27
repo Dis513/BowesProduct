@@ -15,7 +15,8 @@ body {
   margin: 0;
   background: #020617;
   color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -27,7 +28,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(2, 6, 23, 0.9);
+  background: rgba(2, 6, 23, 0.92);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   transition: all 0.3s ease;
@@ -71,15 +72,15 @@ body {
 }
 
 /* ======================
-   HERO (FIXED & CONSISTENT)
+   HERO (DESKTOP)
 ====================== */
 .hero {
   position: relative;
-  min-height: 100svh; /* 🔑 THIS FIXES ALL ALIGNMENT ISSUES */
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 1.25rem;
+  padding: 4rem 1.5rem;
   text-align: center;
   overflow: hidden;
 
@@ -88,7 +89,7 @@ body {
     url("./images/hero.jpg");
 
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   background-repeat: no-repeat;
 }
 
@@ -140,19 +141,70 @@ body {
   transform: translateY(-3px);
 }
 
-.btn.view-btn {
+.btn.outline {
   background: transparent;
   color: var(--accent);
   border: 1.5px solid var(--accent);
 }
 
-.btn.view-btn:hover {
+.btn.outline:hover {
   background: rgba(96, 165, 250, 0.15);
   transform: translateY(-3px);
 }
 
 /* ======================
-   PRODUCTS / CARDS
+   MOBILE HERO FIX (IMPORTANT)
+====================== */
+@media (max-width: 768px) {
+  .hero {
+    min-height: 80svh;
+    padding: 5rem 1.25rem;
+
+    /* KEY FIX */
+    background-size: contain;
+    background-position: center center;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 320px;
+    margin: auto;
+  }
+}
+
+/* ======================
+   MODEL VIEWER
+====================== */
+.model-container {
+  max-width: 1100px;
+  height: 600px;
+  margin: 4rem auto;
+  background: #020617;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+model-viewer {
+  width: 100%;
+  height: 100%;
+  background: #020617;
+}
+
+@media (max-width: 768px) {
+  .model-container {
+    height: 340px;
+    margin: 2rem auto;
+    border-radius: 14px;
+  }
+}
+
+/* ======================
+   PRODUCT CARDS
 ====================== */
 .products {
   max-width: 1200px;
@@ -184,10 +236,6 @@ body {
 .card-content {
   padding: 1.5rem;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 220px;
 }
 
 .card h3 {
@@ -204,11 +252,7 @@ body {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--accent);
-}
-
-.delivery {
-  font-size: 0.85rem;
-  color: #64748b;
+  margin: 0.8rem 0;
 }
 
 /* ======================
@@ -244,42 +288,4 @@ body {
 
 .footer-nav a:hover {
   opacity: 0.8;
-}
-
-/* ======================
-   MOBILE FIXES
-====================== */
-@media (max-width: 768px) {
-  .hero {
-    min-height: 100svh; /* still locked */
-    padding: 5rem 1rem;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-    max-width: 320px;
-    margin: auto;
-  }
-
-  .products {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.4rem;
-  }
-
-  .card img.thumbnail {
-    height: 160px;
-  }
-
-  .header-inner {
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .header-inner::-webkit-scrollbar {
-    display: none;
-  }
 }
