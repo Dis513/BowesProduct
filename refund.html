@@ -1,334 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Refunds – BowesProduct</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Refund policy for BowesProduct digital assets, including icons, models, and brand kits.">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body { margin: 0; }
-
-    /* Header – identical to all other pages */
-    .site-header {
-      position: sticky;
-      top: 0;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(10px);
-      z-index: 1000;
-      transition: all 0.3s ease;
-      padding: 1rem 0;
-      border-bottom: 1px solid #334155;
-    }
-
-    .site-header.scrolled {
-      padding: 0.5rem 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 1rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .logo a {
-      color: inherit;
-      text-decoration: none;
-      font-size: 1.6rem;
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .main-nav {
-      display: flex;
-      gap: 2rem;
-    }
-
-    .main-nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    .main-nav a:hover, .main-nav a.active {
-      color: #60a5fa;
-    }
-
-    #themeSelect {
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: none;
-      background: #1e293b;
-      color: white;
-    }
-
-    /* Hero */
-    .hero { 
-      text-align:center; 
-      padding:4rem 2rem; 
-    }
-
-    /* Content section – clean readable legal text */
-    .content {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1rem;
-      line-height: 1.7;
-      color: #1e293b;
-    }
-
-    .content h1 {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      color: #2563eb;
-    }
-
-    .content h2 {
-      font-size: 1.8rem;
-      margin-top: 2.5rem;
-      margin-bottom: 1rem;
-      color: #2563eb;
-    }
-
-    .content p {
-      margin-bottom: 1rem;
-      font-size: 1.05rem;
-    }
-
-    .content ul {
-      padding-left: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .content li {
-      margin-bottom: 0.6rem;
-    }
-
-    .content strong {
-      color: #1e293b;
-    }
-
-    .update-note {
-      text-align: center;
-      margin-top: 3rem;
-      color: #64748b;
-      font-size: 0.9rem;
-    }
-
-    /* Footer */
-    .site-footer { 
-      margin-top:4rem; 
-      padding:2rem 1rem; 
-      background:#2563eb; 
-      color:white; 
-    }
-
-    .footer-inner { 
-      max-width:1200px; 
-      margin:auto; 
-      display:flex; 
-      flex-wrap:wrap; 
-      justify-content:space-between; 
-      align-items:center; 
-      gap:1rem; 
-    }
-
-    .footer-nav { 
-      display:flex; 
-      gap:1rem; 
-      flex-wrap:wrap; 
-      justify-content: center;
-    }
-
-    .footer-nav a { 
-      color:white; 
-      text-decoration:none; 
-      font-weight:500;
-      transition: opacity 0.2s;
-    }
-
-    .footer-nav a:hover {
-      opacity: 0.8;
-    }
-
-    /* Mobile Optimizations */
-    @media (max-width: 768px) {
-      .hero {
-        padding: 2.5rem 1rem;
-      }
-      .hero h1 {
-        font-size: 2.2rem;
-      }
-
-      .content {
-        padding: 0 0.75rem;
-      }
-
-      .content h1 {
-        font-size: 2.2rem;
-      }
-
-      .content h2 {
-        font-size: 1.6rem;
-      }
-
-      .site-footer {
-        margin-top: 3rem;
-      }
-
-      /* Mobile header */
-      .header-inner {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding: 0 0.5rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      .header-inner::-webkit-scrollbar {
-        display: none;
-      }
-
-      .main-nav {
-        gap: 1.2rem;
-        flex-shrink: 0;
-      }
-
-      .logo a {
-        font-size: 1.4rem;
-      }
-
-      #themeSelect {
-        flex-shrink: 0;
-      }
-
-      .site-header.scrolled .logo a {
-        font-size: 1.3rem;
-      }
-
-      .site-header.scrolled .main-nav {
-        gap: 1rem;
-      }
-
-      .site-header.scrolled .main-nav a {
-        font-size: 0.95rem;
-      }
-
-      .site-header.scrolled #themeSelect {
-        padding: 0.4rem;
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Refund Policy – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Refund policy for BowesProduct 3D models and props.">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ================= BASE ================= */
+body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #1e293b;
+  transition: box-shadow 0.3s ease;
+}
+.site-header.scrolled {
+  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.logo a {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+}
+.main-nav {
+  display: flex;
+  gap: 2rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+.main-nav a:hover,
+.main-nav a.active {
+  color: #60a5fa;
+}
+/* ================= HERO ================= */
+.hero {
+  position: relative;
+  min-height: 70svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
+    url("./images/hero.jpg"); /* optional background */
+  background-size: cover;
+  background-position: center;
+}
+.hero-content {
+  max-width: 900px;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+.hero p {
+  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+  color: #cbd5f5;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0 auto;
+}
+/* ================= CONTENT ================= */
+.content {
+  max-width: 900px;
+  margin: 5rem auto;
+  padding: 0 1.5rem;
+  line-height: 1.8;
+}
+.content h1 {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  color: #60a5fa;
+}
+.content h2 {
+  font-size: 1.8rem;
+  margin: 3rem 0 1rem;
+  color: #60a5fa;
+}
+.content p {
+  font-size: 1.05rem;
+  color: #cbd5e1;
+  margin-bottom: 1.2rem;
+}
+.content ul {
+  padding-left: 1.8rem;
+  margin: 1rem 0;
+}
+.content li {
+  margin-bottom: 0.8rem;
+  color: #cbd5e1;
+}
+.update-note {
+  text-align: center;
+  margin-top: 4rem;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+/* ================= FOOTER ================= */
+.site-footer {
+  background: #2563eb;
+  color: white;
+  padding: 3rem 1rem;
+  margin-top: 6rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: white;
+  text-decoration: none;
+}
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .header-inner {
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0.8rem 1rem;
+  }
+  .header-inner::-webkit-scrollbar { display: none; }
+  .main-nav { gap: 1.5rem; }
+  .hero { min-height: 60svh; padding: 5rem 1rem; }
+  .content { padding: 0 1rem; margin: 4rem auto; }
+}
+</style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <a href="index.html">BowesProduct</a>
-      </div>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="icons.html">Icons</a>
-        <a href="models.html">Models</a>
-        <a href="refund.html" class="active">Refund</a>
-      </nav>
-      <select id="themeSelect">
-        <option value="theme-emerald">Emerald</option>
-        <option value="theme-blue">Blue</option>
-        <option value="theme-violet">Violet</option>
-        <option value="theme-amber">Amber</option>
-      </select>
-    </div>
-  </header>
 
-  <!-- HERO -->
-  <section class="hero">
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">
+      <a href="index.html">BowesProduct</a>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="models.html">Models</a>
+      <a href="about.html">About</a>
+      <a href="refund.html" class="active">Refund</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
     <h1>Refund Policy</h1>
     <p>How refunds are handled for BowesProduct digital assets</p>
-  </section>
-
-  <!-- REFUND CONTENT -->
-  <div class="content">
-    <h1>BowesProduct Refund Policy</h1>
-    
-    <h2>Eligibility</h2>
-    <p>
-      Due to the nature of digital products, refunds are only granted in exceptional circumstances,
-      such as duplicate charges, accidental purchases, or technical issues preventing access.
-    </p>
-
-    <h2>Requesting a Refund</h2>
-    <ul>
-      <li>Contact support@bowesproduct.com within 7 days of purchase</li>
-      <li>Include proof of purchase and a description of the issue</li>
-      <li>All requests are reviewed on a case-by-case basis</li>
-    </ul>
-
-    <h2>Refund Processing</h2>
-    <p>
-      Approved refunds are issued to the original payment method.
-      Processing times typically range from 5–10 business days.
-    </p>
-
-    <h2>Non-Refundable Situations</h2>
-    <ul>
-      <li>Change of mind after download or access</li>
-      <li>Partial or full use of digital assets</li>
-      <li>Violations of the License or Terms of Service</li>
-    </ul>
-
-    <p class="update-note">Last updated: December 26, 2025</p>
   </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <nav class="footer-nav">
-        <a href="about.html">About</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="license.html">License</a>
-        <a href="refund.html" class="active">Refund</a>
-      </nav>
-      <p>© 2025 BowesProduct</p>
-    </div>
-  </footer>
+<!-- CONTENT -->
+<div class="content">
+  <h1>BowesProduct Refund Policy</h1>
 
-  <script>
-    /* Sticky header shrink effect */
-    window.addEventListener('scroll', () => {
-      const header = document.querySelector('.site-header');
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-    });
+  <p>Due to the instant-download nature of digital products, refunds are granted only in limited circumstances.</p>
 
-    /* Theme handling */
-    window.onload = () => {
-      const theme = localStorage.getItem("theme") || "theme-emerald";
-      document.body.className = theme;
-      const select = document.getElementById("themeSelect");
-      if (select) select.value = theme;
-    };
+  <h2>Eligibility for Refund</h2>
+  <p>Refunds may be issued in the following cases:</p>
+  <ul>
+    <li>Accidental duplicate purchase</li>
+    <li>Technical error preventing download or access to files</li>
+    <li>Charged incorrectly or without authorization</li>
+  </ul>
 
-    const themeSelect = document.getElementById("themeSelect");
-    if (themeSelect) {
-      themeSelect.addEventListener("change", () => {
-        document.body.className = themeSelect.value;
-        localStorage.setItem("theme", themeSelect.value);
-      });
-    }
-  </script>
+  <h2>How to Request a Refund</h2>
+  <ul>
+    <li>Contact us at <strong>support@bowesproduct.com</strong> within <strong>7 days</strong> of purchase</li>
+    <li>Include your transaction ID, email used for purchase, and a clear description of the issue</li>
+    <li>We review all requests individually and respond within 2–3 business days</li>
+  </ul>
+
+  <h2>Refund Processing</h2>
+  <p>Approved refunds are returned to the original payment method via Stripe. Processing typically takes 5–10 business days, depending on your bank or card issuer.</p>
+
+  <h2>Non-Refundable Situations</h2>
+  <ul>
+    <li>Change of mind after successful download or access</li>
+    <li>Partial or full use of the purchased assets</li>
+    <li>Requests made more than 7 days after purchase</li>
+    <li>Violation of our License Agreement or Terms of Service</li>
+  </ul>
+
+  <p>We aim to ensure a fair and transparent process. Thank you for understanding the limitations of digital product sales.</p>
+
+  <p class="update-note">Last updated: December 27, 2025</p>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
+
+<script>
+// Sticky header effect
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+});
+</script>
 </body>
 </html>
