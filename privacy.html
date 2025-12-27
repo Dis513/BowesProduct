@@ -186,20 +186,28 @@
     }
 
     /* ================= MOBILE ================= */
-    @media (max-width: 768px) {
-      .hero { min-height: 60svh; padding: 5rem 1rem; }
-      .content { 
-        margin: 5rem auto 5rem;
-        padding: 1.5rem 1rem 4rem; 
-      }
-      .content img {
-        margin: 2.5rem auto;
-        border-radius: 14px;
-      }
-      .content img.small {
-        max-width: 100%;
-      }
-    }
+@media (max-width: 768px) {
+  .header-inner {
+    flex-wrap: wrap;
+    padding: 0.8rem 1rem;
+  }
+
+  .main-nav {
+    width: 100%;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  .hero {
+    min-height: 60svh;
+    padding: 5rem 1rem;
+  }
+
+  .content {
+    padding: 0 1rem;
+    margin: 4rem auto;
+  }
+}
   </style>
 </head>
 <body>
@@ -320,6 +328,7 @@
   </script>
 </body>
 </html>
+
 
 
 
