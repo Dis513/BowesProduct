@@ -5,7 +5,7 @@
 <title>BowesProduct – Commercial 3D Models</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="High-quality commercial-ready 3D character models and props for games, animation, and production.">
-<link rel="stylesheet" href="style.css">
+
 <style>
 /* ================= BASE ================= */
 body {
@@ -15,6 +15,7 @@ body {
   overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -56,204 +57,108 @@ body {
 .main-nav a.active {
   color: #60a5fa;
 }
+
+/* ================= AUTH UI ================= */
+.auth-area {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.auth-area button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.auth-area button.logout {
+  background: #334155;
+}
+
 /* ================= HERO ================= */
 .hero {
-  position: relative;
   min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 1.25rem;
   text-align: center;
-  overflow: hidden;
+  padding: 4rem 1.25rem;
   background:
     linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-    url("./images/hero.jpg"); /* replace with your actual hero image */
+    url("./images/hero.jpg");
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-}
-.hero-content {
-  max-width: 900px;
 }
 .hero h1 {
   font-size: clamp(2.4rem, 6vw, 4.2rem);
   font-weight: 800;
-  margin-bottom: 1rem;
 }
 .hero p {
-  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
   color: #cbd5f5;
-  line-height: 1.6;
   max-width: 720px;
-  margin: 0 auto 2rem;
+  margin: 1.5rem auto;
 }
-/* ================= HERO BUTTONS ================= */
-.hero-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+
+/* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.9);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
+  margin-top: 6rem;
 }
-.btn {
-  padding: 0.9rem 1.6rem;
-  border-radius: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  display: inline-block;
-}
-.btn.primary {
-  background: #2563eb;
-  color: white;
-}
-.btn.primary:hover {
-  background: #1d4ed8;
-  transform: translateY(-3px);
-}
-.btn.secondary {
-  border: 1px solid #60a5fa;
-  color: #60a5fa;
-  background: transparent;
-}
-.btn.secondary:hover {
-  background: rgba(96,165,250,0.15);
-  transform: translateY(-3px);
-}
-/* ================= VALUE STRIP ================= */
-.value-strip {
-  background: #020617;
-  padding: 4rem 1rem;
-}
-.values {
+.footer-inner {
   max-width: 1200px;
   margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
-.value {
-  border: 1px solid #1e293b;
-  border-radius: 16px;
-  padding: 2rem;
-  text-align: center;
-  transition: transform 0.2s;
+.footer-nav a {
+  color: #cbd5e1;
+  margin-right: 1rem;
+  text-decoration: none;
 }
-.value:hover {
-  transform: translateY(-8px);
-}
-.value h3 {
-  font-size: 1.4rem;
-  margin-bottom: 0.8rem;
-}
-.value p {
-  color: #94a3b8;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-    /* ================= FOOTER ================= */
-    .site-footer {
-      background: rgba(2,6,23,0.9);
-      backdrop-filter: blur(10px);
-      border-top: 1px solid #1e293b;
-      color: #e5e7eb;
-      padding: 3rem 1rem;
-      margin-top: 6rem;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .footer-nav {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .footer-nav a {
-      color: #cbd5e1;
-      text-decoration: none;
-    }
-    .footer-nav a:hover {
-      color: #60a5fa;
-    }
-    .site-footer p {
-      margin: 0;
-      color: #94a3b8;
-    }
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-  .header-inner {
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding: 0.8rem 1rem;
-  }
-  .header-inner::-webkit-scrollbar { display: none; }
-  .main-nav { gap: 1.5rem; }
-  .hero { padding-top: 5rem; min-height: 90svh; }
-  .hero-actions { flex-direction: column; }
-  .btn { width: 100%; max-width: 320px; margin: auto; }
-  .values { grid-template-columns: 1fr; }
+.footer-nav a:hover {
+  color: #60a5fa;
 }
 </style>
 </head>
+
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">
       <a href="index.html">BowesProduct</a>
     </div>
+
     <nav class="main-nav">
       <a href="index.html" class="active">Home</a>
       <a href="models.html">Models</a>
       <a href="about.html">About</a>
     </nav>
+
+    <div class="auth-area">
+      <span id="userEmail" style="display:none;"></span>
+      <button id="loginBtn">Login</button>
+      <button id="logoutBtn" class="logout" style="display:none;">Logout</button>
+    </div>
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
+  <div>
     <h1>Commercial-Ready 3D Character Models</h1>
-    <p>
-      High-quality rigged humanoid, anthropomorphic, and fantasy 3D models built for games, animation, VR/AR, simulations, and production pipelines.
-    </p>
-    <div class="hero-actions">
-      <a href="models.html" class="btn primary">Browse All Models</a>
-      <a href="models.html#modelContainer" class="btn secondary">View 3D Preview</a>
-    </div>
+    <p>Rigged humanoid, fantasy, and game-ready assets for real production pipelines.</p>
   </div>
 </section>
 
-<!-- VALUE STRIP -->
-<section class="value-strip">
-  <div class="values">
-    <div class="value">
-      <h3>Production-Ready</h3>
-      <p>Clean topology, HumanIK-compatible rigs, 4K PBR textures, and optimized export formats (.glb / .fbx).</p>
-    </div>
-    <div class="value">
-      <h3>Game & Animation Focused</h3>
-      <p>Designed for real-time engines and offline rendering with consistent quality across all assets.</p>
-    </div>
-    <div class="value">
-      <h3>Full Commercial License</h3>
-      <p>Use in shipped products, client work, or monetized projects — no royalties or attribution required.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
-      <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
       <a href="license.html">License</a>
@@ -263,13 +168,52 @@ body {
   </div>
 </footer>
 
+<!-- ================= FIREBASE AUTH ================= -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct",
+  storageBucket: "bowesproduct.firebasestorage.app",
+  messagingSenderId: "533459045484",
+  appId: "1:533459045484:web:bf727f2e85787132401c49"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const userEmail = document.getElementById("userEmail");
+
+loginBtn.onclick = () => signInWithPopup(auth, provider);
+logoutBtn.onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    userEmail.textContent = user.email;
+    userEmail.style.display = "inline";
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline";
+  } else {
+    userEmail.style.display = "none";
+    loginBtn.style.display = "inline";
+    logoutBtn.style.display = "none";
+  }
+});
+</script>
+
 <script>
-// Sticky header effect
 window.addEventListener('scroll', () => {
-  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+  document.querySelector('.site-header')
+    .classList.toggle('scrolled', window.scrollY > 40);
 });
 </script>
 
 </body>
 </html>
-
