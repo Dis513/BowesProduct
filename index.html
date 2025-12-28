@@ -184,11 +184,85 @@ html, body {
     </nav>
   </div>
 </header>
-
-<section class="hero">
-  <div>
-    <h1>Commercial-Ready 3D Assets</h1>
-    <p>Built for real production pipelines</p>
+/* ================= HERO ================= */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
+    url("./images/hero.jpg"); /* replace with your actual hero image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.hero-content {
+  max-width: 900px;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+.hero p {
+  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+  color: #cbd5f5;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0 auto 2rem;
+}
+/* ================= HERO BUTTONS ================= */
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 0.9rem 1.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  display: inline-block;
+}
+.btn.primary {
+  background: #2563eb;
+  color: white;
+}
+.btn.primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-3px);
+}
+.btn.secondary {
+  border: 1px solid #60a5fa;
+  color: #60a5fa;
+  background: transparent;
+}
+.btn.secondary:hover {
+  background: rgba(96,165,250,0.15);
+  transform: translateY(-3px);
+}
+<!-- VALUE STRIP -->
+<section class="value-strip">
+  <div class="values">
+    <div class="value">
+      <h3>Production-Ready</h3>
+      <p>Clean topology, HumanIK-compatible rigs, 4K PBR textures, and optimized export formats (.glb / .fbx).</p>
+    </div>
+    <div class="value">
+      <h3>Game & Animation Focused</h3>
+      <p>Designed for real-time engines and offline rendering with consistent quality across all assets.</p>
+    </div>
+    <div class="value">
+      <h3>Full Commercial License</h3>
+      <p>Use in shipped products, client work, or monetized projects — no royalties or attribution required.</p>
+    </div>
   </div>
 </section>
 
@@ -245,3 +319,4 @@ html, body {
 
 </body>
 </html>
+
