@@ -61,12 +61,15 @@ body {
   display: flex;
   gap: 1.2rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
+  white-space: normal;
+  word-break: break-word;
 }
 .main-nav a:hover,
 .main-nav a.active {
@@ -211,7 +214,8 @@ body {
     gap: 0.8rem;
   }
   .main-nav {
-    gap: 1rem;
+    gap: 0.8rem;
+    justify-content: flex-start;
   }
   .hero { 
     min-height: 60svh; 
