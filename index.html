@@ -4,23 +4,16 @@
 <meta charset="UTF-8">
 <title>BowesProduct – Commercial 3D Models</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="High-quality commercial-ready 3D character models and props for games, animation, and production.">
 
 <style>
-/* ================= GLOBAL ================= */
 *,
 *::before,
-*::after {
-  box-sizing: border-box;
-}
+*::after { box-sizing: border-box; }
 
 html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-body {
   margin: 0;
+  padding: 0;
+  overflow-x: hidden;
   background: #020617;
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -34,11 +27,6 @@ body {
   background: rgba(2,6,23,0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #1e293b;
-  transition: box-shadow 0.3s ease;
-}
-
-.site-header.scrolled {
-  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
 }
 
 .header-inner {
@@ -61,6 +49,7 @@ body {
 .main-nav {
   display: flex;
   gap: 2rem;
+  align-items: center;
 }
 
 .main-nav a {
@@ -72,6 +61,20 @@ body {
 .main-nav a:hover,
 .main-nav a.active {
   color: #60a5fa;
+}
+
+.login-btn {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid #60a5fa;
+  color: #60a5fa;
+  background: transparent;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background: rgba(96,165,250,0.15);
 }
 
 /* ================= HERO ================= */
@@ -89,153 +92,33 @@ body {
   background-position: center;
 }
 
-.hero-content {
-  max-width: 900px;
-}
-
 .hero h1 {
   font-size: clamp(2.4rem, 6vw, 4.2rem);
   font-weight: 800;
-  margin-bottom: 1rem;
 }
 
 .hero p {
   font-size: clamp(1.1rem, 2.8vw, 1.3rem);
   color: #cbd5f5;
-  line-height: 1.6;
-  max-width: 720px;
-  margin: 0 auto 2rem;
 }
 
-/* ================= HERO BUTTONS ================= */
-.hero-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 0.9rem 1.6rem;
-  border-radius: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.btn.primary {
-  background: #2563eb;
-  color: white;
-}
-
-.btn.primary:hover {
-  background: #1d4ed8;
-  transform: translateY(-3px);
-}
-
-.btn.secondary {
-  border: 1px solid #60a5fa;
-  color: #60a5fa;
-}
-
-.btn.secondary:hover {
-  background: rgba(96,165,250,0.15);
-  transform: translateY(-3px);
-}
-
-/* ================= VALUE STRIP ================= */
-.value-strip {
-  padding: 4rem 1rem;
-}
-
-.values {
-  max-width: 1200px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2rem;
-}
-
-.value {
-  border: 1px solid #1e293b;
-  border-radius: 16px;
-  padding: 2rem;
-  text-align: center;
-}
-
-.value h3 {
-  font-size: 1.4rem;
-  margin-bottom: 0.8rem;
-}
-
-.value p {
-  color: #94a3b8;
-  line-height: 1.6;
-}
-
-/* ================= FOOTER ================= */
-.site-footer {
-  background: rgba(2,6,23,0.95);
-  border-top: 1px solid #1e293b;
-  padding: 3rem 1rem;
-}
-
-.footer-inner {
-  max-width: 1200px;
-  margin: auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: space-between;
-}
-
-.footer-nav {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.footer-nav a {
-  color: #cbd5e1;
-  text-decoration: none;
-}
-
-.footer-nav a:hover {
-  color: #60a5fa;
-}
-
-.site-footer p {
-  color: #94a3b8;
-  margin: 0;
-}
-
-/* ================= MOBILE FIXES ================= */
+/* ================= MOBILE ================= */
 @media (max-width: 768px) {
   .header-inner {
     flex-direction: column;
-    text-align: center;
-    gap: 0.75rem;
+    padding-bottom: 0.75rem;
   }
 
   .main-nav {
-    justify-content: center;
     gap: 1.25rem;
+    justify-content: center;
     flex-wrap: wrap;
   }
 
-  .hero {
-    padding-top: 4rem;
-    min-height: 90svh;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-    max-width: 320px;
-    margin: auto;
+  .login-btn {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    padding: 0.45rem 1rem;
   }
 }
 </style>
@@ -248,62 +131,60 @@ body {
     <div class="logo">
       <a href="index.html">BowesProduct</a>
     </div>
+
     <nav class="main-nav">
       <a href="index.html" class="active">Home</a>
       <a href="models.html">Models</a>
       <a href="about.html">About</a>
+      <button id="authBtn" class="login-btn">Login</button>
     </nav>
   </div>
 </header>
 
 <section class="hero">
-  <div class="hero-content">
-    <h1>Commercial-Ready 3D Character Models</h1>
-    <p>
-      Clean topology, optimized rigs, and production-ready assets for games, animation, VR/AR, and real products.
-    </p>
-    <div class="hero-actions">
-      <a href="models.html" class="btn primary">Browse Models</a>
-      <a href="models.html#modelContainer" class="btn secondary">View 3D Preview</a>
-    </div>
+  <div>
+    <h1>Commercial-Ready 3D Assets</h1>
+    <p>Built for real production pipelines</p>
   </div>
 </section>
 
-<section class="value-strip">
-  <div class="values">
-    <div class="value">
-      <h3>Production Ready</h3>
-      <p>Optimized topology, clean rigs, PBR textures, and engine-ready exports.</p>
-    </div>
-    <div class="value">
-      <h3>Game Focused</h3>
-      <p>Built for Unity, Unreal, Godot, and real-time pipelines.</p>
-    </div>
-    <div class="value">
-      <h3>Commercial License</h3>
-      <p>Unlimited commercial use. No royalties. No attribution.</p>
-    </div>
-  </div>
-</section>
+<!-- ================= FIREBASE ================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
-    </nav>
-    <p>© 2025 BowesProduct</p>
-  </div>
-</footer>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+    authDomain: "bowesproduct.firebaseapp.com",
+    projectId: "bowesproduct",
+    storageBucket: "bowesproduct.firebasestorage.app",
+    messagingSenderId: "533459045484",
+    appId: "1:533459045484:web:bf727f2e85787132401c49"
+  };
 
-<script>
-window.addEventListener('scroll', () => {
-  document.querySelector('.site-header')
-    .classList.toggle('scrolled', window.scrollY > 40);
-});
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const authBtn = document.getElementById("authBtn");
+
+  authBtn.addEventListener("click", async () => {
+    if (auth.currentUser) {
+      await signOut(auth);
+    } else {
+      await signInWithPopup(auth, provider);
+    }
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    authBtn.textContent = user ? "Logout" : "Login";
+  });
 </script>
 
 </body>
