@@ -194,7 +194,6 @@ model-viewer {
   color: #60a5fa;
   margin: 0.8rem 0;
 }
-/* Improved card buttons – smaller, balanced */
 .card-content .btn {
   padding: 0.75rem 1.2rem;
   font-size: 0.95rem;
@@ -296,13 +295,23 @@ model-viewer {
 }
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
+  /* Updated mobile header to match index.html */
   .header-inner {
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding: 0.8rem 1rem;
+    flex-direction: column;
+    padding-bottom: 0.75rem;
   }
-  .header-inner::-webkit-scrollbar { display: none; }
-  .main-nav { gap: 1.5rem; }
+  .main-nav {
+    gap: 1.25rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .login-btn {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    padding: 0.45rem 1rem;
+  }
+
+  /* Other existing mobile styles */
   .model-container { height: 340px; margin: 2rem 0; border-radius: 14px; }
   .products { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.4rem; }
   .card img.thumbnail { height: 160px; }
@@ -330,6 +339,7 @@ model-viewer {
     </nav>
   </div>
 </header>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
@@ -341,12 +351,14 @@ model-viewer {
     </div>
   </div>
 </section>
+
 <!-- SECTION NAV -->
 <div class="section-nav">
   <a href="#rigged-models">Rigged Models</a>
   <a href="#props">Props</a>
   <a href="#packs">Packs</a>
 </div>
+
 <!-- Model Viewer -->
 <div class="model-container" id="modelContainer">
   <model-viewer id="mainViewer"
@@ -943,8 +955,7 @@ model-viewer {
     </div>
   </div>
 </section>
-<!-- Props and Packs sections remain unchanged -->
-<!-- (Copy-paste them from your original code) -->
+ur original Props and Packs HTML here -->
 
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -965,6 +976,7 @@ model-viewer {
 window.addEventListener('scroll', () => {
   document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
+
 // Model viewer switching
 const viewer = document.getElementById("mainViewer");
 const modelContainer = document.getElementById("modelContainer");
@@ -979,6 +991,7 @@ document.querySelectorAll(".view-btn").forEach(btn => {
     modelContainer.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 });
+
 // Filtering
 const searchInput = document.getElementById("searchInput");
 const genderFilter = document.getElementById("genderFilter");
@@ -1004,7 +1017,7 @@ if (genderFilter) genderFilter.addEventListener("change", filterModels);
 if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 </script>
 
-<!-- ================= FIREBASE AUTHENTICATION ================= -->
+<!-- Firebase Authentication -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import {
@@ -1039,8 +1052,6 @@ if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 
   onAuthStateChanged(auth, (user) => {
     authBtn.textContent = user ? "Logout" : "Login";
-    // Optional: You can extend this to show user name, hide/show certain elements, etc.
-    // e.g., authBtn.textContent = user ? `Logout (${user.displayName})` : "Login";
   });
 </script>
 
