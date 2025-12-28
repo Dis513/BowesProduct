@@ -28,7 +28,7 @@ body {
 .header-inner {
   max-width: 1200px;
   margin: auto;
-  padding: 0.45rem 1rem; /* SMALLER HEADER */
+  padding: 0.45rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -61,12 +61,14 @@ body {
   color: #60a5fa;
 }
 
-/* ===== AUTH ===== */
+/* ===== AUTH (FIXED HEIGHT) ===== */
 .auth-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
+  height: 44px; /* LOCKED HEIGHT */
+  justify-content: flex-end;
 }
 
 #profilePic {
@@ -74,7 +76,7 @@ body {
   height: 28px;
   border-radius: 50%;
   border: 2px solid #60a5fa;
-  display: none;
+  visibility: hidden; /* SPACE RESERVED */
 }
 
 .login-btn {
@@ -84,6 +86,7 @@ body {
   font-size: 0.95rem;
   cursor: pointer;
   padding: 0;
+  line-height: 1;
 }
 
 .login-btn:hover {
@@ -105,17 +108,6 @@ body {
   background-position: center;
 }
 
-.about-hero h1 {
-  font-size: clamp(2.2rem, 6vw, 3.5rem);
-  margin-bottom: 1rem;
-}
-
-.about-hero p {
-  color: #cbd5f5;
-  max-width: 720px;
-  margin: auto;
-}
-
 /* ===== CONTENT ===== */
 .about-content {
   max-width: 900px;
@@ -125,27 +117,6 @@ body {
 
 .about-content h2 {
   color: #60a5fa;
-  margin-top: 2.5rem;
-}
-
-.about-content p,
-.about-content li {
-  color: #cbd5e1;
-  line-height: 1.7;
-}
-
-/* ===== FOOTER ===== */
-.site-footer {
-  border-top: 1px solid #1e293b;
-  padding: 2.5rem 1rem;
-}
-
-.footer-inner {
-  max-width: 1200px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
 }
 
 /* ===== MOBILE ===== */
@@ -154,10 +125,6 @@ body {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.4rem;
-  }
-
-  .logo {
-    margin-bottom: 0.25rem;
   }
 
   .main-nav {
@@ -190,25 +157,12 @@ body {
 </header>
 
 <section class="about-hero">
-  <div>
-    <h1>About BowesProduct</h1>
-    <p>Professional, production-ready 3D assets for real-time projects.</p>
-  </div>
+  <h1>About BowesProduct</h1>
 </section>
 
 <section class="about-content">
-  <h2>Who We Are</h2>
-  <p>
-    BowesProduct is a one-person independent 3D asset studio focused on high-quality,
-    commercially licensed models.
-  </p>
+  <p>Professional, production-ready 3D assets.</p>
 </section>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <p>© 2025 BowesProduct</p>
-  </div>
-</footer>
 
 <!-- FIREBASE AUTH -->
 <script type="module">
@@ -245,10 +199,10 @@ onAuthStateChanged(auth, user => {
   if (user) {
     authBtn.textContent = "Logout";
     profilePic.src = user.photoURL;
-    profilePic.style.display = "block";
+    profilePic.style.visibility = "visible";
   } else {
     authBtn.textContent = "Login";
-    profilePic.style.display = "none";
+    profilePic.style.visibility = "hidden";
   }
 });
 </script>
