@@ -23,12 +23,16 @@ body {
   z-index: 1000;
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
+  transition: box-shadow 0.25s ease;
+}
+.site-header.scrolled {
+  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
 }
 
 .header-inner {
   max-width: 1200px;
   margin: auto;
-  padding: 0.45rem 1rem;
+  padding: 0.4rem 1rem; /* tighter header */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -55,28 +59,27 @@ body {
   font-weight: 500;
   font-size: 0.95rem;
 }
-
 .main-nav a:hover,
 .main-nav a.active {
   color: #60a5fa;
 }
 
-/* ===== AUTH (FIXED HEIGHT) ===== */
+/* ===== AUTH (NO LAYOUT SHIFT) ===== */
 .auth-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
-  height: 44px; /* LOCKED HEIGHT */
   justify-content: flex-end;
+  gap: 0.15rem;
+  height: 42px; /* locked */
 }
 
 #profilePic {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   border: 2px solid #60a5fa;
-  visibility: hidden; /* SPACE RESERVED */
+  visibility: hidden;
 }
 
 .login-btn {
@@ -88,7 +91,6 @@ body {
   padding: 0;
   line-height: 1;
 }
-
 .login-btn:hover {
   color: #60a5fa;
 }
@@ -108,6 +110,10 @@ body {
   background-position: center;
 }
 
+.about-hero h1 {
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+}
+
 /* ===== CONTENT ===== */
 .about-content {
   max-width: 900px;
@@ -117,6 +123,13 @@ body {
 
 .about-content h2 {
   color: #60a5fa;
+  margin-top: 3rem;
+}
+
+.about-content p,
+.about-content li {
+  color: #cbd5e1;
+  line-height: 1.7;
 }
 
 /* ===== MOBILE ===== */
@@ -161,38 +174,36 @@ body {
 </section>
 
 <section class="about-content">
-  <p>Professional, production-ready 3D assets.</p>
-</section>
-
-  <!-- MAIN CONTENT -->
-<section class="about-content">
   <h2>Who We Are</h2>
   <p>
-    BowesProduct is a one-person independent 3D asset studio focused on delivering high-quality, commercially licensed 3D models that are ready to drop into your game, animation, or VR/AR project.
+    BowesProduct is a one-person independent 3D asset studio focused on delivering
+    high-quality, commercially licensed 3D models ready for real production.
   </p>
   <p>
-    Every model is carefully crafted with clean topology, optimized performance, PBR materials, and full rigging — built from years of experience in game development and real-time pipelines.
+    Every model is carefully crafted with clean topology, optimized performance,
+    PBR materials, and full rigging — built from years of experience in real-time pipelines.
   </p>
 
   <h2>Our Philosophy</h2>
-  <p>We believe great tools should be accessible. That's why we offer:</p>
   <ul>
-    <li>Fair, one-time pricing with no royalties</li>
+    <li>Fair one-time pricing, no royalties</li>
     <li>Unlimited commercial use license</li>
-    <li>Instant downloads in .glb and .fbx formats</li>
-    <li>Engine-ready assets for Unity, Unreal, Godot, Blender, and more</li>
+    <li>Instant downloads (.glb & .fbx)</li>
+    <li>Engine-ready for Unity, Unreal, Godot, Blender</li>
     <li>Regular updates and new releases</li>
   </ul>
 
   <h2>Contact & Support</h2>
-  <p>
-    Have questions? Suggestions? Found a bug?<br>
-    Reach out anytime — we're here to help.
-  </p>
-  <p>
-    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
-  </p>
+  <p>Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a></p>
 </section>
+
+<!-- HEADER SHADOW -->
+<script>
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header')
+    .classList.toggle('scrolled', window.scrollY > 40);
+});
+</script>
 
 <!-- FIREBASE AUTH -->
 <script type="module">
@@ -239,4 +250,3 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
-
