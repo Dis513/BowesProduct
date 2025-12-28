@@ -90,7 +90,7 @@ body {
   text-align: center;
   background:
     linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-    url("./images/about-bg.jpg"); /* Optional: add an about background image */
+    url("./images/about-bg.jpg"); /* Optional: replace with your own background */
   background-size: cover;
   background-position: center;
 }
@@ -98,6 +98,7 @@ body {
   font-size: clamp(2.4rem, 6vw, 4rem);
   font-weight: 800;
   margin-bottom: 1.5rem;
+  color: white;
 }
 .about-hero p {
   font-size: clamp(1.1rem, 2.8vw, 1.3rem);
@@ -109,26 +110,32 @@ body {
 /* ================= CONTENT ================= */
 .about-content {
   max-width: 900px;
-  margin: 4rem auto;
+  margin: 5rem auto;
   padding: 0 1.5rem;
   line-height: 1.8;
-  color: #cbd5f5;
 }
 .about-content h2 {
   font-size: 2rem;
   margin: 3rem 0 1.5rem;
-  color: white;
+  color: #60a5fa; /* Blue titles restored */
+  text-align: center;
 }
 .about-content p {
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
+  color: #cbd5e1;
 }
 .about-content ul {
-  padding-left: 1.5rem;
+  padding-left: 1.8rem;
   margin: 1.5rem 0;
+  color: #cbd5e1;
 }
 .about-content li {
   margin-bottom: 0.8rem;
+}
+.about-content a {
+  color: #60a5fa;
+  text-decoration: underline;
 }
 /* ================= FOOTER ================= */
 .site-footer {
@@ -145,6 +152,7 @@ body {
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: space-between;
+  align-items: center;
 }
 .footer-nav {
   display: flex;
@@ -184,6 +192,9 @@ body {
     min-height: 60svh;
     padding-top: 7rem;
   }
+  .about-content h2 {
+    font-size: 1.8rem;
+  }
 }
 </style>
 </head>
@@ -204,7 +215,7 @@ body {
   </div>
 </header>
 
-<!-- ABOUT HERO -->
+<!-- ABOUT HERO (restored full hero section) -->
 <section class="about-hero">
   <div>
     <h1>About BowesProduct</h1>
@@ -240,7 +251,7 @@ body {
     Reach out anytime — we're here to help.
   </p>
   <p>
-    Email: <a href="mailto:support@bowesproduct.com" style="color:#60a5fa;">support@bowesproduct.com</a>
+    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
   </p>
 </section>
 
