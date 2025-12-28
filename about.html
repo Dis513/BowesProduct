@@ -5,25 +5,19 @@
 <title>About – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="About BowesProduct – creator of high-quality commercial-ready 3D character models and props.">
-<link rel="stylesheet" href="style.css">
+
 <style>
-/* ================= GLOBAL FIXES ================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-/* ================= BASE ================= */
+/* ================= GLOBAL ================= */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { max-width: 100%; overflow-x: hidden; }
+
 body {
   margin: 0;
   background: #020617;
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -32,55 +26,75 @@ body {
   background: rgba(2,6,23,0.9);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #1e293b;
-  transition: box-shadow 0.3s ease;
 }
 .site-header.scrolled {
   box-shadow: 0 6px 30px rgba(0,0,0,0.4);
 }
+
 .header-inner {
   max-width: 1200px;
   margin: auto;
   padding: 1rem;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
 }
+
 .logo a {
   font-size: 1.6rem;
   font-weight: 700;
   color: white;
   text-decoration: none;
 }
+
+/* ================= NAV ================= */
 .main-nav {
   display: flex;
-  gap: 2rem;
   align-items: center;
+  gap: 1.5rem;
 }
+
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
   font-weight: 500;
 }
-.main-nav a:hover,
-.main-nav a.active {
+.main-nav a.active,
+.main-nav a:hover {
   color: #60a5fa;
 }
+
+/* ================= PROFILE ================= */
+.profile-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#profilePic {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  display: none;
+}
+
+/* ================= BUTTON ================= */
 .login-btn {
-  padding: 0.5rem 1.1rem;
+  padding: 0.45rem 1.1rem;
   border-radius: 999px;
   border: 1.5px solid #60a5fa;
   color: #60a5fa;
   background: transparent;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 .login-btn:hover {
   background: rgba(96,165,250,0.15);
-  transform: translateY(-2px);
 }
-/* ================= HERO (About) ================= */
+
+/* ================= HERO ================= */
 .about-hero {
   min-height: 70svh;
   display: flex;
@@ -90,23 +104,21 @@ body {
   text-align: center;
   background:
     linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-    url("./images/heroabout.jpg"); /* Optional: replace with your own background */
+    url("./images/heroabout.jpg");
   background-size: cover;
   background-position: center;
 }
 .about-hero h1 {
   font-size: clamp(2.4rem, 6vw, 4rem);
   font-weight: 800;
-  margin-bottom: 1.5rem;
-  color: white;
 }
 .about-hero p {
-  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+  font-size: 1.2rem;
   color: #cbd5f5;
   max-width: 800px;
-  margin: 0 auto;
-  line-height: 1.7;
+  margin: auto;
 }
+
 /* ================= CONTENT ================= */
 .about-content {
   max-width: 900px;
@@ -115,49 +127,30 @@ body {
   line-height: 1.8;
 }
 .about-content h2 {
-  font-size: 2rem;
-  margin: 3rem 0 1.5rem;
-  color: #60a5fa; /* Blue titles restored */
-  text-align: left;
-}
-.about-content p {
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
-  color: #cbd5e1;
-}
-.about-content ul {
-  padding-left: 1.8rem;
-  margin: 1.5rem 0;
-  color: #cbd5e1;
-}
-.about-content li {
-  margin-bottom: 0.8rem;
-}
-.about-content a {
   color: #60a5fa;
-  text-decoration: underline;
+  margin-top: 3rem;
 }
+.about-content p,
+.about-content li {
+  color: #cbd5e1;
+}
+
 /* ================= FOOTER ================= */
 .site-footer {
-  background: rgba(2,6,23,0.9);
-  backdrop-filter: blur(10px);
   border-top: 1px solid #1e293b;
   padding: 3rem 1rem;
-  margin-top: 6rem;
+  background: rgba(2,6,23,0.9);
 }
 .footer-inner {
   max-width: 1200px;
   margin: auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
   justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
 }
 .footer-nav {
   display: flex;
   gap: 1.5rem;
-  flex-wrap: wrap;
 }
 .footer-nav a {
   color: #cbd5e1;
@@ -166,38 +159,35 @@ body {
 .footer-nav a:hover {
   color: #60a5fa;
 }
-.site-footer p {
-  color: #94a3b8;
-  margin: 0;
-}
+
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
   .header-inner {
     flex-direction: column;
-    padding-bottom: 0.75rem;
+    align-items: center;
   }
+
+  .logo {
+    order: 1;
+  }
+
   .main-nav {
-    gap: 1.25rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-top: 0.5rem;
+    order: 2;
+    flex-direction: column;
+    gap: 1rem;
   }
-  .login-btn {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    padding: 0.45rem 1rem;
+
+  .profile-wrap {
+    flex-direction: column;
   }
-  .about-hero {
-    min-height: 60svh;
-    padding-top: 7rem;
-  }
-  .about-content h2 {
-    font-size: 1.8rem;
+
+  #profilePic {
+    margin-bottom: 0.25rem;
   }
 }
 </style>
 </head>
+
 <body>
 
 <!-- HEADER -->
@@ -206,53 +196,46 @@ body {
     <div class="logo">
       <a href="index.html">BowesProduct</a>
     </div>
+
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="models.html">Models</a>
       <a href="about.html" class="active">About</a>
-      <button id="authBtn" class="login-btn">Login</button>
+
+      <div class="profile-wrap">
+        <img id="profilePic" alt="Profile">
+        <button id="authBtn" class="login-btn">Login</button>
+      </div>
     </nav>
   </div>
 </header>
 
-<!-- ABOUT HERO (restored full hero section) -->
+<!-- HERO -->
 <section class="about-hero">
   <div>
     <h1>About BowesProduct</h1>
     <p>
-      Creating professional, production-ready 3D character models and props for indie developers, studios, and creators worldwide.
+      Creating professional, production-ready 3D character models and props for developers and studios worldwide.
     </p>
   </div>
 </section>
 
-<!-- MAIN CONTENT -->
+<!-- CONTENT -->
 <section class="about-content">
   <h2>Who We Are</h2>
   <p>
-    BowesProduct is a one-person independent 3D asset studio focused on delivering high-quality, commercially licensed 3D models that are ready to drop into your game, animation, or VR/AR project.
-  </p>
-  <p>
-    Every model is carefully crafted with clean topology, optimized performance, PBR materials, and full rigging — built from years of experience in game development and real-time pipelines.
+    BowesProduct is a one-person independent 3D asset studio delivering high-quality, commercially licensed models.
   </p>
 
   <h2>Our Philosophy</h2>
-  <p>We believe great tools should be accessible. That's why we offer:</p>
   <ul>
-    <li>Fair, one-time pricing with no royalties</li>
-    <li>Unlimited commercial use license</li>
-    <li>Instant downloads in .glb and .fbx formats</li>
-    <li>Engine-ready assets for Unity, Unreal, Godot, Blender, and more</li>
-    <li>Regular updates and new releases</li>
+    <li>One-time pricing, no royalties</li>
+    <li>Unlimited commercial use</li>
+    <li>Engine-ready assets</li>
   </ul>
 
-  <h2>Contact & Support</h2>
-  <p>
-    Have questions? Suggestions? Found a bug?<br>
-    Reach out anytime — we're here to help.
-  </p>
-  <p>
-    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
-  </p>
+  <h2>Contact</h2>
+  <p>Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a></p>
 </section>
 
 <!-- FOOTER -->
@@ -262,60 +245,65 @@ body {
       <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
     </nav>
     <p>© 2025 BowesProduct</p>
   </div>
 </footer>
 
+<!-- STICKY SHADOW -->
 <script>
-// Sticky header effect
 window.addEventListener('scroll', () => {
   document.querySelector('.site-header')
     .classList.toggle('scrolled', window.scrollY > 40);
 });
 </script>
 
-<!-- Firebase Authentication -->
+<!-- FIREBASE AUTH -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-    authDomain: "bowesproduct.firebaseapp.com",
-    projectId: "bowesproduct",
-    storageBucket: "bowesproduct.firebasestorage.app",
-    messagingSenderId: "533459045484",
-    appId: "1:533459045484:web:bf727f2e85787132401c49"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct",
+  storageBucket: "bowesproduct.firebasestorage.app",
+  messagingSenderId: "533459045484",
+  appId: "1:533459045484:web:bf727f2e85787132401c49"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-  const authBtn = document.getElementById("authBtn");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-  authBtn.addEventListener("click", async () => {
-    if (auth.currentUser) {
-      await signOut(auth);
-    } else {
-      await signInWithPopup(auth, provider);
-    }
-  });
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
 
-  onAuthStateChanged(auth, (user) => {
-    authBtn.textContent = user ? "Logout" : "Login";
-  });
+authBtn.addEventListener("click", async () => {
+  if (auth.currentUser) {
+    await signOut(auth);
+  } else {
+    await signInWithPopup(auth, provider);
+  }
+});
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    authBtn.textContent = "Logout";
+    profilePic.src = user.photoURL;
+    profilePic.style.display = "block";
+  } else {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+  }
+});
 </script>
 
 </body>
 </html>
-
-
