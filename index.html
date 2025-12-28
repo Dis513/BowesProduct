@@ -34,6 +34,7 @@ body {
   background: rgba(2,6,23,0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #1e293b;
+  transition: box-shadow 0.3s ease;
 }
 
 .site-header.scrolled {
@@ -73,39 +74,9 @@ body {
   color: #60a5fa;
 }
 
-/* ================= USER BAR ================= */
-.user-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  border-top: 1px solid #1e293b;
-  background: rgba(2,6,23,0.98);
-  font-size: 0.95rem;
-}
-
-.user-bar span {
-  color: #cbd5e1;
-}
-
-.user-bar button {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 0.45rem 1rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.user-bar button:hover {
-  background: #1d4ed8;
-}
-
 /* ================= HERO ================= */
 .hero {
-  min-height: 90svh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -238,21 +209,23 @@ body {
   margin: 0;
 }
 
-/* ================= MOBILE ================= */
+/* ================= MOBILE FIXES ================= */
 @media (max-width: 768px) {
   .header-inner {
     flex-direction: column;
     text-align: center;
+    gap: 0.75rem;
   }
 
   .main-nav {
     justify-content: center;
     gap: 1.25rem;
+    flex-wrap: wrap;
   }
 
   .hero {
     padding-top: 4rem;
-    min-height: 85svh;
+    min-height: 90svh;
   }
 
   .hero-actions {
@@ -281,12 +254,6 @@ body {
       <a href="about.html">About</a>
     </nav>
   </div>
-
-  <!-- USER BAR (SHOW WHEN LOGGED IN) -->
-  <div class="user-bar">
-    <span>Logged in as: Guest</span>
-    <button>Login</button>
-  </div>
 </header>
 
 <section class="hero">
@@ -306,4 +273,38 @@ body {
   <div class="values">
     <div class="value">
       <h3>Production Ready</h3>
-      <p>Optimized topology, clea
+      <p>Optimized topology, clean rigs, PBR textures, and engine-ready exports.</p>
+    </div>
+    <div class="value">
+      <h3>Game Focused</h3>
+      <p>Built for Unity, Unreal, Godot, and real-time pipelines.</p>
+    </div>
+    <div class="value">
+      <h3>Commercial License</h3>
+      <p>Unlimited commercial use. No royalties. No attribution.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header')
+    .classList.toggle('scrolled', window.scrollY > 40);
+});
+</script>
+
+</body>
+</html>
