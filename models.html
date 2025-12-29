@@ -981,73 +981,59 @@ window.addEventListener('scroll', () => {
 });
 
 <script>
-// Get elements
-const mainViewer = document.getElementById('mainViewer');
-const modelContainer = document.getElementById('modelContainer');
-const viewButtons = document.querySelectorAll('.view-btn');
-const searchInput = document.getElementById('searchInput');
-const genderFilter = document.getElementById('genderFilter');
-const categoryFilter = document.getElementById('categoryFilter');
-const cards = document.querySelectorAll('#riggedProducts .card, #props .products .card');
+document.addEventListener('DOMContentLoaded', () => {
+  const mainViewer = document.getElementById('mainViewer');
+  const modelContainer = document.getElementById('modelContainer');
+  const searchInput = document.getElementById('searchInput');
+  const genderFilter = document.getElementById('genderFilter');
+  const categoryFilter = document.getElementById('categoryFilter');
 
-// "View in 3D" button functionality – now using the reliable updateSrc method
-viewButtons.forEach(button => {
-  button.addEventListener('click', async () => {
+  /* ===============================
+     VIEW IN 3D BUTTON (WORKING)
+  =============================== */
+
+  document.addEventListener('click', (e) => {
+    const button = e.target.closest('.view-btn');
+    if (!button) return;
+
     const card = button.closest('.card');
-    const modelPath = card.getAttribute('data-model');
+    if (!card) return;
 
-    if (modelPath && modelPath !== mainViewer.src) {
-      // Use the official method to change the model source
-      await mainViewer.updateSrc(modelPath);
+    const modelPath = card.dataset.model;
+    if (!modelPath) return;
 
-      // Update alt text
-      const modelName = card.querySelector('h3').textContent.trim();
-      mainViewer.alt = `${modelName} 3D Model`;
+    // Load the GLB correctly
+    mainViewer.setAttribute('src', modelPath);
 
-      // Smooth scroll to the viewer
-      modelContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else if (modelPath) {
-      // If it's already the current model, just scroll to it
-      modelContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    // Optional poster reset (prevents stale previews)
+    mainViewer.removeAttribute('poster');
+
+    // Update accessibility label
+    const modelName = card.querySelector('h3')?.textContent.trim() || '3D Model';
+    mainViewer.setAttribute('alt', `${modelName} 3D Model`);
+
+    // Scroll to viewer (UP)
+    modelContainer.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
   });
-});
 
-// Filtering functionality (search + gender + category)
-function filterModels() {
-  const searchTerm = searchInput.value.toLowerCase().trim();
-  const selectedGender = genderFilter.value;
-  const selectedCategory = categoryFilter.value;
+  /* ===============================
+     FILTERING
+  =============================== */
 
-  cards.forEach(card => {
-    const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
-    const gender = card.getAttribute('data-gender') || 'all'; // props have no gender
-    const category = card.getAttribute('data-category') || 'prop';
+  const cards = document.querySelectorAll('#riggedProducts .card, #props .products .card');
 
-    const matchesSearch = title.includes(searchTerm);
-    const matchesGender = selectedGender === 'all' || gender === selectedGender;
-    const matchesCategory = selectedCategory === 'all' || category === selectedCategory;
+  function filterModels() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const se
 
-    card.style.display = matchesSearch && matchesGender && matchesCategory ? 'block' : 'none';
-  });
-}
-
-// Attach filter events
-searchInput.addEventListener('input', filterModels);
-genderFilter.addEventListener('change', filterModels);
-categoryFilter.addEventListener('change', filterModels);
-
-// Run initial filter
-filterModels();
-
-// Sticky header shadow effect
-window.addEventListener('scroll', () => {
-  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
-});
 </script>
 </script>
 </body>
 </html>
+
 
 
 
