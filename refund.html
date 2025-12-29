@@ -207,6 +207,12 @@ h1, h2, h3, h4, h5, h6 {
 
     <div class="auth-inline">
       <img id="profilePic" alt="Profile">
+      <div id="levelInfo" style="margin-left: 1rem; font-size: 0.9rem; color: #cbd5e1; display: none;">
+  <div id="levelText"></div>
+  <div style="width: 100px; height: 6px; background: #1e293b; border-radius: 3px; margin-top: 4px;">
+    <div id="xpBar" style="height: 100%; width: 0%; background: #60a5fa; border-radius: 3px;"></div>
+  </div>
+</div>
       <button id="authBtn" class="login-btn">Login</button>
     </div>
   </div>
@@ -348,5 +354,6 @@ const db = getFirestore(app);
 
 </body>
 </html>
+
 
 
