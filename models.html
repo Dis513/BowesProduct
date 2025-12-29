@@ -15,12 +15,21 @@
 <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
 <link rel="stylesheet" href="style.css">
 <style>
+/* ================= GLOBAL FIXES ================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 /* ================= BASE ================= */
 body {
   margin: 0;
   background: #020617;
   color: white;
-  overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 /* ================= HEADER ================= */
@@ -28,56 +37,80 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(2,6,23,0.9);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid #334155;
-  transition: box-shadow 0.3s ease;
-}
-.site-header.scrolled {
-  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+  background: rgba(2,6,23,0.95);
+  border-bottom: 1px solid #1e293b;
 }
 .header-inner {
   max-width: 1200px;
   margin: auto;
-  padding: 1rem;
+  padding: 0.4rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  flex-wrap: nowrap;
 }
+/* LEFT GROUP */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  min-width: 0;
+}
+/* LOGO */
 .logo a {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: white;
   text-decoration: none;
+  white-space: nowrap;
 }
+/* NAV */
 .main-nav {
   display: flex;
-  gap: 2rem;
+  gap: 1.2rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
   font-weight: 500;
+  font-size: 0.9rem;
+  white-space: normal;
+  word-break: break-word;
 }
 .main-nav a:hover,
 .main-nav a.active {
   color: #60a5fa;
 }
+/* AUTH (RIGHT SIDE) */
+.auth-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  height: 42px;
+  flex-shrink: 0;
+}
+#profilePic {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  visibility: hidden;
+}
 .login-btn {
-  padding: 0.5rem 1.1rem;
-  border-radius: 999px;
-  border: 1.5px solid #60a5fa;
-  color: #60a5fa;
-  background: transparent;
-  font-size: 0.95rem;
+  background: none;
+  border: none;
+  color: #e5e7eb;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  padding: 0;
+  line-height: 1;
 }
 .login-btn:hover {
-  background: rgba(96,165,250,0.15);
-  transform: translateY(-2px);
+  color: #60a5fa;
 }
 /* ================= HERO ================= */
 .hero {
@@ -261,7 +294,7 @@ model-viewer {
 }
 /* ================= FOOTER ================= */
 .site-footer {
-  background: rgba(2,6,23,0.9);
+  background: rgba(2,6,23,0.95);
   backdrop-filter: blur(10px);
   border-top: 1px solid #1e293b;
   color: #e5e7eb;
@@ -295,48 +328,76 @@ model-viewer {
 }
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
-  /* Updated mobile header to match index.html */
-  .header-inner {
-    flex-direction: column;
-    padding-bottom: 0.75rem;
+  .header-left {
+    flex-wrap: wrap;
+    gap: 0.8rem;
   }
   .main-nav {
-    gap: 1.25rem;
-    justify-content: center;
-    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: flex-start;
   }
-  .login-btn {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    padding: 0.45rem 1rem;
+  .model-container { 
+    height: 340px; 
+    margin: 2rem 0; 
+    border-radius: 14px; 
   }
-
-  /* Other existing mobile styles */
-  .model-container { height: 340px; margin: 2rem 0; border-radius: 14px; }
-  .products { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.4rem; }
-  .card img.thumbnail { height: 160px; }
-  .card-content { padding: 1.2rem; min-height: auto; }
-  .filters input, .filters select { display: block; width: 90%; margin: 0.8rem auto; }
-  .section-nav a { display: block; width: 80%; max-width: 320px; margin: 1rem auto; }
-  .hero-actions { flex-direction: column; }
-  .btn { width: 100%; max-width: 320px; margin: auto; }
-  .card-content .btn { max-width: 200px; padding: 0.7rem 1rem; font-size: 0.92rem; }
+  .products { 
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+    gap: 1.4rem; 
+  }
+  .card img.thumbnail { 
+    height: 160px; 
+  }
+  .card-content { 
+    padding: 1.2rem; 
+    min-height: auto; 
+  }
+  .filters input, .filters select { 
+    display: block; 
+    width: 90%; 
+    margin: 0.8rem auto; 
+  }
+  .section-nav a { 
+    display: block; 
+    width: 80%; 
+    max-width: 320px; 
+    margin: 1rem auto; 
+  }
+  .hero-actions { 
+    flex-direction: column; 
+  }
+  .btn { 
+    width: 100%; 
+    max-width: 320px; 
+    margin: auto; 
+  }
+  .card-content .btn { 
+    max-width: 200px; 
+    padding: 0.7rem 1rem; 
+    font-size: 0.92rem; 
+  }
 }
 </style>
 </head>
 <body>
+
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo">
-      <a href="index.html">BowesProduct</a>
+    <div class="header-left">
+      <div class="logo">
+        <a href="index.html">BowesProduct</a>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="models.html" class="active">Models</a>
+        <a href="about.html">About</a>
+      </nav>
     </div>
-    <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="models.html" class="active">Models</a>
-      <a href="about.html">About</a>
+    <div class="auth-stack">
+      <img id="profilePic" alt="Profile">
       <button id="authBtn" class="login-btn">Login</button>
-    </nav>
+    </div>
   </div>
 </header>
 
@@ -379,6 +440,7 @@ model-viewer {
     reveal="interaction">
   </model-viewer>
 </div>
+
 <!-- Rigged Models -->
 <section id="rigged-models">
   <h2 style="text-align:center; margin:4rem 0 1rem;">Rigged Models</h2>
@@ -396,7 +458,7 @@ model-viewer {
       <option value="fantasy">Fantasy</option>
       <option value="alien">Alien</option>
     </select>
-  </div>
+    </div>
   <div class="products" id="riggedProducts">
     <div class="card" data-model="./models/humanmale.glb" data-gender="male" data-category="humanoid">
       <img class="thumbnail" src="./thumbs/humanmale.jpg" alt="Human Male">
@@ -961,6 +1023,14 @@ model-viewer {
   <p style="font-size:1.4rem; max-width:800px; margin:2rem auto;">Product packs coming soon!</p>
   <p style="font-size:1.1rem;">Stay tuned for bundled deals on multiple models and props.</p>
 </section>
+
+<!-- Packs -->
+<section id="packs" style="text-align:center; padding:6rem 2rem; color:#94a3b8;">
+  <h2>Packs</h2>
+  <p style="font-size:1.4rem; max-width:800px; margin:2rem auto;">Product packs coming soon!</p>
+  <p style="font-size:1.1rem;">Stay tuned for bundled deals on multiple models and props.</p>
+</section>
+
 <!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
@@ -976,11 +1046,6 @@ model-viewer {
 </footer>
 
 <script>
-// Sticky header
-window.addEventListener('scroll', () => {
-  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
-});
-
 // Model viewer switching
 const viewer = document.getElementById("mainViewer");
 const modelContainer = document.getElementById("modelContainer");
@@ -1001,6 +1066,7 @@ const searchInput = document.getElementById("searchInput");
 const genderFilter = document.getElementById("genderFilter");
 const categoryFilter = document.getElementById("categoryFilter");
 const productsContainer = document.getElementById("riggedProducts");
+
 function filterModels() {
   const searchTerm = searchInput.value.toLowerCase();
   const gender = genderFilter.value;
@@ -1023,42 +1089,45 @@ if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 
 <!-- Firebase Authentication -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-    authDomain: "bowesproduct.firebaseapp.com",
-    projectId: "bowesproduct",
-    storageBucket: "bowesproduct.firebasestorage.app",
-    messagingSenderId: "533459045484",
-    appId: "1:533459045484:web:bf727f2e85787132401c49"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct",
+  storageBucket: "bowesproduct.firebasestorage.app",
+  messagingSenderId: "533459045484",
+  appId: "1:533459045484:web:bf727f2e85787132401c49"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-  const authBtn = document.getElementById("authBtn");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
 
-  authBtn.addEventListener("click", async () => {
-    if (auth.currentUser) {
-      await signOut(auth);
-    } else {
-      await signInWithPopup(auth, provider);
-    }
-  });
+authBtn.onclick = async () => {
+  auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
+};
 
-  onAuthStateChanged(auth, (user) => {
-    authBtn.textContent = user ? "Logout" : "Login";
-  });
+onAuthStateChanged(auth, user => {
+  if (user) {
+    authBtn.textContent = "Logout";
+    profilePic.src = user.photoURL;
+    profilePic.style.visibility = "visible";
+  } else {
+    authBtn.textContent = "Login";
+    profilePic.style.visibility = "hidden";
+  }
+});
 </script>
 
 </body>
 </html>
-
