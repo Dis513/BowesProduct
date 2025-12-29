@@ -178,21 +178,21 @@ html, body {
  overflow: hidden;
  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
-model-viewer { width: 100%; height: 100%; background: #020617; }
 
-.products {
- max-width: 1200px;
- margin: 0 auto;
- display: grid;
- grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
- gap: 2rem;
- padding: 0 1rem;
+/* ================= MODEL VIEWER ================= */
+.model-container {
+  max-width: 1100px;
+  height: 600px;
+  margin: 4rem auto;
+  background: #020617;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
-.card {
- background: #1e293b;
- border-radius: 16px;
- overflow: hidden;
- transition: transform 0.2s, box-shadow 0.2s;
+model-viewer {
+  width: 100%;
+  height: 100%;
+  background: #020617;
 }
 .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
 .card img.thumbnail { width: 100%; height: 220px; object-fit: cover; }
@@ -294,14 +294,26 @@ model-viewer { width: 100%; height: 100%; background: #020617; }
  <a href="#packs">Packs</a>
 </div>
 
-<model-viewer
-  id="mainViewer"
-  camera-controls
-  auto-rotate
-  shadow-intensity="1"
-  style="width:100%; height:500px;">
-</model-viewer>
-
+<!-- Model Viewer -->
+<div class="model-container" id="modelContainer">
+  <model-viewer id="mainViewer"
+    src="./models/humanmale.glb"
+    poster="./thumbs/promotionalviewer.jpg"
+    alt="Human Male 3D Model"
+    camera-controls
+    auto-rotate
+    auto-rotate-delay="0"
+    rotation-per-second="30deg"
+    interaction-prompt="auto"
+    shadow-intensity="1"
+    exposure="0.9"
+    environment-image="neutral"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    loading="eager"
+    reveal="interaction">
+  </model-viewer>
+</div>
 
 <!-- Rigged Models -->
 <section id="rigged-models">
@@ -900,6 +912,53 @@ model-viewer { width: 100%; height: 100%; background: #020617; }
   <p>© 2025 BowesProduct</p>
  </div>
 </footer>
+ 
+<script>
+// Sticky header
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+});
+// Model viewer switching
+const viewer = document.getElementById("mainViewer");
+const modelContainer = document.getElementById("modelContainer");
+document.querySelectorAll(".view-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const card = btn.closest(".card");
+    const newModel = card.dataset.model;
+    const thumb = card.querySelector("img.thumbnail")?.src || "./thumbs/promotionalviewer.jpg";
+    viewer.src = newModel;
+    viewer.poster = thumb;
+    viewer.dismissPoster();
+    modelContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+});
+
+// Filtering
+const searchInput = document.getElementById("searchInput");
+const genderFilter = document.getElementById("genderFilter");
+const categoryFilter = document.getElementById("categoryFilter");
+const productsContainer = document.getElementById("riggedProducts");
+
+function filterModels() {
+  const searchTerm = searchInput.value.toLowerCase();
+  const gender = genderFilter.value;
+  const category = categoryFilter.value;
+  const cards = productsContainer.querySelectorAll(".card");
+  cards.forEach(card => {
+    const title = card.querySelector("h3").textContent.toLowerCase();
+    const cardGender = card.dataset.gender || "";
+    const cardCategory = card.dataset.category || "";
+    const matches = title.includes(searchTerm) &&
+      (gender === "all" || cardGender === gender) &&
+      (category === "all" || cardCategory === category);
+    card.style.display = matches ? "" : "none";
+  });
+}
+
+if (searchInput) searchInput.addEventListener("input", filterModels);
+if (genderFilter) genderFilter.addEventListener("change", filterModels);
+if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
+</script>
 
 <!-- Firebase Authentication & XP System (exact same as about.html) -->
 <script type="module">
@@ -959,68 +1018,9 @@ onAuthStateChanged(auth, async (user) => {
  levelInfo.style.display = "block";
 });
 </script>
-
-<!-- Your existing model viewer / filtering script -->
-<script>
-<script>
-// Sticky header
-window.addEventListener('scroll', () => {
-  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
-});
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const mainViewer = document.getElementById('mainViewer');
-  const modelContainer = document.getElementById('modelContainer');
-  const searchInput = document.getElementById('searchInput');
-  const genderFilter = document.getElementById('genderFilter');
-  const categoryFilter = document.getElementById('categoryFilter');
-
-  /* ===============================
-     VIEW IN 3D BUTTON (WORKING)
-  =============================== */
-
-  document.addEventListener('click', (e) => {
-    const button = e.target.closest('.view-btn');
-    if (!button) return;
-
-    const card = button.closest('.card');
-    if (!card) return;
-
-    const modelPath = card.dataset.model;
-    if (!modelPath) return;
-
-    // Load the GLB correctly
-    mainViewer.setAttribute('src', modelPath);
-
-    // Optional poster reset (prevents stale previews)
-    mainViewer.removeAttribute('poster');
-
-    // Update accessibility label
-    const modelName = card.querySelector('h3')?.textContent.trim() || '3D Model';
-    mainViewer.setAttribute('alt', `${modelName} 3D Model`);
-
-    // Scroll to viewer (UP)
-    modelContainer.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
-  });
-
-  /* ===============================
-     FILTERING
-  =============================== */
-
-  const cards = document.querySelectorAll('#riggedProducts .card, #props .products .card');
-
-  function filterModels() {
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    const se
-
-</script>
-</script>
 </body>
 </html>
+
 
 
 
