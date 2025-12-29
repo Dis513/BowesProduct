@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Terms of Service – BowesProduct</title>
+<title>Rewards – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 *, *::before, *::after { box-sizing: border-box; }
-html, body { max-width: 100%; overflow-x: hidden; }
+html, body { overflow-x: hidden; }
 
 body {
   margin: 0;
@@ -24,21 +24,18 @@ body {
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
-.site-header.scrolled {
-  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
-}
 .header-inner {
   max-width: 1200px;
   margin: auto;
   padding: 0.6rem 1rem;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 }
 .header-left {
   display: flex;
-  align-items: center;
   gap: 1.6rem;
+  align-items: center;
 }
 .logo a {
   font-size: 1.3rem;
@@ -53,13 +50,8 @@ body {
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
 }
-.main-nav a:hover,
-.main-nav a.active {
-  color: #60a5fa;
-}
+.main-nav a.active { color: #60a5fa; }
 
 /* ================= AUTH ================= */
 .auth-inline {
@@ -84,7 +76,7 @@ body {
   cursor: pointer;
 }
 
-/* ================= XP BAR ================= */
+/* ================= XP ================= */
 #levelInfo {
   display: none;
   flex-direction: column;
@@ -108,51 +100,80 @@ body {
 }
 
 /* ================= CONTENT ================= */
-.content {
-  max-width: 900px;
-  margin: 5rem auto;
+.page {
+  max-width: 1100px;
+  margin: 4rem auto;
   padding: 0 1.5rem;
-  line-height: 1.8;
 }
-.content p,
-.content li { color: #cbd5e1; }
-.content ul { padding-left: 1.5rem; }
-h1, h2 { color: #60a5fa; }
-.update-note {
-  margin-top: 4rem;
-  font-size: 0.95rem;
-  color: #64748b;
+.page h1 {
+  color: #60a5fa;
+  margin-bottom: 0.5rem;
+}
+.page p {
+  color: #cbd5e1;
 }
 
-/* ================= FOOTER ================= */
-.site-footer {
-  background: rgba(2,6,23,0.95);
-  border-top: 1px solid #1e293b;
-  padding: 3rem 1rem;
+/* ================= REWARDS ================= */
+.rewards-header {
+  margin-bottom: 2.5rem;
 }
-.footer-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+.rewards-progress {
+  margin-top: 1rem;
+}
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background: #1e293b;
+  border-radius: 6px;
+}
+#xpProgress {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 6px;
+}
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
+  margin-top: 3rem;
 }
-.footer-nav {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+.reward-card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
 }
-.footer-nav a {
-  color: #cbd5e1;
-  text-decoration: none;
+.reward-card.locked {
+  opacity: 0.45;
 }
-.footer-nav a:hover {
-  color: #60a5fa;
+.reward-icon {
+  font-size: 2.4rem;
 }
-.site-footer p {
-  margin: 0;
+.reward-title {
+  margin-top: 0.8rem;
+  font-weight: 600;
+}
+.reward-desc {
+  font-size: 0.9rem;
   color: #94a3b8;
+  margin: 0.6rem 0;
+}
+.claim-btn {
+  margin-top: 0.8rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: #60a5fa;
+  color: #020617;
+}
+.claim-btn:disabled {
+  background: #1e293b;
+  color: #64748b;
+  cursor: not-allowed;
 }
 
 /* ================= MOBILE ================= */
@@ -171,7 +192,7 @@ h1, h2 { color: #60a5fa; }
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
-        <a href="terms.html" class="active">Terms</a>
+        <a href="rewards.html" class="active">Rewards</a>
       </nav>
     </div>
 
@@ -186,63 +207,21 @@ h1, h2 { color: #60a5fa; }
   </div>
 </header>
 
-<div class="content">
-  <h1>Terms of Service</h1>
+<div class="page">
+  <div class="rewards-header">
+    <h1>Your Rewards</h1>
+    <p id="currentLevelText">Log in to see your rewards.</p>
 
-  <h2>1. Acceptance of Terms</h2>
-  <p>By accessing BowesProduct, you agree to these Terms.</p>
-
-  <h2>2. Eligibility</h2>
-  <p>You must be 18+ or have parental consent.</p>
-
-  <h2>3. Accounts</h2>
-  <p>You are responsible for your account security.</p>
-
-  <h2>4. Purchases</h2>
-  <p>All purchases grant digital access subject to licensing.</p>
-
-  <h2>5. Intellectual Property</h2>
-  <p>All content is protected by law.</p>
-
-  <h2>6. Prohibited Use</h2>
-  <ul>
-    <li>Redistribution</li>
-    <li>Unauthorized resale</li>
-    <li>Security abuse</li>
-  </ul>
-
-  <h2>7. Termination</h2>
-  <p>Accounts may be terminated for violations.</p>
-
-  <h2>8. Disclaimer</h2>
-  <p>Service provided “AS IS”.</p>
-
-  <h2>9. Liability</h2>
-  <p>No liability for indirect damages.</p>
-
-  <p class="update-note">Last updated: December 29, 2025</p>
-</div>
-
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
-    </nav>
-    <p>© 2025 BowesProduct</p>
+    <div class="rewards-progress">
+      <div class="progress-track">
+        <div id="xpProgress"></div>
+      </div>
+      <p id="xpText" style="margin-top:0.5rem;color:#94a3b8;"></p>
+    </div>
   </div>
-</footer>
 
-<script>
-window.addEventListener("scroll", () => {
-  document.querySelector(".site-header")
-    .classList.toggle("scrolled", window.scrollY > 40);
-});
-</script>
+  <div id="rewardsGrid" class="rewards-grid"></div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -263,7 +242,8 @@ const provider = new GoogleAuthProvider();
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 
-authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+authBtn.onclick = () =>
+  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
 onAuthStateChanged(auth, async user => {
   if (!user) return;
@@ -281,12 +261,42 @@ onAuthStateChanged(auth, async user => {
   const next = thresholds[level + 1] ?? Infinity;
   const progress = next === Infinity ? 100 : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
 
-  document.getElementById("levelText").textContent = `Level ${level} – ${titles[level]}`;
+  document.getElementById("levelText").textContent = `Level ${level}`;
   document.getElementById("xpBar").style.width = progress + "%";
   document.getElementById("levelInfo").style.display = "flex";
+
+  document.getElementById("currentLevelText").textContent =
+    `Level ${level} – ${titles[level]}`;
+  document.getElementById("xpText").textContent = `${xp} XP`;
+  document.getElementById("xpProgress").style.width = progress + "%";
+
+  const rewards = [
+    { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked!" },
+    { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Code: REWARD15" },
+    { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €10", msg: "Choose any!" },
+    { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access", msg: "Exclusive unlocked!" },
+    { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "Forever", msg: "Code: MASTER20" }
+  ];
+
+  const grid = document.getElementById("rewardsGrid");
+  grid.innerHTML = "";
+
+  rewards.forEach(r => {
+    const card = document.createElement("div");
+    card.className = "reward-card" + (level >= r.level ? "" : " locked");
+    card.innerHTML = `
+      <div class="reward-icon">${r.icon}</div>
+      <div class="reward-title">${r.title}</div>
+      <div class="reward-desc">${r.desc}</div>
+      <button class="claim-btn" ${level >= r.level ? "" : "disabled"}
+        onclick="alert('${r.msg}')">
+        ${level >= r.level ? "Claim" : "Locked"}
+      </button>
+    `;
+    grid.appendChild(card);
+  });
 });
 </script>
 
 </body>
 </html>
-
