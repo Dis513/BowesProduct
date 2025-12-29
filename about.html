@@ -66,29 +66,19 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-.main-nav a:hover,
-.main-nav a.active {
+.main-nav a:hover {
   color: #60a5fa;
 }
 
-/* ================= AUTH ================= */
-.auth-stack {
+/* ================= AUTH (INLINE, FIXED HEIGHT) ================= */
+.auth-inline {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  height: 42px;
-  gap: 0.15rem;
+  gap: 0.6rem;
+  height: 42px; /* prevents header jump */
 }
 
-#profilePic {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid #60a5fa;
-  visibility: hidden;
-}
-
+/* Button (unchanged good version) */
 .login-btn {
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
@@ -103,11 +93,20 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(96,165,250,0.15);
   transform: translateY(-2px);
 }
-
-
 .login-btn:active {
   transform: translateY(1px);
 }
+
+/* Profile image */
+#profilePic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  visibility: hidden; /* space reserved */
+}
+
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
@@ -179,9 +178,9 @@ h1, h2, h3, h4, h5, h6 {
       </nav>
     </div>
 
-    <div class="auth-stack">
-      <img id="profilePic" alt="Profile">
+    <div class="auth-inline">
       <button id="authBtn" class="login-btn">Login</button>
+      <img id="profilePic" alt="Profile">
     </div>
   </div>
 </header>
@@ -283,7 +282,3 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
-
-
-
-
