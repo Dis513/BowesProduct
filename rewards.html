@@ -305,10 +305,20 @@ const xpBar = document.getElementById("xpBar");
 
 authBtn.onclick = () =>
   auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+    levelInfo.style.display = "none";
+    
+    // Optional: hide rewards page elements when logged out
+    const rewardsSection = document.getElementById("rewardsSection");
+    if (rewardsSection) rewardsSection.style.display = "none";
+    
+    return;
+  }
 
-onAuthStateChanged(auth, async user => {
-  if (!user) return;
-
+  // Logged in
   authBtn.textContent = "Logout";
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
@@ -316,58 +326,77 @@ onAuthStateChanged(auth, async user => {
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
+  // Give new users 10 XP on first login
   if (!snap.exists()) {
     await setDoc(ref, { xp: 10 });
     snap = await getDoc(ref);
   }
 
   const xp = snap.data().xp || 0;
-  const thresholds = [0,200,500,1000,2000,4000];
-  const titles = ["New","Explorer","Builder","Artist","Creator","Master"];
+
+  // Level thresholds and titles
+  const thresholds = [0, 200, 500, 1000, 2000, 4000];
+  const titles = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
 
   const level = thresholds.filter(v => xp >= v).length - 1;
   const next = thresholds[level + 1] ?? thresholds[level];
-  const pct = next === thresholds[level]
-    ? 100
+  const progress = next === thresholds[level] 
+    ? 100 
     : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
 
-  levelText.textContent = `Lvl ${level} – ${titles[level]}`;
-  xpBar.style.width = pct + "%";
-  levelInfo.style.display = "block";
+  // Update header (used on all pages)
+  if (levelText && xpBar && levelInfo) {
+    levelText.textContent = `Level ${level} • ${xp} XP`;
+    xpBar.style.width = progress + "%";
+    levelInfo.style.display = "block";
+  }
 
-  document.getElementById("currentLevelText").textContent =
-    `Level ${level} – ${titles[level]}`;
-  document.getElementById("xpText").textContent = `${xp} XP`;
-  document.getElementById("xpProgress").style.width = pct + "%";
+  // Update rewards page specific elements (only if they exist)
+  const currentLevelText = document.getElementById("currentLevelText");
+  const xpText = document.getElementById("xpText");
+  const xpProgress = document.getElementById("xpProgress");
 
-  const rewards = [
-    { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked!" },
-    { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Code: REWARD15" },
-    { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5!" },
-    { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access", msg: "Exclusive unlocked!" },
-    { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "Forever", msg: "Code: MASTER20" }
-  ];
+  if (currentLevelText) currentLevelText.textContent = `Level ${level} – ${titles[level]}`;
+  if (xpText) xpText.textContent = `${xp} XP`;
+  if (xpProgress) xpProgress.style.width = progress + "%";
 
+  // Rewards grid (only run if on the rewards page)
   const grid = document.getElementById("rewardsGrid");
-  grid.innerHTML = "";
+  if (grid) {
+    const rewards = [
+      { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
+      { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
+      { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
+      { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
+      { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
+    ];
 
-  rewards.forEach(r => {
-    const card = document.createElement("div");
-    card.className = "reward-card" + (level >= r.level ? "" : " locked");
-    card.innerHTML = `
-      <div class="reward-icon">${r.icon}</div>
-      <div class="reward-title">${r.title}</div>
-      <div class="reward-desc">${r.desc}</div>
-      <button class="claim-btn" ${level >= r.level ? "" : "disabled"}
-        onclick="alert('${r.msg}')">
-        ${level >= r.level ? "Claim" : "Locked"}
-      </button>
-    `;
-    grid.appendChild(card);
-  });
+    grid.innerHTML = "";
+    rewards.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "reward-card" + (level >= r.level ? " unlocked" : " locked");
+      card.innerHTML = `
+        <div class="reward-icon">${r.icon}</div>
+        <h3>${r.title}</h3>
+        <p>${r.desc}</p>
+        <button class="claim-btn" ${level >= r.level ? "" : "disabled"}>
+          ${level >= r.level ? "Claim" : "Locked (Lvl ${r.level})"}
+        </button>
+      `;
+      if (level >= r.level) {
+        card.querySelector(".claim-btn").onclick = () => alert(r.msg);
+      }
+      grid.appendChild(card);
+    });
+  }
+
+  // Optional: show rewards section when logged in
+  const rewardsSection = document.getElementById("rewardsSection");
+  if (rewardsSection) rewardsSection.style.display = "block";
 });
 </script>
 
 </body>
 </html>
+
 
