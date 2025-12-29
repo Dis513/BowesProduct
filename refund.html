@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Refund Policy – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Refund policy for BowesProduct 3D models and props.">
+<meta name="description" content="Refund policy for BowesProduct digital 3D models and assets.">
 
 <link rel="stylesheet" href="style.css">
 
@@ -88,6 +88,10 @@ body {
   cursor: pointer;
 }
 
+.login-btn:hover {
+  color: #60a5fa;
+}
+
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
@@ -139,6 +143,7 @@ body {
 .footer-nav {
   display: flex;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .footer-nav a {
@@ -189,20 +194,21 @@ body {
 
   <h2>3. Eligible Refund Exceptions</h2>
   <ul>
-    <li>Corrupted or unusable files with no replacement available</li>
-    <li>Accidental purchases not downloaded</li>
-    <li>Duplicate purchases</li>
+    <li>The file is corrupted or unusable and a replacement cannot be provided</li>
+    <li>The product was purchased in error and has not been downloaded</li>
+    <li>Duplicate purchases of the same product</li>
   </ul>
 
   <h2>4. Non-Refundable Situations</h2>
   <ul>
     <li>Change of mind after download</li>
-    <li>Software incompatibility</li>
-    <li>Failure to read product details or license terms</li>
+    <li>Lack of software compatibility</li>
+    <li>Failure to read product descriptions or license terms</li>
+    <li>Violation of the License Agreement</li>
   </ul>
 
   <h2>5. Requesting a Refund</h2>
-  <p>Refund requests must include order details and be made within a reasonable timeframe.</p>
+  <p>To request a refund, please contact BowesProduct support with your order details and reason for the request. Requests must be made within a reasonable time after purchase.</p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
@@ -220,6 +226,49 @@ body {
     <p>© 2025 BowesProduct</p>
   </div>
 </footer>
+
+<!-- Firebase Auth -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct",
+  storageBucket: "bowesproduct.firebasestorage.app",
+  messagingSenderId: "533459045484",
+  appId: "1:533459045484:web:bf727f2e85787132401c49"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+
+authBtn.onclick = async () => {
+  auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
+};
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    authBtn.textContent = "Logout";
+    profilePic.src = user.photoURL;
+    profilePic.style.visibility = "visible";
+  } else {
+    authBtn.textContent = "Login";
+    profilePic.style.visibility = "hidden";
+  }
+});
+</script>
 
 </body>
 </html>
