@@ -297,8 +297,11 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+/* ================= FIREBASE INIT ================= */
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -311,11 +314,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// 🔒 Important for Messenger
 await setPersistence(auth, browserLocalPersistence);
-
-// 🔁 Handle redirect result ONCE
 getRedirectResult(auth).catch(console.error);
+
+/* ================= DOM ================= */
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -323,16 +325,86 @@ const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
+const rewardsGrid = document.getElementById("rewardsGrid");
+const currentLevelText = document.getElementById("currentLevelText");
+const xpProgress = document.getElementById("xpProgress");
+const xpText = document.getElementById("xpText");
+
+/* ================= REWARDS ================= */
+
+const rewards = [
+  { id: "welcome", title: "Welcome Bonus", icon: "🎉", desc: "Thanks for joining BowesProduct.", xp: 0 },
+  { id: "explorer", title: "Early Explorer", icon: "🧭", desc: "Reach 200 XP.", xp: 200 },
+  { id: "supporter", title: "Supporter", icon: "💎", desc: "Profile badge unlocked.", xp: 500 },
+  { id: "pro", title: "Pro Member", icon: "🚀", desc: "Access Pro-only features.", xp: 1000 },
+  { id: "elite", title: "Elite Status", icon: "👑", desc: "Gold profile + early access.", xp: 2000 },
+  { id: "legend", title: "Legend", icon: "🔥", desc: "Maximum rank achieved.", xp: 3000 }
+];
+
+/* ================= AUTH BUTTON ================= */
+
 authBtn.onclick = () =>
   auth.currentUser
     ? signOut(auth)
     : signInWithRedirect(auth, provider);
+
+/* ================= RENDER REWARDS ================= */
+
+function renderRewards(xp, claimed = {}, userRef) {
+  rewardsGrid.innerHTML = "";
+
+  rewards.forEach(r => {
+    const unlocked = xp >= r.xp;
+    const isClaimed = claimed[r.id];
+
+    const card = document.createElement("div");
+    card.className = "reward-card" +
+      (unlocked ? " unlocked" : " locked") +
+      (isClaimed ? " claimed" : "");
+
+    const status =
+      isClaimed ? "Claimed" :
+      unlocked ? "Unlocked" :
+      `${r.xp} XP`;
+
+    const btnText =
+      isClaimed ? "Claimed" :
+      unlocked ? "Claim" :
+      "Locked";
+
+    card.innerHTML = `
+      <div class="reward-status">${status}</div>
+      <div class="reward-icon">${r.icon}</div>
+      <div class="reward-title">${r.title}</div>
+      <div class="reward-desc">${r.desc}</div>
+      <button class="claim-btn" ${unlocked && !isClaimed ? "" : "disabled"}>
+        ${btnText}
+      </button>
+    `;
+
+    if (unlocked && !isClaimed) {
+      card.querySelector("button").onclick = async () => {
+        await updateDoc(userRef, {
+          [`claimedRewards.${r.id}`]: true
+        });
+        claimed[r.id] = true;
+        renderRewards(xp, claimed, userRef);
+      };
+    }
+
+    rewardsGrid.appendChild(card);
+  });
+}
+
+/* ================= AUTH STATE ================= */
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authBtn.textContent = "Login";
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
+    currentLevelText.textContent = "Log in to see your rewards.";
+    rewardsGrid.innerHTML = "";
     return;
   }
 
@@ -340,30 +412,43 @@ onAuthStateChanged(auth, async (user) => {
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
 
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
+  const userRef = doc(db, "users", user.uid);
+  let snap = await getDoc(userRef);
 
   if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
-    snap = await getDoc(ref);
+    await setDoc(userRef, {
+      xp: 10,
+      claimedRewards: {}
+    });
+    snap = await getDoc(userRef);
   }
 
-  const xp = snap.data().xp || 0;
-  const levels = [0, 200, 500, 1000, 2000];
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
-  let progress = next === levels[level]
+  const data = snap.data();
+  const xp = data.xp || 0;
+  const claimed = data.claimedRewards || {};
+
+  const levels = [0, 200, 500, 1000, 2000, 3000];
+  const level = levels.filter(v => xp >= v).length - 1;
+  const next = levels[level + 1] ?? levels[level];
+  const progress = next === levels[level]
     ? 100
     : ((xp - levels[level]) / (next - levels[level])) * 100;
 
   levelText.textContent = `Level ${level} • ${xp} XP`;
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
+
+  currentLevelText.textContent = `You are Level ${level}`;
+  xpProgress.style.width = progress + "%";
+  xpText.textContent = `${xp} XP total`;
+
+  renderRewards(xp, claimed, userRef);
 });
 </script>
 
 </body>
 </html>
+
 
 
 
