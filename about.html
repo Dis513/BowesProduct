@@ -8,11 +8,9 @@
 <style>
 /* ================= GLOBAL ================= */
 *, *::before, *::after { box-sizing: border-box; }
-html, body { max-width: 100%; overflow-x: hidden; }
+html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 
-/* ================= BASE ================= */
 body {
-  margin: 0;
   background: #020617;
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -29,11 +27,13 @@ body {
 .header-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.6rem 1rem;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
+/* LEFT */
 .header-left {
   display: flex;
   align-items: center;
@@ -54,19 +54,28 @@ body {
   color: #e5e7eb;
   text-decoration: none;
   font-size: 0.95rem;
+  font-weight: 500;
 }
 .main-nav a:hover {
   color: #60a5fa;
 }
 
-/* ================= AUTH ================= */
+/* RIGHT STACK */
+.auth-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 160px;
+}
+
+/* TOP ROW */
 .auth-inline {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  height: 44px;
-  white-space: nowrap;
 }
+
 .login-btn {
   padding: 0.55rem 1.2rem;
   border-radius: 999px;
@@ -76,6 +85,7 @@ body {
   font-size: 0.95rem;
   cursor: pointer;
 }
+
 #profilePic {
   width: 32px;
   height: 32px;
@@ -85,29 +95,26 @@ body {
   visibility: hidden;
 }
 
-/* ================= LEVEL BAR ================= */
+/* LEVEL BAR */
 #levelInfo {
   display: none;
-  margin-left: 0.75rem;
+  width: 100%;
+  text-align: center;
   font-size: 0.85rem;
   color: #cbd5e1;
 }
-#levelText {
-  line-height: 1.2;
-}
 #xpTrack {
-  width: 100px;
+  width: 120px;
   height: 6px;
   background: #1e293b;
   border-radius: 3px;
-  margin-top: 4px;
+  margin: 4px auto 0;
   overflow: hidden;
 }
 #xpBar {
   height: 100%;
   width: 0%;
   background: #60a5fa;
-  border-radius: 3px;
   transition: width 0.3s ease;
 }
 
@@ -122,7 +129,9 @@ body {
 .content li {
   color: #cbd5e1;
 }
-h1, h2 { color: #60a5fa; }
+h1, h2 {
+  color: #60a5fa;
+}
 
 /* ================= FOOTER ================= */
 .site-footer {
@@ -151,18 +160,14 @@ h1, h2 { color: #60a5fa; }
 .footer-nav a:hover {
   color: #60a5fa;
 }
-.site-footer p {
-  margin: 0;
-  color: #94a3b8;
-}
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
+
     <div class="header-left">
       <div class="logo">
         <a href="index.html">BowesProduct</a>
@@ -173,8 +178,11 @@ h1, h2 { color: #60a5fa; }
       </nav>
     </div>
 
-    <div class="auth-inline">
-      <img id="profilePic" alt="Profile">
+    <div class="auth-block">
+      <div class="auth-inline">
+        <img id="profilePic" alt="Profile">
+        <button id="authBtn" class="login-btn">Login</button>
+      </div>
 
       <div id="levelInfo">
         <div id="levelText"></div>
@@ -182,46 +190,34 @@ h1, h2 { color: #60a5fa; }
           <div id="xpBar"></div>
         </div>
       </div>
-
-      <button id="authBtn" class="login-btn">Login</button>
     </div>
+
   </div>
 </header>
 
-<!-- CONTENT -->
 <div class="content">
   <h1>About BowesProduct</h1>
 
   <p>
     BowesProduct is an independent 3D asset studio focused on creating
-    high-quality, production-ready assets for developers and artists.
+    high-quality, production-ready 3D models for developers, artists,
+    and studios.
   </p>
 
   <p>
-    All models are optimized, cleanly structured, and compatible with
-    Blender, Unity, Unreal Engine, and Godot.
+    All assets are designed with clean topology, optimized performance,
+    and compatibility across Blender, Unity, Unreal Engine, and Godot.
   </p>
 
   <h2>What You Get</h2>
   <ul>
-    <li>One-time purchases — no subscriptions</li>
-    <li>Unlimited commercial license</li>
-    <li>Game-ready optimization</li>
+    <li>One-time purchase, no subscriptions</li>
+    <li>Unlimited commercial use</li>
+    <li>Game-ready optimized assets</li>
     <li>No royalties or restrictions</li>
   </ul>
-
-  <h2>Philosophy</h2>
-  <p>
-    Buy once. Use forever. No artificial limits, no tricks.
-  </p>
-
-  <h2>Contact</h2>
-  <p>
-    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
-  </p>
 </div>
 
-<!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
@@ -236,7 +232,6 @@ h1, h2 { color: #60a5fa; }
   </div>
 </footer>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -281,14 +276,10 @@ onAuthStateChanged(auth, async user => {
   if (!snap.exists()) {
     await setDoc(ref, { xp: 10, lastLogin: today });
   } else if (snap.data().lastLogin !== today) {
-    await updateDoc(ref, {
-      xp: increment(10),
-      lastLogin: today
-    });
+    await updateDoc(ref, { xp: increment(10), lastLogin: today });
   }
 
   const xp = (await getDoc(ref)).data().xp || 0;
-
   const thresholds = [0, 200, 500, 1000, 2000, 4000];
   const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
 
@@ -298,12 +289,11 @@ onAuthStateChanged(auth, async user => {
   }
 
   const next = thresholds[level + 1] || Infinity;
-  const progress =
-    next === Infinity ? 100 :
+  const progress = next === Infinity ? 100 :
     ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
 
   levelText.textContent = `Level ${level} – ${titles[level]}`;
-  xpBar.style.width = `${progress}%`;
+  xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
 </script>
