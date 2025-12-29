@@ -980,20 +980,6 @@ window.addEventListener('scroll', () => {
   document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
 
-// Model viewer switching
-const viewer = document.getElementById("mainViewer");
-const modelContainer = document.getElementById("modelContainer");
-document.querySelectorAll(".view-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const card = btn.closest(".card");
-    const newModel = card.dataset.model;
-    const thumb = card.querySelector("img.thumbnail")?.src || "./thumbs/promotionalviewer.jpg";
-    viewer.src = newModel;
-    viewer.poster = thumb;
-    viewer.dismissPoster();
-    modelContainer.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-</script>
 <script>
 // Get elements
 const mainViewer = document.getElementById('mainViewer');
@@ -1004,21 +990,24 @@ const genderFilter = document.getElementById('genderFilter');
 const categoryFilter = document.getElementById('categoryFilter');
 const cards = document.querySelectorAll('#riggedProducts .card, #props .products .card');
 
-// "View in 3D" button functionality
+// "View in 3D" button functionality – now using the reliable updateSrc method
 viewButtons.forEach(button => {
-  button.addEventListener('click', () => {
+  button.addEventListener('click', async () => {
     const card = button.closest('.card');
     const modelPath = card.getAttribute('data-model');
 
-    if (modelPath) {
-      // Update the src of the model-viewer
-      mainViewer.src = modelPath;
+    if (modelPath && modelPath !== mainViewer.src) {
+      // Use the official method to change the model source
+      await mainViewer.updateSrc(modelPath);
 
-      // Optional: update alt text for accessibility
+      // Update alt text
       const modelName = card.querySelector('h3').textContent.trim();
       mainViewer.alt = `${modelName} 3D Model`;
 
       // Smooth scroll to the viewer
+      modelContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (modelPath) {
+      // If it's already the current model, just scroll to it
       modelContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   });
@@ -1031,19 +1020,15 @@ function filterModels() {
   const selectedCategory = categoryFilter.value;
 
   cards.forEach(card => {
-    const title = card.querySelector('h3').textContent.toLowerCase();
+    const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
     const gender = card.getAttribute('data-gender') || 'all'; // props have no gender
-    const category = card.getAttribute('data-category') || 'prop'; // props are not in rigged section
+    const category = card.getAttribute('data-category') || 'prop';
 
     const matchesSearch = title.includes(searchTerm);
     const matchesGender = selectedGender === 'all' || gender === selectedGender;
     const matchesCategory = selectedCategory === 'all' || category === selectedCategory;
 
-    if (matchesSearch && matchesGender && matchesCategory) {
-      card.style.display = 'block';
-    } else {
-      card.style.display = 'none';
-    }
+    card.style.display = matchesSearch && matchesGender && matchesCategory ? 'block' : 'none';
   });
 }
 
@@ -1052,7 +1037,7 @@ searchInput.addEventListener('input', filterModels);
 genderFilter.addEventListener('change', filterModels);
 categoryFilter.addEventListener('change', filterModels);
 
-// Initial filter on page load
+// Run initial filter
 filterModels();
 
 // Sticky header shadow effect
@@ -1060,8 +1045,10 @@ window.addEventListener('scroll', () => {
   document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
 </script>
+</script>
 </body>
 </html>
+
 
 
 
