@@ -7,16 +7,13 @@
 <meta name="description" content="High-quality commercial-ready 3D character models and props for games, animation, and production.">
 
 <style>
-/* ================= GLOBAL FIXES ================= */
 *, *::before, *::after { box-sizing: border-box; }
-html, body { max-width: 100%; overflow-x: hidden; }
-
-/* ================= BASE ================= */
-body {
+html, body {
   margin: 0;
   background: #020617;
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
 }
 
 /* ================= HEADER ================= */
@@ -26,19 +23,18 @@ body {
   z-index: 1000;
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
-  transition: box-shadow 0.3s ease;
 }
-.site-header.scrolled {
-  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
-}
+
 .header-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
+/* LEFT */
 .header-left {
   display: flex;
   align-items: center;
@@ -59,44 +55,83 @@ body {
   color: #e5e7eb;
   text-decoration: none;
   font-size: 0.95rem;
-  font-weight: 500;
 }
-.main-nav a:hover,
-.main-nav a.active {
+.main-nav a.active,
+.main-nav a:hover {
   color: #60a5fa;
 }
 
-/* ================= AUTH ================= */
-.auth-inline {
+/* RIGHT */
+.header-right {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  height: 44px;
+  gap: 0.8rem;
+  min-height: 44px;
 }
-.login-btn {
-  padding: 0.55rem 1.2rem;
-  border-radius: 999px;
-  border: 1.5px solid #60a5fa;
-  color: #60a5fa;
-  background: transparent;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.login-btn:hover {
-  background: rgba(96,165,250,0.15);
-  transform: translateY(-2px);
-}
-.login-btn:active {
-  transform: translateY(1px);
-}
+
+/* PROFILE */
 #profilePic {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   border: 2px solid #60a5fa;
   object-fit: cover;
-  visibility: hidden;
+  display: none;
+}
+
+/* LOGIN */
+.login-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* XP */
+#levelInfo {
+  display: none;
+  width: 140px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+#levelText {
+  white-space: nowrap;
+}
+#xpOuter {
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+#xpBar {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+/* MOBILE HEADER */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo {
+    width: 100%;
+  }
 }
 
 /* ================= HERO ================= */
@@ -120,8 +155,6 @@ body {
   color: #cbd5f5;
   margin: 1rem 0 2rem;
 }
-
-/* ================= HERO BUTTONS ================= */
 .hero-actions {
   display: flex;
   justify-content: center;
@@ -134,52 +167,14 @@ body {
   border-radius: 12px;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.2s ease;
-  display: inline-block;
 }
 .btn.primary {
   background: #2563eb;
   color: white;
 }
-.btn.primary:hover {
-  background: #1d4ed8;
-  transform: translateY(-3px);
-}
 .btn.secondary {
   border: 1.5px solid #60a5fa;
   color: #60a5fa;
-  background: transparent;
-}
-.btn.secondary:hover {
-  background: rgba(96,165,250,0.15);
-  transform: translateY(-3px);
-}
-
-/* ================= VALUE STRIP ================= */
-.value-strip {
-  padding: 4rem 1rem;
-  background: #0f172a;
-}
-.values {
-  max-width: 1200px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-}
-.value {
-  border: 1px solid #1e293b;
-  border-radius: 16px;
-  padding: 2rem;
-  text-align: center;
-  background: #1e293b;
-}
-.value h3 {
-  color: #60a5fa;
-  font-size: 1.4rem;
-}
-.value p {
-  color: #94a3b8;
 }
 
 /* ================= FOOTER ================= */
@@ -212,82 +207,34 @@ body {
   margin: 0;
   color: #94a3b8;
 }
-
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-  .header-inner {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 1rem;
-  }
-  .header-left {
-    flex-direction: row;
-    gap: 1.2rem;
-    align-items: center;
-  }
-  .logo a {
-    font-size: 1.25rem;
-  }
-  .main-nav {
-    gap: 1rem;
-  }
-  .main-nav a {
-    font-size: 0.9rem;
-  }
-  .auth-inline {
-    gap: 0.5rem;
-  }
-  #profilePic {
-    width: 28px;
-    height: 28px;
-  }
-  .login-btn {
-    padding: 0.45rem 0.9rem;
-    font-size: 0.9rem;
-  }
-
-  .hero {
-    padding-top: 5rem;
-    min-height: 90svh;
-  }
-  .hero-actions {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .btn {
-    width: 100%;
-    max-width: 320px;
-    margin: auto;
-  }
-}
 </style>
 </head>
+
 <body>
 
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
+
     <div class="header-left">
-      <div class="logo">
-        <a href="index.html">BowesProduct</a>
-      </div>
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
         <a href="index.html" class="active">Home</a>
         <a href="models.html">Models</a>
       </nav>
     </div>
 
-    <div class="auth-inline">
+    <div class="header-right">
       <img id="profilePic" alt="Profile">
-      <div id="levelInfo" style="margin-left: 1rem; font-size: 0.9rem; color: #cbd5e1; display: none;">
-  <div id="levelText"></div>
-  <div style="width: 100px; height: 6px; background: #1e293b; border-radius: 3px; margin-top: 4px;">
-    <div id="xpBar" style="height: 100%; width: 0%; background: #60a5fa; border-radius: 3px;"></div>
-  </div>
-</div>
+
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+
       <button id="authBtn" class="login-btn">Login</button>
     </div>
+
   </div>
 </header>
 
@@ -299,24 +246,6 @@ body {
     <div class="hero-actions">
       <a href="models.html" class="btn primary">Browse Models</a>
       <a href="models.html#modelContainer" class="btn secondary">View 3D Preview</a>
-    </div>
-  </div>
-</section>
-
-<!-- VALUE STRIP -->
-<section class="value-strip">
-  <div class="values">
-    <div class="value">
-      <h3>Production Ready</h3>
-      <p>Clean topology, optimized poly counts, PBR textures, and engine-ready exports.</p>
-    </div>
-    <div class="value">
-      <h3>Game Focused</h3>
-      <p>Built for Unity, Unreal, Godot, and real-time pipelines.</p>
-    </div>
-    <div class="value">
-      <h3>Commercial License</h3>
-      <p>Unlimited commercial use. No royalties. No attribution.</p>
     </div>
   </div>
 </section>
@@ -336,119 +265,63 @@ body {
   </div>
 </footer>
 
-<script>
-// Sticky header
-window.addEventListener('scroll', () => {
-  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+authBtn.onclick = () =>
+  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+    levelInfo.style.display = "none";
+    return;
+  }
+
+  authBtn.textContent = "Logout";
+  profilePic.src = user.photoURL || "";
+  profilePic.style.display = "block";
+
+  const ref = doc(db, "users", user.uid);
+  let snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, { xp: 10 });
+    snap = await getDoc(ref);
+  }
+
+  const xp = snap.data().xp || 0;
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level] ? 100 :
+    ((xp - levels[level]) / (next - levels[level])) * 100;
+
+  levelText.textContent = `Level ${level} • ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
 });
 </script>
 
-<!-- Firebase Authentication -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-    authDomain: "bowesproduct.firebaseapp.com",
-    projectId: "bowesproduct",
-    storageBucket: "bowesproduct.firebasestorage.app",
-    messagingSenderId: "533459045484",
-    appId: "1:533459045484:web:bf727f2e85787132401c49"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
-
-  const authBtn = document.getElementById("authBtn");
-  const profilePic = document.getElementById("profilePic");
-
-  authBtn.onclick = async () => {
-    if (auth.currentUser) {
-      await signOut(auth);
-    } else {
-      await signInWithPopup(auth, provider);
-    }
-  };
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      authBtn.textContent = "Logout";
-      profilePic.src = user.photoURL || "";
-      profilePic.style.visibility = "visible";
-
-      // Load user data for rewards display
-      const userRef = doc(db, "users", user.uid);
-      const snap = await getDoc(userRef);
-
-      let xp = 0;
-      if (snap.exists()) {
-        const data = snap.data();
-        xp = data.xp || 0;
-      }
-
-      // Calculate level
-      const thresholds = [0, 200, 500, 1000, 2000, 4000];
-      let level = 0;
-      for (let i = 0; i < thresholds.length; i++) {
-        if (xp >= thresholds[i]) level = i;
-      }
-      const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
-      const next = thresholds[level + 1] || Infinity;
-      const progress = next === Infinity ? 100 : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
-
-      // Update header level bar
-      if (document.getElementById("levelText")) {
-        document.getElementById("levelText").textContent = `Level ${level} – ${titles[level]}`;
-        document.getElementById("xpBar").style.width = progress + "%";
-        document.getElementById("levelInfo").style.display = "block";
-      }
-
-      // Update rewards page content
-      document.getElementById("currentLevelText").textContent = `Level ${level} – ${titles[level]}`;
-      document.getElementById("xpText").textContent = `${xp} XP`;
-      document.getElementById("xpProgress").style.width = progress + "%";
-
-      // Rewards grid
-      const rewards = [
-        { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Crate, Barrel, Torch", msg: "Download your free props!" },
-        { level: 2, icon: "🎟️", title: "15% Off Coupon", desc: "Next purchase", msg: "Use code: REWARD15" },
-        { level: 3, icon: "🗿", title: "Free Model", desc: "Any rigged model under €10", msg: "Pick any model under €10!" },
-        { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access to new release", msg: "Download exclusive model!" },
-        { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "Forever discount", msg: "Use code: MASTER20" }
-      ];
-
-      const grid = document.getElementById("rewardsGrid");
-      grid.innerHTML = "";
-      rewards.forEach(r => {
-        const card = document.createElement("div");
-        card.className = "reward-card" + (level >= r.level ? "" : " locked");
-        card.innerHTML = `
-          <div class="reward-icon">${r.icon}</div>
-          <div class="reward-title">${r.title}</div>
-          <div class="reward-desc">${r.desc}</div>
-          ${level >= r.level ? `<button class="claim-btn" onclick="alert('${r.msg}')">Claim Reward</button>` : `<button class="claim-btn" disabled>Locked</button>`}
-        `;
-        grid.appendChild(card);
-      });
-
-    } else {
-      authBtn.textContent = "Login";
-      profilePic.style.visibility = "hidden";
-      if (document.getElementById("levelInfo")) document.getElementById("levelInfo").style.display = "none";
-      document.getElementById("currentLevelText").textContent = "Log in to see your rewards!";
-      document.getElementById("rewardsGrid").innerHTML = "";
-    }
-  });
-</script>
 </body>
 </html>
-
-
-
-
-
-
