@@ -6,17 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Refund policy for BowesProduct 3D models and props.">
 <link rel="stylesheet" href="style.css">
+
 <style>
 /* ================= GLOBAL FIXES ================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { max-width: 100%; overflow-x: hidden; }
+
 /* ================= BASE ================= */
 body {
   margin: 0;
@@ -24,6 +19,7 @@ body {
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -32,6 +28,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
+
 .header-inner {
   max-width: 1200px;
   margin: auto;
@@ -39,15 +36,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;
 }
+
 /* LEFT GROUP */
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
-  min-width: 0;
 }
+
 /* LOGO */
 .logo a {
   font-size: 1.2rem;
@@ -56,26 +53,27 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
+
 /* NAV */
 .main-nav {
   display: flex;
   gap: 1.2rem;
   align-items: center;
-  flex-wrap: wrap;
 }
+
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
-  white-space: normal;
-  word-break: break-word;
 }
+
 .main-nav a:hover,
 .main-nav a.active {
   color: #60a5fa;
 }
-/* AUTH (RIGHT SIDE) */
+
+/* AUTH */
 .auth-stack {
   display: flex;
   flex-direction: column;
@@ -83,8 +81,8 @@ body {
   justify-content: flex-end;
   gap: 0.15rem;
   height: 42px;
-  flex-shrink: 0;
 }
+
 #profilePic {
   width: 26px;
   height: 26px;
@@ -92,6 +90,7 @@ body {
   border: 2px solid #60a5fa;
   visibility: hidden;
 }
+
 .login-btn {
   background: none;
   border: none;
@@ -99,42 +98,28 @@ body {
   font-size: 0.9rem;
   cursor: pointer;
   padding: 0;
-  line-height: 1;
 }
-.login-btn:hover {
-  color: #60a5fa;
-}
+
 /* ================= HERO ================= */
 .hero {
-  position: relative;
   min-height: 70svh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4rem 1.25rem;
   text-align: center;
-  overflow: hidden;
   background:
     linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
     url("./images/hero.jpg");
   background-size: cover;
   background-position: center;
 }
-.hero-content {
-  max-width: 900px;
-}
+
 .hero h1 {
   font-size: clamp(2.4rem, 6vw, 4rem);
   font-weight: 800;
-  margin-bottom: 1rem;
 }
-.hero p {
-  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
-  color: #cbd5f5;
-  line-height: 1.6;
-  max-width: 720px;
-  margin: 0 auto;
-}
+
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
@@ -142,97 +127,68 @@ body {
   padding: 0 1.5rem;
   line-height: 1.8;
 }
+
 .content h1 {
   text-align: center;
   font-size: 2.4rem;
-  margin-bottom: 2rem;
   color: #60a5fa;
 }
+
 .content h2 {
-  font-size: 1.8rem;
-  margin: 3rem 0 1rem;
+  margin-top: 3rem;
   color: #60a5fa;
-  text-align: left;
 }
-.content p {
-  font-size: 1.05rem;
-  color: #cbd5e1;
-  margin-bottom: 1.2rem;
-}
-.content ul {
-  padding-left: 1.8rem;
-  margin: 1rem 0;
-}
+
+.content p,
 .content li {
-  margin-bottom: 0.8rem;
   color: #cbd5e1;
 }
+
 .update-note {
-  text-align: left;
   margin-top: 4rem;
   font-size: 0.95rem;
   color: #64748b;
 }
+
 /* ================= FOOTER ================= */
 .site-footer {
   background: rgba(2,6,23,0.95);
-  backdrop-filter: blur(10px);
   border-top: 1px solid #1e293b;
-  color: #e5e7eb;
   padding: 3rem 1rem;
   margin-top: 6rem;
 }
+
 .footer-inner {
   max-width: 1200px;
   margin: auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
   justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
 }
+
 .footer-nav {
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
 }
+
 .footer-nav a {
   color: #cbd5e1;
   text-decoration: none;
 }
+
 .footer-nav a:hover {
   color: #60a5fa;
 }
-.site-footer p {
-  margin: 0;
-  color: #94a3b8;
-}
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-  .header-left {
-    flex-wrap: wrap;
-    gap: 0.8rem;
-  }
-  .main-nav {
-    gap: 0.8rem;
-    justify-content: flex-start;
-  }
-  .hero { 
-    min-height: 60svh; 
-    padding: 5rem 1rem; 
-  }
-  .content { 
-    padding: 0 1rem; 
-    margin: 4rem auto; 
-  }
-}
 </style>
 </head>
+
 <body>
 
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
+
     <div class="header-left">
       <div class="logo">
         <a href="index.html">BowesProduct</a>
@@ -241,22 +197,20 @@ body {
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
         <a href="about.html">About</a>
-        <a href="refund.html" class="active">Refund</a>
       </nav>
     </div>
+
     <div class="auth-stack">
       <img id="profilePic" alt="Profile">
       <button id="authBtn" class="login-btn">Login</button>
     </div>
+
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <h1>Refund Policy</h1>
-    <p>How refunds are handled for BowesProduct digital assets</p>
-  </div>
+  <h1>Refund Policy</h1>
 </section>
 
 <!-- CONTENT -->
@@ -266,32 +220,17 @@ body {
   <p>Due to the instant-download nature of digital products, refunds are granted only in limited circumstances.</p>
 
   <h2>Eligibility for Refund</h2>
-  <p>Refunds may be issued in the following cases:</p>
   <ul>
     <li>Accidental duplicate purchase</li>
-    <li>Technical error preventing download or access to files</li>
+    <li>Technical error preventing download or access</li>
     <li>Charged incorrectly or without authorization</li>
   </ul>
 
   <h2>How to Request a Refund</h2>
   <ul>
-    <li>Contact us at <strong>support@bowesproduct.com</strong> within <strong>7 days</strong> of purchase</li>
-    <li>Include your transaction ID, email used for purchase, and a clear description of the issue</li>
-    <li>We review all requests individually and respond within 2–3 business days</li>
+    <li>Email <strong>support@bowesproduct.com</strong> within 7 days</li>
+    <li>Include transaction ID and purchase email</li>
   </ul>
-
-  <h2>Refund Processing</h2>
-  <p>Approved refunds are returned to the original payment method via Stripe. Processing typically takes 5–10 business days, depending on your bank or card issuer.</p>
-
-  <h2>Non-Refundable Situations</h2>
-  <ul>
-    <li>Change of mind after successful download or access</li>
-    <li>Partial or full use of the purchased assets</li>
-    <li>Requests made more than 7 days after purchase</li>
-    <li>Violation of our License Agreement or Terms of Service</li>
-  </ul>
-
-  <p>We aim to ensure a fair and transparent process. Thank you for understanding the limitations of digital product sales.</p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
@@ -310,7 +249,7 @@ body {
   </div>
 </footer>
 
-<!-- Firebase Authentication -->
+<!-- Firebase Auth -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -333,6 +272,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 
