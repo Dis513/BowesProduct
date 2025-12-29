@@ -301,7 +301,8 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-/* ================= FIREBASE CONFIG ================= */
+/* ================= FIREBASE INIT ================= */
+
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
@@ -313,69 +314,120 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
+await setPersistence(auth, browserLocalPersistence);
+getRedirectResult(auth).catch(console.error);
+
 /* ================= DOM ================= */
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
-/* ================= IMPORTANT: PERSISTENCE + REDIRECT ================= */
-(async () => {
-  try {
-    await setPersistence(auth, browserLocalPersistence);
-    await getRedirectResult(auth); // finalize redirect
-  } catch (e) {
-    console.error("Auth init error:", e);
-  }
-})();
+const rewardsGrid = document.getElementById("rewardsGrid");
+const currentLevelText = document.getElementById("currentLevelText");
+const xpProgress = document.getElementById("xpProgress");
+const xpText = document.getElementById("xpText");
 
-/* ================= LOGIN BUTTON ================= */
-authBtn.onclick = () => {
-  if (auth.currentUser) {
-    signOut(auth);
-  } else {
-    signInWithRedirect(auth, provider);
-  }
-};
+/* ================= REWARDS ================= */
+
+const rewards = [
+  { id: "welcome", title: "Welcome Bonus", icon: "🎉", desc: "Thanks for joining BowesProduct.", xp: 0 },
+  { id: "explorer", title: "Early Explorer", icon: "🧭", desc: "Reach 200 XP.", xp: 200 },
+  { id: "supporter", title: "Supporter", icon: "💎", desc: "Profile badge unlocked.", xp: 500 },
+  { id: "pro", title: "Pro Member", icon: "🚀", desc: "Access Pro-only features.", xp: 1000 },
+  { id: "elite", title: "Elite Status", icon: "👑", desc: "Gold profile + early access.", xp: 2000 },
+  { id: "legend", title: "Legend", icon: "🔥", desc: "Maximum rank achieved.", xp: 3000 }
+];
+
+/* ================= AUTH BUTTON ================= */
+
+authBtn.onclick = () =>
+  auth.currentUser
+    ? signOut(auth)
+    : signInWithRedirect(auth, provider);
+
+/* ================= RENDER REWARDS ================= */
+
+function renderRewards(xp, claimed = {}, userRef) {
+  rewardsGrid.innerHTML = "";
+
+  rewards.forEach(r => {
+    const unlocked = xp >= r.xp;
+    const isClaimed = claimed[r.id];
+
+    const card = document.createElement("div");
+    card.className = "reward-card" +
+      (unlocked ? " unlocked" : " locked") +
+      (isClaimed ? " claimed" : "");
+
+    const status =
+      isClaimed ? "Claimed" :
+      unlocked ? "Unlocked" :
+      `${r.xp} XP`;
+
+    const btnText =
+      isClaimed ? "Claimed" :
+      unlocked ? "Claim" :
+      "Locked";
+
+    card.innerHTML = `
+      <div class="reward-status">${status}</div>
+      <div class="reward-icon">${r.icon}</div>
+      <div class="reward-title">${r.title}</div>
+      <div class="reward-desc">${r.desc}</div>
+      <button class="claim-btn" ${unlocked && !isClaimed ? "" : "disabled"}>
+        ${btnText}
+      </button>
+    `;
+
+    if (unlocked && !isClaimed) {
+      card.querySelector("button").onclick = async () => {
+        await updateDoc(userRef, {
+          [`claimedRewards.${r.id}`]: true
+        });
+        claimed[r.id] = true;
+        renderRewards(xp, claimed, userRef);
+      };
+    }
+
+    rewardsGrid.appendChild(card);
+  });
+}
 
 /* ================= AUTH STATE ================= */
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authBtn.textContent = "Login";
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
+    currentLevelText.textContent = "Log in to see your rewards.";
+    rewardsGrid.innerHTML = "";
     return;
   }
 
-  /* ===== LOGGED IN ===== */
   authBtn.textContent = "Logout";
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
 
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
+  const userRef = doc(db, "users", user.uid);
+  let snap = await getDoc(userRef);
 
-  // New user setup
   if (!snap.exists()) {
-    await setDoc(ref, {
-      xp: 50,
-      rewards: {
-        welcome: true
-      },
-      discounts: {
-        supporter: false,
-        elite: false
-      }
+    await setDoc(userRef, {
+      xp: 10,
+      claimedRewards: {}
     });
-    snap = await getDoc(ref);
+    snap = await getDoc(userRef);
   }
 
   const data = snap.data();
   const xp = data.xp || 0;
+  const claimed = data.claimedRewards || {};
 
-  /* ===== LEVEL SYSTEM ===== */
-  const levels = [0, 200, 500, 1000, 2000];
+  const levels = [0, 200, 500, 1000, 2000, 3000];
   const level = levels.filter(v => xp >= v).length - 1;
   const next = levels[level + 1] ?? levels[level];
   const progress = next === levels[level]
@@ -386,88 +438,18 @@ onAuthStateChanged(auth, async (user) => {
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 
-  /* ===== RENDER REWARDS PAGE (if exists) ===== */
-  if (document.getElementById("rewardsGrid")) {
-    renderRewards(user.uid, data);
-  }
+  currentLevelText.textContent = `You are Level ${level}`;
+  xpProgress.style.width = progress + "%";
+  xpText.textContent = `${xp} XP total`;
+
+  renderRewards(xp, claimed, userRef);
 });
-
-/* ================= REWARDS ================= */
-async function claimReward(uid, reward) {
-  const ref = doc(db, "users", uid);
-
-  if (reward === "explorer") {
-    await updateDoc(ref, { xp: 200 });
-    alert("🎉 Early Explorer unlocked! Free £1.99 prop added.");
-  }
-
-  if (reward === "supporter") {
-    await updateDoc(ref, { "discounts.supporter": true });
-    alert("✅ Supporter unlocked! 10% discount permanently.");
-  }
-
-  if (reward === "pro") {
-    alert("🎟️ Pro voucher issued (25% off, one time).");
-  }
-
-  if (reward === "elite") {
-    await updateDoc(ref, { "discounts.elite": true });
-    alert("👑 Elite Status unlocked! 20% permanent discount.");
-  }
-
-  if (reward === "legend") {
-    alert("🔥 Legend unlocked! Free 3D character model added.");
-  }
-
-  location.reload();
-}
-
-/* ================= REWARD UI ================= */
-function renderRewards(uid, data) {
-  const grid = document.getElementById("rewardsGrid");
-  const xp = data.xp || 0;
-
-  const rewards = [
-    { id:"welcome", title:"Welcome Bonus", icon:"🎁", xp:0, desc:"+50 XP", locked:false },
-    { id:"explorer", title:"Early Explorer", icon:"🧭", xp:200, desc:"Free £1.99 prop" },
-    { id:"supporter", title:"Supporter", icon:"💙", xp:500, desc:"10% permanent discount" },
-    { id:"pro", title:"Pro Member", icon:"🚀", xp:1000, desc:"25% off (one-time)" },
-    { id:"elite", title:"Elite Status", icon:"👑", xp:1500, desc:"20% permanent discount" },
-    { id:"legend", title:"Legend", icon:"🔥", xp:2000, desc:"Free 3D character model" }
-  ];
-
-  grid.innerHTML = "";
-
-  rewards.forEach(r => {
-    const unlocked = xp >= r.xp;
-    const card = document.createElement("div");
-    card.className = "reward-card" + (unlocked ? "" : " locked");
-
-    card.innerHTML = `
-      <div class="reward-icon">${r.icon}</div>
-      <div class="reward-title">${r.title}</div>
-      <div class="reward-desc">${r.desc}</div>
-      <button class="claim-btn" ${unlocked ? "" : "disabled"}>
-        ${unlocked ? "Claim" : "Locked"}
-      </button>
-    `;
-
-    if (unlocked) {
-      card.querySelector("button").onclick = () => claimReward(uid, r.id);
-    }
-
-    grid.appendChild(card);
-  });
-}
-
-/* ================= MESSENGER WARNING ================= */
-if (/FBAN|FBAV/i.test(navigator.userAgent)) {
-  alert("⚠️ Facebook Messenger may block login. If login fails, open this page in your browser.");
-}
 </script>
+
 
 </body>
 </html>
+
 
 
 
