@@ -4,20 +4,23 @@
 <meta charset="UTF-8">
 <title>Privacy Policy – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Privacy policy for BowesProduct – how we handle your data when you visit our site or purchase 3D assets.">
-
-<link rel="stylesheet" href="style.css">
 
 <style>
-/* ================= GLOBAL ================= */
+/* ================= GLOBAL FIXES ================= */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { max-width: 100%; overflow-x: hidden; }
 
+/* ================= BASE ================= */
 body {
   margin: 0;
   background: #020617;
   color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, sans-serif;
+}
+
+/* ================= HEADINGS (BLUE 1–6) ================= */
+h1, h2, h3, h4, h5, h6 {
+  color: #60a5fa;
 }
 
 /* ================= HEADER ================= */
@@ -60,16 +63,21 @@ body {
   color: #e5e7eb;
   text-decoration: none;
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.main-nav a:hover {
+.main-nav a:hover,
+.main-nav a.active {
   color: #60a5fa;
 }
 
+/* ================= AUTH ================= */
 .auth-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
+  height: 42px;
   gap: 0.15rem;
 }
 
@@ -85,7 +93,9 @@ body {
   background: none;
   border: none;
   color: #e5e7eb;
+  font-size: 0.9rem;
   cursor: pointer;
+  padding: 0;
 }
 
 .login-btn:hover {
@@ -95,22 +105,9 @@ body {
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
-  margin: 3rem auto;
+  margin: 5rem auto;
   padding: 0 1.5rem;
   line-height: 1.8;
-}
-
-.content h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #e5e7eb;
-}
-
-.content h2 {
-  margin-top: 2.5rem;
-  font-size: 1.2rem;
-  color: #93c5fd;
 }
 
 .content p,
@@ -118,13 +115,9 @@ body {
   color: #cbd5e1;
 }
 
-.content a {
-  color: #60a5fa;
-}
-
 .update-note {
-  margin-top: 3rem;
-  font-size: 0.9rem;
+  margin-top: 4rem;
+  font-size: 0.95rem;
   color: #64748b;
 }
 
@@ -133,7 +126,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-top: 1px solid #1e293b;
   padding: 3rem 1rem;
-  margin-top: 5rem;
+  margin-top: 6rem;
 }
 
 .footer-inner {
@@ -142,6 +135,7 @@ body {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
 .footer-nav {
@@ -157,6 +151,11 @@ body {
 
 .footer-nav a:hover {
   color: #60a5fa;
+}
+
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
 }
 </style>
 </head>
@@ -187,46 +186,45 @@ body {
 <!-- CONTENT -->
 <div class="content">
   <h1>Privacy Policy</h1>
-
-  <p>This Privacy Policy explains how BowesProduct ("we", "us", or "our") collects, uses, and protects your information when you visit our website or purchase our 3D assets.</p>
+  <p>This Privacy Policy explains how BowesProduct collects, uses, and protects your information.</p>
 
   <h2>1. Information We Collect</h2>
   <ul>
-    <li><strong>Purchase information:</strong> When you buy an asset via Stripe, we receive your email address, transaction ID, and purchased items. We do not store payment details.</li>
-    <li><strong>Website analytics:</strong> We use privacy-friendly analytics to understand general site usage. No personal identifiers are tracked.</li>
-    <li><strong>No required accounts:</strong> Purchases are linked to the email provided at checkout.</li>
+    <li>Account information (name, email, profile image)</li>
+    <li>Authentication data via Google Sign-In</li>
+    <li>Basic usage data for site functionality</li>
   </ul>
 
-  <h2>2. How We Use Your Information</h2>
+  <h2>2. How We Use Information</h2>
   <ul>
-    <li>Deliver purchased assets and download links</li>
-    <li>Send transactional emails</li>
-    <li>Improve website performance and offerings</li>
-    <li>Comply with legal obligations</li>
+    <li>To provide account access and authentication</li>
+    <li>To deliver purchased digital products</li>
+    <li>To improve site performance and user experience</li>
   </ul>
 
-  <h2>3. Information We Do Not Collect</h2>
-  <ul>
-    <li>No advertising or tracking cookies</li>
-    <li>No sale of personal data</li>
-    <li>No unnecessary personal information</li>
-  </ul>
+  <h2>3. Data Storage & Security</h2>
+  <p>User authentication is handled securely through Firebase. BowesProduct does not store passwords directly.</p>
 
   <h2>4. Third-Party Services</h2>
-  <p><strong>Stripe:</strong> Payments are processed securely by Stripe. Their privacy policy applies: <a href="https://stripe.com/privacy">https://stripe.com/privacy</a></p>
-  <p><strong>Hosting:</strong> Hosted on a static platform which may log standard access data.</p>
+  <p>The site uses third-party services such as Google and Firebase for authentication and hosting.</p>
 
-  <h2>5. Data Security</h2>
-  <p>We apply reasonable security practices, but no method of online transmission is completely secure.</p>
+  <h2>5. Cookies</h2>
+  <p>Cookies may be used only as necessary for login sessions and site functionality.</p>
 
-  <h2>6. Your Rights</h2>
-  <p>You may request access to or deletion of your personal data by contacting us.</p>
+  <h2>6. Data Sharing</h2>
+  <p>BowesProduct does not sell or share personal data with third parties, except where required by law.</p>
 
-  <h2>7. Changes to This Policy</h2>
-  <p>Updates will be posted on this page with a revised date.</p>
+  <h2>7. Your Rights</h2>
+  <p>You may request access to or deletion of your personal data by contacting support.</p>
 
-  <h2>8. Contact</h2>
-  <p>If you have questions regarding this Privacy Policy, please contact us via our website.</p>
+  <h2>8. Changes to This Policy</h2>
+  <p>This Privacy Policy may be updated periodically. Continued use of the site indicates acceptance.</p>
+
+  <h2>9. Contact</h2>
+  <p>
+    Questions regarding privacy?<br>
+    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
+  </p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
@@ -245,7 +243,7 @@ body {
   </div>
 </footer>
 
-<!-- Firebase Auth -->
+<!-- FIREBASE AUTH -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
