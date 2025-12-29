@@ -126,16 +126,33 @@ h1, h2 { color: #60a5fa; }
 
 /* ================= FOOTER ================= */
 .site-footer {
+  background: rgba(2,6,23,0.95);
   border-top: 1px solid #1e293b;
   padding: 3rem 1rem;
-  margin-top: 6rem;
 }
 .footer-inner {
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+.footer-nav a:hover {
+  color: #60a5fa;
+}
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
 }
 
 /* ================= MOBILE ================= */
@@ -272,3 +289,4 @@ onAuthStateChanged(auth, async user => {
 
 </body>
 </html>
+
