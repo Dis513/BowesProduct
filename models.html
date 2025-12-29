@@ -13,7 +13,6 @@
 <!-- Model Viewer -->
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
-<link rel="stylesheet" href="style.css">
 <style>
 /* ================= GLOBAL FIXES ================= */
 *, *::before, *::after { box-sizing: border-box; }
@@ -24,7 +23,6 @@ body {
   margin: 0;
   background: #020617;
   color: white;
-  overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -42,8 +40,8 @@ body {
 }
 .header-inner {
   max-width: 1200px;
-  margin: auto;
-  padding: 0.4rem 1rem;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -51,22 +49,22 @@ body {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 2rem;
 }
 .logo a {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: white;
   text-decoration: none;
 }
 .main-nav {
   display: flex;
-  gap: 1.2rem;
+  gap: 1.8rem;
 }
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 .main-nav a:hover,
@@ -74,20 +72,20 @@ body {
   color: #60a5fa;
 }
 
-/* ================= AUTH (INLINE, FIXED HEIGHT) ================= */
+/* ================= AUTH ================= */
 .auth-inline {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  height: 42px; /* prevents header jump */
+  gap: 0.8rem;
+  height: 48px;
 }
 .login-btn {
-  padding: 0.5rem 1.1rem;
+  padding: 0.6rem 1.3rem;
   border-radius: 999px;
   border: 1.5px solid #60a5fa;
   color: #60a5fa;
   background: transparent;
-  font-size: 0.95rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -99,12 +97,12 @@ body {
   transform: translateY(1px);
 }
 #profilePic {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 2px solid #60a5fa;
   object-fit: cover;
-  visibility: hidden; /* space reserved */
+  visibility: hidden;
 }
 
 /* ================= HERO ================= */
@@ -117,14 +115,13 @@ body {
   padding: 4rem 1.25rem;
   text-align: center;
   overflow: hidden;
-  background:
-    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-    url("./images/heromodels.jpg");
+  background: linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)), url("./images/heromodels.jpg");
   background-size: cover;
   background-position: center;
 }
 .hero-content {
   max-width: 900px;
+  margin: 0 auto;
 }
 .hero h1 {
   font-size: clamp(2.4rem, 6vw, 4.2rem);
@@ -180,7 +177,7 @@ model-viewer {
 /* ================= PRODUCTS & CARDS ================= */
 .products {
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 2rem;
@@ -302,7 +299,7 @@ model-viewer {
 }
 .footer-inner {
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
@@ -330,19 +327,21 @@ model-viewer {
 @media (max-width: 768px) {
   .header-inner {
     flex-direction: column;
-    padding-bottom: 0.75rem;
+    padding: 1rem;
   }
   .header-left {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
+    text-align: center;
   }
   .main-nav {
-    gap: 1.25rem;
-    justify-content: center;
-    flex-wrap: wrap;
+    gap: 1.5rem;
   }
   .auth-inline {
-    margin-top: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .logo a {
+    font-size: 1.6rem;
   }
   .model-container { height: 340px; margin: 2rem 0; border-radius: 14px; }
   .products { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.4rem; }
@@ -357,6 +356,7 @@ model-viewer {
 </style>
 </head>
 <body>
+
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
@@ -377,6 +377,7 @@ model-viewer {
     </div>
   </div>
 </header>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
@@ -388,12 +389,14 @@ model-viewer {
     </div>
   </div>
 </section>
+
 <!-- SECTION NAV -->
 <div class="section-nav">
   <a href="#rigged-models">Rigged Models</a>
   <a href="#props">Props</a>
   <a href="#packs">Packs</a>
 </div>
+
 <!-- Model Viewer -->
 <div class="model-container" id="modelContainer">
   <model-viewer id="mainViewer"
@@ -414,6 +417,7 @@ model-viewer {
     reveal="interaction">
   </model-viewer>
 </div>
+
 <!-- Rigged Models -->
 <section id="rigged-models">
   <h2 style="text-align:center; margin:4rem 0 1rem;">Rigged Models</h2>
@@ -444,7 +448,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/humanfemale.glb" data-gender="female" data-category="humanoid">
       <img class="thumbnail" src="./thumbs/humanfemale.jpg" alt="Human Female">
       <div class="card-content">
@@ -456,7 +459,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/serpentmale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/serpentmale.jpg" alt="Serpent Male">
       <div class="card-content">
@@ -468,7 +470,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/serpentfemale.glb" data-gender="female" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/serpentfemale.jpg" alt="Serpent Female">
       <div class="card-content">
@@ -480,7 +481,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/sharkmale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/sharkmale.jpg" alt="Shark Male">
       <div class="card-content">
@@ -492,7 +492,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/batmale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/batmale.jpg" alt="Bat Male">
       <div class="card-content">
@@ -504,7 +503,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/batfemale.glb" data-gender="female" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/batfemale.jpg" alt="Bat Female">
       <div class="card-content">
@@ -516,7 +514,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/avianmale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/avianmale.jpg" alt="Avian Male">
       <div class="card-content">
@@ -528,7 +525,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/avianfemale.glb" data-gender="female" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/avianfemale.jpg" alt="Avian Female">
       <div class="card-content">
@@ -540,7 +536,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/frogmale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/frogmale.jpg" alt="Frog Male">
       <div class="card-content">
@@ -552,7 +547,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/frogfemale.glb" data-gender="female" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/frogfemale.jpg" alt="Frog Female">
       <div class="card-content">
@@ -564,7 +558,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/crocodilemale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/crocodilemale.jpg" alt="Crocodile Male">
       <div class="card-content">
@@ -576,7 +569,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/crocodilefemale.glb" data-gender="female" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/crocodilefemale.jpg" alt="Crocodile Female">
       <div class="card-content">
@@ -588,7 +580,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/hyenamale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/hyenamale.jpg" alt="Hyena Male">
       <div class="card-content">
@@ -600,7 +591,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/hyenafemale.glb" data-gender="female" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/hyenafemale.jpg" alt="Hyena Female">
       <div class="card-content">
@@ -612,7 +602,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/scorpionmale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/scorpionmale.jpg" alt="Scorpion Male">
       <div class="card-content">
@@ -624,7 +613,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/scorpionfemale.glb" data-gender="female" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/scorpionfemale.jpg" alt="Scorpion Female">
       <div class="card-content">
@@ -636,7 +624,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/rhinomale.glb" data-gender="male" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/rhinomale.jpg" alt="Rhino Male">
       <div class="card-content">
@@ -648,7 +635,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/rhinofemale.glb" data-gender="female" data-category="anthropomorphic">
       <img class="thumbnail" src="./thumbs/rhinofemale.jpg" alt="Rhino Female">
       <div class="card-content">
@@ -660,7 +646,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/energybeingmale.glb" data-gender="male" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/energybeingmale.jpg" alt="Energy Being Male">
       <div class="card-content">
@@ -672,7 +657,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/energybeingfemale.glb" data-gender="female" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/energybeingfemale.jpg" alt="Energy Being Female">
       <div class="card-content">
@@ -684,7 +668,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/elfmale.glb" data-gender="male" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/elfmale.jpg" alt="Elf Male">
       <div class="card-content">
@@ -696,7 +679,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/elffemale.glb" data-gender="female" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/elffemale.jpg" alt="Elf Female">
       <div class="card-content">
@@ -708,7 +690,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/alienstockymale.glb" data-gender="male" data-category="alien">
       <img class="thumbnail" src="./thumbs/alienstockymale.jpg" alt="Alien Stocky Male">
       <div class="card-content">
@@ -720,7 +701,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/alienstockyfemale.glb" data-gender="female" data-category="alien">
       <img class="thumbnail" src="./thumbs/alienstockyfemale.jpg" alt="Alien Stocky Female">
       <div class="card-content">
@@ -732,7 +712,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/dwarfmale.glb" data-gender="male" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/dwarfmale.jpg" alt="Dwarf Male">
       <div class="card-content">
@@ -744,7 +723,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/dwarffemale.glb" data-gender="female" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/dwarffemale.jpg" alt="Dwarf Female">
       <div class="card-content">
@@ -756,7 +734,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/orcmale.glb" data-gender="male" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/orcmale.jpg" alt="Orc Male">
       <div class="card-content">
@@ -768,7 +745,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/orcfemale.glb" data-gender="female" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/orcfemale.jpg" alt="Orc Female">
       <div class="card-content">
@@ -780,7 +756,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/goblinmale.glb" data-gender="male" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/goblinmale.jpg" alt="Goblin Male">
       <div class="card-content">
@@ -792,7 +767,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/goblinfemale.glb" data-gender="female" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/goblinfemale.jpg" alt="Goblin Female">
       <div class="card-content">
@@ -804,7 +778,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/animatronicminotaurmale.glb" data-gender="male" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/animatronicminotaurmale.jpg" alt="Animatronic Minotaur Male">
       <div class="card-content">
@@ -816,7 +789,6 @@ model-viewer {
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/minotaurmale.glb" data-gender="male" data-category="fantasy">
       <img class="thumbnail" src="./thumbs/minotaurmale.jpg" alt="Minotaur Male">
       <div class="card-content">
@@ -845,7 +817,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/bed.glb">
       <img class="thumbnail" src="./thumbs/bed.jpg" alt="Bed">
       <div class="card-content">
@@ -856,7 +827,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/sleepingbag.glb">
       <img class="thumbnail" src="./thumbs/sleepingbag.jpg" alt="Sleeping Bag">
       <div class="card-content">
@@ -867,7 +837,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/anvil.glb">
       <img class="thumbnail" src="./thumbs/anvil.jpg" alt="Anvil">
       <div class="card-content">
@@ -878,7 +847,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/healthpotion.glb">
       <img class="thumbnail" src="./thumbs/healthpotion.jpg" alt="Health Potion">
       <div class="card-content">
@@ -889,7 +857,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/manapotion.glb">
       <img class="thumbnail" src="./thumbs/manapotion.jpg" alt="Mana Potion">
       <div class="card-content">
@@ -900,7 +867,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/dungeonkey.glb">
       <img class="thumbnail" src="./thumbs/dungeonkey.jpg" alt="Dungeon Key">
       <div class="card-content">
@@ -911,7 +877,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/torch.glb">
       <img class="thumbnail" src="./thumbs/torch.jpg" alt="Torch">
       <div class="card-content">
@@ -922,7 +887,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/campfire.glb">
       <img class="thumbnail" src="./thumbs/campfire.jpg" alt="Campfire">
       <div class="card-content">
@@ -933,7 +897,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/barrel.glb">
       <img class="thumbnail" src="./thumbs/barrel.jpg" alt="Barrel">
       <div class="card-content">
@@ -944,7 +907,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/pressureplate.glb">
       <img class="thumbnail" src="./thumbs/pressureplate.jpg" alt="Pressure Plate">
       <div class="card-content">
@@ -955,7 +917,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/skullpile.glb">
       <img class="thumbnail" src="./thumbs/skullpile.jpg" alt="Skull Pile">
       <div class="card-content">
@@ -966,7 +927,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/ritualaltar.glb">
       <img class="thumbnail" src="./thumbs/ritualaltar.jpg" alt="Ritual Altar">
       <div class="card-content">
@@ -977,7 +937,6 @@ model-viewer {
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
     </div>
-
     <div class="card" data-model="./models/stoneurn.glb">
       <img class="thumbnail" src="./thumbs/stoneurn.jpg" alt="Stone Urn">
       <div class="card-content">
@@ -987,22 +946,80 @@ model-viewer {
         <a href="https://buy.stripe.com/test_5kQ4gy10baEgdZM9bY3Je0S" class="btn primary">Buy Model</a>
         <p class="delivery">Instant download · <a href="license.html">License</a></p>
       </div>
+    </div>
   </div>
 </section>
-<!-- Props and Packs sections remain unchanged -->
 
-<!-- FOOTER remains unchanged -->
+<!-- Packs -->
+<section id="packs" style="text-align:center; padding:6rem 2rem; color:#94a3b8;">
+  <h2>Packs</h2>
+  <p style="font-size:1.4rem; max-width:800px; margin:2rem auto;">Product packs coming soon!</p>
+  <p style="font-size:1.1rem;">Stay tuned for bundled deals on multiple models and props.</p>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
 
 <script>
 // Sticky header
 window.addEventListener('scroll', () => {
   document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
-// Model viewer switching (unchanged)
-// Filtering (unchanged)
+
+// Model viewer switching
+const viewer = document.getElementById("mainViewer");
+const modelContainer = document.getElementById("modelContainer");
+document.querySelectorAll(".view-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const card = btn.closest(".card");
+    const newModel = card.dataset.model;
+    const thumb = card.querySelector("img.thumbnail")?.src || "./thumbs/promotionalviewer.jpg";
+    viewer.src = newModel;
+    viewer.poster = thumb;
+    viewer.dismissPoster();
+    modelContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+});
+
+// Filtering
+const searchInput = document.getElementById("searchInput");
+const genderFilter = document.getElementById("genderFilter");
+const categoryFilter = document.getElementById("categoryFilter");
+const productsContainer = document.getElementById("riggedProducts");
+
+function filterModels() {
+  const searchTerm = searchInput.value.toLowerCase();
+  const gender = genderFilter.value;
+  const category = categoryFilter.value;
+  const cards = productsContainer.querySelectorAll(".card");
+  cards.forEach(card => {
+    const title = card.querySelector("h3").textContent.toLowerCase();
+    const cardGender = card.dataset.gender || "";
+    const cardCategory = card.dataset.category || "";
+    const matches = title.includes(searchTerm) &&
+      (gender === "all" || cardGender === gender) &&
+      (category === "all" || cardCategory === category);
+    card.style.display = matches ? "" : "none";
+  });
+}
+
+if (searchInput) searchInput.addEventListener("input", filterModels);
+if (genderFilter) genderFilter.addEventListener("change", filterModels);
+if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 </script>
 
-<!-- Firebase Authentication (updated to match the About page version with profile picture support) -->
+<!-- Firebase Authentication -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import {
@@ -1044,5 +1061,6 @@ window.addEventListener('scroll', () => {
     }
   });
 </script>
+
 </body>
 </html>
