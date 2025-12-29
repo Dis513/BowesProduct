@@ -147,6 +147,31 @@ html, body {
 .content, .hero, .products, .filters, .section-nav, .model-container {
  /* Keeping your existing styles below - unchanged except for minor fixes */
 }
+ /* ================= PRODUCT GRID FIX ================= */
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: #020617;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card img.thumbnail {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
 
 .hero {
  position: relative;
@@ -1020,6 +1045,7 @@ onAuthStateChanged(auth, async (user) => {
 </script>
 </body>
 </html>
+
 
 
 
