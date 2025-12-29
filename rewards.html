@@ -300,7 +300,11 @@ window.addEventListener('scroll', () => {
   const profilePic = document.getElementById("profilePic");
 
   authBtn.onclick = async () => {
-    auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
+    if (auth.currentUser) {
+      await signOut(auth);
+    } else {
+      await signInWithPopup(auth, provider);
+    }
   };
 
   onAuthStateChanged(auth, async (user) => {
@@ -309,65 +313,72 @@ window.addEventListener('scroll', () => {
       profilePic.src = user.photoURL || "";
       profilePic.style.visibility = "visible";
 
-      // Load user data and show level/progress
+      // Load user data for rewards display
       const userRef = doc(db, "users", user.uid);
       const snap = await getDoc(userRef);
+
+      let xp = 0;
       if (snap.exists()) {
         const data = snap.data();
-        const xp = data.xp || 0;
+        xp = data.xp || 0;
+      }
 
-        // Calculate level
-        const thresholds = [0, 200, 500, 1000, 2000, 4000];
-        let level = 0;
-        for (let i = 0; i < thresholds.length; i++) {
-          if (xp >= thresholds[i]) level = i;
-        }
-        const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
-        const next = thresholds[level + 1] || Infinity;
-        const progress = next === Infinity ? 100 : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
+      // Calculate level
+      const thresholds = [0, 200, 500, 1000, 2000, 4000];
+      let level = 0;
+      for (let i = 0; i < thresholds.length; i++) {
+        if (xp >= thresholds[i]) level = i;
+      }
+      const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
+      const next = thresholds[level + 1] || Infinity;
+      const progress = next === Infinity ? 100 : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
 
-        // Update header and rewards page
+      // Update header level bar
+      if (document.getElementById("levelText")) {
         document.getElementById("levelText").textContent = `Level ${level} – ${titles[level]}`;
         document.getElementById("xpBar").style.width = progress + "%";
         document.getElementById("levelInfo").style.display = "block";
-
-        document.getElementById("currentLevelText").textContent = `Level ${level} – ${titles[level]}`;
-        document.getElementById("xpText").textContent = `${xp} XP`;
-        document.getElementById("xpProgress").style.width = progress + "%";
-
-        // Show rewards
-        const rewards = [
-          { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Crate, Barrel, Torch", claimedMsg: "Download your free props!" },
-          { level: 2, icon: "🎟️", title: "15% Off Coupon", desc: "Next purchase", claimedMsg: "Use code: REWARD15" },
-          { level: 3, icon: "🗿", title: "Free Model", desc: "Any rigged model under €10", claimedMsg: "Pick any model under €10!" },
-          { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access to new release", claimedMsg: "Download exclusive model!" },
-          { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "Forever discount", claimedMsg: "Use code: MASTER20 on all purchases" }
-        ];
-
-        const grid = document.getElementById("rewardsGrid");
-        grid.innerHTML = "";
-        rewards.forEach(r => {
-          const card = document.createElement("div");
-          card.className = "reward-card" + (level >= r.level ? "" : " locked");
-          card.innerHTML = `
-            <div class="reward-icon">${r.icon}</div>
-            <div class="reward-title">${r.title}</div>
-            <div class="reward-desc">${r.desc}</div>
-            ${level >= r.level ? `<button class="claim-btn" onclick="alert('${r.claimedMsg}')">Claim Reward</button>` : `<button class="claim-btn" disabled>Locked</button>`}
-          `;
-          grid.appendChild(card);
-        });
       }
+
+      // Update rewards page content
+      document.getElementById("currentLevelText").textContent = `Level ${level} – ${titles[level]}`;
+      document.getElementById("xpText").textContent = `${xp} XP`;
+      document.getElementById("xpProgress").style.width = progress + "%";
+
+      // Rewards grid
+      const rewards = [
+        { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Crate, Barrel, Torch", msg: "Download your free props!" },
+        { level: 2, icon: "🎟️", title: "15% Off Coupon", desc: "Next purchase", msg: "Use code: REWARD15" },
+        { level: 3, icon: "🗿", title: "Free Model", desc: "Any rigged model under €10", msg: "Pick any model under €10!" },
+        { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access to new release", msg: "Download exclusive model!" },
+        { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "Forever discount", msg: "Use code: MASTER20" }
+      ];
+
+      const grid = document.getElementById("rewardsGrid");
+      grid.innerHTML = "";
+      rewards.forEach(r => {
+        const card = document.createElement("div");
+        card.className = "reward-card" + (level >= r.level ? "" : " locked");
+        card.innerHTML = `
+          <div class="reward-icon">${r.icon}</div>
+          <div class="reward-title">${r.title}</div>
+          <div class="reward-desc">${r.desc}</div>
+          ${level >= r.level ? `<button class="claim-btn" onclick="alert('${r.msg}')">Claim Reward</button>` : `<button class="claim-btn" disabled>Locked</button>`}
+        `;
+        grid.appendChild(card);
+      });
+
     } else {
       authBtn.textContent = "Login";
       profilePic.style.visibility = "hidden";
-      document.getElementById("levelInfo").style.display = "none";
+      if (document.getElementById("levelInfo")) document.getElementById("levelInfo").style.display = "none";
       document.getElementById("currentLevelText").textContent = "Log in to see your rewards!";
+      document.getElementById("rewardsGrid").innerHTML = "";
     }
   });
 </script>
-
 </body>
 
 </html>
+
 
