@@ -18,7 +18,7 @@ body {
   font-family: system-ui, sans-serif;
 }
 
-/* ================= HEADINGS (BLUE 1–6) ================= */
+/* ================= HEADINGS ================= */
 h1, h2, h3, h4, h5, h6 {
   color: #60a5fa;
 }
@@ -41,6 +41,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
 }
 
+/* LEFT */
 .header-left {
   display: flex;
   align-items: center;
@@ -66,28 +67,18 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-.main-nav a:hover,
-.main-nav a.active {
+.main-nav a:hover {
   color: #60a5fa;
 }
 
-/* ================= AUTH ================= */
-.auth-stack {
+/* AUTH — INLINE */
+.auth-inline {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  gap: 0.6rem;
   height: 42px;
-  gap: 0.15rem;
 }
 
-#profilePic {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid #60a5fa;
-  visibility: hidden;
-}
 .login-btn {
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
@@ -98,6 +89,7 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .login-btn:hover {
   background: rgba(96,165,250,0.15);
   transform: translateY(-2px);
@@ -106,6 +98,16 @@ h1, h2, h3, h4, h5, h6 {
 .login-btn:active {
   transform: translateY(1px);
 }
+
+#profilePic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  visibility: hidden;
+}
+
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
@@ -179,9 +181,9 @@ h1, h2, h3, h4, h5, h6 {
       </nav>
     </div>
 
-    <div class="auth-stack">
-      <img id="profilePic" alt="Profile">
+    <div class="auth-inline">
       <button id="authBtn" class="login-btn">Login</button>
+      <img id="profilePic" alt="Profile">
     </div>
   </div>
 </header>
@@ -192,42 +194,41 @@ h1, h2, h3, h4, h5, h6 {
   <p>These Terms of Service ("Terms") govern your access to and use of the BowesProduct website and services.</p>
 
   <h2>1. Acceptance of Terms</h2>
-  <p>By accessing or using BowesProduct, you agree to be bound by these Terms and all applicable laws and regulations.</p>
+  <p>By accessing or using BowesProduct, you agree to be bound by these Terms.</p>
 
   <h2>2. Eligibility</h2>
-  <p>You must be at least 18 years old or have legal parental consent to use this site.</p>
+  <p>You must be at least 18 years old or have legal parental consent.</p>
 
   <h2>3. Accounts</h2>
-  <p>You are responsible for maintaining the security of your account and all activity that occurs under it.</p>
+  <p>You are responsible for maintaining your account security.</p>
 
   <h2>4. Purchases & Access</h2>
   <p>All purchases grant access to digital assets subject to the License Agreement.</p>
 
   <h2>5. Intellectual Property</h2>
-  <p>All content on BowesProduct, including models, designs, text, and branding, is protected by intellectual property laws.</p>
+  <p>All content is protected by intellectual property laws.</p>
 
   <h2>6. Prohibited Conduct</h2>
   <ul>
-    <li>Violating any applicable laws or regulations</li>
-    <li>Infringing on intellectual property rights</li>
-    <li>Attempting to reverse engineer or redistribute assets</li>
-    <li>Interfering with site security or functionality</li>
+    <li>Violating laws</li>
+    <li>Redistributing assets</li>
+    <li>Interfering with site security</li>
   </ul>
 
   <h2>7. Termination</h2>
-  <p>BowesProduct may suspend or terminate access for violations of these Terms.</p>
+  <p>Access may be terminated for violations.</p>
 
   <h2>8. Disclaimer</h2>
-  <p>The service is provided <strong>"AS IS"</strong> without warranties of any kind.</p>
+  <p>The service is provided <strong>"AS IS"</strong>.</p>
 
   <h2>9. Limitation of Liability</h2>
-  <p>BowesProduct shall not be liable for any indirect or consequential damages arising from use of the site.</p>
+  <p>BowesProduct is not liable for indirect damages.</p>
 
-  <h2>10. Changes to Terms</h2>
-  <p>These Terms may be updated at any time. Continued use constitutes acceptance of changes.</p>
+  <h2>10. Changes</h2>
+  <p>Terms may be updated at any time.</p>
 
   <h2>11. Governing Law</h2>
-  <p>These Terms shall be governed by the laws of the jurisdiction in which BowesProduct operates.</p>
+  <p>These Terms are governed by applicable laws.</p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
@@ -291,7 +292,3 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
-
-
-
-
