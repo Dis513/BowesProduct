@@ -315,8 +315,15 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error);
+(async () => {
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+    await getRedirectResult(auth);
+  } catch (e) {
+    console.error(e);
+  }
+})();
+
 
 /* ================= DOM ================= */
 
@@ -471,6 +478,7 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
 
 
 
