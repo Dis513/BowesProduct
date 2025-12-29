@@ -18,7 +18,7 @@ body {
   font-family: system-ui, sans-serif;
 }
 
-/* ================= HEADINGS (BLUE 1–6) ================= */
+/* ================= HEADINGS ================= */
 h1, h2, h3, h4, h5, h6 {
   color: #60a5fa;
 }
@@ -41,6 +41,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
 }
 
+/* LEFT */
 .header-left {
   display: flex;
   align-items: center;
@@ -66,27 +67,16 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-.main-nav a:hover,
-.main-nav a.active {
+.main-nav a:hover {
   color: #60a5fa;
 }
 
-/* ================= AUTH ================= */
-.auth-stack {
+/* AUTH — INLINE */
+.auth-inline {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  gap: 0.6rem;
   height: 42px;
-  gap: 0.15rem;
-}
-
-#profilePic {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid #60a5fa;
-  visibility: hidden;
 }
 
 .login-btn {
@@ -99,14 +89,23 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .login-btn:hover {
   background: rgba(96,165,250,0.15);
   transform: translateY(-2px);
 }
 
-
 .login-btn:active {
   transform: translateY(1px);
+}
+
+#profilePic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  visibility: hidden;
 }
 
 /* ================= CONTENT ================= */
@@ -182,9 +181,9 @@ h1, h2, h3, h4, h5, h6 {
       </nav>
     </div>
 
-    <div class="auth-stack">
-      <img id="profilePic" alt="Profile">
+    <div class="auth-inline">
       <button id="authBtn" class="login-btn">Login</button>
+      <img id="profilePic" alt="Profile">
     </div>
   </div>
 </header>
@@ -195,34 +194,33 @@ h1, h2, h3, h4, h5, h6 {
   <p>This Refund Policy outlines the conditions under which refunds may be issued for purchases made on BowesProduct.</p>
 
   <h2>1. Digital Products</h2>
-  <p>All products sold on BowesProduct are digital downloads. Once a product has been delivered or made available for download, it is considered used.</p>
+  <p>All products sold on BowesProduct are digital downloads.</p>
 
   <h2>2. No Automatic Refunds</h2>
-  <p>Due to the nature of digital goods, all sales are generally <strong>final and non-refundable</strong>.</p>
+  <p>All sales are generally <strong>final and non-refundable</strong>.</p>
 
   <h2>3. Eligible Refund Exceptions</h2>
   <ul>
-    <li>The file is corrupted or unusable and a replacement cannot be provided</li>
-    <li>The product was purchased in error and has not been downloaded</li>
-    <li>Duplicate purchases of the same product</li>
+    <li>Corrupted or unusable files</li>
+    <li>Accidental purchase without download</li>
+    <li>Duplicate purchases</li>
   </ul>
 
   <h2>4. Non-Refundable Situations</h2>
   <ul>
-    <li>Change of mind after download</li>
-    <li>Lack of software compatibility</li>
-    <li>Failure to review product details or license terms</li>
-    <li>Violation of the License Agreement</li>
+    <li>Change of mind</li>
+    <li>Software incompatibility</li>
+    <li>Failure to review license terms</li>
   </ul>
 
   <h2>5. Requesting a Refund</h2>
-  <p>Refund requests must include order details and be submitted within a reasonable timeframe after purchase.</p>
+  <p>Refund requests must include order details.</p>
 
   <h2>6. Chargebacks</h2>
-  <p>Unauthorized chargebacks may result in revoked access to purchased assets.</p>
+  <p>Unauthorized chargebacks may revoke access.</p>
 
   <h2>7. Policy Changes</h2>
-  <p>BowesProduct reserves the right to modify this Refund Policy at any time.</p>
+  <p>This policy may change at any time.</p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
@@ -286,7 +284,3 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
-
-
-
-
