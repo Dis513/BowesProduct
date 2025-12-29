@@ -274,9 +274,40 @@ window.addEventListener('scroll', () => {
     GoogleAuthProvider,
     signInWithPopup,
     signOut,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    authBtn.textContent = "Logout";
+    profilePic.src = user.photoURL || "";
+    profilePic.style.visibility = "visible";
 
+    // Create user data if new
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) {
+      await setDoc(userRef, {
+        xp: 0,
+        level: 0,
+        claimedRewards: [],
+        lastLogin: new Date().toISOString()
+      });
+    } else {
+      // Daily login bonus (+10 XP once per day)
+      const data = snap.data();
+      const last = new Date(data.lastLogin);
+      const now = new Date();
+      const sameDay = last.getDate() === now.getDate() && last.getMonth() === now.getMonth() && last.getFullYear() === now.getFullYear();
+      if (!sameDay) {
+        await updateDoc(userRef, {
+          xp: increment(10),
+          lastLogin: now.toISOString()
+        });
+      }
+    }
+  } else {
+    authBtn.textContent = "Login";
+    profilePic.style.visibility = "hidden";
+  }
+});
   const firebaseConfig = {
     apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
     authDomain: "bowesproduct.firebaseapp.com",
@@ -313,4 +344,5 @@ const db = getFirestore(app);
 
 </body>
 </html>
+
 
