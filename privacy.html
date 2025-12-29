@@ -293,40 +293,38 @@ authBtn.onclick = () =>
   auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    authBtn.textContent = "Login";
-    profilePic.style.display = "none";
-    levelInfo.style.display = "none";
-    return;
-  }
+ if (!user) {
+  authBtn.textContent = "Login";
+  profilePic.style.display = "none";
+  levelInfo.style.display = "none";
+  return;
+ }
 
-  authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL || "";
-  profilePic.style.display = "block";
+ authBtn.textContent = "Logout";
+ profilePic.src = user.photoURL || "";
+ profilePic.style.display = "block";
 
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
+ const ref = doc(db, "users", user.uid);
+ let snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
-    snap = await getDoc(ref);
-  }
+ if (!snap.exists()) {
+  await setDoc(ref, { xp: 10 });  // ← New users start with 10 XP
+  snap = await getDoc(ref);
+ }
 
-  const xp = snap.data().xp || 0;
-  const levels = [0,200,500,1000,2000,4000];
-  const titles = ["New","Explorer","Builder","Artist","Creator","Master"];
+ const xp = snap.data().xp || 0;
+ const levels = [0, 200, 500, 1000, 2000];
+ let level = levels.filter(v => xp >= v).length - 1;
+ let next = levels[level + 1] ?? levels[level];
+ let progress = next === levels[level] ? 100 :
+  ((xp - levels[level]) / (next - levels[level])) * 100;
 
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
-  let pct = next === levels[level]
-    ? 100
-    : ((xp - levels[level]) / (next - levels[level])) * 100;
-
-  levelText.textContent = `Lvl ${level} – ${titles[level]}`;
-  xpBar.style.width = pct + "%";
-  levelInfo.style.display = "block";
+ levelText.textContent = `Level ${level} • ${xp} XP`;
+ xpBar.style.width = progress + "%";
+ levelInfo.style.display = "block";
 });
 </script>
 
 </body>
 </html>
+
