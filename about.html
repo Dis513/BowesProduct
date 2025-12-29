@@ -6,17 +6,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== RESET ===== */
+/* ================= GLOBAL FIXES ================= */
 *, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; overflow-x: hidden; }
+html, body { max-width: 100%; overflow-x: hidden; }
 
+/* ================= BASE ================= */
 body {
+  margin: 0;
   background: #020617;
   color: white;
   font-family: system-ui, sans-serif;
 }
 
-/* ===== HEADER ===== */
+/* ================= HEADINGS ================= */
+h1, h2, h3, h4, h5, h6 {
+  color: #60a5fa;
+}
+
+/* ================= HEADER ================= */
 .site-header {
   position: sticky;
   top: 0;
@@ -34,14 +41,12 @@ body {
   justify-content: space-between;
 }
 
-/* ===== LEFT GROUP ===== */
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
 }
 
-/* ===== LOGO ===== */
 .logo a {
   font-size: 1.2rem;
   font-weight: 700;
@@ -49,7 +54,6 @@ body {
   text-decoration: none;
 }
 
-/* ===== NAV ===== */
 .main-nav {
   display: flex;
   gap: 1.2rem;
@@ -59,6 +63,7 @@ body {
   color: #e5e7eb;
   text-decoration: none;
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .main-nav a:hover,
@@ -66,11 +71,13 @@ body {
   color: #60a5fa;
 }
 
-/* ===== AUTH ===== */
+/* ================= AUTH ================= */
 .auth-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
+  height: 42px;
   gap: 0.15rem;
 }
 
@@ -86,50 +93,38 @@ body {
   background: none;
   border: none;
   color: #e5e7eb;
+  font-size: 0.9rem;
   cursor: pointer;
+  padding: 0;
 }
 
 .login-btn:hover {
   color: #60a5fa;
 }
 
-/* ===== CONTENT ===== */
-.about-content {
+/* ================= CONTENT ================= */
+.content {
   max-width: 900px;
-  margin: 3rem auto;
-  padding: 0 1.25rem;
+  margin: 5rem auto;
+  padding: 0 1.5rem;
   line-height: 1.8;
 }
 
-.about-content h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #e5e7eb;
-}
-
-.about-content h2 {
-  color: #93c5fd;
-  margin-top: 2.5rem;
-  font-size: 1.2rem;
-}
-
-.about-content p,
-.about-content li {
+.content p,
+.content li {
   color: #cbd5e1;
-  font-size: 1.05rem;
 }
 
-.about-content ul {
+.content ul {
   padding-left: 1.5rem;
 }
 
-/* ===== FOOTER ===== */
+/* ================= FOOTER ================= */
 .site-footer {
-  background: rgba(2,6,23,0.9);
+  background: rgba(2,6,23,0.95);
   border-top: 1px solid #1e293b;
   padding: 3rem 1rem;
-  margin-top: 5rem;
+  margin-top: 6rem;
 }
 
 .footer-inner {
@@ -138,6 +133,7 @@ body {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
 .footer-nav {
@@ -167,12 +163,10 @@ body {
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-
     <div class="header-left">
       <div class="logo">
         <a href="index.html">BowesProduct</a>
       </div>
-
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
@@ -184,43 +178,46 @@ body {
       <img id="profilePic" alt="Profile">
       <button id="authBtn" class="login-btn">Login</button>
     </div>
-
   </div>
 </header>
 
 <!-- CONTENT -->
-<section class="about-content">
+<div class="content">
   <h1>About BowesProduct</h1>
 
-  <h2>Who We Are</h2>
   <p>
-    BowesProduct is a one-person independent 3D asset studio focused on delivering
-    high-quality, commercially licensed 3D models that are ready to drop directly
-    into production pipelines.
+    BowesProduct is an independent 3D asset studio focused on creating
+    high-quality, production-ready 3D models for developers, artists,
+    and studios.
   </p>
 
   <p>
-    Every model is crafted with clean topology, optimized performance, PBR materials,
-    and real-time engine compatibility — built from years of professional experience.
+    All assets are designed with clean topology, optimized performance,
+    and compatibility across modern pipelines including Blender,
+    Unity, Unreal Engine, and Godot.
   </p>
 
-  <h2>Our Philosophy</h2>
+  <h2>What You Get</h2>
   <ul>
-    <li>Fair one-time pricing, no royalties</li>
+    <li>One-time purchase, no subscriptions</li>
     <li>Unlimited commercial use license</li>
-    <li>Engine-ready assets for Unity, Unreal, Godot, Blender</li>
-    <li>Consistent updates and improvements</li>
+    <li>Game-ready and real-time optimized assets</li>
+    <li>Clear legal terms — no fine print tricks</li>
   </ul>
 
-  <h2>Contact & Support</h2>
+  <h2>Philosophy</h2>
   <p>
-    Questions, suggestions, or issues?<br>
-    Reach out anytime.
+    The goal is simple: provide assets that save you time without
+    restricting how you use them. No royalties. No seat limits.
+    No artificial barriers.
   </p>
+
+  <h2>Contact</h2>
   <p>
-    Email: <a href="mailto:support@bowesproduct.com" style="color:#60a5fa;">support@bowesproduct.com</a>
+    Questions or support requests?<br>
+    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
   </p>
-</section>
+</div>
 
 <!-- FOOTER -->
 <footer class="site-footer">
