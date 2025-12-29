@@ -974,9 +974,10 @@ onAuthStateChanged(auth, async (user) => {
 
 <!-- Your existing model viewer / filtering script -->
 <script>
-// Sticky header effect (optional)
+<script>
+// Sticky header
 window.addEventListener('scroll', () => {
- document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
 
 // Model viewer switching
@@ -1061,6 +1062,7 @@ window.addEventListener('scroll', () => {
 </script>
 </body>
 </html>
+
 
 
 
