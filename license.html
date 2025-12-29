@@ -15,12 +15,7 @@ body {
   margin: 0;
   background: #020617;
   color: white;
-  font-family: system-ui, sans-serif;
-}
-
-/* ================= HEADINGS ================= */
-h1, h2, h3, h4, h5, h6 {
-  color: #60a5fa;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ================= HEADER ================= */
@@ -30,58 +25,54 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1000;
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
+  transition: box-shadow 0.3s ease;
 }
-
+.site-header.scrolled {
+  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+}
 .header-inner {
   max-width: 1200px;
-  margin: auto;
-  padding: 0.4rem 1rem;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
-/* LEFT */
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.6rem;
 }
-
 .logo a {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: white;
   text-decoration: none;
   white-space: nowrap;
 }
-
 .main-nav {
   display: flex;
-  gap: 1.2rem;
+  gap: 1.4rem;
 }
-
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 500;
 }
-
 .main-nav a:hover {
   color: #60a5fa;
 }
 
-/* AUTH — INLINE (MATCHES INDEX) */
+/* ================= AUTH ================= */
 .auth-inline {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  height: 42px;
+  gap: 0.7rem;
+  height: 44px;
 }
-
 .login-btn {
-  padding: 0.5rem 1.1rem;
+  padding: 0.55rem 1.2rem;
   border-radius: 999px;
   border: 1.5px solid #60a5fa;
   color: #60a5fa;
@@ -90,23 +81,25 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
 .login-btn:hover {
   background: rgba(96,165,250,0.15);
   transform: translateY(-2px);
 }
-
 .login-btn:active {
   transform: translateY(1px);
 }
-
 #profilePic {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 2px solid #60a5fa;
   object-fit: cover;
   visibility: hidden;
+}
+
+/* ================= HEADINGS ================= */
+h1, h2, h3, h4, h5, h6 {
+  color: #60a5fa;
 }
 
 /* ================= CONTENT ================= */
@@ -116,6 +109,13 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0 1.5rem;
   line-height: 1.8;
 }
+.content p,
+.content li {
+  color: #cbd5e1;
+}
+.content ul {
+  padding-left: 1.5rem;
+}
 
 /* ================= FOOTER ================= */
 .site-footer {
@@ -124,38 +124,67 @@ h1, h2, h3, h4, h5, h6 {
   padding: 3rem 1rem;
   margin-top: 6rem;
 }
-
 .footer-inner {
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1.5rem;
 }
-
 .footer-nav {
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
 }
-
 .footer-nav a {
   color: #cbd5e1;
   text-decoration: none;
 }
-
 .footer-nav a:hover {
   color: #60a5fa;
 }
-
 .site-footer p {
   margin: 0;
   color: #94a3b8;
 }
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+  }
+  .header-left {
+    flex-direction: row;
+    gap: 1.2rem;
+    align-items: center;
+  }
+  .logo a {
+    font-size: 1.25rem;
+  }
+  .main-nav {
+    gap: 1rem;
+  }
+  .main-nav a {
+    font-size: 0.9rem;
+  }
+  .auth-inline {
+    gap: 0.5rem;
+  }
+  #profilePic {
+    width: 28px;
+    height: 28px;
+  }
+  .login-btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+  }
+}
 </style>
 </head>
-
 <body>
 
 <!-- HEADER -->
@@ -171,10 +200,10 @@ h1, h2, h3, h4, h5, h6 {
       </nav>
     </div>
 
- <div class="auth-inline">
-  <img id="profilePic" alt="Profile">
-  <button id="authBtn" class="login-btn">Login</button>
-</div>
+    <div class="auth-inline">
+      <img id="profilePic" alt="Profile">
+      <button id="authBtn" class="login-btn">Login</button>
+    </div>
   </div>
 </header>
 
@@ -226,7 +255,7 @@ h1, h2, h3, h4, h5, h6 {
   <h2>10. Governing Law</h2>
   <p>Governed by applicable local law.</p>
 
-  <p><em>Last updated: December 28, 2025</em></p>
+  <p><em>Last updated: December 29, 2025</em></p>
 </div>
 
 <!-- FOOTER -->
@@ -243,49 +272,55 @@ h1, h2, h3, h4, h5, h6 {
   </div>
 </footer>
 
-<!-- FIREBASE AUTH -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct",
-  storageBucket: "bowesproduct.firebasestorage.app",
-  messagingSenderId: "533459045484",
-  appId: "1:533459045484:web:bf727f2e85787132401c49"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-const authBtn = document.getElementById("authBtn");
-const profilePic = document.getElementById("profilePic");
-
-authBtn.onclick = async () => {
-  auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
-};
-
-onAuthStateChanged(auth, user => {
-  if (user) {
-    authBtn.textContent = "Logout";
-    profilePic.src = user.photoURL;
-    profilePic.style.visibility = "visible";
-  } else {
-    authBtn.textContent = "Login";
-    profilePic.style.visibility = "hidden";
-  }
+<script>
+// Sticky header
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
+</script>
+
+<!-- Firebase Authentication -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+    authDomain: "bowesproduct.firebaseapp.com",
+    projectId: "bowesproduct",
+    storageBucket: "bowesproduct.firebasestorage.app",
+    messagingSenderId: "533459045484",
+    appId: "1:533459045484:web:bf727f2e85787132401c49"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const authBtn = document.getElementById("authBtn");
+  const profilePic = document.getElementById("profilePic");
+
+  authBtn.onclick = async () => {
+    auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
+  };
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      authBtn.textContent = "Logout";
+      profilePic.src = user.photoURL || "";
+      profilePic.style.visibility = "visible";
+    } else {
+      authBtn.textContent = "Login";
+      profilePic.style.visibility = "hidden";
+    }
+  });
 </script>
 
 </body>
 </html>
-
