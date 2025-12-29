@@ -114,6 +114,14 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.8;
   color: #cbd5e1;
 }
+  /* ===== MODEL VIEWER ===== */
+model-viewer {
+  width: 100%;
+  height: 420px;
+  background: #020617;
+  border-radius: 14px;
+  border: 1px solid #1e293b;
+}
 
 /* ================= FOOTER ================= */
 .site-footer {
@@ -175,6 +183,15 @@ h1, h2, h3, h4, h5, h6 {
     </div>
   </div>
 </header>
+
+  <model-viewer
+    src="model.glb"
+    camera-controls
+    auto-rotate
+    shadow-intensity="1"
+    exposure="1.1">
+  </model-viewer>
+
 <!-- Rigged Models -->
 <section id="rigged-models">
   <h2 style="text-align:center; margin:4rem 0 1rem;">Rigged Models</h2>
@@ -816,4 +833,5 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
+
 
