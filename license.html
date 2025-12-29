@@ -4,26 +4,20 @@
 <meta charset="UTF-8">
 <title>License – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Commercial license terms governing the use of BowesProduct 3D models and props.">
-<link rel="stylesheet" href="style.css">
+
 <style>
 /* ================= GLOBAL FIXES ================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { max-width: 100%; overflow-x: hidden; }
+
 /* ================= BASE ================= */
 body {
   margin: 0;
   background: #020617;
   color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, sans-serif;
 }
+
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -32,6 +26,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
+
 .header-inner {
   max-width: 1200px;
   margin: auto;
@@ -39,15 +34,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;
 }
+
 /* LEFT GROUP */
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
-  min-width: 0;
 }
+
 /* LOGO */
 .logo a {
   font-size: 1.2rem;
@@ -56,35 +51,36 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
+
 /* NAV */
 .main-nav {
   display: flex;
   gap: 1.2rem;
   align-items: center;
-  flex-wrap: wrap;
 }
+
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-weight: 500;
   font-size: 0.9rem;
-  white-space: normal;
-  word-break: break-word;
+  font-weight: 500;
 }
+
 .main-nav a:hover,
 .main-nav a.active {
   color: #60a5fa;
 }
-/* AUTH (RIGHT SIDE) */
+
+/* AUTH (RIGHT) */
 .auth-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.15rem;
   height: 42px;
-  flex-shrink: 0;
+  gap: 0.15rem;
 }
+
 #profilePic {
   width: 26px;
   height: 26px;
@@ -92,6 +88,7 @@ body {
   border: 2px solid #60a5fa;
   visibility: hidden;
 }
+
 .login-btn {
   background: none;
   border: none;
@@ -101,40 +98,11 @@ body {
   padding: 0;
   line-height: 1;
 }
+
 .login-btn:hover {
   color: #60a5fa;
 }
-/* ================= HERO ================= */
-.hero {
-  position: relative;
-  min-height: 70svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 1.25rem;
-  text-align: center;
-  overflow: hidden;
-  background:
-    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-    url("./images/hero.jpg");
-  background-size: cover;
-  background-position: center;
-}
-.hero-content {
-  max-width: 900px;
-}
-.hero h1 {
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 800;
-  margin-bottom: 1rem;
-}
-.hero p {
-  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
-  color: #cbd5f5;
-  line-height: 1.6;
-  max-width: 720px;
-  margin: 0 auto;
-}
+
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
@@ -142,92 +110,52 @@ body {
   padding: 0 1.5rem;
   line-height: 1.8;
 }
+
 .content h1 {
+  color: #60a5fa;
   text-align: center;
-  font-size: 2.4rem;
   margin-bottom: 2rem;
-  color: #60a5fa;
 }
-.content h2 {
-  font-size: 1.8rem;
-  margin: 3rem 0 1rem;
-  color: #60a5fa;
-  text-align: left;
-}
-.content p {
-  font-size: 1.05rem;
-  color: #cbd5e1;
-  margin-bottom: 1.2rem;
-}
-.content ul {
-  padding-left: 1.8rem;
-  margin: 1rem 0;
-}
-.content li {
-  margin-bottom: 0.8rem;
-  color: #cbd5e1;
-}
-.update-note {
-  text-align: left;
-  margin-top: 4rem;
-  font-size: 0.95rem;
-  color: #64748b;
-}
+
 /* ================= FOOTER ================= */
 .site-footer {
   background: rgba(2,6,23,0.95);
-  backdrop-filter: blur(10px);
   border-top: 1px solid #1e293b;
-  color: #e5e7eb;
   padding: 3rem 1rem;
   margin-top: 6rem;
 }
+
 .footer-inner {
   max-width: 1200px;
   margin: auto;
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 1.5rem;
-  justify-content: space-between;
-  align-items: center;
 }
+
 .footer-nav {
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
 }
+
 .footer-nav a {
   color: #cbd5e1;
   text-decoration: none;
 }
+
 .footer-nav a:hover {
   color: #60a5fa;
 }
+
 .site-footer p {
   margin: 0;
   color: #94a3b8;
 }
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-  .header-left {
-    flex-wrap: wrap;
-    gap: 0.8rem;
-  }
-  .main-nav {
-    gap: 0.8rem;
-    justify-content: flex-start;
-  }
-  .hero { 
-    min-height: 60svh; 
-    padding: 5rem 1rem; 
-  }
-  .content { 
-    padding: 0 1rem; 
-    margin: 4rem auto; 
-  }
-}
 </style>
 </head>
+
 <body>
 
 <!-- HEADER -->
@@ -241,23 +169,15 @@ body {
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
         <a href="about.html">About</a>
-        <a href="license.html" class="active">License</a>
       </nav>
     </div>
+
     <div class="auth-stack">
       <img id="profilePic" alt="Profile">
       <button id="authBtn" class="login-btn">Login</button>
     </div>
   </div>
 </header>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>Commercial License</h1>
-    <p>Clear, straightforward terms for using BowesProduct 3D assets</p>
-  </div>
-</section>
 
 <!-- CONTENT -->
 <div class="content">
@@ -310,6 +230,7 @@ body {
   <p class="update-note">Last updated: December 29, 2025</p>
 </div>
 
+
 <!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
@@ -317,14 +238,13 @@ body {
       <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
       <a href="refund.html">Refund</a>
     </nav>
     <p>© 2025 BowesProduct</p>
   </div>
 </footer>
 
-<!-- Firebase Authentication -->
+<!-- FIREBASE AUTH -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -347,6 +267,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 
@@ -368,3 +289,5 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
+
+
