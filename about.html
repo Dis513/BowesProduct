@@ -277,7 +277,7 @@ window.addEventListener('scroll', () => {
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -297,11 +297,7 @@ window.addEventListener('scroll', () => {
   const profilePic = document.getElementById("profilePic");
 
   authBtn.onclick = async () => {
-    if (auth.currentUser) {
-      await signOut(auth);
-    } else {
-      await signInWithPopup(auth, provider);
-    }
+    auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
   };
 
   onAuthStateChanged(auth, async (user) => {
@@ -310,17 +306,24 @@ window.addEventListener('scroll', () => {
       profilePic.src = user.photoURL || "";
       profilePic.style.visibility = "visible";
 
-      // Load user data for rewards display
+      // Setup user data + daily XP
       const userRef = doc(db, "users", user.uid);
       const snap = await getDoc(userRef);
-
-      let xp = 0;
-      if (snap.exists()) {
+      if (!snap.exists()) {
+        await setDoc(userRef, { xp: 0, lastLogin: new Date().toISOString() });
+      } else {
         const data = snap.data();
-        xp = data.xp || 0;
+        const last = new Date(data.lastLogin);
+        const now = new Date();
+        if (last.getDate() !== now.getDate() || last.getMonth() !== now.getMonth() || last.getFullYear() !== now.getFullYear()) {
+          await updateDoc(userRef, { xp: increment(10), lastLogin: now.toISOString() });
+        }
       }
 
-      // Calculate level
+      // Load latest XP and show level bar
+      const latest = await getDoc(userRef);
+      const xp = latest.data().xp || 0;
+
       const thresholds = [0, 200, 500, 1000, 2000, 4000];
       let level = 0;
       for (let i = 0; i < thresholds.length; i++) {
@@ -330,53 +333,25 @@ window.addEventListener('scroll', () => {
       const next = thresholds[level + 1] || Infinity;
       const progress = next === Infinity ? 100 : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
 
-      // Update header level bar
-      if (document.getElementById("levelText")) {
-        document.getElementById("levelText").textContent = `Level ${level} – ${titles[level]}`;
-        document.getElementById("xpBar").style.width = progress + "%";
-        document.getElementById("levelInfo").style.display = "block";
+      const levelInfo = document.getElementById("levelInfo");
+      if (levelInfo) {
+        document.getElementById("levelText").textContent = `Level ${level} – ${titles[level]} (${xp} XP)`;
+        document.getElementById("xpBar").style.width = `${progress}%`;
+        levelInfo.style.display = "flex";  // Use flex for better alignment
       }
-
-      // Update rewards page content
-      document.getElementById("currentLevelText").textContent = `Level ${level} – ${titles[level]}`;
-      document.getElementById("xpText").textContent = `${xp} XP`;
-      document.getElementById("xpProgress").style.width = progress + "%";
-
-      // Rewards grid
-      const rewards = [
-        { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Crate, Barrel, Torch", msg: "Download your free props!" },
-        { level: 2, icon: "🎟️", title: "15% Off Coupon", desc: "Next purchase", msg: "Use code: REWARD15" },
-        { level: 3, icon: "🗿", title: "Free Model", desc: "Any rigged model under €10", msg: "Pick any model under €10!" },
-        { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access to new release", msg: "Download exclusive model!" },
-        { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "Forever discount", msg: "Use code: MASTER20" }
-      ];
-
-      const grid = document.getElementById("rewardsGrid");
-      grid.innerHTML = "";
-      rewards.forEach(r => {
-        const card = document.createElement("div");
-        card.className = "reward-card" + (level >= r.level ? "" : " locked");
-        card.innerHTML = `
-          <div class="reward-icon">${r.icon}</div>
-          <div class="reward-title">${r.title}</div>
-          <div class="reward-desc">${r.desc}</div>
-          ${level >= r.level ? `<button class="claim-btn" onclick="alert('${r.msg}')">Claim Reward</button>` : `<button class="claim-btn" disabled>Locked</button>`}
-        `;
-        grid.appendChild(card);
-      });
 
     } else {
       authBtn.textContent = "Login";
       profilePic.style.visibility = "hidden";
-      if (document.getElementById("levelInfo")) document.getElementById("levelInfo").style.display = "none";
-      document.getElementById("currentLevelText").textContent = "Log in to see your rewards!";
-      document.getElementById("rewardsGrid").innerHTML = "";
+      const levelInfo = document.getElementById("levelInfo");
+      if (levelInfo) levelInfo.style.display = "none";
     }
   });
 </script>
 
 </body>
 </html>
+
 
 
 
