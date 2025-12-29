@@ -7,7 +7,13 @@
 
 <style>
 *, *::before, *::after { box-sizing: border-box; }
-html, body { margin:0; background:#020617; color:white; font-family:system-ui; }
+html, body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
 
 /* ================= HEADER ================= */
 .site-header {
@@ -17,13 +23,14 @@ html, body { margin:0; background:#020617; color:white; font-family:system-ui; }
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
+
 .header-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 /* LEFT */
@@ -37,6 +44,7 @@ html, body { margin:0; background:#020617; color:white; font-family:system-ui; }
   font-weight: 700;
   color: white;
   text-decoration: none;
+  white-space: nowrap;
 }
 .main-nav {
   display: flex;
@@ -49,27 +57,15 @@ html, body { margin:0; background:#020617; color:white; font-family:system-ui; }
 }
 .main-nav a:hover { color:#60a5fa; }
 
-/* RIGHT STACK */
-.auth-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  min-width: 180px;
-}
-.auth-inline {
+/* RIGHT */
+.header-right {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.8rem;
+  min-height: 44px;
 }
-.login-btn {
-  padding: 0.55rem 1.2rem;
-  border-radius: 999px;
-  border: 1.5px solid #60a5fa;
-  background: transparent;
-  color: #60a5fa;
-  cursor: pointer;
-}
+
+/* PROFILE */
 #profilePic {
   width: 32px;
   height: 32px;
@@ -79,18 +75,30 @@ html, body { margin:0; background:#020617; color:white; font-family:system-ui; }
   display: none;
 }
 
-/* LEVEL BAR */
+/* LOGIN */
+.login-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* XP */
 #levelInfo {
   display: none;
-  width: 100%;
-  max-width: 180px;
-  text-align: center;
-  font-size: 0.85rem;
+  width: 140px;
+  font-size: 0.8rem;
   color: #cbd5e1;
+}
+#levelText {
+  white-space: nowrap;
 }
 #xpOuter {
   width: 100%;
-  height: 6px;
+  height: 5px;
   background: #1e293b;
   border-radius: 3px;
   margin-top: 4px;
@@ -100,7 +108,26 @@ html, body { margin:0; background:#020617; color:white; font-family:system-ui; }
   width: 0%;
   background: #60a5fa;
   border-radius: 3px;
-  transition: width 0.4s ease;
+  transition: width 0.35s ease;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo {
+    width: 100%;
+  }
 }
 
 /* ================= CONTENT ================= */
@@ -110,28 +137,16 @@ html, body { margin:0; background:#020617; color:white; font-family:system-ui; }
   padding: 0 1.5rem;
 }
 h1, h2 { color:#60a5fa; }
-p, li { color:#cbd5e1; line-height:1.8; }
-
-/* ================= MOBILE FIX ================= */
-@media (max-width: 768px) {
-  .header-inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  .header-left {
-    justify-content: space-between;
-    width: 100%;
-  }
-  .auth-block {
-    width: 100%;
-  }
+p, li {
+  color:#cbd5e1;
+  line-height:1.8;
 }
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
 
@@ -143,23 +158,56 @@ p, li { color:#cbd5e1; line-height:1.8; }
       </nav>
     </div>
 
-    <div class="auth-block">
-      <div class="auth-inline">
-        <img id="profilePic">
-        <button id="authBtn" class="login-btn">Login</button>
-      </div>
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+
       <div id="levelInfo">
         <div id="levelText"></div>
         <div id="xpOuter"><div id="xpBar"></div></div>
       </div>
+
+      <button id="authBtn" class="login-btn">Login</button>
     </div>
 
   </div>
 </header>
 
+<!-- CONTENT -->
 <div class="content">
   <h1>About BowesProduct</h1>
-  <p>BowesProduct is an independent 3D asset studio focused on high-quality production-ready assets.</p>
+
+  <p>
+    BowesProduct is an independent 3D asset studio focused on creating
+    high-quality, production-ready 3D models for developers, artists,
+    and studios.
+  </p>
+
+  <p>
+    All assets are designed with clean topology, optimized performance,
+    and compatibility across modern pipelines including Blender,
+    Unity, Unreal Engine, and Godot.
+  </p>
+
+  <h2>What You Get</h2>
+  <ul>
+    <li>One-time purchase, no subscriptions</li>
+    <li>Unlimited commercial use license</li>
+    <li>Game-ready and real-time optimized assets</li>
+    <li>Clear legal terms — no fine print tricks</li>
+  </ul>
+
+  <h2>Philosophy</h2>
+  <p>
+    The goal is simple: provide assets that save you time without
+    restricting how you use them. No royalties. No seat limits.
+    No artificial barriers.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions or support requests?<br><br>
+    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
+  </p>
 </div>
 
 <!-- ================= FIREBASE ================= -->
@@ -171,7 +219,7 @@ import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/fireb
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct",
+  projectId: "bowesproduct"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -179,38 +227,44 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-authBtn.onclick = async () => {
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+authBtn.onclick = () =>
   auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
-};
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    profilePic.style.display = "none";
     authBtn.textContent = "Login";
+    profilePic.style.display = "none";
     levelInfo.style.display = "none";
     return;
   }
 
   authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL;
+  profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
 
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
   if (!snap.exists()) {
-    await setDoc(ref, { xp: 0 });
+    await setDoc(ref, { xp: 10 });
     snap = await getDoc(ref);
   }
 
   const xp = snap.data().xp || 0;
-  const levels = [0,200,500,1000,2000];
-  let lvl = levels.filter(v => xp >= v).length - 1;
-  let next = levels[lvl+1] ?? levels[lvl];
-  let prog = next === levels[lvl] ? 100 : ((xp-levels[lvl])/(next-levels[lvl]))*100;
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level] ? 100 :
+    ((xp - levels[level]) / (next - levels[level])) * 100;
 
-  levelText.textContent = `Level ${lvl}`;
-  xpBar.style.width = prog + "%";
+  levelText.textContent = `Level ${level} • ${xp} XP`;
+  xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
 </script>
