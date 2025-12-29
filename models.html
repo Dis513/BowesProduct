@@ -26,50 +26,60 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* ================= HEADER ================= */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: rgba(2,6,23,0.95);
-  border-bottom: 1px solid #1e293b;
-  transition: box-shadow 0.3s ease;
-}
-.site-header.scrolled {
-  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
-}
-.header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0.5rem 1rem;
+/* HEADER RIGHT SIDE */
+.header-right {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 1rem;
 }
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 1.6rem;
+
+/* LEVEL INFO */
+.level-info {
+  display: none;
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  min-width: 140px;
 }
-.logo a {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: white;
-  text-decoration: none;
+
+.level-text {
+  margin-bottom: 4px;
+  white-space: nowrap;
 }
-.main-nav {
-  display: flex;
-  gap: 1.4rem;
+
+.xp-track {
+  width: 100%;
+  height: 6px;
+  background: #1e293b;
+  border-radius: 4px;
+  overflow: hidden;
 }
-.main-nav a {
-  color: #e5e7eb;
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
+
+.xp-bar {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  transition: width 0.3s ease;
 }
-.main-nav a:hover,
-.main-nav a.active {
-  color: #60a5fa;
+
+/* PROFILE PIC */
+#profilePic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  display: none;
+}
+
+/* MOBILE HEADER FIX */
+@media (max-width: 768px) {
+  .level-info {
+    display: none !important;
+  }
+
+  .main-nav {
+    display: none;
+  }
 }
 
 /* ================= AUTH ================= */
@@ -406,15 +416,42 @@ model-viewer {
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
+
+    <!-- LEFT -->
     <div class="header-left">
       <div class="logo">
         <a href="index.html">BowesProduct</a>
       </div>
+
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html" class="active">Models</a>
+        <a href="rewards.html">Rewards</a>
       </nav>
     </div>
+
+    <!-- RIGHT -->
+    <div class="header-right">
+
+      <!-- LEVEL / XP -->
+      <div id="levelInfo" class="level-info">
+        <div id="levelText" class="level-text"></div>
+        <div class="xp-track">
+          <div id="xpBar" class="xp-bar"></div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <img id="profilePic" alt="Profile">
+
+      <!-- AUTH -->
+      <button id="authBtn" class="login-btn">Login</button>
+
+    </div>
+
+  </div>
+</header>
+
 
     <div class="auth-inline">
       <img id="profilePic" alt="Profile">
@@ -1118,8 +1155,18 @@ if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 <!-- Firebase Authentication -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -1147,78 +1194,56 @@ if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
   };
 
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      authBtn.textContent = "Logout";
-      profilePic.src = user.photoURL || "";
-      profilePic.style.visibility = "visible";
-
-      // Load user data for rewards display
-      const userRef = doc(db, "users", user.uid);
-      const snap = await getDoc(userRef);
-
-      let xp = 0;
-      if (snap.exists()) {
-        const data = snap.data();
-        xp = data.xp || 0;
-      }
-
-      // Calculate level
-      const thresholds = [0, 200, 500, 1000, 2000, 4000];
-      let level = 0;
-      for (let i = 0; i < thresholds.length; i++) {
-        if (xp >= thresholds[i]) level = i;
-      }
-      const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
-      const next = thresholds[level + 1] || Infinity;
-      const progress = next === Infinity ? 100 : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
-
-      // Update header level bar
-      if (document.getElementById("levelText")) {
-        document.getElementById("levelText").textContent = `Level ${level} – ${titles[level]}`;
-        document.getElementById("xpBar").style.width = progress + "%";
-        document.getElementById("levelInfo").style.display = "block";
-      }
-
-      // Update rewards page content
-      document.getElementById("currentLevelText").textContent = `Level ${level} – ${titles[level]}`;
-      document.getElementById("xpText").textContent = `${xp} XP`;
-      document.getElementById("xpProgress").style.width = progress + "%";
-
-      // Rewards grid
-      const rewards = [
-        { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Crate, Barrel, Torch", msg: "Download your free props!" },
-        { level: 2, icon: "🎟️", title: "15% Off Coupon", desc: "Next purchase", msg: "Use code: REWARD15" },
-        { level: 3, icon: "🗿", title: "Free Model", desc: "Any rigged model under €10", msg: "Pick any model under €10!" },
-        { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access to new release", msg: "Download exclusive model!" },
-        { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "Forever discount", msg: "Use code: MASTER20" }
-      ];
-
-      const grid = document.getElementById("rewardsGrid");
-      grid.innerHTML = "";
-      rewards.forEach(r => {
-        const card = document.createElement("div");
-        card.className = "reward-card" + (level >= r.level ? "" : " locked");
-        card.innerHTML = `
-          <div class="reward-icon">${r.icon}</div>
-          <div class="reward-title">${r.title}</div>
-          <div class="reward-desc">${r.desc}</div>
-          ${level >= r.level ? `<button class="claim-btn" onclick="alert('${r.msg}')">Claim Reward</button>` : `<button class="claim-btn" disabled>Locked</button>`}
-        `;
-        grid.appendChild(card);
-      });
-
-    } else {
+    if (!user) {
       authBtn.textContent = "Login";
-      profilePic.style.visibility = "hidden";
-      if (document.getElementById("levelInfo")) document.getElementById("levelInfo").style.display = "none";
-      document.getElementById("currentLevelText").textContent = "Log in to see your rewards!";
-      document.getElementById("rewardsGrid").innerHTML = "";
+      profilePic.style.visibility = "block";
+      document.getElementById("levelInfo")?.style.setProperty("display", "none");
+      return;
+    }
+
+    // Logged in
+    authBtn.textContent = "Logout";
+    profilePic.src = user.photoURL || "";
+    profilePic.style.visibility = "visible";
+
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+
+    let xp = 0;
+    if (snap.exists()) {
+      xp = snap.data().xp || 0;
+    }
+
+    // Level calculation
+    const thresholds = [0, 200, 500, 1000, 2000, 4000];
+    const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
+
+    let level = 0;
+    for (let i = 0; i < thresholds.length; i++) {
+      if (xp >= thresholds[i]) level = i;
+    }
+
+    const next = thresholds[level + 1] || Infinity;
+    const progress =
+      next === Infinity ? 100 :
+      ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
+
+    // ✅ HEADER XP BAR (SAFE)
+    const levelText = document.getElementById("levelText");
+    const xpBar = document.getElementById("xpBar");
+    const levelInfo = document.getElementById("levelInfo");
+
+    if (levelText && xpBar && levelInfo) {
+      levelText.textContent = `Level ${level} – ${titles[level]}`;
+      xpBar.style.width = `${progress}%`;
+      levelInfo.style.display = "block";
     }
   });
 </script>
 
 </body>
 </html>
+
 
 
 
