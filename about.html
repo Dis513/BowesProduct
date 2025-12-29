@@ -8,13 +8,7 @@
 <style>
 /* ================= GLOBAL ================= */
 *, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
-
-body {
-  background: #020617;
-  color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
+html, body { margin: 0; background: #020617; color: white; font-family: system-ui, sans-serif; }
 
 /* ================= HEADER ================= */
 .site-header {
@@ -54,11 +48,8 @@ body {
   color: #e5e7eb;
   text-decoration: none;
   font-size: 0.95rem;
-  font-weight: 500;
 }
-.main-nav a:hover {
-  color: #60a5fa;
-}
+.main-nav a:hover { color: #60a5fa; }
 
 /* RIGHT STACK */
 .auth-block {
@@ -66,7 +57,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  min-width: 160px;
+  min-width: 180px;
 }
 
 /* TOP ROW */
@@ -76,16 +67,7 @@ body {
   gap: 0.7rem;
 }
 
-.login-btn {
-  padding: 0.55rem 1.2rem;
-  border-radius: 999px;
-  border: 1.5px solid #60a5fa;
-  color: #60a5fa;
-  background: transparent;
-  font-size: 0.95rem;
-  cursor: pointer;
-}
-
+/* AVATAR */
 #profilePic {
   width: 32px;
   height: 32px;
@@ -95,12 +77,23 @@ body {
   visibility: hidden;
 }
 
+/* BUTTON */
+.login-btn {
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  color: #60a5fa;
+  background: transparent;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.login-btn:hover { background: rgba(96,165,250,0.15); }
+
 /* LEVEL BAR */
 #levelInfo {
   display: none;
-  width: 100%;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #cbd5e1;
 }
 #xpTrack {
@@ -125,13 +118,8 @@ body {
   padding: 0 1.5rem;
   line-height: 1.8;
 }
-.content p,
-.content li {
-  color: #cbd5e1;
-}
-h1, h2 {
-  color: #60a5fa;
-}
+h1, h2 { color: #60a5fa; }
+.content p, .content li { color: #cbd5e1; }
 
 /* ================= FOOTER ================= */
 .site-footer {
@@ -153,13 +141,8 @@ h1, h2 {
   gap: 1.5rem;
   flex-wrap: wrap;
 }
-.footer-nav a {
-  color: #cbd5e1;
-  text-decoration: none;
-}
-.footer-nav a:hover {
-  color: #60a5fa;
-}
+.footer-nav a { color: #cbd5e1; text-decoration: none; }
+.footer-nav a:hover { color: #60a5fa; }
 </style>
 </head>
 
@@ -169,9 +152,7 @@ h1, h2 {
   <div class="header-inner">
 
     <div class="header-left">
-      <div class="logo">
-        <a href="index.html">BowesProduct</a>
-      </div>
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
@@ -197,25 +178,7 @@ h1, h2 {
 
 <div class="content">
   <h1>About BowesProduct</h1>
-
-  <p>
-    BowesProduct is an independent 3D asset studio focused on creating
-    high-quality, production-ready 3D models for developers, artists,
-    and studios.
-  </p>
-
-  <p>
-    All assets are designed with clean topology, optimized performance,
-    and compatibility across Blender, Unity, Unreal Engine, and Godot.
-  </p>
-
-  <h2>What You Get</h2>
-  <ul>
-    <li>One-time purchase, no subscriptions</li>
-    <li>Unlimited commercial use</li>
-    <li>Game-ready optimized assets</li>
-    <li>No royalties or restrictions</li>
-  </ul>
+  <p>High-quality, production-ready 3D assets for developers and studios.</p>
 </div>
 
 <footer class="site-footer">
@@ -232,6 +195,7 @@ h1, h2 {
   </div>
 </footer>
 
+<!-- ================= FIREBASE ================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -280,19 +244,10 @@ onAuthStateChanged(auth, async user => {
   }
 
   const xp = (await getDoc(ref)).data().xp || 0;
-  const thresholds = [0, 200, 500, 1000, 2000, 4000];
-  const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
+  const level = Math.floor(xp / 200);
+  const progress = (xp % 200) / 2;
 
-  let level = 0;
-  for (let i = 0; i < thresholds.length; i++) {
-    if (xp >= thresholds[i]) level = i;
-  }
-
-  const next = thresholds[level + 1] || Infinity;
-  const progress = next === Infinity ? 100 :
-    ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
-
-  levelText.textContent = `Level ${level} – ${titles[level]}`;
+  levelText.textContent = `Level ${level} • ${xp} XP`;
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
