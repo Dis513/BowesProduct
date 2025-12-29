@@ -6,17 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Terms of service for using BowesProduct website and purchasing 3D assets.">
 <link rel="stylesheet" href="style.css">
+
 <style>
 /* ================= GLOBAL FIXES ================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { max-width: 100%; overflow-x: hidden; }
+
 /* ================= BASE ================= */
 body {
   margin: 0;
@@ -24,6 +19,7 @@ body {
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -32,6 +28,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
+
 .header-inner {
   max-width: 1200px;
   margin: auto;
@@ -39,15 +36,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;
 }
+
 /* LEFT GROUP */
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
-  min-width: 0;
 }
+
 /* LOGO */
 .logo a {
   font-size: 1.2rem;
@@ -56,26 +53,26 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
+
 /* NAV */
 .main-nav {
   display: flex;
   gap: 1.2rem;
   align-items: center;
-  flex-wrap: wrap;
 }
+
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
-  white-space: normal;
-  word-break: break-word;
 }
-.main-nav a:hover,
-.main-nav a.active {
+
+.main-nav a:hover {
   color: #60a5fa;
 }
-/* AUTH (RIGHT SIDE) */
+
+/* AUTH */
 .auth-stack {
   display: flex;
   flex-direction: column;
@@ -83,8 +80,8 @@ body {
   justify-content: flex-end;
   gap: 0.15rem;
   height: 42px;
-  flex-shrink: 0;
 }
+
 #profilePic {
   width: 26px;
   height: 26px;
@@ -92,6 +89,7 @@ body {
   border: 2px solid #60a5fa;
   visibility: hidden;
 }
+
 .login-btn {
   background: none;
   border: none;
@@ -99,42 +97,32 @@ body {
   font-size: 0.9rem;
   cursor: pointer;
   padding: 0;
-  line-height: 1;
 }
+
 .login-btn:hover {
   color: #60a5fa;
 }
+
 /* ================= HERO ================= */
 .hero {
-  position: relative;
   min-height: 70svh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4rem 1.25rem;
   text-align: center;
-  overflow: hidden;
   background:
     linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
     url("./images/heroterms.jpg");
   background-size: cover;
   background-position: center;
 }
-.hero-content {
-  max-width: 900px;
-}
+
 .hero h1 {
   font-size: clamp(2.4rem, 6vw, 4rem);
   font-weight: 800;
-  margin-bottom: 1rem;
 }
-.hero p {
-  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
-  color: #cbd5f5;
-  line-height: 1.6;
-  max-width: 720px;
-  margin: 0 auto;
-}
+
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
@@ -142,101 +130,72 @@ body {
   padding: 0 1.5rem;
   line-height: 1.8;
 }
+
 .content h1 {
   text-align: center;
   font-size: 2.4rem;
-  margin-bottom: 2rem;
   color: #60a5fa;
 }
+
 .content h2 {
-  font-size: 1.8rem;
-  margin: 3rem 0 1rem;
+  margin-top: 3rem;
   color: #60a5fa;
-  text-align: left;
 }
-.content p {
-  font-size: 1.05rem;
-  color: #cbd5e1;
-  margin-bottom: 1.2rem;
-}
-.content ul {
-  padding-left: 1.8rem;
-  margin: 1rem 0;
-}
+
+.content p,
 .content li {
-  margin-bottom: 0.8rem;
   color: #cbd5e1;
 }
+
 .content a {
   color: #60a5fa;
-  text-decoration: underline;
 }
+
 .update-note {
-  text-align: left;
   margin-top: 4rem;
   font-size: 0.95rem;
   color: #64748b;
 }
+
 /* ================= FOOTER ================= */
 .site-footer {
   background: rgba(2,6,23,0.95);
-  backdrop-filter: blur(10px);
   border-top: 1px solid #1e293b;
-  color: #e5e7eb;
   padding: 3rem 1rem;
   margin-top: 6rem;
 }
+
 .footer-inner {
   max-width: 1200px;
   margin: auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
   justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
 }
+
 .footer-nav {
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
 }
+
 .footer-nav a {
   color: #cbd5e1;
   text-decoration: none;
 }
+
 .footer-nav a:hover {
   color: #60a5fa;
 }
-.site-footer p {
-  margin: 0;
-  color: #94a3b8;
-}
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-  .header-left {
-    flex-wrap: wrap;
-    gap: 0.8rem;
-  }
-  .main-nav {
-    gap: 0.8rem;
-    justify-content: flex-start;
-  }
-  .hero { 
-    min-height: 60svh; 
-    padding: 5rem 1rem; 
-  }
-  .content { 
-    padding: 0 1rem; 
-    margin: 4rem auto; 
-  }
-}
 </style>
 </head>
+
 <body>
 
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
+
     <div class="header-left">
       <div class="logo">
         <a href="index.html">BowesProduct</a>
@@ -245,72 +204,37 @@ body {
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
         <a href="about.html">About</a>
-        <a href="terms.html" class="active">Terms</a>
       </nav>
     </div>
+
     <div class="auth-stack">
       <img id="profilePic" alt="Profile">
       <button id="authBtn" class="login-btn">Login</button>
     </div>
+
   </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <h1>Terms of Service</h1>
-    <p>Rules and conditions for using BowesProduct</p>
-  </div>
+  <h1>Terms of Service</h1>
 </section>
 
 <!-- CONTENT -->
 <div class="content">
   <h1>BowesProduct Terms of Service</h1>
-  <p>By accessing or using the BowesProduct website and purchasing our digital 3D assets, you agree to be bound by these Terms of Service.</p>
+  <p>By using the BowesProduct website or purchasing assets, you agree to these Terms.</p>
 
-  <h2>1. Acceptance of Terms</h2>
+  <h2>Purchases</h2>
   <ul>
-    <li>Using the website or making a purchase constitutes acceptance of these terms and any future updates.</li>
-    <li>We may revise these terms at any time. Continued use after changes means you accept the updated terms.</li>
+    <li>Payments processed via Stripe</li>
+    <li>Refunds governed by the <a href="refund.html">Refund Policy</a></li>
   </ul>
 
-  <h2>2. Purchases and Payments</h2>
+  <h2>Licensing</h2>
   <ul>
-    <li>All transactions are securely processed through Stripe.</li>
-    <li>Purchases of digital products are final except where specified in our <a href="refund.html">Refund Policy</a>.</li>
-    <li>We do not store your payment information.</li>
+    <li>Assets governed by the <a href="license.html">Commercial License</a></li>
   </ul>
-
-  <h2>3. License and Asset Usage</h2>
-  <ul>
-    <li>All 3D assets are provided under the terms of our <a href="license.html">Commercial License</a>.</li>
-    <li>You must comply with the permitted and prohibited uses outlined in the License.</li>
-  </ul>
-
-  <h2>4. User Conduct</h2>
-  <ul>
-    <li>You agree to use the website lawfully and not interfere with its operation.</li>
-    <li>Automated scraping, bots, or attempts to overload the site are prohibited.</li>
-    <li>Report any security issues responsibly.</li>
-  </ul>
-
-  <h2>5. Intellectual Property</h2>
-  <p>All content on the website, including previews, text, and 3D assets, is owned by BowesProduct and protected by copyright and other intellectual property laws.</p>
-
-  <h2>6. Limitation of Liability</h2>
-  <ul>
-    <li>The website and assets are provided "as is" without warranties of any kind.</li>
-    <li>BowesProduct is not liable for indirect, incidental, or consequential damages arising from use of the site or assets.</li>
-  </ul>
-
-  <h2>7. Termination</h2>
-  <p>We reserve the right to suspend or terminate access for violations of these terms at our sole discretion.</p>
-
-  <h2>8. Governing Law</h2>
-  <p>These terms are governed by the laws of the jurisdiction in which BowesProduct operates.</p>
-
-  <h2>9. Contact</h2>
-  <p>If you have any questions about these Terms, please contact us via our support channels.</p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
@@ -329,7 +253,7 @@ body {
   </div>
 </footer>
 
-<!-- Firebase Authentication -->
+<!-- Firebase Auth -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -352,6 +276,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 
