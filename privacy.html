@@ -298,6 +298,8 @@ window.addEventListener('scroll', () => {
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
 
   const authBtn = document.getElementById("authBtn");
@@ -321,3 +323,4 @@ window.addEventListener('scroll', () => {
 
 </body>
 </html>
+
