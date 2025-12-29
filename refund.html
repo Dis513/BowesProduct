@@ -4,20 +4,23 @@
 <meta charset="UTF-8">
 <title>Refund Policy – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Refund policy for BowesProduct digital 3D models and assets.">
-
-<link rel="stylesheet" href="style.css">
 
 <style>
-/* ================= GLOBAL ================= */
+/* ================= GLOBAL FIXES ================= */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { max-width: 100%; overflow-x: hidden; }
 
+/* ================= BASE ================= */
 body {
   margin: 0;
   background: #020617;
   color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, sans-serif;
+}
+
+/* ================= HEADINGS (BLUE 1–6) ================= */
+h1, h2, h3, h4, h5, h6 {
+  color: #60a5fa;
 }
 
 /* ================= HEADER ================= */
@@ -60,16 +63,21 @@ body {
   color: #e5e7eb;
   text-decoration: none;
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.main-nav a:hover {
+.main-nav a:hover,
+.main-nav a.active {
   color: #60a5fa;
 }
 
+/* ================= AUTH ================= */
 .auth-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
+  height: 42px;
   gap: 0.15rem;
 }
 
@@ -85,7 +93,9 @@ body {
   background: none;
   border: none;
   color: #e5e7eb;
+  font-size: 0.9rem;
   cursor: pointer;
+  padding: 0;
 }
 
 .login-btn:hover {
@@ -95,22 +105,9 @@ body {
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
-  margin: 3rem auto;
+  margin: 5rem auto;
   padding: 0 1.5rem;
   line-height: 1.8;
-}
-
-.content h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #e5e7eb;
-}
-
-.content h2 {
-  margin-top: 2.5rem;
-  font-size: 1.2rem;
-  color: #93c5fd;
 }
 
 .content p,
@@ -119,8 +116,8 @@ body {
 }
 
 .update-note {
-  margin-top: 3rem;
-  font-size: 0.9rem;
+  margin-top: 4rem;
+  font-size: 0.95rem;
   color: #64748b;
 }
 
@@ -129,7 +126,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-top: 1px solid #1e293b;
   padding: 3rem 1rem;
-  margin-top: 5rem;
+  margin-top: 6rem;
 }
 
 .footer-inner {
@@ -138,6 +135,7 @@ body {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
 .footer-nav {
@@ -153,6 +151,11 @@ body {
 
 .footer-nav a:hover {
   color: #60a5fa;
+}
+
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
 }
 </style>
 </head>
@@ -183,14 +186,13 @@ body {
 <!-- CONTENT -->
 <div class="content">
   <h1>Refund Policy</h1>
-
   <p>This Refund Policy outlines the conditions under which refunds may be issued for purchases made on BowesProduct.</p>
 
   <h2>1. Digital Products</h2>
   <p>All products sold on BowesProduct are digital downloads. Once a product has been delivered or made available for download, it is considered used.</p>
 
   <h2>2. No Automatic Refunds</h2>
-  <p>Due to the nature of digital goods, all sales are final and non-refundable.</p>
+  <p>Due to the nature of digital goods, all sales are generally <strong>final and non-refundable</strong>.</p>
 
   <h2>3. Eligible Refund Exceptions</h2>
   <ul>
@@ -203,12 +205,18 @@ body {
   <ul>
     <li>Change of mind after download</li>
     <li>Lack of software compatibility</li>
-    <li>Failure to read product descriptions or license terms</li>
+    <li>Failure to review product details or license terms</li>
     <li>Violation of the License Agreement</li>
   </ul>
 
   <h2>5. Requesting a Refund</h2>
-  <p>To request a refund, please contact BowesProduct support with your order details and reason for the request. Requests must be made within a reasonable time after purchase.</p>
+  <p>Refund requests must include order details and be submitted within a reasonable timeframe after purchase.</p>
+
+  <h2>6. Chargebacks</h2>
+  <p>Unauthorized chargebacks may result in revoked access to purchased assets.</p>
+
+  <h2>7. Policy Changes</h2>
+  <p>BowesProduct reserves the right to modify this Refund Policy at any time.</p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
@@ -227,7 +235,7 @@ body {
   </div>
 </footer>
 
-<!-- Firebase Auth -->
+<!-- FIREBASE AUTH -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
