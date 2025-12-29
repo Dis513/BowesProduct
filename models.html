@@ -2,36 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>3D Models – BowesProduct</title>
+<title>BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Commercial-ready rigged 3D models and props for games and animation. Instant download in .glb and .fbx formats. Fantasy, anthropomorphic, and humanoid characters.">
-<meta property="og:title" content="BowesProduct - 3D Models">
-<meta property="og:description" content="High-quality rigged fantasy and anthropomorphic 3D models with instant download.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://www.bowesproduct.com/models.html">
-<meta property="og:image" content="https://www.bowesproduct.com/thumbs/humanmale.jpg">
-<!-- Model Viewer -->
-<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
-<link rel="stylesheet" href="style.css">
+
 <style>
 /* ================= GLOBAL FIXES ================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { max-width: 100%; overflow-x: hidden; }
+
 /* ================= BASE ================= */
 body {
   margin: 0;
   background: #020617;
   color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, sans-serif;
 }
+
+/* ================= HEADINGS ================= */
+h1, h2, h3, h4, h5, h6 {
+  color: #60a5fa;
+}
+
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -40,6 +31,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
+
 .header-inner {
   max-width: 1200px;
   margin: auto;
@@ -47,59 +39,44 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;
 }
-/* LEFT GROUP */
+
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
-  min-width: 0;
 }
-/* LOGO */
+
 .logo a {
   font-size: 1.2rem;
   font-weight: 700;
   color: white;
   text-decoration: none;
-  white-space: nowrap;
 }
-/* NAV */
+
 .main-nav {
   display: flex;
   gap: 1.2rem;
-  align-items: center;
-  flex-wrap: wrap;
 }
+
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-weight: 500;
   font-size: 0.9rem;
-  white-space: normal;
-  word-break: break-word;
+  font-weight: 500;
 }
-.main-nav a:hover,
-.main-nav a.active {
+
+.main-nav a:hover {
   color: #60a5fa;
 }
-/* AUTH (RIGHT SIDE) */
-.auth-stack {
+
+/* ================= AUTH ================= */
+.auth-inline {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.15rem;
-  height: 42px;
-  flex-shrink: 0;
+  gap: 0.6rem;
 }
-#profilePic {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid #60a5fa;
-  visibility: hidden;
-}
+
 .login-btn {
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
@@ -110,285 +87,76 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .login-btn:hover {
   background: rgba(96,165,250,0.15);
   transform: translateY(-2px);
 }
 
-
 .login-btn:active {
   transform: translateY(1px);
 }
-/* ================= HERO ================= */
-.hero {
-  position: relative;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 1.25rem;
-  text-align: center;
-  overflow: hidden;
-  background:
-    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-    url("./images/heromodels.jpg");
-  background-size: cover;
-  background-position: center;
-}
-.hero-content {
-  max-width: 900px;
-}
-.hero h1 {
-  font-size: clamp(2.4rem, 6vw, 4.2rem);
-  font-weight: 800;
-  margin-bottom: 1rem;
-}
-.hero p {
-  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
-  color: #cbd5f5;
-  line-height: 1.6;
-  max-width: 720px;
-  margin: 0 auto 2rem;
-}
-.hero-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-.btn {
-  padding: 0.9rem 1.6rem;
-  border-radius: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  display: inline-block;
-}
-.btn.primary {
-  background: #2563eb;
-  color: white;
-}
-.btn.primary:hover {
-  background: #1d4ed8;
-  transform: translateY(-3px);
-}
-/* ================= MODEL VIEWER ================= */
-.model-container {
-  max-width: 1100px;
-  height: 600px;
-  margin: 4rem auto;
-  background: #020617;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
-}
-model-viewer {
-  width: 100%;
-  height: 100%;
-  background: #020617;
-}
-/* ================= PRODUCTS & CARDS ================= */
-.products {
-  max-width: 1200px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2rem;
-  padding: 0 1rem;
-}
-.card {
-  background: #1e293b;
-  border-radius: 16px;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-.card img.thumbnail {
-  width: 100%;
-  height: 220px;
+
+#profilePic {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
   object-fit: cover;
+  visibility: hidden;
 }
-.card-content {
-  padding: 1.5rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 220px;
+
+/* ================= CONTENT ================= */
+.content {
+  max-width: 900px;
+  margin: 5rem auto;
+  padding: 0 1.5rem;
+  line-height: 1.8;
+  color: #cbd5e1;
 }
-.card h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.1rem;
-}
-.card .details {
-  color: #94a3b8;
-  font-size: 0.9rem;
-  margin: 0.5rem 0;
-}
-.price {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #60a5fa;
-  margin: 0.8rem 0;
-}
-.card-content .btn {
-  padding: 0.75rem 1.2rem;
-  font-size: 0.95rem;
-  margin: 0.5rem auto 0;
-  width: 100%;
-  max-width: 220px;
-  box-sizing: border-box;
-}
-.card-content .btn.primary {
-  background: #2563eb;
-  color: white;
-}
-.card-content .btn.primary:hover {
-  background: #1d4ed8;
-  transform: translateY(-2px);
-}
-.card-content .btn.view-btn {
-  background: transparent;
-  color: #60a5fa;
-  border: 1.5px solid #60a5fa;
-  margin-bottom: 0.8rem;
-}
-.card-content .btn.view-btn:hover {
-  background: rgba(96,165,250,0.15);
-  transform: translateY(-2px);
-}
-.delivery {
-  font-size: 0.85rem;
-  color: #64748b;
-  margin-top: 1rem;
-}
-/* ================= FILTERS ================= */
-.filters {
-  text-align: center;
-  margin: 3rem 0 2rem;
-  padding: 1rem;
-}
-.filters input, .filters select {
-  padding: 0.7rem 1rem;
-  margin: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #334155;
-  background: #1e293b;
-  color: white;
-  font-size: 1rem;
-}
-/* ================= SECTION NAV ================= */
-.section-nav {
-  text-align: center;
-  margin: 4rem 0 3rem;
-}
-.section-nav a {
-  display: inline-block;
-  margin: 0 1rem;
-  padding: 0.9rem 2rem;
-  background: #2563eb;
-  color: white;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.3s;
-}
-.section-nav a:hover {
-  background: #1d4ed8;
-}
+
 /* ================= FOOTER ================= */
 .site-footer {
   background: rgba(2,6,23,0.95);
-  backdrop-filter: blur(10px);
   border-top: 1px solid #1e293b;
-  color: #e5e7eb;
   padding: 3rem 1rem;
   margin-top: 6rem;
 }
+
 .footer-inner {
   max-width: 1200px;
   margin: auto;
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 1.5rem;
-  justify-content: space-between;
-  align-items: center;
 }
+
 .footer-nav {
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
 }
+
 .footer-nav a {
   color: #cbd5e1;
   text-decoration: none;
 }
+
 .footer-nav a:hover {
   color: #60a5fa;
 }
+
 .site-footer p {
   margin: 0;
   color: #94a3b8;
 }
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-  .header-left {
-    flex-wrap: wrap;
-    gap: 0.8rem;
-  }
-  .main-nav {
-    gap: 0.8rem;
-    justify-content: flex-start;
-  }
-  .model-container { 
-    height: 340px; 
-    margin: 2rem 0; 
-    border-radius: 14px; 
-  }
-  .products { 
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
-    gap: 1.4rem; 
-  }
-  .card img.thumbnail { 
-    height: 160px; 
-  }
-  .card-content { 
-    padding: 1.2rem; 
-    min-height: auto; 
-  }
-  .filters input, .filters select { 
-    display: block; 
-    width: 90%; 
-    margin: 0.8rem auto; 
-  }
-  .section-nav a { 
-    display: block; 
-    width: 80%; 
-    max-width: 320px; 
-    margin: 1rem auto; 
-  }
-  .hero-actions { 
-    flex-direction: column; 
-  }
-  .btn { 
-    width: 100%; 
-    max-width: 320px; 
-    margin: auto; 
-  }
-  .card-content .btn { 
-    max-width: 200px; 
-    padding: 0.7rem 1rem; 
-    font-size: 0.92rem; 
-  }
-}
 </style>
 </head>
+
 <body>
 
-<!-- HEADER -->
+<!-- ================= HEADER ================= -->
 <header class="site-header">
   <div class="header-inner">
     <div class="header-left">
@@ -397,56 +165,18 @@ model-viewer {
       </div>
       <nav class="main-nav">
         <a href="index.html">Home</a>
-        <a href="models.html" class="active">Models</a>
+        <a href="models.html">Models</a>
       </nav>
     </div>
-    <div class="auth-stack">
-      <img id="profilePic" alt="Profile">
+
+    <div class="auth-inline">
       <button id="authBtn" class="login-btn">Login</button>
+      <img id="profilePic" alt="Profile">
     </div>
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>3D Models</h1>
-    <p>Commercial-ready rigged characters and props with instant download</p>
-    <div class="hero-actions">
-      <a href="#rigged-models" class="btn primary">Browse Rigged Models</a>
-      <a href="#modelContainer" class="btn primary">Open 3D Viewer</a>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION NAV -->
-<div class="section-nav">
-  <a href="#rigged-models">Rigged Models</a>
-  <a href="#props">Props</a>
-  <a href="#packs">Packs</a>
-</div>
-
-<!-- Model Viewer -->
-<div class="model-container" id="modelContainer">
-  <model-viewer id="mainViewer"
-    src="./models/humanmale.glb"
-    poster="./thumbs/promotionalviewer.jpg"
-    alt="Human Male 3D Model"
-    camera-controls
-    auto-rotate
-    auto-rotate-delay="0"
-    rotation-per-second="30deg"
-    interaction-prompt="auto"
-    shadow-intensity="1"
-    exposure="0.9"
-    environment-image="neutral"
-    ar
-    ar-modes="webxr scene-viewer quick-look"
-    loading="eager"
-    reveal="interaction">
-  </model-viewer>
-</div>
-
+<!-- ================= CONTENT ================= -->
 <!-- Rigged Models -->
 <section id="rigged-models">
   <h2 style="text-align:center; margin:4rem 0 1rem;">Rigged Models</h2>
@@ -1029,7 +759,7 @@ model-viewer {
   <p style="font-size:1.4rem; max-width:800px; margin:2rem auto;">Product packs coming soon!</p>
   <p style="font-size:1.1rem;">Stay tuned for bundled deals on multiple models and props.</p>
 </section>
-<!-- FOOTER -->
+<!-- ================= FOOTER ================= -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
@@ -1043,49 +773,7 @@ model-viewer {
   </div>
 </footer>
 
-<script>
-// Model viewer switching
-const viewer = document.getElementById("mainViewer");
-const modelContainer = document.getElementById("modelContainer");
-document.querySelectorAll(".view-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const card = btn.closest(".card");
-    const newModel = card.dataset.model;
-    const thumb = card.querySelector("img.thumbnail")?.src || "./thumbs/promotionalviewer.jpg";
-    viewer.src = newModel;
-    viewer.poster = thumb;
-    viewer.dismissPoster();
-    modelContainer.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-});
-
-// Filtering
-const searchInput = document.getElementById("searchInput");
-const genderFilter = document.getElementById("genderFilter");
-const categoryFilter = document.getElementById("categoryFilter");
-const productsContainer = document.getElementById("riggedProducts");
-
-function filterModels() {
-  const searchTerm = searchInput.value.toLowerCase();
-  const gender = genderFilter.value;
-  const category = categoryFilter.value;
-  const cards = productsContainer.querySelectorAll(".card");
-  cards.forEach(card => {
-    const title = card.querySelector("h3").textContent.toLowerCase();
-    const cardGender = card.dataset.gender || "";
-    const cardCategory = card.dataset.category || "";
-    const matches = title.includes(searchTerm) &&
-      (gender === "all" || cardGender === gender) &&
-      (category === "all" || cardCategory === category);
-    card.style.display = matches ? "" : "none";
-  });
-}
-if (searchInput) searchInput.addEventListener("input", filterModels);
-if (genderFilter) genderFilter.addEventListener("change", filterModels);
-if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
-</script>
-
-<!-- Firebase Authentication -->
+<!-- ================= FIREBASE AUTH ================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -1108,6 +796,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 
@@ -1129,8 +818,3 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
-
-
-
-
-
