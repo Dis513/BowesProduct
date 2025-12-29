@@ -346,110 +346,8 @@ window.addEventListener('scroll', () => {
 <!-- Firebase Authentication -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    authBtn.textContent = "Logout";
-    profilePic.src = user.photoURL || "";
-    profilePic.style.visibility = "visible";
-
-    // === USER DATA SETUP (from Step 2) ===
-    const userRef = doc(db, "users", user.uid);
-    const snap = await getDoc(userRef);
-
-    if (!snap.exists()) {
-      // First-time user
-      await setDoc(userRef, {
-        xp: 0,
-        level: 0,
-        claimedRewards: [],
-        lastLogin: new Date().toISOString()
-      });
-    } else {
-      // Daily login bonus (+10 XP once per day)
-      const data = snap.data();
-      const last = new Date(data.lastLogin);
-      const now = new Date();
-      const sameDay = last.getDate() === now.getDate() &&
-                      last.getMonth() === now.getMonth() &&
-                      last.getFullYear() === now.getFullYear();
-      if (!sameDay) {
-        await updateDoc(userRef, {
-          xp: increment(10),
-          lastLogin: now.toISOString()
-        });
-      }
-    }
-
-    // === SHOW LEVEL & XP BAR (Step 3) ===
-    const latestSnap = await getDoc(userRef);  // Get updated XP after possible daily bonus
-    const data = latestSnap.data();
-    const xp = data.xp || 0;
-
-    // Calculate level
-    const thresholds = [0, 200, 500, 1000, 2000, 4000];
-    let level = 0;
-    for (let i = 0; i < thresholds.length; i++) {
-      if (xp >= thresholds[i]) level = i;
-    }
-
-    const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
-    const currentTitle = titles[level];
-
-    // Progress to next level
-    const nextThreshold = thresholds[level + 1] || thresholds[thresholds.length - 1];
-    const xpForThisLevel = xp - (level === 0 ? 0 : thresholds[level]);
-    const xpNeeded = nextThreshold - (level === 0 ? 0 : thresholds[level]);
-    const progressPercent = nextThreshold === Infinity ? 100 : (xpForThisLevel / xpNeeded) * 100;
-
-    // Update the display
-    document.getElementById("levelText").textContent = 
-      `Level ${level} – ${currentTitle} (${xp} XP)`;
-
-    document.getElementById("xpBar").style.width = progressPercent + "%";
-
-    document.getElementById("levelInfo").style.display = "block";
-
-  } else {
-    // Not logged in
-    authBtn.textContent = "Login";
-    profilePic.style.visibility = "hidden";
-    document.getElementById("levelInfo").style.display = "none";
-  }
-});
-
-    // Create user data if new
-    const userRef = doc(db, "users", user.uid);
-    const snap = await getDoc(userRef);
-    if (!snap.exists()) {
-      await setDoc(userRef, {
-        xp: 0,
-        level: 0,
-        claimedRewards: [],
-        lastLogin: new Date().toISOString()
-      });
-    } else {
-      // Daily login bonus (+10 XP once per day)
-      const data = snap.data();
-      const last = new Date(data.lastLogin);
-      const now = new Date();
-      const sameDay = last.getDate() === now.getDate() && last.getMonth() === now.getMonth() && last.getFullYear() === now.getFullYear();
-      if (!sameDay) {
-        await updateDoc(userRef, {
-          xp: increment(10),
-          lastLogin: now.toISOString()
-        });
-      }
-    }
-  } else {
-    authBtn.textContent = "Login";
-    profilePic.style.visibility = "hidden";
-  }
-});atic.com/firebasejs/10.7.0/firebase-auth.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -462,31 +360,93 @@ onAuthStateChanged(auth, async (user) => {
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-const db = getFirestore(app);
+  const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
 
   const authBtn = document.getElementById("authBtn");
   const profilePic = document.getElementById("profilePic");
 
   authBtn.onclick = async () => {
-    auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
+    if (auth.currentUser) {
+      await signOut(auth);
+    } else {
+      await signInWithPopup(auth, provider);
+    }
   };
 
-  onAuthStateChanged(auth, user => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       authBtn.textContent = "Logout";
       profilePic.src = user.photoURL || "";
       profilePic.style.visibility = "visible";
+
+      // Load user data for rewards display
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+
+      let xp = 0;
+      if (snap.exists()) {
+        const data = snap.data();
+        xp = data.xp || 0;
+      }
+
+      // Calculate level
+      const thresholds = [0, 200, 500, 1000, 2000, 4000];
+      let level = 0;
+      for (let i = 0; i < thresholds.length; i++) {
+        if (xp >= thresholds[i]) level = i;
+      }
+      const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
+      const next = thresholds[level + 1] || Infinity;
+      const progress = next === Infinity ? 100 : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
+
+      // Update header level bar
+      if (document.getElementById("levelText")) {
+        document.getElementById("levelText").textContent = `Level ${level} – ${titles[level]}`;
+        document.getElementById("xpBar").style.width = progress + "%";
+        document.getElementById("levelInfo").style.display = "block";
+      }
+
+      // Update rewards page content
+      document.getElementById("currentLevelText").textContent = `Level ${level} – ${titles[level]}`;
+      document.getElementById("xpText").textContent = `${xp} XP`;
+      document.getElementById("xpProgress").style.width = progress + "%";
+
+      // Rewards grid
+      const rewards = [
+        { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Crate, Barrel, Torch", msg: "Download your free props!" },
+        { level: 2, icon: "🎟️", title: "15% Off Coupon", desc: "Next purchase", msg: "Use code: REWARD15" },
+        { level: 3, icon: "🗿", title: "Free Model", desc: "Any rigged model under €10", msg: "Pick any model under €10!" },
+        { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access to new release", msg: "Download exclusive model!" },
+        { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "Forever discount", msg: "Use code: MASTER20" }
+      ];
+
+      const grid = document.getElementById("rewardsGrid");
+      grid.innerHTML = "";
+      rewards.forEach(r => {
+        const card = document.createElement("div");
+        card.className = "reward-card" + (level >= r.level ? "" : " locked");
+        card.innerHTML = `
+          <div class="reward-icon">${r.icon}</div>
+          <div class="reward-title">${r.title}</div>
+          <div class="reward-desc">${r.desc}</div>
+          ${level >= r.level ? `<button class="claim-btn" onclick="alert('${r.msg}')">Claim Reward</button>` : `<button class="claim-btn" disabled>Locked</button>`}
+        `;
+        grid.appendChild(card);
+      });
+
     } else {
       authBtn.textContent = "Login";
       profilePic.style.visibility = "hidden";
+      if (document.getElementById("levelInfo")) document.getElementById("levelInfo").style.display = "none";
+      document.getElementById("currentLevelText").textContent = "Log in to see your rewards!";
+      document.getElementById("rewardsGrid").innerHTML = "";
     }
   });
 </script>
-
 </body>
 </html>
+
 
 
 
