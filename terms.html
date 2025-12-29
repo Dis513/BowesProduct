@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <title>Terms of Service – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Terms of service for using BowesProduct website and purchasing 3D assets.">
+<meta name="description" content="Terms of service for using the BowesProduct website and purchasing 3D assets.">
+
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* ================= GLOBAL FIXES ================= */
+/* ================= GLOBAL ================= */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { max-width: 100%; overflow-x: hidden; }
 
-/* ================= BASE ================= */
 body {
   margin: 0;
   background: #020617;
@@ -38,33 +38,27 @@ body {
   justify-content: space-between;
 }
 
-/* LEFT GROUP */
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
 }
 
-/* LOGO */
 .logo a {
   font-size: 1.2rem;
   font-weight: 700;
   color: white;
   text-decoration: none;
-  white-space: nowrap;
 }
 
-/* NAV */
 .main-nav {
   display: flex;
   gap: 1.2rem;
-  align-items: center;
 }
 
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-weight: 500;
   font-size: 0.9rem;
 }
 
@@ -72,14 +66,11 @@ body {
   color: #60a5fa;
 }
 
-/* AUTH */
 .auth-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
   gap: 0.15rem;
-  height: 42px;
 }
 
 #profilePic {
@@ -94,52 +85,32 @@ body {
   background: none;
   border: none;
   color: #e5e7eb;
-  font-size: 0.9rem;
   cursor: pointer;
-  padding: 0;
 }
 
 .login-btn:hover {
   color: #60a5fa;
 }
 
-/* ================= HERO ================= */
-.hero {
-  min-height: 70svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 1.25rem;
-  text-align: center;
-  background:
-    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-    url("./images/heroterms.jpg");
-  background-size: cover;
-  background-position: center;
-}
-
-.hero h1 {
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 800;
-}
-
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
-  margin: 5rem auto;
+  margin: 3rem auto;
   padding: 0 1.5rem;
   line-height: 1.8;
 }
 
 .content h1 {
-  text-align: center;
-  font-size: 2.4rem;
-  color: #60a5fa;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #e5e7eb;
 }
 
 .content h2 {
-  margin-top: 3rem;
-  color: #60a5fa;
+  margin-top: 2.5rem;
+  font-size: 1.2rem;
+  color: #93c5fd;
 }
 
 .content p,
@@ -147,13 +118,9 @@ body {
   color: #cbd5e1;
 }
 
-.content a {
-  color: #60a5fa;
-}
-
 .update-note {
-  margin-top: 4rem;
-  font-size: 0.95rem;
+  margin-top: 3rem;
+  font-size: 0.9rem;
   color: #64748b;
 }
 
@@ -162,7 +129,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-top: 1px solid #1e293b;
   padding: 3rem 1rem;
-  margin-top: 6rem;
+  margin-top: 5rem;
 }
 
 .footer-inner {
@@ -176,7 +143,6 @@ body {
 .footer-nav {
   display: flex;
   gap: 1.5rem;
-  flex-wrap: wrap;
 }
 
 .footer-nav a {
@@ -192,84 +158,56 @@ body {
 
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-
     <div class="header-left">
-      <div class="logo">
-        <a href="index.html">BowesProduct</a>
-      </div>
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
         <a href="about.html">About</a>
       </nav>
     </div>
-
     <div class="auth-stack">
       <img id="profilePic" alt="Profile">
       <button id="authBtn" class="login-btn">Login</button>
     </div>
-
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <h1>Terms of Service</h1>
-</section>
-
-<!-- CONTENT -->
 <div class="content">
   <h1>BowesProduct Terms of Service</h1>
-  <p>These Terms of Service ("Terms") govern your access to and use of the BowesProduct website, store, and services ("Service"). By accessing or using the Service, you agree to be bound by these Terms.</p>
+
+  <p>These Terms of Service ("Terms") govern your access to and use of the BowesProduct website and services.</p>
 
   <h2>1. Use of the Website</h2>
-  <p>You may use the BowesProduct website for lawful purposes only. You agree not to misuse the Service, interfere with its operation, or attempt unauthorized access to any systems or data.</p>
+  <p>You may use the Service for lawful purposes only.</p>
 
-  <h2>2. Eligibility</h2>
-  <p>By using this Service, you represent that you are at least 18 years old or have legal parental or guardian consent to use the website.</p>
+  <h2>2. Purchases & Digital Products</h2>
+  <p>All products are digital goods and subject to the applicable License Agreement.</p>
 
-  <h2>3. Purchases & Digital Products</h2>
-  <p>All products sold are digital goods. Upon successful purchase, you are granted access to the product subject to the applicable License Agreement.</p>
+  <h2>3. License Agreement</h2>
+  <p>Assets are licensed, not sold.</p>
 
-  <h2>4. License Agreement</h2>
-  <p>All 3D models and assets are licensed, not sold. Use of any downloaded asset is governed by the BowesProduct 3D Asset License Agreement, which is incorporated by reference into these Terms.</p>
-
-  <h2>5. Account Responsibility</h2>
-  <p>If you create an account, you are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
-
-  <h2>6. Prohibited Conduct</h2>
+  <h2>4. Prohibited Conduct</h2>
   <ul>
-    <li>Attempting to reverse engineer or exploit the website or services</li>
-    <li>Uploading malicious code or engaging in harmful activity</li>
-    <li>Using the Service for fraudulent or unlawful purposes</li>
-    <li>Violating any applicable laws or regulations</li>
+    <li>Abuse or exploitation of the Service</li>
+    <li>Fraudulent or unlawful activity</li>
+    <li>Violation of applicable laws</li>
   </ul>
 
-  <h2>7. Intellectual Property</h2>
-  <p>All website content, branding, text, graphics, and assets are the property of BowesProduct or its licensors and are protected by intellectual property laws.</p>
+  <h2>5. Disclaimer</h2>
+  <p>The Service is provided <strong>"AS IS"</strong>.</p>
 
-  <h2>8. Service Availability</h2>
-  <p>BowesProduct reserves the right to modify, suspend, or discontinue any part of the Service at any time without notice.</p>
+  <h2>6. Limitation of Liability</h2>
+  <p>BowesProduct shall not be liable for damages arising from use of the Service.</p>
 
-  <h2>9. Disclaimer</h2>
-  <p>The Service is provided <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> without warranties of any kind.</p>
-
-  <h2>10. Limitation of Liability</h2>
-  <p>To the maximum extent permitted by law, BowesProduct shall not be liable for any damages resulting from your use of the Service.</p>
-
-  <h2>11. Termination</h2>
-  <p>BowesProduct may terminate or restrict access to the Service if you violate these Terms.</p>
-
-  <h2>12. Governing Law</h2>
-  <p>These Terms shall be governed by the laws of the jurisdiction in which BowesProduct operates.</p>
+  <h2>7. Governing Law</h2>
+  <p>These Terms are governed by the laws of the jurisdiction in which BowesProduct operates.</p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
 
-<!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
@@ -286,13 +224,7 @@ body {
 <!-- Firebase Auth -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -310,23 +242,14 @@ const provider = new GoogleAuthProvider();
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 
-authBtn.onclick = async () => {
-  auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
-};
+authBtn.onclick = async () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
 onAuthStateChanged(auth, user => {
-  if (user) {
-    authBtn.textContent = "Logout";
-    profilePic.src = user.photoURL;
-    profilePic.style.visibility = "visible";
-  } else {
-    authBtn.textContent = "Login";
-    profilePic.style.visibility = "hidden";
-  }
+  authBtn.textContent = user ? "Logout" : "Login";
+  profilePic.style.visibility = user ? "visible" : "hidden";
+  if (user) profilePic.src = user.photoURL;
 });
 </script>
 
 </body>
 </html>
-
-
