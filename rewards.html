@@ -283,8 +283,22 @@ h1 { color:#60a5fa; }
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
+  signOut,
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -297,6 +311,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
+// 🔒 Important for Messenger
+await setPersistence(auth, browserLocalPersistence);
+
+// 🔁 Handle redirect result ONCE
+getRedirectResult(auth).catch(console.error);
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
@@ -304,21 +324,18 @@ const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
 authBtn.onclick = () =>
-  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+  auth.currentUser
+    ? signOut(auth)
+    : signInWithRedirect(auth, provider);
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authBtn.textContent = "Login";
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
-    
-    // Optional: hide rewards page elements when logged out
-    const rewardsSection = document.getElementById("rewardsSection");
-    if (rewardsSection) rewardsSection.style.display = "none";
-    
     return;
   }
 
-  // Logged in
   authBtn.textContent = "Logout";
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
@@ -326,77 +343,27 @@ onAuthStateChanged(auth, async (user) => {
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
-  // Give new users 10 XP on first login
   if (!snap.exists()) {
     await setDoc(ref, { xp: 10 });
     snap = await getDoc(ref);
   }
 
   const xp = snap.data().xp || 0;
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level]
+    ? 100
+    : ((xp - levels[level]) / (next - levels[level])) * 100;
 
-  // Level thresholds and titles
-  const thresholds = [0, 200, 500, 1000, 2000, 4000];
-  const titles = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
-
-  const level = thresholds.filter(v => xp >= v).length - 1;
-  const next = thresholds[level + 1] ?? thresholds[level];
-  const progress = next === thresholds[level] 
-    ? 100 
-    : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
-
-  // Update header (used on all pages)
-  if (levelText && xpBar && levelInfo) {
-    levelText.textContent = `Level ${level} • ${xp} XP`;
-    xpBar.style.width = progress + "%";
-    levelInfo.style.display = "block";
-  }
-
-  // Update rewards page specific elements (only if they exist)
-  const currentLevelText = document.getElementById("currentLevelText");
-  const xpText = document.getElementById("xpText");
-  const xpProgress = document.getElementById("xpProgress");
-
-  if (currentLevelText) currentLevelText.textContent = `Level ${level} – ${titles[level]}`;
-  if (xpText) xpText.textContent = `${xp} XP`;
-  if (xpProgress) xpProgress.style.width = progress + "%";
-
-  // Rewards grid (only run if on the rewards page)
-  const grid = document.getElementById("rewardsGrid");
-  if (grid) {
-    const rewards = [
-      { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
-      { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
-      { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
-      { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
-      { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
-    ];
-
-    grid.innerHTML = "";
-    rewards.forEach(r => {
-      const card = document.createElement("div");
-      card.className = "reward-card" + (level >= r.level ? " unlocked" : " locked");
-      card.innerHTML = `
-        <div class="reward-icon">${r.icon}</div>
-        <h3>${r.title}</h3>
-        <p>${r.desc}</p>
-        <button class="claim-btn" ${level >= r.level ? "" : "disabled"}>
-          ${level >= r.level ? "Claim" : "Locked (Lvl ${r.level})"}
-        </button>
-      `;
-      if (level >= r.level) {
-        card.querySelector(".claim-btn").onclick = () => alert(r.msg);
-      }
-      grid.appendChild(card);
-    });
-  }
-
-  // Optional: show rewards section when logged in
-  const rewardsSection = document.getElementById("rewardsSection");
-  if (rewardsSection) rewardsSection.style.display = "block";
+  levelText.textContent = `Level ${level} • ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
 });
 </script>
 
 </body>
 </html>
+
 
 
