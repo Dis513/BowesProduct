@@ -5,18 +5,12 @@
 <title>BowesProduct – Commercial 3D Models</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="High-quality commercial-ready 3D character models and props for games, animation, and production.">
-<link rel="stylesheet" href="style.css">
+
 <style>
 /* ================= GLOBAL FIXES ================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { max-width: 100%; overflow-x: hidden; }
+
 /* ================= BASE ================= */
 body {
   margin: 0;
@@ -24,6 +18,7 @@ body {
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -32,6 +27,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
+
 .header-inner {
   max-width: 1200px;
   margin: auto;
@@ -39,16 +35,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;
 }
-/* LEFT GROUP */
+
+/* LEFT */
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
-  min-width: 0;
 }
-/* LOGO */
+
 .logo a {
   font-size: 1.2rem;
   font-weight: 700;
@@ -56,39 +51,33 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
-/* NAV */
+
 .main-nav {
   display: flex;
   gap: 1.2rem;
-  align-items: center;
 }
+
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-weight: 500;
   font-size: 0.9rem;
+  font-weight: 500;
 }
+
 .main-nav a:hover,
 .main-nav a.active {
   color: #60a5fa;
 }
-/* AUTH (RIGHT SIDE) */
-.auth-stack {
+
+/* AUTH — INLINE, FIXED HEIGHT */
+.auth-inline {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.15rem;
-  height: 42px;
-  flex-shrink: 0;
+  gap: 0.6rem;
+  height: 42px; /* prevents header jump */
 }
-#profilePic {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid #60a5fa;
-  visibility: hidden;
-}
+
+/* Button (good version) */
 .login-btn {
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
@@ -103,11 +92,20 @@ body {
   background: rgba(96,165,250,0.15);
   transform: translateY(-2px);
 }
-
-
 .login-btn:active {
   transform: translateY(1px);
 }
+
+/* Profile image */
+#profilePic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  visibility: hidden; /* space reserved */
+}
+
 /* ================= HERO ================= */
 .hero {
   min-height: 100svh;
@@ -122,14 +120,17 @@ body {
   background-size: cover;
   background-position: center;
 }
+
 .hero h1 {
   font-size: clamp(2.4rem, 6vw, 4.2rem);
   font-weight: 800;
 }
+
 .hero p {
   font-size: clamp(1.1rem, 2.8vw, 1.3rem);
   color: #cbd5f5;
 }
+
 /* ================= HERO BUTTONS ================= */
 .hero-actions {
   display: flex;
@@ -138,14 +139,15 @@ body {
   flex-wrap: wrap;
   margin-top: 2rem;
 }
+
 .btn {
   padding: 0.9rem 1.6rem;
   border-radius: 12px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
-  display: inline-block;
 }
+
 .btn.primary {
   background: #2563eb;
   color: white;
@@ -154,20 +156,22 @@ body {
   background: #1d4ed8;
   transform: translateY(-3px);
 }
+
 .btn.secondary {
   border: 1.5px solid #60a5fa;
   color: #60a5fa;
-  background: transparent;
 }
 .btn.secondary:hover {
   background: rgba(96,165,250,0.15);
   transform: translateY(-3px);
 }
+
 /* ================= VALUE STRIP ================= */
 .value-strip {
   padding: 4rem 1rem;
   background: #0f172a;
 }
+
 .values {
   max-width: 1200px;
   margin: auto;
@@ -175,6 +179,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
+
 .value {
   border: 1px solid #1e293b;
   border-radius: 16px;
@@ -182,37 +187,38 @@ body {
   text-align: center;
   background: #1e293b;
 }
+
 .value h3 {
-  font-size: 1.4rem;
-  margin-bottom: 0.8rem;
   color: #60a5fa;
+  font-size: 1.4rem;
 }
+
 .value p {
   color: #94a3b8;
-  line-height: 1.6;
 }
+
 /* ================= FOOTER ================= */
 .site-footer {
   background: rgba(2,6,23,0.95);
-  backdrop-filter: blur(10px);
   border-top: 1px solid #1e293b;
-  color: #e5e7eb;
   padding: 3rem 1rem;
 }
+
 .footer-inner {
   max-width: 1200px;
   margin: auto;
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 1.5rem;
-  justify-content: space-between;
-  align-items: center;
 }
+
 .footer-nav {
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
 }
+
 .footer-nav a {
   color: #cbd5e1;
   text-decoration: none;
@@ -220,19 +226,14 @@ body {
 .footer-nav a:hover {
   color: #60a5fa;
 }
+
 .site-footer p {
   margin: 0;
   color: #94a3b8;
 }
+
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
-  .header-left {
-    flex-wrap: wrap;
-    gap: 0.8rem;
-  }
-  .main-nav {
-    gap: 1rem;
-  }
   .hero {
     padding-top: 5rem;
     min-height: 90svh;
@@ -249,7 +250,9 @@ body {
 }
 </style>
 </head>
+
 <body>
+
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
@@ -262,12 +265,14 @@ body {
         <a href="models.html">Models</a>
       </nav>
     </div>
-    <div class="auth-stack">
-      <img id="profilePic" alt="Profile">
+
+    <div class="auth-inline">
       <button id="authBtn" class="login-btn">Login</button>
+      <img id="profilePic" alt="Profile">
     </div>
   </div>
 </header>
+
 <!-- HERO -->
 <section class="hero">
   <div>
@@ -279,6 +284,7 @@ body {
     </div>
   </div>
 </section>
+
 <!-- VALUE STRIP -->
 <section class="value-strip">
   <div class="values">
@@ -296,6 +302,7 @@ body {
     </div>
   </div>
 </section>
+
 <!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
@@ -310,7 +317,7 @@ body {
   </div>
 </footer>
 
-<!-- Firebase Authentication -->
+<!-- FIREBASE AUTH -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -320,6 +327,7 @@ import {
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
@@ -328,14 +336,18 @@ const firebaseConfig = {
   messagingSenderId: "533459045484",
   appId: "1:533459045484:web:bf727f2e85787132401c49"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
+
 authBtn.onclick = async () => {
   auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
 };
+
 onAuthStateChanged(auth, user => {
   if (user) {
     authBtn.textContent = "Logout";
@@ -347,9 +359,6 @@ onAuthStateChanged(auth, user => {
   }
 });
 </script>
+
 </body>
 </html>
-
-
-
-
