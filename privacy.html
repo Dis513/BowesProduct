@@ -5,14 +5,14 @@
 <title>Privacy Policy – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Privacy policy for BowesProduct – how we handle your data when you visit our site or purchase 3D assets.">
+
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* ================= GLOBAL FIXES ================= */
+/* ================= GLOBAL ================= */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { max-width: 100%; overflow-x: hidden; }
 
-/* ================= BASE ================= */
 body {
   margin: 0;
   background: #020617;
@@ -38,33 +38,27 @@ body {
   justify-content: space-between;
 }
 
-/* LEFT GROUP */
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
 }
 
-/* LOGO */
 .logo a {
   font-size: 1.2rem;
   font-weight: 700;
   color: white;
   text-decoration: none;
-  white-space: nowrap;
 }
 
-/* NAV */
 .main-nav {
   display: flex;
   gap: 1.2rem;
-  align-items: center;
 }
 
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-weight: 500;
   font-size: 0.9rem;
 }
 
@@ -72,14 +66,11 @@ body {
   color: #60a5fa;
 }
 
-/* AUTH */
 .auth-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
   gap: 0.15rem;
-  height: 42px;
 }
 
 #profilePic {
@@ -94,52 +85,32 @@ body {
   background: none;
   border: none;
   color: #e5e7eb;
-  font-size: 0.9rem;
   cursor: pointer;
-  padding: 0;
 }
 
 .login-btn:hover {
   color: #60a5fa;
 }
 
-/* ================= HERO ================= */
-.hero {
-  min-height: 70svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 1.25rem;
-  text-align: center;
-  background:
-    linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)),
-    url("./images/heroprivacy.jpg");
-  background-size: cover;
-  background-position: center;
-}
-
-.hero h1 {
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 800;
-}
-
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
-  margin: 5rem auto;
+  margin: 3rem auto;
   padding: 0 1.5rem;
   line-height: 1.8;
 }
 
 .content h1 {
-  text-align: center;
-  font-size: 2.4rem;
-  color: #60a5fa;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #e5e7eb;
 }
 
 .content h2 {
-  margin-top: 3rem;
-  color: #60a5fa;
+  margin-top: 2.5rem;
+  font-size: 1.2rem;
+  color: #93c5fd;
 }
 
 .content p,
@@ -147,9 +118,13 @@ body {
   color: #cbd5e1;
 }
 
+.content a {
+  color: #60a5fa;
+}
+
 .update-note {
-  margin-top: 4rem;
-  font-size: 0.95rem;
+  margin-top: 3rem;
+  font-size: 0.9rem;
   color: #64748b;
 }
 
@@ -158,7 +133,7 @@ body {
   background: rgba(2,6,23,0.95);
   border-top: 1px solid #1e293b;
   padding: 3rem 1rem;
-  margin-top: 6rem;
+  margin-top: 5rem;
 }
 
 .footer-inner {
@@ -191,7 +166,6 @@ body {
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-
     <div class="header-left">
       <div class="logo">
         <a href="index.html">BowesProduct</a>
@@ -207,58 +181,52 @@ body {
       <img id="profilePic" alt="Profile">
       <button id="authBtn" class="login-btn">Login</button>
     </div>
-
   </div>
 </header>
-
-<!-- HERO -->
-<section class="hero">
-  <h1>Privacy Policy</h1>
-</section>
 
 <!-- CONTENT -->
 <div class="content">
   <h1>Privacy Policy</h1>
+
   <p>This Privacy Policy explains how BowesProduct ("we", "us", or "our") collects, uses, and protects your information when you visit our website or purchase our 3D assets.</p>
 
   <h2>1. Information We Collect</h2>
-  <p>We collect only the information necessary to process purchases and improve our service:</p>
   <ul>
-    <li><strong>Purchase information:</strong> When you buy an asset via Stripe (our payment processor), we receive your email address, transaction ID, and purchased items. We do not store or have access to your payment details (credit card, etc.).</li>
-    <li><strong>Website analytics:</strong> We use basic analytics (via Plausible or similar privacy-friendly tools) to understand site traffic and usage patterns. No personal identifiers or cookies are used for tracking individuals.</li>
-    <li><strong>No account registration:</strong> You do not need to create an account. Purchases are linked to the email provided during checkout.</li>
+    <li><strong>Purchase information:</strong> When you buy an asset via Stripe, we receive your email address, transaction ID, and purchased items. We do not store payment details.</li>
+    <li><strong>Website analytics:</strong> We use privacy-friendly analytics to understand general site usage. No personal identifiers are tracked.</li>
+    <li><strong>No required accounts:</strong> Purchases are linked to the email provided at checkout.</li>
   </ul>
 
   <h2>2. How We Use Your Information</h2>
   <ul>
-    <li>To deliver purchased assets (instant download links are sent via email).</li>
-    <li>To send transactional emails (purchase confirmation, download links).</li>
-    <li>To improve our website and product offerings based on anonymous usage data.</li>
-    <li>To comply with legal obligations.</li>
+    <li>Deliver purchased assets and download links</li>
+    <li>Send transactional emails</li>
+    <li>Improve website performance and offerings</li>
+    <li>Comply with legal obligations</li>
   </ul>
 
   <h2>3. Information We Do Not Collect</h2>
   <ul>
-    <li>No cookies for advertising or cross-site tracking.</li>
-    <li>No personal data beyond what is required for purchase fulfillment.</li>
-    <li>No sale or sharing of your data with third parties for marketing purposes.</li>
+    <li>No advertising or tracking cookies</li>
+    <li>No sale of personal data</li>
+    <li>No unnecessary personal information</li>
   </ul>
 
   <h2>4. Third-Party Services</h2>
-  <p><strong>Stripe:</strong> Payments are processed securely by Stripe. Their privacy policy applies to data handled during payment: <a href="https://stripe.com/privacy" style="color:#60a5fa;">https://stripe.com/privacy</a></p>
-  <p><strong>Hosting:</strong> The website is hosted on a static hosting provider (e.g., Vercel/Netlify). They may log standard server access data but do not share personal information.</p>
+  <p><strong>Stripe:</strong> Payments are processed securely by Stripe. Their privacy policy applies: <a href="https://stripe.com/privacy">https://stripe.com/privacy</a></p>
+  <p><strong>Hosting:</strong> Hosted on a static platform which may log standard access data.</p>
 
   <h2>5. Data Security</h2>
-  <p>We implement reasonable security measures to protect your information. However, no method of transmission over the internet is 100% secure.</p>
+  <p>We apply reasonable security practices, but no method of online transmission is completely secure.</p>
 
   <h2>6. Your Rights</h2>
-  <p>You may request access to or deletion of your personal data by contacting us at the email below. We will respond within a reasonable timeframe.</p>
+  <p>You may request access to or deletion of your personal data by contacting us.</p>
 
   <h2>7. Changes to This Policy</h2>
-  <p>We may update this policy occasionally. Changes will be posted on this page with an updated "Last updated" date.</p>
+  <p>Updates will be posted on this page with a revised date.</p>
 
-  <h2>8. Contact Us</h2>
-  <p>If you have questions about this Privacy Policy, please contact us via the contact form on our site or appropriate channels.</p>
+  <h2>8. Contact</h2>
+  <p>If you have questions regarding this Privacy Policy, please contact us via our website.</p>
 
   <p class="update-note">Last updated: December 28, 2025</p>
 </div>
@@ -322,4 +290,3 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
-
