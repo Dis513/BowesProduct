@@ -18,7 +18,7 @@ body {
   font-family: system-ui, sans-serif;
 }
 
-/* ================= HEADINGS (BLUE 1–6) ================= */
+/* ================= HEADINGS ================= */
 h1, h2, h3, h4, h5, h6 {
   color: #60a5fa;
 }
@@ -41,14 +41,13 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
 }
 
-/* LEFT GROUP */
+/* LEFT */
 .header-left {
   display: flex;
   align-items: center;
   gap: 1.4rem;
 }
 
-/* LOGO */
 .logo a {
   font-size: 1.2rem;
   font-weight: 700;
@@ -57,11 +56,9 @@ h1, h2, h3, h4, h5, h6 {
   white-space: nowrap;
 }
 
-/* NAV */
 .main-nav {
   display: flex;
   gap: 1.2rem;
-  align-items: center;
 }
 
 .main-nav a {
@@ -71,27 +68,16 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-.main-nav a:hover,
-.main-nav a.active {
+.main-nav a:hover {
   color: #60a5fa;
 }
 
-/* AUTH (RIGHT) */
-.auth-stack {
+/* AUTH — INLINE (MATCHES INDEX) */
+.auth-inline {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  gap: 0.6rem;
   height: 42px;
-  gap: 0.15rem;
-}
-
-#profilePic {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid #60a5fa;
-  visibility: hidden;
 }
 
 .login-btn {
@@ -104,6 +90,7 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .login-btn:hover {
   background: rgba(96,165,250,0.15);
   transform: translateY(-2px);
@@ -112,6 +99,16 @@ h1, h2, h3, h4, h5, h6 {
 .login-btn:active {
   transform: translateY(1px);
 }
+
+#profilePic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  visibility: hidden;
+}
+
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
@@ -174,9 +171,9 @@ h1, h2, h3, h4, h5, h6 {
       </nav>
     </div>
 
-    <div class="auth-stack">
-      <img id="profilePic" alt="Profile">
+    <div class="auth-inline">
       <button id="authBtn" class="login-btn">Login</button>
+      <img id="profilePic" alt="Profile">
     </div>
   </div>
 </header>
@@ -195,42 +192,43 @@ h1, h2, h3, h4, h5, h6 {
     <li>Inclusion in games, animations, films, simulations, VR/AR experiences, apps, and websites</li>
     <li>Use in monetized products with no royalty payments</li>
     <li>Modification, rigging adjustments, texturing, and adaptation of assets</li>
-    <li>Incorporation into larger works (e.g., characters in games, props in scenes)</li>
+    <li>Incorporation into larger works</li>
     <li>Unlimited seats/projects under a single purchase</li>
   </ul>
 
   <h2>3. Prohibited Uses</h2>
   <ul>
-    <li>Reselling, redistributing, or sublicensing the original asset files as standalone products</li>
-    <li>Distributing the raw .glb, .fbx, or source files to third parties</li>
-    <li>Using assets in products where the primary value is the asset itself (e.g., stock model marketplaces)</li>
-    <li>Using assets in trademarked logos or branding that implies endorsement</li>
-    <li>Using assets for unlawful, defamatory, or unethical purposes</li>
+    <li>Reselling or redistributing the raw asset files</li>
+    <li>Distributing original source files</li>
+    <li>Using assets where the primary value is the asset itself</li>
+    <li>Trademark or endorsement misuse</li>
+    <li>Unlawful or unethical use</li>
   </ul>
 
   <h2>4. Ownership & Copyright</h2>
-  <p>All 3D assets remain the intellectual property of BowesProduct. This license grants usage rights only and does not transfer ownership or copyright.</p>
+  <p>All assets remain the intellectual property of BowesProduct.</p>
 
   <h2>5. No Attribution Required</h2>
-  <p>You are not required to credit BowesProduct in your final work, although appreciation is always welcome.</p>
+  <p>No credit required.</p>
 
   <h2>6. No Warranty</h2>
-  <p>Assets are provided <strong>"AS IS"</strong> without warranties of any kind, express or implied, including but not limited to merchantability or fitness for a particular purpose.</p>
+  <p>Assets are provided <strong>"AS IS"</strong>.</p>
 
   <h2>7. Limitation of Liability</h2>
-  <p>To the maximum extent permitted by law, BowesProduct shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of the assets.</p>
+  <p>BowesProduct is not liable for damages arising from use.</p>
 
   <h2>8. Indemnification</h2>
-  <p>Licensee agrees to indemnify and hold harmless BowesProduct from any claims arising from Licensee’s use or modification of the assets.</p>
+  <p>Licensee agrees to indemnify BowesProduct.</p>
 
   <h2>9. Termination</h2>
-  <p>This license terminates automatically upon breach of any term. Upon termination, Licensee must cease all use and destroy copies of the assets.</p>
+  <p>License terminates upon breach.</p>
 
   <h2>10. Governing Law</h2>
-  <p>This Agreement shall be governed by the laws of the jurisdiction in which BowesProduct operates.</p>
+  <p>Governed by applicable local law.</p>
 
-  <p class="update-note">Last updated: December 28, 2025</p>
+  <p><em>Last updated: December 28, 2025</em></p>
 </div>
+
 <!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
@@ -290,7 +288,3 @@ onAuthStateChanged(auth, user => {
 
 </body>
 </html>
-
-
-
-
