@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>About – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 /* ================= GLOBAL FIXES ================= */
 *, *::before, *::after { box-sizing: border-box; }
@@ -57,8 +56,10 @@ body {
   color: #e5e7eb;
   text-decoration: none;
   font-size: 0.95rem;
+  font-weight: 500;
 }
-.main-nav a:hover {
+.main-nav a:hover,
+.main-nav a.active {
   color: #60a5fa;
 }
 
@@ -67,6 +68,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.7rem;
+  height: 44px;
 }
 .login-btn {
   padding: 0.55rem 1.2rem;
@@ -74,10 +76,16 @@ body {
   border: 1.5px solid #60a5fa;
   color: #60a5fa;
   background: transparent;
+  font-size: 0.95rem;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 .login-btn:hover {
   background: rgba(96,165,250,0.15);
+  transform: translateY(-2px);
+}
+.login-btn:active {
+  transform: translateY(1px);
 }
 #profilePic {
   width: 32px;
@@ -88,30 +96,9 @@ body {
   visibility: hidden;
 }
 
-/* ================= XP UI ================= */
-#levelInfo {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  margin-left: 1rem;
-  min-width: 150px;
-}
-#levelText {
-  font-size: 0.85rem;
-  color: #cbd5e1;
-}
-#xpContainer {
-  width: 120px;
-  height: 6px;
-  background: #1e293b;
-  border-radius: 999px;
-  overflow: hidden;
-}
-#xpBar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #60a5fa, #38bdf8);
-  transition: width 0.4s ease;
+/* ================= HEADINGS ================= */
+h1, h2, h3, h4, h5, h6 {
+  color: #60a5fa;
 }
 
 /* ================= CONTENT ================= */
@@ -127,9 +114,6 @@ body {
 }
 .content ul {
   padding-left: 1.5rem;
-}
-h1, h2 {
-  color: #60a5fa;
 }
 
 /* ================= FOOTER ================= */
@@ -163,12 +147,46 @@ h1, h2 {
   margin: 0;
   color: #94a3b8;
 }
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+  }
+  .header-left {
+    flex-direction: row;
+    gap: 1.2rem;
+    align-items: center;
+  }
+  .logo a {
+    font-size: 1.25rem;
+  }
+  .main-nav {
+    gap: 1rem;
+  }
+  .main-nav a {
+    font-size: 0.9rem;
+  }
+  .auth-inline {
+    gap: 0.5rem;
+  }
+  #profilePic {
+    width: 28px;
+    height: 28px;
+  }
+  .login-btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+  }
+}
 </style>
 </head>
-
 <body>
 
-<!-- HEADER -->
+<!-- HEADER - Updated: Removed "About" link so profile icon fits nicely -->
 <header class="site-header">
   <div class="header-inner">
     <div class="header-left">
@@ -178,17 +196,12 @@ h1, h2 {
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
+        <!-- About link removed as requested -->
       </nav>
     </div>
 
     <div class="auth-inline">
       <img id="profilePic" alt="Profile">
-      <div id="levelInfo">
-        <div id="levelText"></div>
-        <div id="xpContainer">
-          <div id="xpBar"></div>
-        </div>
-      </div>
       <button id="authBtn" class="login-btn">Login</button>
     </div>
   </div>
@@ -205,30 +218,17 @@ h1, h2 {
   </p>
 
   <p>
-    Every asset is built with clean topology, optimized performance,
+    All assets are designed with clean topology, optimized performance,
     and compatibility across modern pipelines including Blender,
     Unity, Unreal Engine, and Godot.
   </p>
 
   <h2>What You Get</h2>
   <ul>
-    <li>One-time purchases — no subscriptions</li>
-    <li>Unlimited commercial-use license</li>
-    <li>Game-ready, real-time optimized assets</li>
-    <li>Clear legal terms with no hidden restrictions</li>
-  </ul>
-
-  <h2>Rewards & Progression</h2>
-  <p>
-    BowesProduct includes a lightweight reward system designed to
-    recognize active users without restricting access.
-  </p>
-
-  <ul>
-    <li>Earn XP through daily logins</li>
-    <li>Progress through user levels and titles</li>
-    <li>Future rewards may include discounts and exclusive assets</li>
-    <li>No pay-to-win mechanics — activity only</li>
+    <li>One-time purchase, no subscriptions</li>
+    <li>Unlimited commercial use license</li>
+    <li>Game-ready and real-time optimized assets</li>
+    <li>Clear legal terms — no fine print tricks</li>
   </ul>
 
   <h2>Philosophy</h2>
@@ -240,8 +240,8 @@ h1, h2 {
 
   <h2>Contact</h2>
   <p>
-    Email:
-    <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
+    Questions or support requests?<br><br>
+    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
   </p>
 </div>
 
@@ -254,121 +254,59 @@ h1, h2 {
       <a href="terms.html">Terms</a>
       <a href="license.html">License</a>
       <a href="refund.html">Refund</a>
-      <a href="rewards.html">Rewards</a>
     </nav>
     <p>© 2025 BowesProduct</p>
   </div>
 </footer>
 
-<!-- HEADER SHADOW -->
 <script>
-window.addEventListener("scroll", () => {
-  document.querySelector(".site-header")
-    .classList.toggle("scrolled", window.scrollY > 40);
+// Sticky header
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
 </script>
 
-<!-- FIREBASE AUTH + XP -->
+<!-- Firebase Authentication -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  increment
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct",
-  storageBucket: "bowesproduct.firebasestorage.app",
-  messagingSenderId: "533459045484",
-  appId: "1:533459045484:web:bf727f2e85787132401c49"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-
-const authBtn = document.getElementById("authBtn");
-const profilePic = document.getElementById("profilePic");
-const levelInfo = document.getElementById("levelInfo");
-const levelText = document.getElementById("levelText");
-const xpBar = document.getElementById("xpBar");
-
-authBtn.onclick = async () => {
-  auth.currentUser
-    ? await signOut(auth)
-    : await signInWithPopup(auth, provider);
-};
-
-const LEVELS = [
-  { xp: 0, title: "New User" },
-  { xp: 200, title: "Explorer" },
-  { xp: 500, title: "Builder" },
-  { xp: 1000, title: "Artist" },
-  { xp: 2000, title: "Creator" },
-  { xp: 4000, title: "Master" }
-];
-
-function getLevel(xp) {
-  let i = 0;
-  for (; i < LEVELS.length; i++) {
-    if (xp < LEVELS[i].xp) break;
-  }
-  const current = LEVELS[i - 1] || LEVELS[0];
-  const next = LEVELS[i];
-  const progress = next
-    ? ((xp - current.xp) / (next.xp - current.xp)) * 100
-    : 100;
-
-  return {
-    level: i - 1,
-    title: current.title,
-    progress: Math.min(progress, 100)
+  const firebaseConfig = {
+    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+    authDomain: "bowesproduct.firebaseapp.com",
+    projectId: "bowesproduct",
+    storageBucket: "bowesproduct.firebasestorage.app",
+    messagingSenderId: "533459045484",
+    appId: "1:533459045484:web:bf727f2e85787132401c49"
   };
-}
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    authBtn.textContent = "Login";
-    profilePic.style.visibility = "hidden";
-    levelInfo.style.display = "none";
-    return;
-  }
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-  authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL || "";
-  profilePic.style.visibility = "visible";
+  const authBtn = document.getElementById("authBtn");
+  const profilePic = document.getElementById("profilePic");
 
-  const ref = doc(db, "users", user.uid);
-  const today = new Date().toDateString();
-  const snap = await getDoc(ref);
+  authBtn.onclick = async () => {
+    auth.currentUser ? await signOut(auth) : await signInWithPopup(auth, provider);
+  };
 
-  if (!snap.exists()) {
-    await setDoc(ref, { xp: 10, lastLogin: today });
-  } else if (snap.data().lastLogin !== today) {
-    await updateDoc(ref, { xp: increment(10), lastLogin: today });
-  }
-
-  const xp = (await getDoc(ref)).data().xp || 0;
-  const lvl = getLevel(xp);
-
-  levelText.textContent = `Level ${lvl.level} — ${lvl.title} (${xp} XP)`;
-  xpBar.style.width = `${lvl.progress}%`;
-  levelInfo.style.display = "flex";
-});
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      authBtn.textContent = "Logout";
+      profilePic.src = user.photoURL || "";
+      profilePic.style.visibility = "visible";
+    } else {
+      authBtn.textContent = "Login";
+      profilePic.style.visibility = "hidden";
+    }
+  });
 </script>
 
 </body>
