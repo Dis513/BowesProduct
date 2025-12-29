@@ -1128,6 +1128,70 @@ onAuthStateChanged(auth, async (user) => {
     profilePic.src = user.photoURL || "";
     profilePic.style.visibility = "visible";
 
+    // === USER DATA SETUP (from Step 2) ===
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+
+    if (!snap.exists()) {
+      // First-time user
+      await setDoc(userRef, {
+        xp: 0,
+        level: 0,
+        claimedRewards: [],
+        lastLogin: new Date().toISOString()
+      });
+    } else {
+      // Daily login bonus (+10 XP once per day)
+      const data = snap.data();
+      const last = new Date(data.lastLogin);
+      const now = new Date();
+      const sameDay = last.getDate() === now.getDate() &&
+                      last.getMonth() === now.getMonth() &&
+                      last.getFullYear() === now.getFullYear();
+      if (!sameDay) {
+        await updateDoc(userRef, {
+          xp: increment(10),
+          lastLogin: now.toISOString()
+        });
+      }
+    }
+
+    // === SHOW LEVEL & XP BAR (Step 3) ===
+    const latestSnap = await getDoc(userRef);  // Get updated XP after possible daily bonus
+    const data = latestSnap.data();
+    const xp = data.xp || 0;
+
+    // Calculate level
+    const thresholds = [0, 200, 500, 1000, 2000, 4000];
+    let level = 0;
+    for (let i = 0; i < thresholds.length; i++) {
+      if (xp >= thresholds[i]) level = i;
+    }
+
+    const titles = ["New User", "Explorer", "Builder", "Artist", "Creator", "Master"];
+    const currentTitle = titles[level];
+
+    // Progress to next level
+    const nextThreshold = thresholds[level + 1] || thresholds[thresholds.length - 1];
+    const xpForThisLevel = xp - (level === 0 ? 0 : thresholds[level]);
+    const xpNeeded = nextThreshold - (level === 0 ? 0 : thresholds[level]);
+    const progressPercent = nextThreshold === Infinity ? 100 : (xpForThisLevel / xpNeeded) * 100;
+
+    // Update the display
+    document.getElementById("levelText").textContent = 
+      `Level ${level} – ${currentTitle} (${xp} XP)`;
+
+    document.getElementById("xpBar").style.width = progressPercent + "%";
+
+    document.getElementById("levelInfo").style.display = "block";
+
+  } else {
+    // Not logged in
+    authBtn.textContent = "Login";
+    profilePic.style.visibility = "hidden";
+    document.getElementById("levelInfo").style.display = "none";
+  }
+});
     // Create user data if new
     const userRef = doc(db, "users", user.uid);
     const snap = await getDoc(userRef);
@@ -1192,6 +1256,7 @@ const db = getFirestore(app);
 
 </body>
 </html>
+
 
 
 
