@@ -294,26 +294,14 @@ model-viewer { width: 100%; height: 100%; background: #020617; }
  <a href="#packs">Packs</a>
 </div>
 
-<!-- Model Viewer -->
-<div class="model-container" id="modelContainer">
- <model-viewer id="mainViewer"
-  src="./models/humanmale.glb"
-  poster="./thumbs/promotionalviewer.jpg"
-  alt="Human Male 3D Model"
+<model-viewer
+  id="mainViewer"
   camera-controls
   auto-rotate
-  auto-rotate-delay="0"
-  rotation-per-second="30deg"
-  interaction-prompt="auto"
   shadow-intensity="1"
-  exposure="0.9"
-  environment-image="neutral"
-  ar
-  ar-modes="webxr scene-viewer quick-look"
-  loading="eager"
-  reveal="interaction">
- </model-viewer>
-</div>
+  style="width:100%; height:500px;">
+</model-viewer>
+
 
 <!-- Rigged Models -->
 <section id="rigged-models">
@@ -1033,6 +1021,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 
