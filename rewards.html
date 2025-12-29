@@ -298,10 +298,11 @@ import {
   doc,
   getDoc,
   setDoc,
-  updateDoc
+  updateDoc,
+  increment
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-/* ================= FIREBASE INIT ================= */
+/* ================= FIREBASE ================= */
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -333,24 +334,52 @@ const xpText = document.getElementById("xpText");
 /* ================= REWARDS ================= */
 
 const rewards = [
-  { id: "welcome", title: "Welcome Bonus", icon: "🎉", desc: "Thanks for joining BowesProduct.", xp: 0 },
-  { id: "explorer", title: "Early Explorer", icon: "🧭", desc: "Reach 200 XP.", xp: 200 },
-  { id: "supporter", title: "Supporter", icon: "💎", desc: "Profile badge unlocked.", xp: 500 },
-  { id: "pro", title: "Pro Member", icon: "🚀", desc: "Access Pro-only features.", xp: 1000 },
-  { id: "elite", title: "Elite Status", icon: "👑", desc: "Gold profile + early access.", xp: 2000 },
-  { id: "legend", title: "Legend", icon: "🔥", desc: "Maximum rank achieved.", xp: 3000 }
+  { id: "welcome", title: "Welcome Bonus", icon: "🎉", desc: "+50 XP", xp: 0 },
+  { id: "explorer", title: "Early Explorer", icon: "🧭", desc: "Free £1.99 prop", xp: 200 },
+  { id: "supporter", title: "Supporter", icon: "💎", desc: "Permanent 10% discount", xp: 500 },
+  { id: "pro", title: "Pro Member", icon: "🚀", desc: "One-time 25% voucher", xp: 1000 },
+  { id: "elite", title: "Elite Status", icon: "👑", desc: "Permanent 20% discount", xp: 2000 },
+  { id: "legend", title: "Legend", icon: "🔥", desc: "Free 3D character model", xp: 3000 }
 ];
 
-/* ================= AUTH BUTTON ================= */
+/* ================= CLAIM LOGIC ================= */
+
+async function applyRewardEffect(rewardId, userRef) {
+  switch (rewardId) {
+    case "welcome":
+      await updateDoc(userRef, { xp: increment(50) });
+      break;
+
+    case "explorer":
+      await updateDoc(userRef, { "perks.freeProp199": true });
+      break;
+
+    case "supporter":
+      await updateDoc(userRef, { "perks.discount": 0.10 });
+      break;
+
+    case "pro":
+      await updateDoc(userRef, { "perks.proVoucher25": true });
+      break;
+
+    case "elite":
+      await updateDoc(userRef, { "perks.discount": 0.20 });
+      break;
+
+    case "legend":
+      await updateDoc(userRef, { "perks.freeCharacterModel": true });
+      break;
+  }
+}
+
+/* ================= UI ================= */
 
 authBtn.onclick = () =>
   auth.currentUser
     ? signOut(auth)
     : signInWithRedirect(auth, provider);
 
-/* ================= RENDER REWARDS ================= */
-
-function renderRewards(xp, claimed = {}, userRef) {
+function renderRewards(xp, claimed, userRef) {
   rewardsGrid.innerHTML = "";
 
   rewards.forEach(r => {
@@ -358,37 +387,30 @@ function renderRewards(xp, claimed = {}, userRef) {
     const isClaimed = claimed[r.id];
 
     const card = document.createElement("div");
-    card.className = "reward-card" +
+    card.className =
+      "reward-card" +
       (unlocked ? " unlocked" : " locked") +
       (isClaimed ? " claimed" : "");
 
-    const status =
-      isClaimed ? "Claimed" :
-      unlocked ? "Unlocked" :
-      `${r.xp} XP`;
-
-    const btnText =
-      isClaimed ? "Claimed" :
-      unlocked ? "Claim" :
-      "Locked";
-
     card.innerHTML = `
-      <div class="reward-status">${status}</div>
+      <div class="reward-status">
+        ${isClaimed ? "Claimed" : unlocked ? "Unlocked" : r.xp + " XP"}
+      </div>
       <div class="reward-icon">${r.icon}</div>
       <div class="reward-title">${r.title}</div>
       <div class="reward-desc">${r.desc}</div>
       <button class="claim-btn" ${unlocked && !isClaimed ? "" : "disabled"}>
-        ${btnText}
+        ${isClaimed ? "Claimed" : unlocked ? "Claim" : "Locked"}
       </button>
     `;
 
     if (unlocked && !isClaimed) {
       card.querySelector("button").onclick = async () => {
+        await applyRewardEffect(r.id, userRef);
         await updateDoc(userRef, {
           [`claimedRewards.${r.id}`]: true
         });
-        claimed[r.id] = true;
-        renderRewards(xp, claimed, userRef);
+        location.reload(); // refresh XP / state cleanly
       };
     }
 
@@ -396,7 +418,7 @@ function renderRewards(xp, claimed = {}, userRef) {
   });
 }
 
-/* ================= AUTH STATE ================= */
+/* ================= AUTH ================= */
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -418,7 +440,8 @@ onAuthStateChanged(auth, async (user) => {
   if (!snap.exists()) {
     await setDoc(userRef, {
       xp: 10,
-      claimedRewards: {}
+      claimedRewards: {},
+      perks: {}
     });
     snap = await getDoc(userRef);
   }
@@ -448,6 +471,7 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
 
 
 
