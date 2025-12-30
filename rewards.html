@@ -294,7 +294,9 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  updateDoc,
+  increment
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 /* ================= FIREBASE CONFIG ================= */
@@ -339,9 +341,25 @@ onAuthStateChanged(auth, async (user) => {
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
+  /* ===== FIRST LOGIN ===== */
   if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
+    await setDoc(ref, {
+      xp: 10,
+      lastLogin: new Date().toDateString()
+    });
     snap = await getDoc(ref);
+  } else {
+    /* ===== DAILY XP ===== */
+    const data = snap.data();
+    const today = new Date().toDateString();
+
+    if (data.lastLogin !== today) {
+      await updateDoc(ref, {
+        xp: increment(10),
+        lastLogin: today
+      });
+      snap = await getDoc(ref);
+    }
   }
 
   const xp = snap.data().xp || 0;
@@ -352,9 +370,10 @@ onAuthStateChanged(auth, async (user) => {
 
   const level = thresholds.filter(v => xp >= v).length - 1;
   const next = thresholds[level + 1] ?? thresholds[level];
-  const progress = next === thresholds[level]
-    ? 100
-    : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
+  const progress =
+    next === thresholds[level]
+      ? 100
+      : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
 
   levelText.textContent = `Level ${level} • ${xp} XP`;
   xpBar.style.width = progress + "%";
@@ -366,7 +385,8 @@ onAuthStateChanged(auth, async (user) => {
   const xpText = document.getElementById("xpText");
   const xpProgress = document.getElementById("xpProgress");
 
-  if (currentLevelText) currentLevelText.textContent = `Level ${level} – ${titles[level]}`;
+  if (currentLevelText)
+    currentLevelText.textContent = `Level ${level} – ${titles[level]}`;
   if (xpText) xpText.textContent = `${xp} XP`;
   if (xpProgress) xpProgress.style.width = progress + "%";
 
@@ -409,6 +429,7 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
 
 
 
