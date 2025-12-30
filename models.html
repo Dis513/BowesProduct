@@ -4798,7 +4798,6 @@ if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 </script>
 
 <!-- Firebase Authentication & XP System (exact same as about.html) -->
-<!-- Models.html Script -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -4817,35 +4816,51 @@ import {
   increment,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
 /* ================= FIREBASE ================= */
+
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
   projectId: "bowesproduct"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
+
 /* ================= UI ================= */
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
+
 authBtn.onclick = () =>
   auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+
 /* ================= CONSTANTS ================= */
+
 const LEVELS = [0, 200, 500, 1000, 2000, 4000];
 const SHARE_CAP = 50;
-const BASE_SHARE_XP = 5; // ✅ XP PER SHARE
+const BASE_SHARE_XP = 5;
 const MILESTONES = [5,10,15,20,25,30,35,40,45,50];
-const TODAY = new Date().toDateString();
-/* ================= HELPERS ================= */
-function sanitizeModelId(modelPath) {
-  return modelPath.replaceAll("/", "_").replaceAll(".", "_");
+
+function getCurrentMonth() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
+
+/* ================= HELPERS ================= */
+
+function sanitizeModelId(path) {
+  return path.replaceAll("/", "_").replaceAll(".", "_");
+}
+
 /* ================= AUTH ================= */
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authBtn.textContent = "Login";
@@ -4853,86 +4868,124 @@ onAuthStateChanged(auth, async (user) => {
     levelInfo.style.display = "none";
     return;
   }
+
   authBtn.textContent = "Logout";
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
+
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
+
+  /* Init user */
   if (!snap.exists()) {
     await setDoc(ref, {
       xp: 10,
-      dailyShares: 0,
-      lastShareDate: TODAY,
+      monthlyShares: 0,
+      lastShareMonth: getCurrentMonth(),
       sharedModels: {}
     });
     snap = await getDoc(ref);
   }
-  // Set up real-time listener for updates
+
+  /* Monthly reset */
+  const data = snap.data();
+  const month = getCurrentMonth();
+
+  if (data.lastShareMonth !== month) {
+    await updateDoc(ref, {
+      monthlyShares: 0,
+      lastShareMonth: month,
+      sharedModels: {}
+    });
+  }
+
+  /* Realtime header XP */
   onSnapshot(ref, (snap) => {
+    if (!snap.exists()) return;
+
     const data = snap.data();
     const xp = data.xp || 0;
+
     const level = LEVELS.filter(v => xp >= v).length - 1;
     const next = LEVELS[level + 1] ?? LEVELS[level];
     const progress =
       next === LEVELS[level]
         ? 100
         : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
+
     levelText.textContent = `Level ${level} • ${xp} XP`;
     xpBar.style.width = progress + "%";
     levelInfo.style.display = "block";
   });
 });
+
 /* ================= SHARE XP ================= */
+
 async function grantShareXPFromCard(card) {
   const user = auth.currentUser;
   if (!user || !card) return;
+
   const modelPath = card.dataset.model;
   if (!modelPath) return;
+
   const modelId = sanitizeModelId(modelPath);
   const ref = doc(db, "users", user.uid);
   const snap = await getDoc(ref);
+
   if (!snap.exists()) return;
+
   const data = snap.data();
-  let dailyShares = data.dailyShares || 0;
+  const month = getCurrentMonth();
+
+  let monthlyShares = data.monthlyShares || 0;
   const sharedModels = data.sharedModels || {};
-  // 🔄 Reset daily shares
-  if (data.lastShareDate !== TODAY) {
-    dailyShares = 0;
+
+  /* Monthly reset safety */
+  if (data.lastShareMonth !== month) {
+    monthlyShares = 0;
     await updateDoc(ref, {
-      dailyShares: 0,
-      lastShareDate: TODAY
+      monthlyShares: 0,
+      lastShareMonth: month,
+      sharedModels: {}
     });
   }
-  // ❌ Anti-spam
-  if (sharedModels[modelId] === TODAY) return;
-  if (dailyShares >= SHARE_CAP) return;
-  const newCount = dailyShares + 1;
+
+  /* Anti-spam */
+  if (sharedModels[modelId] === month) return;
+  if (monthlyShares >= SHARE_CAP) return;
+
+  const newCount = monthlyShares + 1;
+
   const milestoneBonus = MILESTONES.includes(newCount)
     ? newCount * 10
     : 0;
+
   const totalXP = BASE_SHARE_XP + milestoneBonus;
+
   await updateDoc(ref, {
-    dailyShares: increment(1),
+    monthlyShares: increment(1),
     xp: increment(totalXP),
-    [`sharedModels.${modelId}`]: TODAY,
-    lastShareDate: TODAY
+    [`sharedModels.${modelId}`]: month,
+    lastShareMonth: month
   });
-  // 🔔 Notify rewards page
-  localStorage.setItem("rewardsUpdated", Date.now().toString());
+
   console.log(
-    `Shared ${modelPath} → +${totalXP} XP (share #${newCount})`
+    `Shared ${modelPath} → +${totalXP} XP (monthly share #${newCount})`
   );
 }
-/* ================= AUTO-HOOK ALL SHARE BUTTONS ================= */
+
+/* ================= AUTO-HOOK SHARE BUTTONS ================= */
+
 document.addEventListener("click", (e) => {
   const shareBtn = e.target.closest("[data-share]");
   if (!shareBtn) return;
+
   const card = shareBtn.closest(".card");
   if (!card) return;
+
   grantShareXPFromCard(card);
 });
 </script>
-
 
 <template id="share-template">
   <div class="share-buttons">
@@ -4963,6 +5016,7 @@ document.querySelectorAll('.share-fb, .share-x, .share-reddit, .share-wa').forEa
 </script>
 </body>
 </html>
+
 
 
 
