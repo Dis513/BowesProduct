@@ -184,25 +184,26 @@
         <p id="xpText" style="margin-top:0.5rem;color:#94a3b8;"></p>
     </div>
 
-    <!-- Daily Sharing Rewards -->
-    <div class="share-section" id="shareSection" style="display:none;">
-        <h2>Daily Sharing Rewards</h2>
-        <p>Share models to earn bonus XP! (Resets daily)</p>
-        <div class="share-progress">
-            <div class="progress-track">
-                <div id="shareProgressBar"></div>
-            </div>
-            <p style="margin-top:0.5rem;">
-                Shares today: <span id="shareCount">0</span> / 50
-                <br><small>Milestones: 5 (+50 XP) • 10 (+100) • 15 (+150) • ... • 50 (+500 XP)</small>
-            </p>
+ <!-- Monthly Sharing Rewards -->
+<div class="share-section" id="shareSection" style="display:none;">
+    <h2>Monthly Sharing Rewards</h2>
+    <p>Share models to earn bonus XP! (Resets monthly)</p>
+
+    <div class="share-progress">
+        <div class="progress-track">
+            <div id="shareProgressBar"></div>
         </div>
-        <p>Go to the Models page and click any share button to earn XP!</p>
+        <p style="margin-top:0.5rem;">
+            Shares this month: <span id="shareCount">0</span> / 50
+            <br>
+            <small>
+                Milestones: 5 (+50 XP) • 10 (+100 XP) • 15 (+150 XP) • ... • 50 (+500 XP)
+            </small>
+        </p>
     </div>
 
-    <div id="rewardsGrid" class="rewards-grid"></div>
+    <p>Go to the Models page and click any share button to earn XP this month!</p>
 </div>
-
 <!-- FOOTER -->
 <footer class="site-footer">
     <div class="footer-inner">
@@ -391,5 +392,6 @@ function renderRewards(level) {
 
 </body>
 </html>
+
 
 
