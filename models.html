@@ -270,6 +270,104 @@ model-viewer {
  .btn { width: 100%; max-width: 320px; margin: auto; }
  .card-content .btn { max-width: 200px; padding: 0.7rem 1rem; font-size: 0.92rem; }
 }
+ /* =========================
+   SOCIAL SHARE ICON STYLES
+   ========================= */
+
+.share-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* Base button */
+.share-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #020617;
+  border: 1px solid #1e293b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #94a3b8; /* default icon color */
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+/* SVG sizing */
+.share-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Hover animation */
+.share-btn:hover {
+  transform: translateY(-2px) scale(1.08);
+}
+
+/* =========================
+   BRAND COLORS (HOVER)
+   ========================= */
+
+/* Twitter / X */
+.share-btn[data-platform="twitter"]:hover {
+  color: #1DA1F2;
+  border-color: #1DA1F2;
+}
+
+/* Reddit */
+.share-btn[data-platform="reddit"]:hover {
+  color: #FF4500;
+  border-color: #FF4500;
+}
+
+/* Discord */
+.share-btn[data-platform="discord"]:hover {
+  color: #5865F2;
+  border-color: #5865F2;
+}
+
+/* Facebook */
+.share-btn[data-platform="facebook"]:hover {
+  color: #1877F2;
+  border-color: #1877F2;
+}
+
+/* WhatsApp */
+.share-btn[data-platform="whatsapp"]:hover {
+  color: #25D366;
+  border-color: #25D366;
+}
+
+/* Copy link */
+.share-btn[data-platform="copy"]:hover {
+  color: #60a5fa;
+  border-color: #60a5fa;
+}
+
+/* =========================
+   OPTIONAL: ACTIVE PRESS
+   ========================= */
+
+.share-btn:active {
+  transform: scale(0.95);
+}
+
+/* =========================
+   OPTIONAL: TOOLTIP READY
+   ========================= */
+
+.share-btn[title] {
+  position: relative;
+}
+
 </style>
 </head>
 <body>
@@ -4802,6 +4900,7 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
 
 
 
