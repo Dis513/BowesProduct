@@ -231,7 +231,8 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 /* ================= FIREBASE ================= */
@@ -264,6 +265,11 @@ const LEVELS = [0, 200, 500, 1000, 2000, 4000];
 const TITLES = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
 const SHARE_CAP = 50;
 
+function getCurrentMonth() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
 /* ================= AUTH ================= */
 
 onAuthStateChanged(auth, async (user) => {
@@ -284,48 +290,71 @@ onAuthStateChanged(auth, async (user) => {
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
-  /* Initialize user if missing */
+  /* Initialize user */
   if (!snap.exists()) {
     await setDoc(ref, {
       xp: 10,
-      dailyShares: 0,
-      lastShareDate: "",
+      monthlyShares: 0,
+      lastShareMonth: getCurrentMonth(),
       sharedModels: {}
     });
     snap = await getDoc(ref);
   }
 
+  /* Monthly reset */
   const data = snap.data();
-  const xp = data.xp || 0;
-  const dailyShares = data.dailyShares || 0;
+  const currentMonth = getCurrentMonth();
 
-  /* Level calc */
-  const level = LEVELS.filter(v => xp >= v).length - 1;
-  const next = LEVELS[level + 1] ?? LEVELS[level];
-  const progress =
-    next === LEVELS[level]
-      ? 100
-      : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
+  if (data.lastShareMonth !== currentMonth) {
+    await setDoc(ref, {
+      monthlyShares: 0,
+      lastShareMonth: currentMonth
+    }, { merge: true });
+  }
 
-  /* Header UI */
-  levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
-  levelInfo.style.display = "block";
+  /* ================= REALTIME LISTENER ================= */
 
-  /* Page UI */
-  document.getElementById("currentLevelText").textContent =
-    `Level ${level} – ${TITLES[level]}`;
-  document.getElementById("xpText").textContent = `${xp} XP`;
-  document.getElementById("xpProgress").style.width = progress + "%";
+  onSnapshot(ref, (snap) => {
+    if (!snap.exists()) return;
 
-  /* Share section */
-  document.getElementById("shareSection").style.display = "block";
-  document.getElementById("shareCount").textContent = dailyShares;
-  document.getElementById("shareProgressBar").style.width =
-    `${(dailyShares / SHARE_CAP) * 100}%`;
+    const data = snap.data();
+    const xp = data.xp || 0;
+    const monthlyShares = data.monthlyShares || 0;
 
-  /* Rewards grid */
+    /* Level calc */
+    const level = LEVELS.filter(v => xp >= v).length - 1;
+    const next = LEVELS[level + 1] ?? LEVELS[level];
+    const progress =
+      next === LEVELS[level]
+        ? 100
+        : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
+
+    /* Header UI */
+    levelText.textContent = `Level ${level} • ${xp} XP`;
+    xpBar.style.width = progress + "%";
+    levelInfo.style.display = "block";
+
+    /* Page UI */
+    document.getElementById("currentLevelText").textContent =
+      `Level ${level} – ${TITLES[level]}`;
+    document.getElementById("xpText").textContent = `${xp} XP`;
+    document.getElementById("xpProgress").style.width = progress + "%";
+
+    /* Share UI */
+    document.getElementById("shareSection").style.display = "block";
+    document.getElementById("shareCount").textContent = monthlyShares;
+    document.getElementById("shareProgressBar").style.width =
+      `${Math.min((monthlyShares / SHARE_CAP) * 100, 100)}%`;
+
+    renderRewards(level);
+  });
+});
+
+/* ================= REWARDS ================= */
+
+function renderRewards(level) {
   const grid = document.getElementById("rewardsGrid");
+
   const rewards = [
     { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
     { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
@@ -335,35 +364,32 @@ onAuthStateChanged(auth, async (user) => {
   ];
 
   grid.innerHTML = "";
+
   rewards.forEach(r => {
     const unlocked = level >= r.level;
     const card = document.createElement("div");
     card.className = "reward-card" + (unlocked ? "" : " locked");
+
     card.innerHTML = `
       <div class="reward-icon">${r.icon}</div>
-      <h3>${r.title}</h3>
-      <p>${r.desc}</p>
+      <h3 class="reward-title">${r.title}</h3>
+      <p class="reward-desc">${r.desc}</p>
       <button class="claim-btn" ${unlocked ? "" : "disabled"}>
         ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
       </button>
     `;
+
     if (unlocked) {
       card.querySelector(".claim-btn").onclick = () => alert(r.msg);
     }
+
     grid.appendChild(card);
   });
-});
-
-/* ================= REFRESH WHEN MODELS PAGE UPDATES ================= */
-
-window.addEventListener("storage", (e) => {
-  if (e.key === "rewardsUpdated") {
-    location.reload();
-  }
-});
+}
 </script>
 
 
 </body>
 </html>
+
 
