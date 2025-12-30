@@ -217,7 +217,7 @@
         <p>© 2025 BowesProduct</p>
     </div>
 </footer>
-
+<!-- Rewards.html Script -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -231,7 +231,8 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 /* ================= FIREBASE ================= */
@@ -295,62 +296,65 @@ onAuthStateChanged(auth, async (user) => {
     snap = await getDoc(ref);
   }
 
-  const data = snap.data();
-  const xp = data.xp || 0;
-  const dailyShares = data.dailyShares || 0;
+  // Set up real-time listener for updates
+  onSnapshot(ref, (snap) => {
+    const data = snap.data();
+    const xp = data.xp || 0;
+    const dailyShares = data.dailyShares || 0;
 
-  /* Level calc */
-  const level = LEVELS.filter(v => xp >= v).length - 1;
-  const next = LEVELS[level + 1] ?? LEVELS[level];
-  const progress =
-    next === LEVELS[level]
-      ? 100
-      : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
+    /* Level calc */
+    const level = LEVELS.filter(v => xp >= v).length - 1;
+    const next = LEVELS[level + 1] ?? LEVELS[level];
+    const progress =
+      next === LEVELS[level]
+        ? 100
+        : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
 
-  /* Header UI */
-  levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
-  levelInfo.style.display = "block";
+    /* Header UI */
+    levelText.textContent = `Level ${level} • ${xp} XP`;
+    xpBar.style.width = progress + "%";
+    levelInfo.style.display = "block";
 
-  /* Page UI */
-  document.getElementById("currentLevelText").textContent =
-    `Level ${level} – ${TITLES[level]}`;
-  document.getElementById("xpText").textContent = `${xp} XP`;
-  document.getElementById("xpProgress").style.width = progress + "%";
+    /* Page UI */
+    document.getElementById("currentLevelText").textContent =
+      `Level ${level} – ${TITLES[level]}`;
+    document.getElementById("xpText").textContent = `${xp} XP`;
+    document.getElementById("xpProgress").style.width = progress + "%";
 
-  /* Share section */
-  document.getElementById("shareSection").style.display = "block";
-  document.getElementById("shareCount").textContent = dailyShares;
-  document.getElementById("shareProgressBar").style.width =
-    `${(dailyShares / SHARE_CAP) * 100}%`;
+    /* Share section */
+    document.getElementById("shareSection").style.display = "block";
+    document.getElementById("shareCount").textContent = dailyShares;
+    document.getElementById("shareProgressBar").style.width =
+      `${(dailyShares / SHARE_CAP) * 100}%`;
 
-  /* Rewards grid */
-  const grid = document.getElementById("rewardsGrid");
-  const rewards = [
-    { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
-    { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
-    { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
-    { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
-    { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
-  ];
+    /* Rewards grid */
+    const grid = document.getElementById("rewardsGrid");
+    const rewards = [
+      { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
+      { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
+      { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
+      { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
+      { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
+    ];
 
-  grid.innerHTML = "";
-  rewards.forEach(r => {
-    const unlocked = level >= r.level;
-    const card = document.createElement("div");
-    card.className = "reward-card" + (unlocked ? "" : " locked");
-    card.innerHTML = `
-      <div class="reward-icon">${r.icon}</div>
-      <h3>${r.title}</h3>
-      <p>${r.desc}</p>
-      <button class="claim-btn" ${unlocked ? "" : "disabled"}>
-        ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
-      </button>
-    `;
-    if (unlocked) {
-      card.querySelector(".claim-btn").onclick = () => alert(r.msg);
-    }
-    grid.appendChild(card);
+    grid.innerHTML = "";
+    rewards.forEach(r => {
+      const unlocked = level >= r.level;
+      const card = document.createElement("div");
+      card.className = "reward-card" + (unlocked ? "" : " locked");
+      card.innerHTML = `
+        <div class="reward-icon">${r.icon}</div>
+        <h3>${r.title}</h3>
+        <p>${r.desc}</p>
+        <button class="claim-btn" ${unlocked ? "" : "disabled"}>
+          ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
+        </button>
+      `;
+      if (unlocked) {
+        card.querySelector(".claim-btn").onclick = () => alert(r.msg);
+      }
+      grid.appendChild(card);
+    });
   });
 });
 
@@ -363,7 +367,7 @@ window.addEventListener("storage", (e) => {
 });
 </script>
 
-
 </body>
 </html>
+
 
