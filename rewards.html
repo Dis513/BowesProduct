@@ -1,223 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Rewards – BowesProduct</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; }
-        html, body {
-            margin: 0;
-            background: #020617;
-            color: white;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<title>Rewards – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        /* HEADER */
-        .site-header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(2,6,23,0.95);
-            border-bottom: 1px solid #1e293b;
-        }
-        .header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0.6rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .header-left { display: flex; align-items: center; gap: 1.6rem; }
-        .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
-        .main-nav { display: flex; gap: 1.4rem; }
-        .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
-        .main-nav a.active, .main-nav a:hover { color:#60a5fa; }
-        .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
-        #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
-        .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
-        #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
-        #levelText { white-space: nowrap; }
-        #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
-        #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
 
-        @media (max-width: 768px) {
-            .header-inner { flex-direction: column; align-items: stretch; gap: 8px; }
-            .header-left { justify-content: space-between; }
-            .header-right { justify-content: space-between; width: 100%; }
-            #levelInfo { width: 100%; }
-        }
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.95);
+  border-bottom: 1px solid #1e293b;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-        /* PAGE */
-        .page {
-            max-width: 1100px;
-            margin: 4rem auto;
-            padding: 0 1.5rem;
-        }
-        h1 { color:#60a5fa; }
+/* LEFT */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.logo a {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.main-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.main-nav a.active,
+.main-nav a:hover { color:#60a5fa; }
 
-        /* REWARDS PROGRESS */
-        .rewards-progress {
-            margin-top: 1rem;
-        }
-        .progress-track {
-            width: 100%;
-            height: 10px;
-            background: #1e293b;
-            border-radius: 6px;
-        }
-        #xpProgress {
-            height: 100%;
-            width: 0%;
-            background: #60a5fa;
-            border-radius: 6px;
-            transition: width 0.4s ease;
-        }
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 44px;
+}
 
-        /* SHARE SECTION */
-        .share-section {
-            margin-top: 3rem;
-            padding: 1.5rem;
-            background: rgba(30,41,59,0.4);
-            border-radius: 16px;
-            text-align: center;
-        }
-        .share-progress {
-            margin: 1rem 0;
-        }
-        #shareCount { font-size: 1.8rem; font-weight: 700; color: #60a5fa; }
-        #shareProgressBar {
-            height: 10px;
-            background: #60a5fa;
-            border-radius: 6px;
-            width: 0%;
-            transition: width 0.4s ease;
-        }
+/* PROFILE */
+#profilePic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  display: none;
+}
 
-        /* REWARDS GRID */
-        .rewards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-        .reward-card {
-            background: #020617;
-            border: 1px solid #1e293b;
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        .reward-card.locked { opacity: 0.45; }
-        .reward-icon { font-size: 2.4rem; }
-        .reward-title { margin-top: 0.8rem; font-weight: 600; }
-        .reward-desc { font-size: 0.9rem; color: #94a3b8; margin: 0.6rem 0; }
-        .claim-btn {
-            margin-top: 0.8rem;
-            padding: 0.45rem 1.2rem;
-            border-radius: 999px;
-            border: none;
-            cursor: pointer;
-            background: #60a5fa;
-            color: #020617;
-        }
-        .claim-btn:disabled {
-            background: #1e293b;
-            color: #64748b;
-            cursor: not-allowed;
-        }
+/* LOGIN */
+.login-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
 
-        /* FOOTER */
-        .site-footer {
-            background: rgba(2,6,23,0.95);
-            border-top: 1px solid #1e293b;
-            padding: 3rem 1rem;
-        }
-        .footer-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-        .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-        .footer-nav a { color: #cbd5e1; text-decoration: none; }
-        .footer-nav a:hover { color:#60a5fa; }
-        .site-footer p { margin: 0; color: #94a3b8; }
-    </style>
+/* XP */
+#levelInfo {
+  display: none;
+  width: 140px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+#levelText { white-space: nowrap; }
+#xpOuter {
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+#xpBar {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo { width: 100%; }
+}
+
+/* ================= PAGE ================= */
+.page {
+  max-width: 1100px;
+  margin: 4rem auto;
+  padding: 0 1.5rem;
+}
+
+h1 { color:#60a5fa; }
+
+/* ================= REWARDS ================= */
+.rewards-progress {
+  margin-top: 1rem;
+}
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background: #1e293b;
+  border-radius: 6px;
+}
+#xpProgress {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.reward-card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+}
+.reward-card.locked { opacity: 0.45; }
+
+.reward-icon { font-size: 2.4rem; }
+.reward-title { margin-top: 0.8rem; font-weight: 600; }
+.reward-desc {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin: 0.6rem 0;
+}
+.claim-btn {
+  margin-top: 0.8rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: #60a5fa;
+  color: #020617;
+}
+.claim-btn:disabled {
+  background: #1e293b;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+/* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+.footer-nav a:hover { color:#60a5fa; }
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
+}
+</style>
 </head>
+
 <body>
 
 <!-- HEADER -->
 <header class="site-header">
-    <div class="header-inner">
-        <div class="header-left">
-            <div class="logo"><a href="index.html">BowesProduct</a></div>
-            <nav class="main-nav">
-                <a href="index.html">Home</a>
-                <a href="models.html">Models</a>
-            </nav>
-        </div>
-        <div class="header-right">
-            <img id="profilePic" alt="Profile">
-            <div id="levelInfo">
-                <div id="levelText"></div>
-                <div id="xpOuter"><div id="xpBar"></div></div>
-            </div>
-            <button id="authBtn" class="login-btn">Login</button>
-        </div>
+  <div class="header-inner">
+
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="models.html">Models</a>
+      </nav>
     </div>
+
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+
+      <button id="authBtn" class="login-btn">Login</button>
+    </div>
+
+  </div>
 </header>
 
 <!-- PAGE -->
 <div class="page">
-    <h1>Your Rewards</h1>
-    <p id="currentLevelText">Log in to see your rewards.</p>
+  <h1>Your Rewards</h1>
+  <p id="currentLevelText">Log in to see your rewards.</p>
 
-    <div class="rewards-progress">
-        <div class="progress-track">
-            <div id="xpProgress"></div>
-        </div>
-        <p id="xpText" style="margin-top:0.5rem;color:#94a3b8;"></p>
+  <div class="rewards-progress">
+    <div class="progress-track">
+      <div id="xpProgress"></div>
     </div>
+    <p id="xpText" style="margin-top:0.5rem;color:#94a3b8;"></p>
+  </div>
 
-    <!-- Daily Sharing Rewards -->
-    <div class="share-section" id="shareSection" style="display:none;">
-        <h2>Daily Sharing Rewards</h2>
-        <p>Share models to earn bonus XP! (Resets daily)</p>
-        <div class="share-progress">
-            <div class="progress-track">
-                <div id="shareProgressBar"></div>
-            </div>
-            <p style="margin-top:0.5rem;">
-                Shares today: <span id="shareCount">0</span> / 50
-                <br><small>Milestones: 5 (+50 XP) • 10 (+100) • 15 (+150) • ... • 50 (+500 XP)</small>
-            </p>
-        </div>
-        <p>Go to the Models page and click any share button to earn XP!</p>
-    </div>
-
-    <div id="rewardsGrid" class="rewards-grid"></div>
+  <div id="rewardsGrid" class="rewards-grid"></div>
 </div>
 
 <!-- FOOTER -->
 <footer class="site-footer">
-    <div class="footer-inner">
-        <nav class="footer-nav">
-            <a href="about.html">About</a>
-            <a href="privacy.html">Privacy</a>
-            <a href="terms.html">Terms</a>
-            <a href="license.html">License</a>
-            <a href="refund.html">Refund</a>
-            <a href="rewards.html">Rewards</a>
-        </nav>
-        <p>© 2025 BowesProduct</p>
-    </div>
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
 </footer>
-<!-- Rewards.html Script -->
+
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -231,12 +294,10 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc,
-  onSnapshot
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-/* ================= FIREBASE ================= */
-
+/* ================= FIREBASE CONFIG ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
@@ -248,36 +309,29 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* ================= UI ================= */
-
+/* ================= DOM ================= */
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
+/* ================= LOGIN BUTTON ================= */
 authBtn.onclick = () =>
-  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+  auth.currentUser
+    ? signOut(auth)
+    : signInWithPopup(auth, provider);
 
-/* ================= LEVEL SYSTEM ================= */
-
-const LEVELS = [0, 200, 500, 1000, 2000, 4000];
-const TITLES = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
-const SHARE_CAP = 50;
-
-/* ================= AUTH ================= */
-
+/* ================= AUTH STATE ================= */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authBtn.textContent = "Login";
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
-    document.getElementById("shareSection").style.display = "none";
-    document.getElementById("currentLevelText").textContent =
-      "Log in to see your rewards.";
     return;
   }
 
+  /* ===== LOGGED IN ===== */
   authBtn.textContent = "Logout";
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
@@ -285,89 +339,76 @@ onAuthStateChanged(auth, async (user) => {
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
-  /* Initialize user if missing */
   if (!snap.exists()) {
-    await setDoc(ref, {
-      xp: 10,
-      dailyShares: 0,
-      lastShareDate: "",
-      sharedModels: {}
-    });
+    await setDoc(ref, { xp: 10 });
     snap = await getDoc(ref);
   }
 
-  // Set up real-time listener for updates
-  onSnapshot(ref, (snap) => {
-    const data = snap.data();
-    const xp = data.xp || 0;
-    const dailyShares = data.dailyShares || 0;
+  const xp = snap.data().xp || 0;
 
-    /* Level calc */
-    const level = LEVELS.filter(v => xp >= v).length - 1;
-    const next = LEVELS[level + 1] ?? LEVELS[level];
-    const progress =
-      next === LEVELS[level]
-        ? 100
-        : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
+  /* ===== LEVEL SYSTEM ===== */
+  const thresholds = [0, 200, 500, 1000, 2000, 4000];
+  const titles = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
 
-    /* Header UI */
-    levelText.textContent = `Level ${level} • ${xp} XP`;
-    xpBar.style.width = progress + "%";
-    levelInfo.style.display = "block";
+  const level = thresholds.filter(v => xp >= v).length - 1;
+  const next = thresholds[level + 1] ?? thresholds[level];
+  const progress = next === thresholds[level]
+    ? 100
+    : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
 
-    /* Page UI */
-    document.getElementById("currentLevelText").textContent =
-      `Level ${level} – ${TITLES[level]}`;
-    document.getElementById("xpText").textContent = `${xp} XP`;
-    document.getElementById("xpProgress").style.width = progress + "%";
+  levelText.textContent = `Level ${level} • ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
 
-    /* Share section */
-    document.getElementById("shareSection").style.display = "block";
-    document.getElementById("shareCount").textContent = dailyShares;
-    document.getElementById("shareProgressBar").style.width =
-      `${(dailyShares / SHARE_CAP) * 100}%`;
+  /* ================= REWARDS PAGE ================= */
+  const grid = document.getElementById("rewardsGrid");
+  const currentLevelText = document.getElementById("currentLevelText");
+  const xpText = document.getElementById("xpText");
+  const xpProgress = document.getElementById("xpProgress");
 
-    /* Rewards grid */
-    const grid = document.getElementById("rewardsGrid");
-    const rewards = [
-      { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
-      { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
-      { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
-      { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
-      { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
-    ];
+  if (currentLevelText) currentLevelText.textContent = `Level ${level} – ${titles[level]}`;
+  if (xpText) xpText.textContent = `${xp} XP`;
+  if (xpProgress) xpProgress.style.width = progress + "%";
 
-    grid.innerHTML = "";
-    rewards.forEach(r => {
-      const unlocked = level >= r.level;
-      const card = document.createElement("div");
-      card.className = "reward-card" + (unlocked ? "" : " locked");
-      card.innerHTML = `
-        <div class="reward-icon">${r.icon}</div>
-        <h3>${r.title}</h3>
-        <p>${r.desc}</p>
-        <button class="claim-btn" ${unlocked ? "" : "disabled"}>
-          ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
-        </button>
-      `;
-      if (unlocked) {
-        card.querySelector(".claim-btn").onclick = () => alert(r.msg);
-      }
-      grid.appendChild(card);
-    });
+  if (!grid) return;
+
+  const rewards = [
+    { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
+    { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
+    { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
+    { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
+    { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
+  ];
+
+  grid.innerHTML = "";
+
+  rewards.forEach(r => {
+    const unlocked = level >= r.level;
+
+    const card = document.createElement("div");
+    card.className = "reward-card" + (unlocked ? "" : " locked");
+
+    card.innerHTML = `
+      <div class="reward-icon">${r.icon}</div>
+      <h3>${r.title}</h3>
+      <p>${r.desc}</p>
+      <button class="claim-btn" ${unlocked ? "" : "disabled"}>
+        ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
+      </button>
+    `;
+
+    if (unlocked) {
+      card.querySelector(".claim-btn").onclick = () => alert(r.msg);
+    }
+
+    grid.appendChild(card);
   });
-});
-
-/* ================= REFRESH WHEN MODELS PAGE UPDATES ================= */
-
-window.addEventListener("storage", (e) => {
-  if (e.key === "rewardsUpdated") {
-    location.reload();
-  }
 });
 </script>
 
+
 </body>
 </html>
+
 
 
