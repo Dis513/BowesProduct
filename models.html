@@ -5007,15 +5007,10 @@ document.addEventListener("click", (e) => {
   </div>
 </template>
 <script>
-// Record share when user clicks any share button
-document.querySelectorAll('.share-fb, .share-x, .share-reddit, .share-wa').forEach(btn => {
-    btn.addEventListener('click', () => {
-        localStorage.setItem('shareEvent', JSON.stringify({ timestamp: Date.now() }));
-    });
-});
 </script>
 </body>
 </html>
+
 
 
 
