@@ -4814,8 +4814,12 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  updateDoc,
+  increment
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+/* ================= FIREBASE ================= */
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -4828,11 +4832,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// 🔒 Important for Messenger
 await setPersistence(auth, browserLocalPersistence);
-
-// 🔁 Handle redirect result ONCE
 getRedirectResult(auth).catch(console.error);
+
+/* ================= UI ================= */
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -4844,6 +4847,23 @@ authBtn.onclick = () =>
   auth.currentUser
     ? signOut(auth)
     : signInWithRedirect(auth, provider);
+
+/* ================= CONSTANTS ================= */
+
+const LEVELS = [0, 200, 500, 1000, 2000];
+const SHARE_CAP = 50;
+const MILESTONES = [5,10,15,20,25,30,35,40,45,50];
+const TODAY = new Date().toDateString();
+
+/* ================= HELPERS ================= */
+
+function sanitizeModelId(modelPath) {
+  return modelPath
+    .replaceAll("/", "_")
+    .replaceAll(".", "_");
+}
+
+/* ================= AUTH ================= */
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -4861,23 +4881,91 @@ onAuthStateChanged(auth, async (user) => {
   let snap = await getDoc(ref);
 
   if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
+    await setDoc(ref, {
+      xp: 10,
+      dailyShares: 0,
+      lastShareDate: TODAY,
+      sharedModels: {}
+    });
     snap = await getDoc(ref);
   }
 
-  const xp = snap.data().xp || 0;
-  const levels = [0, 200, 500, 1000, 2000];
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
-  let progress = next === levels[level]
+  const data = snap.data();
+  const xp = data.xp || 0;
+
+  const level = LEVELS.filter(v => xp >= v).length - 1;
+  const next = LEVELS[level + 1] ?? LEVELS[level];
+  const progress = next === LEVELS[level]
     ? 100
-    : ((xp - levels[level]) / (next - levels[level])) * 100;
+    : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
 
   levelText.textContent = `Level ${level} • ${xp} XP`;
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
+
+/* ================= SHARE XP (AUTO FOR ALL CARDS) ================= */
+
+async function grantShareXPFromCard(card) {
+  const user = auth.currentUser;
+  if (!user || !card) return;
+
+  const modelPath = card.dataset.model;
+  if (!modelPath) return;
+
+  const modelId = sanitizeModelId(modelPath);
+
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+  const dailyShares = data.dailyShares || 0;
+  const sharedModels = data.sharedModels || {};
+
+  // Reset daily shares if new day
+  if (data.lastShareDate !== TODAY) {
+    await updateDoc(ref, {
+      dailyShares: 0,
+      lastShareDate: TODAY
+    });
+  }
+
+  // ❌ Anti-spam
+  if (sharedModels[modelId] === TODAY) return;
+  if (dailyShares >= SHARE_CAP) return;
+
+  const newCount = dailyShares + 1;
+  const bonusXP = MILESTONES.includes(newCount) ? newCount * 10 : 0;
+
+  await updateDoc(ref, {
+    dailyShares: increment(1),
+    xp: increment(bonusXP),
+    [`sharedModels.${modelId}`]: TODAY,
+    lastShareDate: TODAY
+  });
+
+  console.log(`XP granted for ${modelPath}`);
+}
+
+/* ================= AUTO-HOOK SHARE BUTTONS ================= */
+
+/*
+  ANY button with [data-share] inside a .card
+  will automatically grant XP correctly
+*/
+
+document.addEventListener("click", (e) => {
+  const shareBtn = e.target.closest("[data-share]");
+  if (!shareBtn) return;
+
+  const card = shareBtn.closest(".card");
+  if (!card) return;
+
+  grantShareXPFromCard(card);
+});
 </script>
+
 <template id="share-template">
   <div class="share-buttons">
     <a href="#" class="share-fb" target="_blank" rel="noopener" aria-label="Share on Facebook">
@@ -4900,6 +4988,7 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
 
 
 
