@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Rewards – BowesProduct</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 html, body {
@@ -13,6 +14,7 @@ html, body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
 }
+
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -29,6 +31,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
 }
+
 /* LEFT */
 .header-left {
   display: flex;
@@ -53,6 +56,7 @@ html, body {
 }
 .main-nav a.active,
 .main-nav a:hover { color:#60a5fa; }
+
 /* RIGHT */
 .header-right {
   display: flex;
@@ -60,6 +64,7 @@ html, body {
   gap: 0.8rem;
   min-height: 44px;
 }
+
 /* PROFILE */
 #profilePic {
   width: 32px;
@@ -69,6 +74,7 @@ html, body {
   object-fit: cover;
   display: none;
 }
+
 /* LOGIN */
 .login-btn {
   padding: 0.45rem 1.1rem;
@@ -79,6 +85,7 @@ html, body {
   font-size: 0.95rem;
   cursor: pointer;
 }
+
 /* XP */
 #levelInfo {
   display: none;
@@ -101,6 +108,7 @@ html, body {
   border-radius: 3px;
   transition: width 0.35s ease;
 }
+
 /* MOBILE */
 @media (max-width: 768px) {
   .header-inner {
@@ -117,178 +125,109 @@ html, body {
   }
   #levelInfo { width: 100%; }
 }
+
 /* ================= PAGE ================= */
 .page {
   max-width: 1100px;
   margin: 4rem auto;
   padding: 0 1.5rem;
 }
-h1 { color:#60a5fa; text-align: center; }
 
-/* ================= TALENT TREE LAYOUT ================= */
-.talent-tree-container {
-  margin-top: 2rem;
-  padding: 2rem 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
+h1 { color:#60a5fa; }
 
-.talent-tree {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 900px;
-  padding: 3rem 1rem;
-}
-
-/* Progress bar at top */
+/* ================= REWARDS ================= */
 .rewards-progress {
-  margin: 2rem auto 3rem;
-  max-width: 600px;
+  margin-top: 1rem;
 }
 .progress-track {
   width: 100%;
-  height: 12px;
+  height: 10px;
   background: #1e293b;
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 6px;
 }
 #xpProgress {
   height: 100%;
   width: 0%;
-  background: linear-gradient(to right, #60a5fa, #a78bfa);
-  border-radius: 8px;
-  transition: width 0.6s ease;
-}
-#xpText {
-  text-align: center;
-  margin-top: 0.8rem;
-  color: #cbd5e1;
+  background: #60a5fa;
+  border-radius: 6px;
+  transition: width 0.4s ease;
 }
 
-/* Tree rows */
-.tree-row {
-  display: flex;
-  justify-content: center;
-  gap: 4rem;
-  margin-bottom: 5rem;
-  position: relative;
-  z-index: 2;
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
 }
 
-/* Individual talent nodes */
-.talent-node {
-  width: 180px;
-  background: #0f172a;
-  border: 2px solid #1e293b;
+.reward-card {
+  background: #020617;
+  border: 1px solid #1e293b;
   border-radius: 16px;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem;
   text-align: center;
-  transition: all 0.3s ease;
-  position: relative;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
-.talent-node.unlocked {
-  border-color: #60a5fa;
-  background: #1e293b;
-  box-shadow: 0 0 20px rgba(96,165,250,0.3);
-}
-.talent-node.locked {
-  opacity: 0.4;
-  filter: grayscale(80%);
-}
-.talent-icon {
-  font-size: 3rem;
-  margin-bottom: 0.8rem;
-}
-.talent-title {
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
-}
-.talent-desc {
-  font-size: 0.88rem;
+.reward-card.locked { opacity: 0.45; }
+
+.reward-icon { font-size: 2.4rem; }
+.reward-title { margin-top: 0.8rem; font-weight: 600; }
+.reward-desc {
+  font-size: 0.9rem;
   color: #94a3b8;
-  margin: 0.6rem 0 1rem;
+  margin: 0.6rem 0;
 }
 .claim-btn {
-  padding: 0.5rem 1.2rem;
+  margin-top: 0.8rem;
+  padding: 0.45rem 1.2rem;
   border-radius: 999px;
   border: none;
   cursor: pointer;
   background: #60a5fa;
   color: #020617;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-.claim-btn:hover:not(:disabled) {
-  background: #a78bfa;
-  transform: translateY(-2px);
 }
 .claim-btn:disabled {
-  background: #334155;
+  background: #1e293b;
   color: #64748b;
   cursor: not-allowed;
 }
 
-/* Connecting lines */
-.talent-tree::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent, #1e293b, transparent);
-  transform: translateX(-50%);
-  z-index: 1;
+/* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
 }
-
-/* Branch lines */
-.tree-row:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  width: 4px;
-  height: 5rem;
-  background: #1e293b;
-  transform: translateX(-50%);
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
 }
-
-/* Horizontal branches for multi-node rows */
-.tree-row:has(.talent-node:nth-child(1):nth-last-child(3))::before,
-.tree-row:has(.talent-node:nth-child(1):nth-last-child(2))::before {
-  content: '';
-  position: absolute;
-  top: -5rem;
-  left: 50%;
-  width: 70%;
-  height: 5rem;
-  border-bottom: 4px solid #1e293b;
-  border-left: 4px solid #1e293b;
-  border-right: 4px solid #1e293b;
-  border-radius: 0 0 20px 20px;
-  transform: translateX(-50%);
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .talent-node {
-    width: 150px;
-    padding: 1rem;
-  }
-  .talent-icon { font-size: 2.5rem; }
-  .tree-row { gap: 2rem; }
-  .talent-tree { min-width: 700px; }
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+.footer-nav a:hover { color:#60a5fa; }
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
 }
 </style>
 </head>
+
 <body>
+
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
+
     <div class="header-left">
       <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
@@ -296,34 +235,34 @@ h1 { color:#60a5fa; text-align: center; }
         <a href="models.html">Models</a>
       </nav>
     </div>
+
     <div class="header-right">
       <img id="profilePic" alt="Profile">
+
       <div id="levelInfo">
         <div id="levelText"></div>
         <div id="xpOuter"><div id="xpBar"></div></div>
       </div>
+
       <button id="authBtn" class="login-btn">Login</button>
     </div>
+
   </div>
 </header>
 
 <!-- PAGE -->
 <div class="page">
-  <h1>Reward Talent Tree</h1>
-  <p id="currentLevelText" style="text-align:center; color:#cbd5e1;">Log in to see your rewards.</p>
+  <h1>Your Rewards</h1>
+  <p id="currentLevelText">Log in to see your rewards.</p>
 
   <div class="rewards-progress">
     <div class="progress-track">
       <div id="xpProgress"></div>
     </div>
-    <p id="xpText"></p>
+    <p id="xpText" style="margin-top:0.5rem;color:#94a3b8;"></p>
   </div>
 
-  <div class="talent-tree-container">
-    <div id="talentTree" class="talent-tree">
-      <!-- Dynamically filled by JS -->
-    </div>
-  </div>
+  <div id="rewardsGrid" class="rewards-grid"></div>
 </div>
 
 <!-- FOOTER -->
@@ -364,6 +303,7 @@ const firebaseConfig = {
   authDomain: "bowesproduct.firebaseapp.com",
   projectId: "bowesproduct"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -388,8 +328,6 @@ onAuthStateChanged(auth, async (user) => {
     authBtn.textContent = "Login";
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
-    document.getElementById("currentLevelText").textContent = "Log in to see your rewards.";
-    document.getElementById("talentTree").innerHTML = "";
     return;
   }
 
@@ -400,15 +338,18 @@ onAuthStateChanged(auth, async (user) => {
 
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
+
   if (!snap.exists()) {
     await setDoc(ref, { xp: 10 });
     snap = await getDoc(ref);
   }
+
   const xp = snap.data().xp || 0;
 
   /* ===== LEVEL SYSTEM ===== */
   const thresholds = [0, 200, 500, 1000, 2000, 4000];
   const titles = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
+
   const level = thresholds.filter(v => xp >= v).length - 1;
   const next = thresholds[level + 1] ?? thresholds[level];
   const progress = next === thresholds[level]
@@ -419,61 +360,55 @@ onAuthStateChanged(auth, async (user) => {
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 
-  document.getElementById("currentLevelText").textContent = `Level ${level} – ${titles[level]}`;
-  document.getElementById("xpText").textContent = `${xp} XP • ${Math.round(progress)}% to next level`;
-  document.getElementById("xpProgress").style.width = progress + "%";
+  /* ================= REWARDS PAGE ================= */
+  const grid = document.getElementById("rewardsGrid");
+  const currentLevelText = document.getElementById("currentLevelText");
+  const xpText = document.getElementById("xpText");
+  const xpProgress = document.getElementById("xpProgress");
 
-  /* ================= TALENT TREE ================= */
-  const tree = document.getElementById("talentTree");
-  tree.innerHTML = "";
+  if (currentLevelText) currentLevelText.textContent = `Level ${level} – ${titles[level]}`;
+  if (xpText) xpText.textContent = `${xp} XP`;
+  if (xpProgress) xpProgress.style.width = progress + "%";
+
+  if (!grid) return;
 
   const rewards = [
-    { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props for your projects", msg: "Unlocked Free Prop Pack!" },
-    { level: 2, icon: "🎟️", title: "15% Discount", desc: "One-time discount on next purchase", msg: "Use code: REWARD15" },
-    { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5 for free", msg: "Choose any model under €5 for free!" },
-    { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access to a premium model", msg: "Exclusive model unlocked!" },
-    { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "20% off all future purchases forever", msg: "Use code: MASTER20 forever!" }
+    { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
+    { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
+    { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
+    { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
+    { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
   ];
 
-  // Layout: tier 1 (1 node), tier 2 (2 nodes), tier 3+ (1 node each)
-  const layout = [
-    [rewards[0]],                  // Level 1
-    [rewards[1], rewards[2]],      // Level 2 & 3 branching
-    [rewards[3]],                  // Level 4
-    [rewards[4]]                   // Level 5
-  ];
+  grid.innerHTML = "";
 
-  layout.forEach(rowRewards => {
-    const row = document.createElement("div");
-    row.className = "tree-row";
+  rewards.forEach(r => {
+    const unlocked = level >= r.level;
 
-    rowRewards.forEach(r => {
-      const unlocked = level >= r.level;
+    const card = document.createElement("div");
+    card.className = "reward-card" + (unlocked ? "" : " locked");
 
-      const node = document.createElement("div");
-      node.className = `talent-node ${unlocked ? "unlocked" : "locked"}`;
+    card.innerHTML = `
+      <div class="reward-icon">${r.icon}</div>
+      <h3>${r.title}</h3>
+      <p>${r.desc}</p>
+      <button class="claim-btn" ${unlocked ? "" : "disabled"}>
+        ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
+      </button>
+    `;
 
-      node.innerHTML = `
-        <div class="talent-icon">${r.icon}</div>
-        <h3 class="talent-title">${r.title}</h3>
-        <p class="talent-desc">${r.desc}</p>
-        <button class="claim-btn" ${unlocked ? "" : "disabled"}>
-          ${unlocked ? "Claim Reward" : `Locked (Level ${r.level})`}
-        </button>
-      `;
+    if (unlocked) {
+      card.querySelector(".claim-btn").onclick = () => alert(r.msg);
+    }
 
-      if (unlocked) {
-        node.querySelector(".claim-btn").onclick = () => {
-          alert(r.msg);
-        };
-      }
-
-      row.appendChild(node);
-    });
-
-    tree.appendChild(row);
+    grid.appendChild(card);
   });
 });
 </script>
+
+
 </body>
 </html>
+
+
+
