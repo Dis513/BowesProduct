@@ -12,6 +12,7 @@ html, body {
   background: #020617;
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
 }
 
 /* ================= HEADER ================= */
@@ -22,25 +23,40 @@ html, body {
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
+
 .header-inner {
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
   padding: 0.6rem 1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
 .logo a {
+  font-size: 1.3rem;
+  font-weight: 700;
   color: white;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1.3rem;
 }
+
+.main-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+
 .main-nav a {
-  margin-left: 1.4rem;
-  color: #cbd5e1;
+  color: #e5e7eb;
   text-decoration: none;
+  font-size: 0.95rem;
 }
+
 .main-nav a:hover { color:#60a5fa; }
 
 .header-right {
@@ -48,13 +64,16 @@ html, body {
   align-items: center;
   gap: 0.8rem;
 }
+
 #profilePic {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   border: 2px solid #60a5fa;
+  object-fit: cover;
   display: none;
 }
+
 .login-btn {
   padding: 0.45rem 1.1rem;
   border-radius: 999px;
@@ -66,49 +85,55 @@ html, body {
 
 /* ================= PAGE ================= */
 .page {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 4rem auto;
   padding: 0 1.5rem;
 }
-h1 { color:#60a5fa; text-align:center; }
 
-/* ================= TALENT TREE ================= */
+h1 { color:#60a5fa; }
+
+/* ================= REWARDS ================= */
+.rewards-progress {
+  margin-top: 1rem;
+}
+
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background: #1e293b;
+  border-radius: 6px;
+}
+
+#xpProgress {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
 .rewards-grid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
   margin-top: 3rem;
 }
 
-.reward-node {
-  width: 100%;
-  max-width: 420px;
+.reward-card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  padding: 1.5rem;
   text-align: center;
 }
 
-.reward-card {
-  background: rgba(2,6,23,0.85);
-  border: 1px solid #1e293b;
-  border-radius: 16px;
-  padding: 1.6rem;
-  transition: 0.3s;
-}
+.reward-card.locked { opacity: 0.45; }
 
-.reward-card.locked {
-  opacity: 0.4;
-}
+.reward-icon { font-size: 2.4rem; }
 
-.reward-card.claimed {
-  border-color: #60a5fa;
-  box-shadow: 0 0 20px rgba(96,165,250,0.2);
-}
-
-.reward-icon {
-  font-size: 2.4rem;
-}
 .reward-desc {
-  color: #94a3b8;
   font-size: 0.9rem;
+  color: #94a3b8;
 }
 
 .claim-btn {
@@ -120,21 +145,34 @@ h1 { color:#60a5fa; text-align:center; }
   color: #020617;
   cursor: pointer;
 }
+
 .claim-btn:disabled {
   background: #1e293b;
   color: #64748b;
   cursor: not-allowed;
 }
 
-/* Blue arrow */
-.reward-arrow {
-  width: 28px;
-  height: 28px;
-  margin: 0.6rem auto;
-  border-left: 3px solid rgba(96,165,250,0.6);
-  border-bottom: 3px solid rgba(96,165,250,0.6);
-  transform: rotate(-45deg);
+/* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
 }
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+  margin-right: 1rem;
+}
+.footer-nav a:hover { color:#60a5fa; }
 </style>
 </head>
 
@@ -142,13 +180,14 @@ h1 { color:#60a5fa; text-align:center; }
 
 <header class="site-header">
   <div class="header-inner">
-    <div>
-      <span class="logo"><a href="index.html">BowesProduct</a></span>
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
       </nav>
     </div>
+
     <div class="header-right">
       <img id="profilePic">
       <button id="authBtn" class="login-btn">Login</button>
@@ -157,33 +196,44 @@ h1 { color:#60a5fa; text-align:center; }
 </header>
 
 <div class="page">
-  <h1>Reward Path</h1>
+  <h1>Your Rewards</h1>
+  <p id="currentLevelText">Log in to see your rewards.</p>
+
+  <div class="rewards-progress">
+    <div class="progress-track">
+      <div id="xpProgress"></div>
+    </div>
+    <p id="xpText"></p>
+  </div>
+
   <div id="rewardsGrid" class="rewards-grid"></div>
 </div>
 
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-const firebaseConfig = {
+const app = initializeApp({
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
   projectId: "bowesproduct"
-};
+});
 
-const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
@@ -194,7 +244,7 @@ const profilePic = document.getElementById("profilePic");
 authBtn.onclick = () =>
   auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
-onAuthStateChanged(auth, async user => {
+onAuthStateChanged(auth, async (user) => {
   if (!user) return;
 
   authBtn.textContent = "Logout";
@@ -205,68 +255,17 @@ onAuthStateChanged(auth, async user => {
   let snap = await getDoc(ref);
 
   if (!snap.exists()) {
-    await setDoc(ref, { xp: 0, claimedRewards: {} });
+    await setDoc(ref, { xp: 10 });
     snap = await getDoc(ref);
   }
 
-  const xp = snap.data().xp || 0;
-  const claimed = snap.data().claimedRewards || {};
-
+  const xp = snap.data().xp;
   const thresholds = [0,200,500,1000,2000,4000];
+  const titles = ["Starter","Explorer","Builder","Artist","Creator","Master"];
   const level = thresholds.filter(v => xp >= v).length - 1;
 
-  const rewards = [
-    { level:1, icon:"📦", title:"Free Prop Pack", msg:"Unlocked Free Prop Pack!" },
-    { level:2, icon:"🎟️", title:"15% Discount", msg:"Use code: REWARD15" },
-    { level:3, icon:"🗿", title:"Free Model", msg:"Choose any model under €5!" },
-    { level:4, icon:"✨", title:"Exclusive Model", msg:"Exclusive model unlocked!" },
-    { level:5, icon:"👑", title:"Permanent 20% Off", msg:"Use code: MASTER20 forever!" }
-  ];
-
-  const grid = document.getElementById("rewardsGrid");
-  grid.innerHTML = "";
-
-  rewards.forEach((r, i) => {
-    const unlocked = level >= r.level;
-    const isClaimed = claimed[r.title];
-
-    const node = document.createElement("div");
-    node.className = "reward-node";
-
-    const card = document.createElement("div");
-    card.className =
-      "reward-card" +
-      (unlocked ? "" : " locked") +
-      (isClaimed ? " claimed" : "");
-
-    card.innerHTML = `
-      <div class="reward-icon">${r.icon}</div>
-      <h3>${r.title}</h3>
-      <button class="claim-btn" ${!unlocked || isClaimed ? "disabled" : ""}>
-        ${isClaimed ? "Claimed" : unlocked ? "Claim" : `Locked`}
-      </button>
-    `;
-
-    if (unlocked && !isClaimed) {
-      card.querySelector("button").onclick = async () => {
-        await setDoc(ref, {
-          claimedRewards: { ...claimed, [r.title]: true }
-        }, { merge: true });
-
-        alert(r.msg);
-        location.reload();
-      };
-    }
-
-    node.appendChild(card);
-    grid.appendChild(node);
-
-    if (i < rewards.length - 1) {
-      const arrow = document.createElement("div");
-      arrow.className = "reward-arrow";
-      grid.appendChild(arrow);
-    }
-  });
+  document.getElementById("currentLevelText").textContent =
+    `Level ${level} – ${titles[level]}`;
 });
 </script>
 
