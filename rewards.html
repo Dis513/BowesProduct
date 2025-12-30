@@ -221,25 +221,25 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
-    onAuthStateChanged
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc,
-    updateDoc,
-    increment
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
+/* ================= FIREBASE ================= */
+
 const firebaseConfig = {
-    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-    authDomain: "bowesproduct.firebaseapp.com",
-    projectId: "bowesproduct"
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -247,146 +247,123 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
+/* ================= UI ================= */
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
-authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+authBtn.onclick = () =>
+  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+
+/* ================= LEVEL SYSTEM ================= */
+
+const LEVELS = [0, 200, 500, 1000, 2000, 4000];
+const TITLES = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
+const SHARE_CAP = 50;
+
+/* ================= AUTH ================= */
 
 onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-        authBtn.textContent = "Login";
-        profilePic.style.display = "none";
-        levelInfo.style.display = "none";
-        document.getElementById("currentLevelText").textContent = "Log in to see your rewards.";
-        document.getElementById("shareSection").style.display = "none";
-        return;
-    }
+  if (!user) {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+    levelInfo.style.display = "none";
+    document.getElementById("shareSection").style.display = "none";
+    document.getElementById("currentLevelText").textContent =
+      "Log in to see your rewards.";
+    return;
+  }
 
-    authBtn.textContent = "Logout";
-    profilePic.src = user.photoURL || "";
-    profilePic.style.display = "block";
+  authBtn.textContent = "Logout";
+  profilePic.src = user.photoURL || "";
+  profilePic.style.display = "block";
 
-    const ref = doc(db, "users", user.uid);
-    let snap = await getDoc(ref);
+  const ref = doc(db, "users", user.uid);
+  let snap = await getDoc(ref);
 
-    // Initialize new user
-    if (!snap.exists()) {
-        await setDoc(ref, {
-            xp: 10,
-            lastLogin: new Date().toDateString(),
-            lastShareDate: "",
-            dailyShares: 0
-        });
-        snap = await getDoc(ref);
-    }
-
-    const data = snap.data();
-    const today = new Date().toDateString();
-
-    // Daily login XP
-    if (data.lastLogin !== today) {
-        await updateDoc(ref, {
-            xp: increment(10),
-            lastLogin: today
-        });
-    }
-
-    // Reset daily shares if new day
-    if (data.lastShareDate !== today) {
-        await updateDoc(ref, {
-            dailyShares: 0,
-            lastShareDate: today
-        });
-        snap = await getDoc(ref);
-    }
-
-    let xp = snap.data().xp || 0;
-    let dailyShares = snap.data().dailyShares || 0;
-
-    // Level system
-    const thresholds = [0, 200, 500, 1000, 2000, 4000];
-    const titles = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
-    const level = thresholds.filter(v => xp >= v).length - 1;
-    const next = thresholds[level + 1] ?? thresholds[level];
-    const progress = next === thresholds[level] ? 100 : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
-
-    levelText.textContent = `Level ${level} • ${xp} XP`;
-    xpBar.style.width = progress + "%";
-    levelInfo.style.display = "block";
-
-    document.getElementById("currentLevelText").textContent = `Level ${level} – ${titles[level]}`;
-    document.getElementById("xpText").textContent = `${xp} XP`;
-    document.getElementById("xpProgress").style.width = progress + "%";
-
-    // Show sharing section
-    document.getElementById("shareSection").style.display = "block";
-    document.getElementById("shareCount").textContent = dailyShares;
-    document.getElementById("shareProgressBar").style.width = `${(dailyShares / 50) * 100}%`;
-
-    // Rewards grid
-    const grid = document.getElementById("rewardsGrid");
-    const rewards = [
-        { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
-        { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
-        { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
-        { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
-        { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
-    ];
-
-    grid.innerHTML = "";
-    rewards.forEach(r => {
-        const unlocked = level >= r.level;
-        const card = document.createElement("div");
-        card.className = "reward-card" + (unlocked ? "" : " locked");
-        card.innerHTML = `
-            <div class="reward-icon">${r.icon}</div>
-            <h3>${r.title}</h3>
-            <p>${r.desc}</p>
-            <button class="claim-btn" ${unlocked ? "" : "disabled"}>
-                ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
-            </button>
-        `;
-        if (unlocked) {
-            card.querySelector(".claim-btn").onclick = () => alert(r.msg);
-        }
-        grid.appendChild(card);
+  /* Initialize user if missing */
+  if (!snap.exists()) {
+    await setDoc(ref, {
+      xp: 10,
+      dailyShares: 0,
+      lastShareDate: "",
+      sharedModels: {}
     });
+    snap = await getDoc(ref);
+  }
+
+  const data = snap.data();
+  const xp = data.xp || 0;
+  const dailyShares = data.dailyShares || 0;
+
+  /* Level calc */
+  const level = LEVELS.filter(v => xp >= v).length - 1;
+  const next = LEVELS[level + 1] ?? LEVELS[level];
+  const progress =
+    next === LEVELS[level]
+      ? 100
+      : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
+
+  /* Header UI */
+  levelText.textContent = `Level ${level} • ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
+
+  /* Page UI */
+  document.getElementById("currentLevelText").textContent =
+    `Level ${level} – ${TITLES[level]}`;
+  document.getElementById("xpText").textContent = `${xp} XP`;
+  document.getElementById("xpProgress").style.width = progress + "%";
+
+  /* Share section */
+  document.getElementById("shareSection").style.display = "block";
+  document.getElementById("shareCount").textContent = dailyShares;
+  document.getElementById("shareProgressBar").style.width =
+    `${(dailyShares / SHARE_CAP) * 100}%`;
+
+  /* Rewards grid */
+  const grid = document.getElementById("rewardsGrid");
+  const rewards = [
+    { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
+    { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
+    { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
+    { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
+    { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
+  ];
+
+  grid.innerHTML = "";
+  rewards.forEach(r => {
+    const unlocked = level >= r.level;
+    const card = document.createElement("div");
+    card.className = "reward-card" + (unlocked ? "" : " locked");
+    card.innerHTML = `
+      <div class="reward-icon">${r.icon}</div>
+      <h3>${r.title}</h3>
+      <p>${r.desc}</p>
+      <button class="claim-btn" ${unlocked ? "" : "disabled"}>
+        ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
+      </button>
+    `;
+    if (unlocked) {
+      card.querySelector(".claim-btn").onclick = () => alert(r.msg);
+    }
+    grid.appendChild(card);
+  });
 });
 
-// Listen for share events from models.html
-window.addEventListener("storage", async (e) => {
-    if (e.key === "shareEvent" && auth.currentUser) {
-        const eventData = JSON.parse(e.newValue || "{}");
-        if (eventData.timestamp && Date.now() - eventData.timestamp < 5000) {
-            const ref = doc(db, "users", auth.currentUser.uid);
-            const snap = await getDoc(ref);
-            if (!snap.exists()) return;
+/* ================= REFRESH WHEN MODELS PAGE UPDATES ================= */
 
-            const data = snap.data();
-            const today = new Date().toDateString();
-            if (data.lastShareDate !== today || (data.dailyShares || 0) >= 50) return;
-
-            const newCount = (data.dailyShares || 0) + 1;
-
-            // Calculate milestone bonus
-            const milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
-            const bonus = milestones.includes(newCount) ? newCount * 10 : 0;
-
-            await updateDoc(ref, {
-                dailyShares: increment(1),
-                lastShareDate: today,
-                xp: increment(bonus)
-            });
-
-            // Refresh page to update UI
-            location.reload();
-        }
-    }
+window.addEventListener("storage", (e) => {
+  if (e.key === "rewardsUpdated") {
+    location.reload();
+  }
 });
 </script>
 
+
 </body>
 </html>
+
