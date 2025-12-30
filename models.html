@@ -368,6 +368,85 @@ model-viewer {
         <button class="btn view-btn">View in 3D</button>
         <a href="https://buy.stripe.com/test_6oU14mcITbIk8FsgEq3Je08" class="btn primary">Buy Model</a>
         <p class="delivery">Instant download · Rigged · .glb/.fbx · <a href="license.html">License</a></p>
+       <!-- Share Buttons -->
+<div class="share-actions" style="margin-top:12px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+
+  <button class="share-btn" data-platform="twitter" title="Share on X">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2H21.55l-7.227 8.26L22.5 22h-6.4l-5.01-6.52L5.37 22H2.06l7.73-8.84L1.5 2h6.56l4.53 5.92L18.244 2Z"/>
+    </svg>
+  </button>
+
+  <button class="share-btn" data-platform="reddit" title="Share on Reddit">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.7 3.1c.2-.9 1-1.6 2-1.6 1.1 0 2 .9 2 2s-.9 2-2 2c-.6 0-1.2-.3-1.6-.7l-4.2.9.9 4.2c2.8.1 5.3.9 6.8 2.2.5-.4 1.2-.7 1.9-.7 1.6 0 2.9 1.3 2.9 2.9 0 3.3-4.4 6-9.9 6s-9.9-2.7-9.9-6c0-1.6 1.3-2.9 2.9-2.9.7 0 1.4.3 1.9.7 1.5-1.3 4-2.1 6.8-2.2l-1-4.7 5.4-1.1Z"/>
+    </svg>
+  </button>
+
+  <button class="share-btn" data-platform="discord" title="Share on Discord">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.3 4.5A19.8 19.8 0 0 0 15.8 3l-.3.6a18.3 18.3 0 0 1 4.1 1.6ZM8.5 3l-.3.6a18.3 18.3 0 0 0-4.1 1.6l.6 1.1A17.2 17.2 0 0 1 8.5 3Zm11.8 4.4c-1.5-2.3-3-3.6-3-3.6s-.3.1-.8.3c1.9 1.3 2.8 2.8 2.8 2.8-1.2-.7-2.3-1.1-3.4-1.4-1-.3-2-.5-3-.5s-2 .2-3 .5c-1.1.3-2.2.7-3.4 1.4 0 0 .9-1.5 2.8-2.8-.5-.2-.8-.3-.8-.3s-1.5 1.3-3 3.6c-1.5 2.3-2.3 4.6-2.3 4.6 0 3.3 2.4 4.7 2.4 4.7 1.1.7 2.3 1.1 3.5 1.3l.7-.9c-1.3-.4-2.5-1.1-3.5-2.1 1.3.9 3.5 2 6.5 2s5.2-1.1 6.5-2c-1 .9-2.2 1.6-3.5 2.1l.7.9c1.2-.2 2.4-.6 3.5-1.3 0 0 2.4-1.4 2.4-4.7 0 0-.8-2.3-2.3-4.6Z"/>
+    </svg>
+  </button>
+
+  <button class="share-btn" data-platform="facebook" title="Share on Facebook">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H8.1v-2.9h2.3V9.8c0-2.3 1.4-3.6 3.4-3.6 1 0 2 .2 2 .2v2.2h-1.1c-1.1 0-1.4.7-1.4 1.4v1.7h2.5l-.4 2.9h-2.1v7A10 10 0 0 0 22 12Z"/>
+    </svg>
+  </button>
+
+  <button class="share-btn" data-platform="whatsapp" title="Share on WhatsApp">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2a10 10 0 0 0-8.7 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/>
+    </svg>
+  </button>
+
+  <button class="share-btn" data-platform="copy" title="Copy link">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7Z"/>
+    </svg>
+  </button>
+
+</div>
+
+<script>
+(() => {
+  const block = document.currentScript.previousElementSibling;
+  const url = window.location.href;
+  const text = "Check out this 3D model on BowesProduct!";
+
+  block.querySelectorAll(".share-btn").forEach(btn => {
+    btn.onclick = () => {
+      const p = btn.dataset.platform;
+
+      if (p === "twitter")
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+
+      if (p === "reddit")
+        window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
+
+      if (p === "facebook")
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+
+      if (p === "whatsapp")
+        window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
+
+      if (p === "discord") {
+        navigator.clipboard.writeText(text + " " + url);
+        alert("Copied for Discord");
+      }
+
+      if (p === "copy") {
+        navigator.clipboard.writeText(url);
+        alert("Link copied");
+      }
+
+      localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
+    };
+  });
+})();
+</script>
+
       </div>
     </div>
 
@@ -1088,3 +1167,4 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
