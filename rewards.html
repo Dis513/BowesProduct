@@ -380,6 +380,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   getRedirectResult,
   signOut,
   onAuthStateChanged,
@@ -405,7 +406,10 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error);
+getRedirectResult(auth).catch(console.error); // Always handle redirect result
+
+// Detect Facebook/Messenger/Insta in-app browsers (and other known popup-hostile environments)
+const isInAppBrowser = /FBAN|FBAV|Instagram|Line|Zalo/i.test(navigator.userAgent);
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -417,11 +421,15 @@ authBtn.onclick = () => {
   if (auth.currentUser) {
     signOut(auth);
   } else {
-    signInWithPopup(auth, provider)
-      .catch((error) => {
-        console.error("Login error:", error);
-        alert("Login failed: " + error.message);
-      });
+    if (isInAppBrowser) {
+      signInWithRedirect(auth, provider);  // Fallback to redirect for Messenger/FB/Insta/etc.
+    } else {
+      signInWithPopup(auth, provider)
+        .catch((error) => {
+          console.error("Login error:", error);
+          alert("Login failed: " + error.message);
+        });
+    }
   }
 };
 
@@ -430,10 +438,18 @@ onAuthStateChanged(auth, async (user) => {
     authBtn.textContent = "Login";
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
-    document.getElementById("currentLevelText").textContent = "Log in to see your rewards.";
-    document.getElementById("xpText").textContent = "";
-    document.getElementById("xpProgress").style.width = "0%";
-    document.getElementById("rewardsGrid").innerHTML = "";
+
+    // Rewards page specific reset
+    const currentLevelText = document.getElementById("currentLevelText");
+    const xpText = document.getElementById("xpText");
+    const xpProgress = document.getElementById("xpProgress");
+    const rewardsGrid = document.getElementById("rewardsGrid");
+
+    if (currentLevelText) currentLevelText.textContent = "Log in to see your rewards.";
+    if (xpText) xpText.textContent = "";
+    if (xpProgress) xpProgress.style.width = "0%";
+    if (rewardsGrid) rewardsGrid.innerHTML = "";
+
     return;
   }
 
@@ -461,35 +477,40 @@ onAuthStateChanged(auth, async (user) => {
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 
-  // Update rewards page specific elements
-  document.getElementById("currentLevelText").textContent = `You are Level ${level}`;
-  document.getElementById("xpText").textContent = `${xp} / ${next} XP to next level`;
-  document.getElementById("xpProgress").style.width = progress + "%";
-
-  // Example rewards – you can expand this
+  // Rewards page specific updates
+  const currentLevelText = document.getElementById("currentLevelText");
+  const xpText = document.getElementById("xpText");
+  const xpProgress = document.getElementById("xpProgress");
   const rewardsGrid = document.getElementById("rewardsGrid");
-  rewardsGrid.innerHTML = ""; // Clear previous
 
-  const rewards = [
-    { level: 1, icon: "🎨", title: "Early Supporter Badge", desc: "Exclusive profile badge", claimed: xp >= 200 },
-    { level: 2, icon: "🔓", title: "Free Prop Pack", desc: "5 free props", claimed: xp >= 500 },
-    { level: 3, icon: "💎", title: "Discount Coupon", desc: "20% off next purchase", claimed: xp >= 1000 },
-    { level: 4, icon: "🏆", title: "Exclusive Model", desc: "Special character model", claimed: xp >= 2000 }
-  ];
+  if (currentLevelText) currentLevelText.textContent = `You are Level ${level}`;
+  if (xpText) xpText.textContent = `${xp} / ${next} XP to next level`;
+  if (xpProgress) xpProgress.style.width = progress + "%";
 
-  rewards.forEach(r => {
-    const card = document.createElement("div");
-    card.className = "reward-card" + (r.claimed ? "" : " locked");
-    card.innerHTML = `
-      <div class="reward-icon">${r.icon}</div>
-      <div class="reward-title">${r.title}</div>
-      <div class="reward-desc">${r.desc}</div>
-      <button class="claim-btn" ${r.claimed ? "disabled" : ""}>
-        ${r.claimed ? "Claimed" : "Locked"}
-      </button>
-    `;
-    rewardsGrid.appendChild(card);
-  });
+  if (rewardsGrid) {
+    rewardsGrid.innerHTML = ""; // Clear previous
+
+    const rewards = [
+      { level: 1, icon: "🎨", title: "Early Supporter Badge", desc: "Exclusive profile badge", claimed: xp >= 200 },
+      { level: 2, icon: "🔓", title: "Free Prop Pack", desc: "5 free props", claimed: xp >= 500 },
+      { level: 3, icon: "💎", title: "Discount Coupon", desc: "20% off next purchase", claimed: xp >= 1000 },
+      { level: 4, icon: "🏆", title: "Exclusive Model", desc: "Special character model", claimed: xp >= 2000 }
+    ];
+
+    rewards.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "reward-card" + (r.claimed ? "" : " locked");
+      card.innerHTML = `
+        <div class="reward-icon">${r.icon}</div>
+        <div class="reward-title">${r.title}</div>
+        <div class="reward-desc">${r.desc}</div>
+        <button class="claim-btn" ${r.claimed ? "disabled" : ""}>
+          ${r.claimed ? "Claimed" : "Locked"}
+        </button>
+      `;
+      rewardsGrid.appendChild(card);
+    });
+  }
 });
 </script>
 
@@ -525,3 +546,4 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
