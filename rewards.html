@@ -286,9 +286,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebas
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithPopup,  // Changed to Popup
+  getRedirectResult, // Keep just in case (harmless)
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import {
   getFirestore,
@@ -297,7 +300,6 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-/* ================= FIREBASE CONFIG ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
@@ -309,20 +311,31 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* ================= DOM ================= */
+await setPersistence(auth, browserLocalPersistence);
+getRedirectResult(auth).catch(console.error); // Keep for compatibility
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
-/* ================= LOGIN BUTTON ================= */
-authBtn.onclick = () =>
-  auth.currentUser
-    ? signOut(auth)
-    : signInWithPopup(auth, provider);
+authBtn.onclick = () => {
+  if (auth.currentUser) {
+    signOut(auth);
+  } else {
+    signInWithPopup(auth, provider)  // Use Popup instead of Redirect
+      .then((result) => {
+        // Optional: handle result if needed
+        console.log("Logged in:", result.user);
+      })
+      .catch((error) => {
+        console.error("Login error:", error);
+        alert("Login failed: " + error.message);
+      });
+  }
+};
 
-/* ================= AUTH STATE ================= */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authBtn.textContent = "Login";
@@ -331,7 +344,6 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  /* ===== LOGGED IN ===== */
   authBtn.textContent = "Logout";
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
@@ -345,70 +357,22 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   const xp = snap.data().xp || 0;
-
-  /* ===== LEVEL SYSTEM ===== */
-  const thresholds = [0, 200, 500, 1000, 2000, 4000];
-  const titles = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
-
-  const level = thresholds.filter(v => xp >= v).length - 1;
-  const next = thresholds[level + 1] ?? thresholds[level];
-  const progress = next === thresholds[level]
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level]
     ? 100
-    : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
+    : ((xp - levels[level]) / (next - levels[level])) * 100;
 
   levelText.textContent = `Level ${level} • ${xp} XP`;
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
-
-  /* ================= REWARDS PAGE ================= */
-  const grid = document.getElementById("rewardsGrid");
-  const currentLevelText = document.getElementById("currentLevelText");
-  const xpText = document.getElementById("xpText");
-  const xpProgress = document.getElementById("xpProgress");
-
-  if (currentLevelText) currentLevelText.textContent = `Level ${level} – ${titles[level]}`;
-  if (xpText) xpText.textContent = `${xp} XP`;
-  if (xpProgress) xpProgress.style.width = progress + "%";
-
-  if (!grid) return;
-
-  const rewards = [
-    { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
-    { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
-    { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
-    { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
-    { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
-  ];
-
-  grid.innerHTML = "";
-
-  rewards.forEach(r => {
-    const unlocked = level >= r.level;
-
-    const card = document.createElement("div");
-    card.className = "reward-card" + (unlocked ? "" : " locked");
-
-    card.innerHTML = `
-      <div class="reward-icon">${r.icon}</div>
-      <h3>${r.title}</h3>
-      <p>${r.desc}</p>
-      <button class="claim-btn" ${unlocked ? "" : "disabled"}>
-        ${unlocked ? "Claim" : `Locked (Lvl ${r.level})`}
-      </button>
-    `;
-
-    if (unlocked) {
-      card.querySelector(".claim-btn").onclick = () => alert(r.msg);
-    }
-
-    grid.appendChild(card);
-  });
 });
 </script>
 
-
 </body>
 </html>
+
 
 
 
