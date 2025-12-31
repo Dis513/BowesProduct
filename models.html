@@ -1051,13 +1051,14 @@ if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 })();
 </script>
 
-<!-- FIREBASE -->
+<!-- FIREBASE + DAILY XP (Universal for all pages) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   getRedirectResult,
   signOut,
   onAuthStateChanged,
@@ -1085,6 +1086,9 @@ const provider = new GoogleAuthProvider();
 await setPersistence(auth, browserLocalPersistence);
 getRedirectResult(auth).catch(console.error);
 
+// Detect Facebook/Messenger/Insta in-app browsers
+const isInAppBrowser = /FBAN|FBAV|Instagram|Line|Zalo/i.test(navigator.userAgent);
+
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
@@ -1095,11 +1099,15 @@ authBtn.onclick = () => {
   if (auth.currentUser) {
     signOut(auth);
   } else {
-    signInWithPopup(auth, provider)
-      .catch((error) => {
-        console.error("Login error:", error);
-        alert("Login failed: " + error.message);
-      });
+    if (isInAppBrowser) {
+      signInWithRedirect(auth, provider);
+    } else {
+      signInWithPopup(auth, provider)
+        .catch((error) => {
+          console.error("Login error:", error);
+          alert("Login failed: " + error.message);
+        });
+    }
   }
 };
 
@@ -1118,12 +1126,30 @@ onAuthStateChanged(auth, async (user) => {
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
-    snap = await getDoc(ref);
+  let data = snap.data() || {};
+  let xp = data.xp || 0;
+  let lastLoginDate = data.lastLoginDate ? data.lastLoginDate.toDate() : null;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Start of today
+
+  let addedDailyXP = false;
+
+  if (!lastLoginDate || lastLoginDate < today) {
+    xp += 10; // Daily bonus
+    addedDailyXP = true;
+
+    await setDoc(ref, {
+      xp: xp,
+      lastLoginDate: today
+    }, { merge: true });
+  } else if (!snap.exists()) {
+    // First login ever
+    xp = 10;
+    await setDoc(ref, { xp: xp, lastLoginDate: today });
   }
 
-  const xp = snap.data().xp || 0;
+  // Calculate level & progress
   const levels = [0, 200, 500, 1000, 2000];
   let level = levels.filter(v => xp >= v).length - 1;
   let next = levels[level + 1] ?? levels[level];
@@ -1134,6 +1160,11 @@ onAuthStateChanged(auth, async (user) => {
   levelText.textContent = `Level ${level} • ${xp} XP`;
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
+
+  // Optional daily bonus notification (appears on every page)
+  if (addedDailyXP) {
+    alert("Daily login bonus! +10 XP");
+  }
 });
 </script>
 
@@ -1141,7 +1172,7 @@ onAuthStateChanged(auth, async (user) => {
 <script>
 (() => {
   const url = window.location.href;
-  const text = "Read the BowesProduct Refund Policy – fair and transparent!";
+  const text = "Check out BowesProduct – high-quality commercial 3D assets!";
   document.querySelectorAll(".share-btn").forEach(btn => {
     btn.onclick = () => {
       const p = btn.dataset.platform;
@@ -1159,7 +1190,7 @@ onAuthStateChanged(auth, async (user) => {
       }
       if (p === "copy") {
         navigator.clipboard.writeText(url);
-        alert("Refund Policy link copied!");
+        alert("Page link copied!");
       }
       localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
     };
@@ -1169,5 +1200,6 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
 
 
