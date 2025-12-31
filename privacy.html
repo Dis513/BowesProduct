@@ -356,7 +356,6 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
   getRedirectResult,
   signOut,
   onAuthStateChanged,
@@ -382,10 +381,7 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error); // Always handle redirect result
-
-// Detect Facebook/Messenger/Insta in-app browsers
-const isInAppBrowser = /FBAN|FBAV|Instagram/i.test(navigator.userAgent);
+getRedirectResult(auth).catch(console.error);
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -397,15 +393,11 @@ authBtn.onclick = () => {
   if (auth.currentUser) {
     signOut(auth);
   } else {
-    if (isInAppBrowser) {
-      signInWithRedirect(auth, provider);  // Use redirect in problematic in-app browsers
-    } else {
-      signInWithPopup(auth, provider)
-        .catch((error) => {
-          console.error("Login error:", error);
-          alert("Login failed: " + error.message);
-        });
-    }
+    signInWithPopup(auth, provider)
+      .catch((error) => {
+        console.error("Login error:", error);
+        alert("Login failed: " + error.message);
+      });
   }
 };
 
@@ -442,11 +434,12 @@ onAuthStateChanged(auth, async (user) => {
   levelInfo.style.display = "block";
 });
 </script>
+
 <!-- Share buttons functionality -->
 <script>
 (() => {
   const url = window.location.href;
-  const text = "Read the BowesProduct Privacy Policy – we respect your data!";
+  const text = "Read the BowesProduct Refund Policy – fair and transparent!";
   document.querySelectorAll(".share-btn").forEach(btn => {
     btn.onclick = () => {
       const p = btn.dataset.platform;
@@ -464,7 +457,7 @@ onAuthStateChanged(auth, async (user) => {
       }
       if (p === "copy") {
         navigator.clipboard.writeText(url);
-        alert("Privacy Policy link copied!");
+        alert("Refund Policy link copied!");
       }
       localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
     };
@@ -474,5 +467,6 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
 
 
