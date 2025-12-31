@@ -1058,6 +1058,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   getRedirectResult,
   signOut,
   onAuthStateChanged,
@@ -1083,7 +1084,10 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error);
+getRedirectResult(auth).catch(console.error); // Always handle redirect result
+
+// Detect Facebook/Messenger/Insta in-app browsers
+const isInAppBrowser = /FBAN|FBAV|Instagram/i.test(navigator.userAgent);
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -1095,11 +1099,15 @@ authBtn.onclick = () => {
   if (auth.currentUser) {
     signOut(auth);
   } else {
-    signInWithPopup(auth, provider)
-      .catch((error) => {
-        console.error("Login error:", error);
-        alert("Login failed: " + error.message);
-      });
+    if (isInAppBrowser) {
+      signInWithRedirect(auth, provider);  // Use redirect in problematic in-app browsers
+    } else {
+      signInWithPopup(auth, provider)
+        .catch((error) => {
+          console.error("Login error:", error);
+          alert("Login failed: " + error.message);
+        });
+    }
   }
 };
 
@@ -1139,3 +1147,4 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
