@@ -328,14 +328,13 @@ p, li {
   </div>
 </footer>
 
-<!-- ================= FIREBASE ================= -->
+  <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
   getRedirectResult,
   signOut,
   onAuthStateChanged,
@@ -361,10 +360,7 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error); // Always handle redirect result
-
-// Detect Facebook/Messenger/Insta in-app browsers
-const isInAppBrowser = /FBAN|FBAV|Instagram/i.test(navigator.userAgent);
+getRedirectResult(auth).catch(console.error);
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -376,15 +372,11 @@ authBtn.onclick = () => {
   if (auth.currentUser) {
     signOut(auth);
   } else {
-    if (isInAppBrowser) {
-      signInWithRedirect(auth, provider);  // Use redirect in problematic in-app browsers
-    } else {
-      signInWithPopup(auth, provider)
-        .catch((error) => {
-          console.error("Login error:", error);
-          alert("Login failed: " + error.message);
-        });
-    }
+    signInWithPopup(auth, provider)
+      .catch((error) => {
+        console.error("Login error:", error);
+        alert("Login failed: " + error.message);
+      });
   }
 };
 
@@ -421,7 +413,38 @@ onAuthStateChanged(auth, async (user) => {
   levelInfo.style.display = "block";
 });
 </script>
+
+<!-- Share buttons functionality -->
+<script>
+(() => {
+  const url = window.location.href;
+  const text = "Read the BowesProduct Refund Policy – fair and transparent!";
+  document.querySelectorAll(".share-btn").forEach(btn => {
+    btn.onclick = () => {
+      const p = btn.dataset.platform;
+      if (p === "twitter")
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+      if (p === "reddit")
+        window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
+      if (p === "facebook")
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+      if (p === "whatsapp")
+        window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
+      if (p === "discord") {
+        navigator.clipboard.writeText(text + " " + url);
+        alert("Copied to clipboard for Discord!");
+      }
+      if (p === "copy") {
+        navigator.clipboard.writeText(url);
+        alert("Refund Policy link copied!");
+      }
+      localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
+    };
+  });
+})();
+</script>
 </body>
 </html>
+
 
 
