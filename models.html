@@ -269,7 +269,7 @@ model-viewer {
  .hero-actions { flex-direction: column; }
  .btn { width: 100%; max-width: 320px; margin: auto; }
  .card-content .btn { max-width: 200px; padding: 0.7rem 1rem; font-size: 0.92rem; }
-
+}
 </style>
 </head>
 <body>
@@ -300,47 +300,14 @@ model-viewer {
  </div>
 </header>
 
-<script>
-(() => {
-  const block = document.currentScript.previousElementSibling;
-  const url = window.location.href;
-  const text = "Check out this 3D model on BowesProduct!";
-
-  block.querySelectorAll(".share-btn").forEach(btn => {
-    btn.onclick = () => {
-      const p = btn.dataset.platform;
-
-      if (p === "twitter")
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
-
-      if (p === "reddit")
-        window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
-
-      if (p === "facebook")
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
-
-      if (p === "whatsapp")
-        window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
-
-      if (p === "discord") {
-        navigator.clipboard.writeText(text + " " + url);
-        alert("Copied for Discord");
-      }
-
-      if (p === "copy") {
-        navigator.clipboard.writeText(url);
-        alert("Link copied");
-      }
-
-      localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
-    };
-  });
-})();
-</script>
-
-      </div>
-    </div>
-
+<!-- HERO -->
+<section class="hero">
+ <div class="hero-content">
+  <h1>3D Models</h1>
+  <p>Commercial-ready rigged characters and props with instant download</p>
+  <div class="hero-actions">
+   <a href="#rigged-models" class="btn primary">Browse Rigged Models</a>
+   <a href="#modelContainer" class="btn primary">Open 3D Viewer</a>
   </div>
  </div>
 </section>
@@ -1018,28 +985,25 @@ if (genderFilter) genderFilter.addEventListener("change", filterModels);
 if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 </script>
 
-
 <!-- Firebase Authentication & XP System (exact same as about.html) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import {
   getFirestore,
   doc,
   getDoc,
-  setDoc,
-  updateDoc,
-  increment,
-  onSnapshot
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-/* ================= FIREBASE ================= */
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
@@ -1052,7 +1016,11 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* ================= UI ================= */
+// 🔒 Important for Messenger
+await setPersistence(auth, browserLocalPersistence);
+
+// 🔁 Handle redirect result ONCE
+getRedirectResult(auth).catch(console.error);
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -1061,27 +1029,9 @@ const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
 authBtn.onclick = () =>
-  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
-
-/* ================= CONSTANTS ================= */
-
-const LEVELS = [0, 200, 500, 1000, 2000, 4000];
-const SHARE_CAP = 50;
-const BASE_SHARE_XP = 5;
-const MILESTONES = [5,10,15,20,25,30,35,40,45,50];
-
-function getCurrentMonth() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-
-/* ================= HELPERS ================= */
-
-function sanitizeModelId(path) {
-  return path.replaceAll("/", "_").replaceAll(".", "_");
-}
-
-/* ================= AUTH ================= */
+  auth.currentUser
+    ? signOut(auth)
+    : signInWithRedirect(auth, provider);
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -1098,145 +1048,27 @@ onAuthStateChanged(auth, async (user) => {
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
-  /* Init user */
   if (!snap.exists()) {
-    await setDoc(ref, {
-      xp: 10,
-      monthlyShares: 0,
-      lastShareMonth: getCurrentMonth(),
-      sharedModels: {}
-    });
+    await setDoc(ref, { xp: 10 });
     snap = await getDoc(ref);
   }
 
-  /* Monthly reset */
-  const data = snap.data();
-  const month = getCurrentMonth();
+  const xp = snap.data().xp || 0;
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level]
+    ? 100
+    : ((xp - levels[level]) / (next - levels[level])) * 100;
 
-  if (data.lastShareMonth !== month) {
-    await updateDoc(ref, {
-      monthlyShares: 0,
-      lastShareMonth: month,
-      sharedModels: {}
-    });
-  }
-
-  /* Realtime header XP */
-  onSnapshot(ref, (snap) => {
-    if (!snap.exists()) return;
-
-    const data = snap.data();
-    const xp = data.xp || 0;
-
-    const level = LEVELS.filter(v => xp >= v).length - 1;
-    const next = LEVELS[level + 1] ?? LEVELS[level];
-    const progress =
-      next === LEVELS[level]
-        ? 100
-        : ((xp - LEVELS[level]) / (next - LEVELS[level])) * 100;
-
-    levelText.textContent = `Level ${level} • ${xp} XP`;
-    xpBar.style.width = progress + "%";
-    levelInfo.style.display = "block";
-  });
-});
-
-/* ================= SHARE XP ================= */
-
-async function grantShareXPFromCard(card) {
-  const user = auth.currentUser;
-  if (!user || !card) return;
-
-  const modelPath = card.dataset.model;
-  if (!modelPath) return;
-
-  const modelId = sanitizeModelId(modelPath);
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-
-  if (!snap.exists()) return;
-
-  const data = snap.data();
-  const month = getCurrentMonth();
-
-  let monthlyShares = data.monthlyShares || 0;
-  const sharedModels = data.sharedModels || {};
-
-  /* Monthly reset safety */
-  if (data.lastShareMonth !== month) {
-    monthlyShares = 0;
-    await updateDoc(ref, {
-      monthlyShares: 0,
-      lastShareMonth: month,
-      sharedModels: {}
-    });
-  }
-
-  /* Anti-spam */
-  if (sharedModels[modelId] === month) return;
-  if (monthlyShares >= SHARE_CAP) return;
-
-  const newCount = monthlyShares + 1;
-
-  const milestoneBonus = MILESTONES.includes(newCount)
-    ? newCount * 10
-    : 0;
-
-  const totalXP = BASE_SHARE_XP + milestoneBonus;
-
-  await updateDoc(ref, {
-    monthlyShares: increment(1),
-    xp: increment(totalXP),
-    [`sharedModels.${modelId}`]: month,
-    lastShareMonth: month
-  });
-
-  console.log(
-    `Shared ${modelPath} → +${totalXP} XP (monthly share #${newCount})`
-  );
-}
-
-/* ================= AUTO-HOOK SHARE BUTTONS ================= */
-
-document.addEventListener("click", (e) => {
-  const shareBtn = e.target.closest("[data-share]");
-  if (!shareBtn) return;
-
-  const card = shareBtn.closest(".card");
-  if (!card) return;
-
-  grantShareXPFromCard(card);
+  levelText.textContent = `Level ${level} • ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
 });
 </script>
 
-<template id="share-template">
-  <div class="share-buttons">
-    <a href="#" class="share-fb" target="_blank" rel="noopener" aria-label="Share on Facebook">
-      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-    </a>
-
-    <a href="#" class="share-x" target="_blank" rel="noopener" aria-label="Share on X">
-      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-    </a>
-
-    <a href="#" class="share-reddit" target="_blank" rel="noopener" aria-label="Share on Reddit">
-      <svg viewBox="0 0 24 24"><path d="M6.38 14.032c0-.965.785-1.75 1.75-1.75s1.75.785 1.75 1.75-.785 1.75-1.75 1.75-1.75-.785-1.75-1.75zm9.24 0c0-.965.785-1.75 1.75-1.75s1.75.785 1.75 1.75-.785 1.75-1.75 1.75-1.75-.785-1.75-1.75z"/></svg>
-    </a>
-
-    <a href="#" class="share-wa" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
-      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15z"/></svg>
-    </a>
-  </div>
-</template>
-<script>
-</script>
 </body>
 </html>
-
-
-
-
-
 
 
 
