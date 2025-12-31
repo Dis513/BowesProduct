@@ -263,8 +263,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebas
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
+  signInWithPopup,  // Changed to Popup
+  getRedirectResult, // Keep just in case (harmless)
   signOut,
   onAuthStateChanged,
   setPersistence,
@@ -288,11 +288,8 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// 🔒 Important for Messenger
 await setPersistence(auth, browserLocalPersistence);
-
-// 🔁 Handle redirect result ONCE
-getRedirectResult(auth).catch(console.error);
+getRedirectResult(auth).catch(console.error); // Keep for compatibility
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -300,10 +297,21 @@ const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
-authBtn.onclick = () =>
-  auth.currentUser
-    ? signOut(auth)
-    : signInWithRedirect(auth, provider);
+authBtn.onclick = () => {
+  if (auth.currentUser) {
+    signOut(auth);
+  } else {
+    signInWithPopup(auth, provider)  // Use Popup instead of Redirect
+      .then((result) => {
+        // Optional: handle result if needed
+        console.log("Logged in:", result.user);
+      })
+      .catch((error) => {
+        console.error("Login error:", error);
+        alert("Login failed: " + error.message);
+      });
+  }
+};
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -339,8 +347,8 @@ onAuthStateChanged(auth, async (user) => {
 });
 </script>
 
-
 </body>
 </html>
+
 
 
