@@ -27,73 +27,73 @@ html, body {
 
 /* ================= NSFW AGE VERIFICATION MODAL ================= */
 #ageGate {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(2, 6, 23, 0.98);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  padding: 1rem;
-  text-align: center;
+ position: fixed;
+ top: 0; left: 0; right: 0; bottom: 0;
+ background: rgba(2, 6, 23, 0.98);
+ backdrop-filter: blur(8px);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ z-index: 9999;
+ padding: 1rem;
+ text-align: center;
 }
 #ageGate.hidden { display: none; }
 
 .age-gate-content {
-  max-width: 500px;
-  padding: 2.5rem 2rem;
-  background: #0f172a;
-  border-radius: 20px;
-  border: 1px solid #1e293b;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+ max-width: 500px;
+ padding: 2.5rem 2rem;
+ background: #0f172a;
+ border-radius: 20px;
+ border: 1px solid #1e293b;
+ box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
 .age-gate-content h1 {
-  font-size: clamp(2rem, 6vw, 2.8rem);
-  margin-bottom: 1.5rem;
-  color: #f87171;
+ font-size: clamp(2rem, 6vw, 2.8rem);
+ margin-bottom: 1.5rem;
+ color: #f87171;
 }
 .age-gate-content p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #cbd5e1;
-  margin-bottom: 2.5rem;
+ font-size: 1.1rem;
+ line-height: 1.6;
+ color: #cbd5e1;
+ margin-bottom: 2.5rem;
 }
 .age-gate-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+ display: flex;
+ flex-direction: column;
+ gap: 1rem;
 }
 .age-gate-btn {
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
+ padding: 1rem 2rem;
+ border-radius: 12px;
+ font-size: 1.1rem;
+ font-weight: 600;
+ cursor: pointer;
+ transition: all 0.2s ease;
 }
 #enterBtn {
-  background: #2563eb;
-  color: white;
-  border: none;
+ background: #2563eb;
+ color: white;
+ border: none;
 }
 #enterBtn:hover { background: #1d4ed8; transform: translateY(-3px); }
 #leaveBtn {
-  background: transparent;
-  color: #f87171;
-  border: 2px solid #f87171;
+ background: transparent;
+ color: #f87171;
+ border: 2px solid #f87171;
 }
 #leaveBtn:hover { background: rgba(248,113,113,0.15); }
 
 /* New overlay + block interaction while age gate is active */
 body.age-gate-active::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 6, 23, 0.75);
-  backdrop-filter: blur(12px);
-  z-index: 9998; /* Just below modal */
-  pointer-events: auto; /* Blocks clicks on everything behind */
+ content: "";
+ position: fixed;
+ inset: 0;
+ background: rgba(2, 6, 23, 0.75);
+ backdrop-filter: blur(12px);
+ z-index: 9998; /* Just below modal */
+ pointer-events: auto; /* Blocks clicks on everything behind */
 }
 
 body.age-gate-active .site-header,
@@ -101,8 +101,8 @@ body.age-gate-active .hero,
 body.age-gate-active .model-container,
 body.age-gate-active section,
 body.age-gate-active footer {
-  pointer-events: none; /* Extra safety – disables interaction */
-  user-select: none;
+ pointer-events: none; /* Extra safety – disables interaction */
+ user-select: none;
 }
 
 /* ================= HEADER ================= */
@@ -112,6 +112,9 @@ body.age-gate-active footer {
  z-index: 1000;
  background: rgba(2,6,23,0.95);
  border-bottom: 1px solid #1e293b;
+}
+.site-header.scrolled {
+ box-shadow: 0 6px 30px rgba(0,0,0,0.4);
 }
 
 .header-inner {
@@ -316,6 +319,7 @@ model-viewer {
  justify-content: space-between;
  flex-wrap: wrap;
  gap: 1.5rem;
+ align-items: center;
 }
 .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .footer-nav a { color: #cbd5e1; text-decoration: none; }
@@ -333,103 +337,72 @@ model-viewer {
  .hero-actions { flex-direction: column; }
  .btn { width: 100%; max-width: 320px; margin: auto; }
  .card-content .btn { max-width: 200px; padding: 0.7rem 1rem; font-size: 0.92rem; }
+ .footer-inner {
+   flex-direction: column;
+   text-align: center;
+ }
+ .share-actions {
+   margin-top: 1.5rem;
+ }
 }
 
 /* =========================
    SOCIAL SHARE ICON STYLES
    ========================= */
 .share-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 12px;
-  flex-wrap: wrap;
+ display: flex;
+ gap: 12px;
+ justify-content: center;
+ margin-top: 12px;
+ flex-wrap: wrap;
 }
-/* Base button */
 .share-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #020617;
-  border: 1px solid #1e293b;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #94a3b8; /* default icon color */
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+ width: 42px;
+ height: 42px;
+ border-radius: 50%;
+ background: #020617;
+ border: 1px solid #1e293b;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ cursor: pointer;
+ color: #94a3b8;
+ transition:
+   transform 0.15s ease,
+   background 0.15s ease,
+   color 0.15s ease,
+   border-color 0.15s ease;
 }
-/* SVG sizing */
 .share-btn svg {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
+ width: 20px;
+ height: 20px;
+ fill: currentColor;
 }
-/* Hover animation */
 .share-btn:hover {
-  transform: translateY(-2px) scale(1.08);
+ transform: translateY(-2px) scale(1.08);
 }
-/* =========================
-   BRAND COLORS (HOVER)
-   ========================= */
-/* Twitter / X */
-.share-btn[data-platform="twitter"]:hover {
-  color: #1DA1F2;
-  border-color: #1DA1F2;
-}
-/* Reddit */
-.share-btn[data-platform="reddit"]:hover {
-  color: #FF4500;
-  border-color: #FF4500;
-}
-/* Discord */
-.share-btn[data-platform="discord"]:hover {
-  color: #5865F2;
-  border-color: #5865F2;
-}
-/* Facebook */
-.share-btn[data-platform="facebook"]:hover {
-  color: #1877F2;
-  border-color: #1877F2;
-}
-/* WhatsApp */
-.share-btn[data-platform="whatsapp"]:hover {
-  color: #25D366;
-  border-color: #25D366;
-}
-/* Copy link */
-.share-btn[data-platform="copy"]:hover {
-  color: #60a5fa;
-  border-color: #60a5fa;
-}
-/* =========================
-   ACTIVE PRESS & TOOLTIP
-   ========================= */
-.share-btn:active {
-  transform: scale(0.95);
-}
-.share-btn[title] {
-  position: relative;
-}
+.share-btn[data-platform="twitter"]:hover { color: #1DA1F2; border-color: #1DA1F2; }
+.share-btn[data-platform="reddit"]:hover { color: #FF4500; border-color: #FF4500; }
+.share-btn[data-platform="discord"]:hover { color: #5865F2; border-color: #5865F2; }
+.share-btn[data-platform="facebook"]:hover { color: #1877F2; border-color: #1877F2; }
+.share-btn[data-platform="whatsapp"]:hover { color: #25D366; border-color: #25D366; }
+.share-btn[data-platform="copy"]:hover { color: #60a5fa; border-color: #60a5fa; }
+.share-btn:active { transform: scale(0.95); }
 </style>
 </head>
 <body class="age-gate-active">
 
 <!-- NSFW AGE VERIFICATION MODAL -->
 <div id="ageGate">
-  <div class="age-gate-content">
-    <h1>NSFW Warning – 18+</h1>
-    <p>This website contains <strong>Not Safe For Work (NSFW)</strong> adult content, including nudity and sexually suggestive 3D models.</p>
-    <p>You must be <strong>18 years or older</strong> to view this content.</p>
-    <div class="age-gate-buttons">
-      <button id="enterBtn" class="age-gate-btn">I am 18 or older – Enter</button>
-      <button id="leaveBtn" class="age-gate-btn">I am under 18 – Leave</button>
-    </div>
+ <div class="age-gate-content">
+  <h1>NSFW Warning – 18+</h1>
+  <p>This website contains <strong>Not Safe For Work (NSFW)</strong> adult content, including nudity and sexually suggestive 3D models.</p>
+  <p>You must be <strong>18 years or older</strong> to view this content.</p>
+  <div class="age-gate-buttons">
+    <button id="enterBtn" class="age-gate-btn">I am 18 or older – Enter</button>
+    <button id="leaveBtn" class="age-gate-btn">I am under 18 – Leave</button>
   </div>
+ </div>
 </div>
 
 <!-- HEADER -->
@@ -475,21 +448,21 @@ model-viewer {
 <!-- Model Viewer -->
 <div class="model-container" id="modelContainer">
  <model-viewer id="mainViewer"
- src="./models/humanmale.glb"
- poster="./thumbs/promotionalviewer.jpg"
- alt="Human Male 3D Model"
- camera-controls
- auto-rotate
- auto-rotate-delay="0"
- rotation-per-second="30deg"
- interaction-prompt="auto"
- shadow-intensity="1"
- exposure="0.9"
- environment-image="neutral"
- ar
- ar-modes="webxr scene-viewer quick-look"
- loading="eager"
- reveal="interaction">
+  src="./models/humanmale.glb"
+  poster="./thumbs/promotionalviewer.jpg"
+  alt="Human Male 3D Model"
+  camera-controls
+  auto-rotate
+  auto-rotate-delay="0"
+  rotation-per-second="30deg"
+  interaction-prompt="auto"
+  shadow-intensity="1"
+  exposure="0.9"
+  environment-image="neutral"
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  loading="eager"
+  reveal="interaction">
  </model-viewer>
 </div>
 
@@ -944,7 +917,6 @@ model-viewer {
  <p style="font-size:1.4rem; max-width:800px; margin:2rem auto;">Product packs coming soon!</p>
  <p style="font-size:1.1rem;">Stay tuned for bundled deals on multiple models and props.</p>
 </section>
-
 <!-- FOOTER -->
 <footer class="site-footer">
  <div class="footer-inner">
@@ -957,40 +929,39 @@ model-viewer {
    <a href="rewards.html">Rewards</a>
   </nav>
   <p>© 2025 BowesProduct</p>
- </div>
 
- <!-- Share Buttons in Footer -->
- <div class="share-actions">
-  <button class="share-btn" data-platform="twitter" title="Share on X">
-   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-    <path d="M18 2H22l-7.3 8.3L23 22h-6.6l-5.2-6.7L5.2 22H2l7.8-8.9L1 2h6.7l4.7 6.1L18.9 2z"/>
-   </svg>
-  </button>
-  <button class="share-btn" data-platform="reddit" title="Share on Reddit">
-   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-    <path d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12s5.4 12 12 12 12-5.4 12-12Zm-5.2 1.9c.1.3.2.7.2 1.1 0 2.9-3.1 5.2-7 5.2s-7-2.3-7-5.2c0-.4.1-.8.2-1.1-.6-.3-1-.9-1-1.6 0-1 .8-1.8 1.8-1.8.5 0 1 .2 1.3.5 1-.7 2.4-1.2 4-1.3l.8-3.6 2.5.6c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4-.6 1.4-1.4 1.4c-.4 0-.8-.2-1-.5l-1.8-.4-.6 2.8c1.6.1 3 .6 4 1.3.3-.3.8-.5 1.3-.5 1 0 1.8.8 1.8 1.8 0 .7-.4 1.3-1 1.6Z"/>
-   </svg>
-  </button>
-  <button class="share-btn" data-platform="discord" title="Share on Discord">
-   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-    <path d="M20.3 4.4A19.8 19.8 0 0 0 15.8 3l-.3.6a18 18 0 0 1 4.1 1.6ZM8.5 3l-.3.6a18 18 0 0 0-4.1 1.6l.6 1.1A17 17 0 0 1 8.5 3Zm11.6 4.6c-1.5-2.3-3-3.6-3-3.6s-.3.1-.8.3c1.9 1.3 2.8 2.8 2.8 2.8-2.9-1.5-6.1-1.5-9 0 0 0 .9-1.5 2.8-2.8-.5-.2-.8-.3-.8-.3s-1.5 1.3-3 3.6c-1.5 2.3-2.1 4.5-2.1 4.5 0 3.3 2.4 4.8 2.4 4.8 1.1.7 2.3 1.1 3.5 1.3l.7-.9c-1.3-.4-2.5-1.1-3.5-2.1 3.1 2 7.1 2 10.2 0-1 .9-2.2 1.6-3.5 2.1l.7.9c1.2-.2 2.4-.6 3.5-1.3 0 0 2.4-1.5 2.4-4.8 0 0-.6-2.2-2.1-4.5ZM9.5 14.5c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Zm5 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Z"/>
-   </svg>
-  </button>
-  <button class="share-btn" data-platform="facebook" title="Share on Facebook">
-   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-    <path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-2 .9-2 1.8V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12"/>
-   </svg>
-  </button>
-  <button class="share-btn" data-platform="whatsapp" title="Share on WhatsApp">
-   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-    <path d="M12 0a12 12 0 0 0-10 18.6L0 24l5.6-1.5A12 12 0 1 0 12 0Zm0 21.8c-1.7 0-3.4-.5-4.9-1.4l-.4-.2-3.3.9.9-3.2-.2-.4A9.8 9.8 0 1 1 12 21.8Z"/>
-   </svg>
-  </button>
-  <button class="share-btn" data-platform="copy" title="Copy link">
-   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Z"/>
-   </svg>
-  </button>
+  <div class="share-actions">
+   <button class="share-btn" data-platform="twitter" title="Share on X">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M18.9 2H22l-7.3 8.3L23 22h-6.6l-5.2-6.7L5.2 22H2l7.8-8.9L1 2h6.7l4.7 6.1L18.9 2z"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="reddit" title="Share on Reddit">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12s5.4 12 12 12 12-5.4 12-12Zm-5.2 1.9c.1.3.2.7.2 1.1 0 2.9-3.1 5.2-7 5.2s-7-2.3-7-5.2c0-.4.1-.8.2-1.1-.6-.3-1-.9-1-1.6 0-1 .8-1.8 1.8-1.8.5 0 1 .2 1.3.5 1-.7 2.4-1.2 4-1.3l.8-3.6 2.5.6c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4-.6 1.4-1.4 1.4c-.4 0-.8-.2-1-.5l-1.8-.4-.6 2.8c1.6.1 3 .6 4 1.3.3-.3.8-.5 1.3-.5 1 0 1.8.8 1.8 1.8 0 .7-.4 1.3-1 1.6Z"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="discord" title="Share on Discord">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M20.3 4.4A19.8 19.8 0 0 0 15.8 3l-.3.6a18 18 0 0 1 4.1 1.6ZM8.5 3l-.3.6a18 18 0 0 0-4.1 1.6l.6 1.1A17 17 0 0 1 8.5 3Zm11.6 4.6c-1.5-2.3-3-3.6-3-3.6s-.3.1-.8.3c1.9 1.3 2.8 2.8 2.8 2.8-2.9-1.5-6.1-1.5-9 0 0 0 .9-1.5 2.8-2.8-.5-.2-.8-.3-.8-.3s-1.5 1.3-3 3.6c-1.5 2.3-2.1 4.5-2.1 4.5 0 3.3 2.4 4.8 2.4 4.8 1.1.7 2.3 1.1 3.5 1.3l.7-.9c-1.3-.4-2.5-1.1-3.5-2.1 3.1 2 7.1 2 10.2 0-1 .9-2.2 1.6-3.5 2.1l.7.9c1.2-.2 2.4-.6 3.5-1.3 0 0 2.4-1.5 2.4-4.8 0 0-.6-2.2-2.1-4.5ZM9.5 14.5c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Zm5 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Z"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="facebook" title="Share on Facebook">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-2 .9-2 1.8V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="whatsapp" title="Share on WhatsApp">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M12 0a12 12 0 0 0-10 18.6L0 24l5.6-1.5A12 12 0 1 0 12 0Zm0 21.8c-1.7 0-3.4-.5-4.9-1.4l-.4-.2-3.3.9.9-3.2-.2-.4A9.8 9.8 0 1 1 12 21.8Z"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="copy" title="Copy link">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Z"/>
+    </svg>
+   </button>
+  </div>
  </div>
 </footer>
 
@@ -1002,10 +973,10 @@ document.getElementById('enterBtn').addEventListener('click', () => {
 });
 
 document.getElementById('leaveBtn').addEventListener('click', () => {
-  window.location.href = 'https://www.google.com'; // or any safe redirect
+  window.location.href = 'https://www.google.com';
 });
 
-// Sticky header
+// Sticky header with shadow
 window.addEventListener('scroll', () => {
   document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
 });
@@ -1086,8 +1057,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebas
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,  // Changed to Popup
-  getRedirectResult, // Keep just in case (harmless)
+  signInWithPopup,
+  getRedirectResult,
   signOut,
   onAuthStateChanged,
   setPersistence,
@@ -1112,7 +1083,7 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error); // Keep for compatibility
+getRedirectResult(auth).catch(console.error);
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -1124,11 +1095,7 @@ authBtn.onclick = () => {
   if (auth.currentUser) {
     signOut(auth);
   } else {
-    signInWithPopup(auth, provider)  // Use Popup instead of Redirect
-      .then((result) => {
-        // Optional: handle result if needed
-        console.log("Logged in:", result.user);
-      })
+    signInWithPopup(auth, provider)
       .catch((error) => {
         console.error("Login error:", error);
         alert("Login failed: " + error.message);
@@ -1169,6 +1136,6 @@ onAuthStateChanged(auth, async (user) => {
   levelInfo.style.display = "block";
 });
 </script>
+
 </body>
 </html>
-
