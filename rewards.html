@@ -373,7 +373,7 @@ window.addEventListener("scroll", () => {
 });
 </script>
 
-<!-- FIREBASE -->
+<!-- FIREBASE + DAILY XP + REWARDS -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -406,9 +406,9 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error); // Always handle redirect result
+getRedirectResult(auth).catch(console.error);
 
-// Detect Facebook/Messenger/Insta in-app browsers (and other known popup-hostile environments)
+// Detect Facebook/Messenger/Insta in-app browsers
 const isInAppBrowser = /FBAN|FBAV|Instagram|Line|Zalo/i.test(navigator.userAgent);
 
 const authBtn = document.getElementById("authBtn");
@@ -422,7 +422,7 @@ authBtn.onclick = () => {
     signOut(auth);
   } else {
     if (isInAppBrowser) {
-      signInWithRedirect(auth, provider);  // Fallback to redirect for Messenger/FB/Insta/etc.
+      signInWithRedirect(auth, provider);
     } else {
       signInWithPopup(auth, provider)
         .catch((error) => {
@@ -439,7 +439,7 @@ onAuthStateChanged(auth, async (user) => {
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
 
-    // Rewards page specific reset
+    // Reset rewards page elements if they exist
     const currentLevelText = document.getElementById("currentLevelText");
     const xpText = document.getElementById("xpText");
     const xpProgress = document.getElementById("xpProgress");
@@ -460,12 +460,31 @@ onAuthStateChanged(auth, async (user) => {
   const ref = doc(db, "users", user.uid);
   let snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
-    snap = await getDoc(ref);
+  let data = snap.data() || {};
+  let xp = data.xp || 0;
+  let lastLoginDate = data.lastLoginDate ? data.lastLoginDate.toDate() : null;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+  let addedDailyXP = false;
+
+  if (!lastLoginDate || lastLoginDate < today) {
+    // New day → give daily login bonus
+    xp += 10;
+    addedDailyXP = true;
+
+    await setDoc(ref, {
+      xp: xp,
+      lastLoginDate: today
+    }, { merge: true });
+  } else if (!snap.exists()) {
+    // First-ever login fallback
+    xp = 10;
+    await setDoc(ref, { xp: xp, lastLoginDate: today });
   }
 
-  const xp = snap.data().xp || 0;
+  // Calculate level & progress
   const levels = [0, 200, 500, 1000, 2000];
   let level = levels.filter(v => xp >= v).length - 1;
   let next = levels[level + 1] ?? levels[level];
@@ -477,7 +496,12 @@ onAuthStateChanged(auth, async (user) => {
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 
-  // Rewards page specific updates
+  // Optional toast for daily bonus
+  if (addedDailyXP) {
+    alert("Daily login bonus! +10 XP");
+  }
+
+  // Rewards page specific updates (only if elements exist)
   const currentLevelText = document.getElementById("currentLevelText");
   const xpText = document.getElementById("xpText");
   const xpProgress = document.getElementById("xpProgress");
@@ -546,4 +570,5 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
+
 
