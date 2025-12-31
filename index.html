@@ -224,6 +224,9 @@ html, body {
  flex-direction: column;
  text-align: center;
  }
+ .share-actions {
+ margin-top: 1.5rem;
+ }
 }
 
 /* =========================
@@ -312,24 +315,25 @@ html, body {
 <header class="site-header">
  <div class="header-inner">
 
- <div class="header-left">
- <div class="logo"><a href="index.html">BowesProduct</a></div>
- <nav class="main-nav">
- <a href="index.html" class="active">Home</a>
- <a href="models.html">Models</a>
- </nav>
- </div>
+  <div class="header-left">
+   <div class="logo"><a href="index.html">BowesProduct</a></div>
+   <nav class="main-nav">
+    <a href="index.html" class="active">Home</a>
+    <a href="models.html">Models</a>
+    <a href="about.html">About</a>
+   </nav>
+  </div>
 
- <div class="header-right">
- <img id="profilePic" alt="Profile">
+  <div class="header-right">
+   <img id="profilePic" alt="Profile">
 
- <div id="levelInfo">
- <div id="levelText"></div>
- <div id="xpOuter"><div id="xpBar"></div></div>
- </div>
+   <div id="levelInfo">
+    <div id="levelText"></div>
+    <div id="xpOuter"><div id="xpBar"></div></div>
+   </div>
 
- <button id="authBtn" class="login-btn">Login</button>
- </div>
+   <button id="authBtn" class="login-btn">Login</button>
+  </div>
 
  </div>
 </header>
@@ -337,61 +341,61 @@ html, body {
 <!-- HERO -->
 <section class="hero">
  <div>
- <h1>Commercial-Ready 3D Assets</h1>
- <p>Built for real production pipelines</p>
- <div class="hero-actions">
- <a href="models.html" class="btn primary">Browse Models</a>
- <a href="models.html#modelContainer" class="btn secondary">View 3D Preview</a>
- </div>
+  <h1>Commercial-Ready 3D Assets</h1>
+  <p>Built for real production pipelines</p>
+  <div class="hero-actions">
+   <a href="models.html" class="btn primary">Browse Models</a>
+   <a href="models.html#modelContainer" class="btn secondary">View 3D Preview</a>
+  </div>
  </div>
 </section>
 
 <!-- FOOTER -->
 <footer class="site-footer">
  <div class="footer-inner">
- <nav class="footer-nav">
- <a href="about.html">About</a>
- <a href="privacy.html">Privacy</a>
- <a href="terms.html">Terms</a>
- <a href="license.html">License</a>
- <a href="refund.html">Refund</a>
- <a href="rewards.html">Rewards</a>
- </nav>
- <p>© 2025 BowesProduct</p>
+  <nav class="footer-nav">
+   <a href="about.html">About</a>
+   <a href="privacy.html">Privacy</a>
+   <a href="terms.html">Terms</a>
+   <a href="license.html">License</a>
+   <a href="refund.html">Refund</a>
+   <a href="rewards.html">Rewards</a>
+  </nav>
+  <p>© 2025 BowesProduct</p>
 
- <!-- Share Buttons -->
- <div class="share-actions">
- <button class="share-btn" data-share data-platform="twitter" title="Share on X">
- <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
- <path d="M18.9 2H22l-7.3 8.3L23 22h-6.6l-5.2-6.7L5.2 22H2l7.8-8.9L1 2h6.7l4.7 6.1L18.9 2z"/>
- </svg>
- </button>
- <button class="share-btn" data-share data-platform="reddit" title="Share on Reddit">
- <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
- <path d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12s5.4 12 12 12 12-5.4 12-12Zm-5.2 1.9c.1.3.2.7.2 1.1 0 2.9-3.1 5.2-7 5.2s-7-2.3-7-5.2c0-.4.1-.8.2-1.1-.6-.3-1-.9-1-1.6 0-1 .8-1.8 1.8-1.8.5 0 1 .2 1.3.5 1-.7 2.4-1.2 4-1.3l.8-3.6 2.5.6c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4-.6 1.4-1.4 1.4c-.4 0-.8-.2-1-.5l-1.8-.4-.6 2.8c1.6.1 3 .6 4 1.3.3-.3.8-.5 1.3-.5 1 0 1.8.8 1.8 1.8 0 .7-.4 1.3-1 1.6Z"/>
- </svg>
- </button>
- <button class="share-btn" data-share data-platform="discord" title="Share on Discord">
- <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
- <path d="M20.3 4.4A19.8 19.8 0 0 0 15.8 3l-.3.6a18 18 0 0 1 4.1 1.6ZM8.5 3l-.3.6a18 18 0 0 0-4.1 1.6l.6 1.1A17 17 0 0 1 8.5 3Zm11.6 4.6c-1.5-2.3-3-3.6-3-3.6s-.3.1-.8.3c1.9 1.3 2.8 2.8 2.8 2.8-2.9-1.5-6.1-1.5-9 0 0 0 .9-1.5 2.8-2.8-.5-.2-.8-.3-.8-.3s-1.5 1.3-3 3.6c-1.5 2.3-2.1 4.5-2.1 4.5 0 3.3 2.4 4.8 2.4 4.8 1.1.7 2.3 1.1 3.5 1.3l.7-.9c-1.3-.4-2.5-1.1-3.5-2.1 3.1 2 7.1 2 10.2 0-1 .9-2.2 1.6-3.5 2.1l.7.9c1.2-.2 2.4-.6 3.5-1.3 0 0 2.4-1.5 2.4-4.8 0 0-.6-2.2-2.1-4.5ZM9.5 14.5c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Zm5 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Z"/>
- </svg>
- </button>
- <button class="share-btn" data-share data-platform="facebook" title="Share on Facebook">
- <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
- <path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-2 .9-2 1.8V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12"/>
- </svg>
- </button>
- <button class="share-btn" data-share data-platform="whatsapp" title="Share on WhatsApp">
- <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
- <path d="M12 0a12 12 0 0 0-10 18.6L0 24l5.6-1.5A12 12 0 1 0 12 0Zm0 21.8c-1.7 0-3.4-.5-4.9-1.4l-.4-.2-3.3.9.9-3.2-.2-.4A9.8 9.8 0 1 1 12 21.8Z"/>
- </svg>
- </button>
- <button class="share-btn" data-share data-platform="copy" title="Copy link">
- <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
- <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Z"/>
- </svg>
- </button>
- </div>
+  <!-- Share Buttons – centered below nav & copyright -->
+  <div class="share-actions">
+   <button class="share-btn" data-platform="twitter" title="Share on X">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M18.9 2H22l-7.3 8.3L23 22h-6.6l-5.2-6.7L5.2 22H2l7.8-8.9L1 2h6.7l4.7 6.1L18.9 2z"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="reddit" title="Share on Reddit">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12s5.4 12 12 12 12-5.4 12-12Zm-5.2 1.9c.1.3.2.7.2 1.1 0 2.9-3.1 5.2-7 5.2s-7-2.3-7-5.2c0-.4.1-.8.2-1.1-.6-.3-1-.9-1-1.6 0-1 .8-1.8 1.8-1.8.5 0 1 .2 1.3.5 1-.7 2.4-1.2 4-1.3l.8-3.6 2.5.6c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4-.6 1.4-1.4 1.4c-.4 0-.8-.2-1-.5l-1.8-.4-.6 2.8c1.6.1 3 .6 4 1.3.3-.3.8-.5 1.3-.5 1 0 1.8.8 1.8 1.8 0 .7-.4 1.3-1 1.6Z"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="discord" title="Share on Discord">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M20.3 4.4A19.8 19.8 0 0 0 15.8 3l-.3.6a18 18 0 0 1 4.1 1.6ZM8.5 3l-.3.6a18 18 0 0 0-4.1 1.6l.6 1.1A17 17 0 0 1 8.5 3Zm11.6 4.6c-1.5-2.3-3-3.6-3-3.6s-.3.1-.8.3c1.9 1.3 2.8 2.8 2.8 2.8-2.9-1.5-6.1-1.5-9 0 0 0 .9-1.5 2.8-2.8-.5-.2-.8-.3-.8-.3s-1.5 1.3-3 3.6c-1.5 2.3-2.1 4.5-2.1 4.5 0 3.3 2.4 4.8 2.4 4.8 1.1.7 2.3 1.1 3.5 1.3l.7-.9c-1.3-.4-2.5-1.1-3.5-2.1 3.1 2 7.1 2 10.2 0-1 .9-2.2 1.6-3.5 2.1l.7.9c1.2-.2 2.4-.6 3.5-1.3 0 0 2.4-1.5 2.4-4.8 0 0-.6-2.2-2.1-4.5ZM9.5 14.5c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Zm5 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Z"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="facebook" title="Share on Facebook">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-2 .9-2 1.8V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="whatsapp" title="Share on WhatsApp">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M12 0a12 12 0 0 0-10 18.6L0 24l5.6-1.5A12 12 0 1 0 12 0Zm0 21.8c-1.7 0-3.4-.5-4.9-1.4l-.4-.2-3.3.9.9-3.2-.2-.4A9.8 9.8 0 1 1 12 21.8Z"/>
+    </svg>
+   </button>
+   <button class="share-btn" data-platform="copy" title="Copy link">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+     <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Z"/>
+    </svg>
+   </button>
+  </div>
  </div>
 </footer>
 
@@ -399,26 +403,26 @@ html, body {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,  // Changed to Popup
-  getRedirectResult, // Keep just in case (harmless)
-  signOut,
-  onAuthStateChanged,
-  setPersistence,
-  browserLocalPersistence
+ getAuth,
+ GoogleAuthProvider,
+ signInWithPopup,
+ getRedirectResult,
+ signOut,
+ onAuthStateChanged,
+ setPersistence,
+ browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc
+ getFirestore,
+ doc,
+ getDoc,
+ setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct"
+ apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+ authDomain: "bowesproduct.firebaseapp.com",
+ projectId: "bowesproduct"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -427,7 +431,7 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error); // Keep for compatibility
+getRedirectResult(auth).catch(console.error);
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -436,84 +440,80 @@ const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
 authBtn.onclick = () => {
-  if (auth.currentUser) {
-    signOut(auth);
-  } else {
-    signInWithPopup(auth, provider)  // Use Popup instead of Redirect
-      .then((result) => {
-        // Optional: handle result if needed
-        console.log("Logged in:", result.user);
-      })
-      .catch((error) => {
-        console.error("Login error:", error);
-        alert("Login failed: " + error.message);
-      });
-  }
+ if (auth.currentUser) {
+  signOut(auth);
+ } else {
+  signInWithPopup(auth, provider)
+   .catch((error) => {
+    console.error("Login error:", error);
+    alert("Login failed: " + error.message);
+   });
+ }
 };
 
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    authBtn.textContent = "Login";
-    profilePic.style.display = "none";
-    levelInfo.style.display = "none";
-    return;
-  }
+ if (!user) {
+  authBtn.textContent = "Login";
+  profilePic.style.display = "none";
+  levelInfo.style.display = "none";
+  return;
+ }
 
-  authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL || "";
-  profilePic.style.display = "block";
+ authBtn.textContent = "Logout";
+ profilePic.src = user.photoURL || "";
+ profilePic.style.display = "block";
 
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
+ const ref = doc(db, "users", user.uid);
+ let snap = await getDoc(ref);
 
-  if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
-    snap = await getDoc(ref);
-  }
+ if (!snap.exists()) {
+  await setDoc(ref, { xp: 10 });
+  snap = await getDoc(ref);
+ }
 
-  const xp = snap.data().xp || 0;
-  const levels = [0, 200, 500, 1000, 2000];
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
-  let progress = next === levels[level]
-    ? 100
-    : ((xp - levels[level]) / (next - levels[level])) * 100;
+ const xp = snap.data().xp || 0;
+ const levels = [0, 200, 500, 1000, 2000];
+ let level = levels.filter(v => xp >= v).length - 1;
+ let next = levels[level + 1] ?? levels[level];
+ let progress = next === levels[level]
+  ? 100
+  : ((xp - levels[level]) / (next - levels[level])) * 100;
 
-  levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
-  levelInfo.style.display = "block";
+ levelText.textContent = `Level ${level} • ${xp} XP`;
+ xpBar.style.width = progress + "%";
+ levelInfo.style.display = "block";
 });
 </script>
+
 <!-- Share buttons functionality -->
 <script>
 (() => {
  const url = window.location.href;
  const text = "Check out BowesProduct – high-quality commercial 3D assets ready for your projects!";
  document.querySelectorAll(".share-btn").forEach(btn => {
- btn.onclick = () => {
- const p = btn.dataset.platform;
- if (p === "twitter")
- window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
- if (p === "reddit")
- window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
- if (p === "facebook")
- window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
- if (p === "whatsapp")
- window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
- if (p === "discord") {
- navigator.clipboard.writeText(text + " " + url);
- alert("Copied to clipboard for Discord!");
- }
- if (p === "copy") {
- navigator.clipboard.writeText(url);
- alert("Homepage link copied!");
- }
- localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
- };
+  btn.onclick = () => {
+   const p = btn.dataset.platform;
+   if (p === "twitter")
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+   if (p === "reddit")
+    window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
+   if (p === "facebook")
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+   if (p === "whatsapp")
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
+   if (p === "discord") {
+    navigator.clipboard.writeText(text + " " + url);
+    alert("Copied to clipboard for Discord!");
+   }
+   if (p === "copy") {
+    navigator.clipboard.writeText(url);
+    alert("Homepage link copied!");
+   }
+   localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
+  };
  });
 })();
 </script>
 
 </body>
 </html>
-
