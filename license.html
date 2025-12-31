@@ -14,7 +14,6 @@ html, body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
 }
-
 /* ================= HEADER ================= */
 .site-header {
   position: sticky;
@@ -23,7 +22,6 @@ html, body {
   background: rgba(2,6,23,0.95);
   border-bottom: 1px solid #1e293b;
 }
-
 .header-inner {
   max-width: 1200px;
   margin: 0 auto;
@@ -32,7 +30,6 @@ html, body {
   align-items: center;
   justify-content: space-between;
 }
-
 /* LEFT */
 .header-left {
   display: flex;
@@ -56,7 +53,6 @@ html, body {
   font-size: 0.95rem;
 }
 .main-nav a:hover { color:#60a5fa; }
-
 /* RIGHT */
 .header-right {
   display: flex;
@@ -64,7 +60,6 @@ html, body {
   gap: 0.8rem;
   min-height: 44px;
 }
-
 /* PROFILE */
 #profilePic {
   width: 32px;
@@ -74,7 +69,6 @@ html, body {
   object-fit: cover;
   display: none;
 }
-
 /* LOGIN */
 .login-btn {
   padding: 0.45rem 1.1rem;
@@ -85,7 +79,6 @@ html, body {
   font-size: 0.95rem;
   cursor: pointer;
 }
-
 /* XP */
 #levelInfo {
   display: none;
@@ -108,7 +101,6 @@ html, body {
   border-radius: 3px;
   transition: width 0.35s ease;
 }
-
 /* MOBILE */
 @media (max-width: 768px) {
   .header-inner {
@@ -127,7 +119,6 @@ html, body {
     width: 100%;
   }
 }
-
 /* ================= CONTENT ================= */
 .content {
   max-width: 900px;
@@ -153,6 +144,7 @@ p, li {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1.5rem;
+  align-items: center;
 }
 .footer-nav {
   display: flex;
@@ -168,34 +160,84 @@ p, li {
   margin: 0;
   color: #94a3b8;
 }
+
+/* MOBILE FOOTER */
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .share-actions {
+    margin-top: 1.5rem;
+  }
+}
+
+/* =========================
+   SOCIAL SHARE ICON STYLES
+   ========================= */
+.share-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.share-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #020617;
+  border: 1px solid #1e293b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #94a3b8;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.share-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.share-btn:hover {
+  transform: translateY(-2px) scale(1.08);
+}
+.share-btn[data-platform="twitter"]:hover { color: #1DA1F2; border-color: #1DA1F2; }
+.share-btn[data-platform="reddit"]:hover { color: #FF4500; border-color: #FF4500; }
+.share-btn[data-platform="discord"]:hover { color: #5865F2; border-color: #5865F2; }
+.share-btn[data-platform="facebook"]:hover { color: #1877F2; border-color: #1877F2; }
+.share-btn[data-platform="whatsapp"]:hover { color: #25D366; border-color: #25D366; }
+.share-btn[data-platform="copy"]:hover { color: #60a5fa; border-color: #60a5fa; }
+.share-btn:active { transform: scale(0.95); }
 </style>
 </head>
-
 <body>
 
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-
     <div class="header-left">
       <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
+        <a href="about.html">About</a>
+        <a href="license.html" class="active">License</a>
       </nav>
     </div>
-
     <div class="header-right">
       <img id="profilePic" alt="Profile">
-
       <div id="levelInfo">
         <div id="levelText"></div>
         <div id="xpOuter"><div id="xpBar"></div></div>
       </div>
-
       <button id="authBtn" class="login-btn">Login</button>
     </div>
-
   </div>
 </header>
 
@@ -203,10 +245,8 @@ p, li {
 <div class="content">
   <h1>BowesProduct 3D Asset License Agreement</h1>
   <p>This License Agreement ("Agreement") governs the use of all 3D models and props provided by BowesProduct ("Licensor"). By purchasing or downloading any asset, you ("Licensee") agree to be bound by the terms below.</p>
-
   <h2>1. Grant of License</h2>
   <p>Licensor grants Licensee a <strong>non-exclusive, non-transferable, worldwide, perpetual commercial license</strong> to use, modify, reproduce, and incorporate the licensed 3D assets into Licensee’s projects.</p>
-
   <h2>2. Permitted Uses</h2>
   <ul>
     <li>Use in personal, commercial, and client projects</li>
@@ -216,7 +256,6 @@ p, li {
     <li>Incorporation into larger works</li>
     <li>Unlimited seats/projects under a single purchase</li>
   </ul>
-
   <h2>3. Prohibited Uses</h2>
   <ul>
     <li>Reselling or redistributing the raw asset files</li>
@@ -225,29 +264,21 @@ p, li {
     <li>Trademark or endorsement misuse</li>
     <li>Unlawful or unethical use</li>
   </ul>
-
   <h2>4. Ownership & Copyright</h2>
   <p>All assets remain the intellectual property of BowesProduct.</p>
-
   <h2>5. No Attribution Required</h2>
   <p>No credit required.</p>
-
   <h2>6. No Warranty</h2>
   <p>Assets are provided <strong>"AS IS"</strong>.</p>
-
   <h2>7. Limitation of Liability</h2>
   <p>BowesProduct is not liable for damages arising from use.</p>
-
   <h2>8. Indemnification</h2>
   <p>Licensee agrees to indemnify BowesProduct.</p>
-
   <h2>9. Termination</h2>
   <p>License terminates upon breach.</p>
-
   <h2>10. Governing Law</h2>
   <p>Governed by applicable local law.</p>
-
-  <p><em>Last updated: December 29, 2025</em></p>
+  <p><em>Last updated: December 31, 2025</em></p>
 </div>
 
 <!-- FOOTER -->
@@ -262,6 +293,40 @@ p, li {
       <a href="rewards.html">Rewards</a>
     </nav>
     <p>© 2025 BowesProduct</p>
+
+    <!-- Share Buttons – centered below nav & copyright -->
+    <div class="share-actions">
+      <button class="share-btn" data-platform="twitter" title="Share on X">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M18.9 2H22l-7.3 8.3L23 22h-6.6l-5.2-6.7L5.2 22H2l7.8-8.9L1 2h6.7l4.7 6.1L18.9 2z"/>
+        </svg>
+      </button>
+      <button class="share-btn" data-platform="reddit" title="Share on Reddit">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12s5.4 12 12 12 12-5.4 12-12Zm-5.2 1.9c.1.3.2.7.2 1.1 0 2.9-3.1 5.2-7 5.2s-7-2.3-7-5.2c0-.4.1-.8.2-1.1-.6-.3-1-.9-1-1.6 0-1 .8-1.8 1.8-1.8.5 0 1 .2 1.3.5 1-.7 2.4-1.2 4-1.3l.8-3.6 2.5.6c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4-.6 1.4-1.4 1.4c-.4 0-.8-.2-1-.5l-1.8-.4-.6 2.8c1.6.1 3 .6 4 1.3.3-.3.8-.5 1.3-.5 1 0 1.8.8 1.8 1.8 0 .7-.4 1.3-1 1.6Z"/>
+        </svg>
+      </button>
+      <button class="share-btn" data-platform="discord" title="Share on Discord">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M20.3 4.4A19.8 19.8 0 0 0 15.8 3l-.3.6a18 18 0 0 1 4.1 1.6ZM8.5 3l-.3.6a18 18 0 0 0-4.1 1.6l.6 1.1A17 17 0 0 1 8.5 3Zm11.6 4.6c-1.5-2.3-3-3.6-3-3.6s-.3.1-.8.3c1.9 1.3 2.8 2.8 2.8 2.8-2.9-1.5-6.1-1.5-9 0 0 0 .9-1.5 2.8-2.8-.5-.2-.8-.3-.8-.3s-1.5 1.3-3 3.6c-1.5 2.3-2.1 4.5-2.1 4.5 0 3.3 2.4 4.8 2.4 4.8 1.1.7 2.3 1.1 3.5 1.3l.7-.9c-1.3-.4-2.5-1.1-3.5-2.1 3.1 2 7.1 2 10.2 0-1 .9-2.2 1.6-3.5 2.1l.7.9c1.2-.2 2.4-.6 3.5-1.3 0 0 2.4-1.5 2.4-4.8 0 0-.6-2.2-2.1-4.5ZM9.5 14.5c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Zm5 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7Z"/>
+        </svg>
+      </button>
+      <button class="share-btn" data-platform="facebook" title="Share on Facebook">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-2 .9-2 1.8V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12"/>
+        </svg>
+      </button>
+      <button class="share-btn" data-platform="whatsapp" title="Share on WhatsApp">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M12 0a12 12 0 0 0-10 18.6L0 24l5.6-1.5A12 12 0 1 0 12 0Zm0 21.8c-1.7 0-3.4-.5-4.9-1.4l-.4-.2-3.3.9.9-3.2-.2-.4A9.8 9.8 0 1 1 12 21.8Z"/>
+        </svg>
+      </button>
+      <button class="share-btn" data-platform="copy" title="Copy link">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Z"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </footer>
 
@@ -271,8 +336,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebas
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,  // Changed to Popup
-  getRedirectResult, // Keep just in case (harmless)
+  signInWithPopup,
+  getRedirectResult,
   signOut,
   onAuthStateChanged,
   setPersistence,
@@ -297,7 +362,7 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 await setPersistence(auth, browserLocalPersistence);
-getRedirectResult(auth).catch(console.error); // Keep for compatibility
+getRedirectResult(auth).catch(console.error);
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -309,11 +374,7 @@ authBtn.onclick = () => {
   if (auth.currentUser) {
     signOut(auth);
   } else {
-    signInWithPopup(auth, provider)  // Use Popup instead of Redirect
-      .then((result) => {
-        // Optional: handle result if needed
-        console.log("Logged in:", result.user);
-      })
+    signInWithPopup(auth, provider)
       .catch((error) => {
         console.error("Login error:", error);
         alert("Login failed: " + error.message);
@@ -355,9 +416,35 @@ onAuthStateChanged(auth, async (user) => {
 });
 </script>
 
+<!-- Share buttons functionality -->
+<script>
+(() => {
+  const url = window.location.href;
+  const text = "Check out the BowesProduct 3D Asset License – clear, fair, and creator-friendly!";
+  document.querySelectorAll(".share-btn").forEach(btn => {
+    btn.onclick = () => {
+      const p = btn.dataset.platform;
+      if (p === "twitter")
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+      if (p === "reddit")
+        window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
+      if (p === "facebook")
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+      if (p === "whatsapp")
+        window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
+      if (p === "discord") {
+        navigator.clipboard.writeText(text + " " + url);
+        alert("Copied to clipboard for Discord!");
+      }
+      if (p === "copy") {
+        navigator.clipboard.writeText(url);
+        alert("License page link copied!");
+      }
+      localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
+    };
+  });
+})();
+</script>
+
 </body>
 </html>
-
-
-
-
