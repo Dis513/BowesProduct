@@ -10,175 +10,236 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.bowesproduct.com/models.html">
 <meta property="og:image" content="https://www.bowesproduct.com/thumbs/humanmale.jpg">
-
 <!-- Model Viewer -->
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
-
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 html, body {
- margin: 0;
- background: #020617;
- color: white;
- font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
- overflow-x: hidden;
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  height: 100%;
 }
+
+/* ================= AGE GATE MODAL ================= */
+#ageGate {
+  position: fixed;
+  inset: 0;
+  background: #020617;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 2rem;
+  text-align: center;
+}
+#ageGate h2 {
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+#ageGate p {
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  max-width: 680px;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+#ageGate .buttons {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#ageGate .btn {
+  padding: 1rem 2.8rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  min-width: 220px;
+}
+#ageGate .btn.enter {
+  background: #2563eb;
+  color: white;
+  border: none;
+}
+#ageGate .btn.enter:hover {
+  background: #1d4ed8;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(37,99,235,0.3);
+}
+#ageGate .btn.exit {
+  background: transparent;
+  color: #ef4444;
+  border: 2px solid #ef4444;
+}
+#ageGate .btn.exit:hover {
+  background: rgba(239,68,68,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(239,68,68,0.2);
+}
+
+/* Hide main content until age verified */
+body.age-gate-active #mainContent { display: none; }
 
 /* ================= HEADER ================= */
 .site-header {
- position: sticky;
- top: 0;
- z-index: 1000;
- background: rgba(2,6,23,0.95);
- border-bottom: 1px solid #1e293b;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.95);
+  border-bottom: 1px solid #1e293b;
+  backdrop-filter: blur(10px);
 }
-
 .header-inner {
- max-width: 1200px;
- margin: 0 auto;
- padding: 0.6rem 1rem;
- display: flex;
- align-items: center;
- justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-
 /* LEFT */
 .header-left {
- display: flex;
- align-items: center;
- gap: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
 }
 .logo a {
- font-size: 1.3rem;
- font-weight: 700;
- color: white;
- text-decoration: none;
- white-space: nowrap;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
 }
 .main-nav {
- display: flex;
- gap: 1.4rem;
+  display: flex;
+  gap: 1.4rem;
 }
 .main-nav a {
- color: #e5e7eb;
- text-decoration: none;
- font-size: 0.95rem;
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.95rem;
 }
-
 .main-nav a.active,
 .main-nav a:hover {
- color: #60a5fa;
+  color: #60a5fa;
 }
 /* RIGHT */
 .header-right {
- display: flex;
- align-items: center;
- gap: 0.8rem;
- min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 44px;
 }
-
-/* PROFILE */
 #profilePic {
- width: 32px;
- height: 32px;
- border-radius: 50%;
- border: 2px solid #60a5fa;
- object-fit: cover;
- display: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  display: none;
 }
-
-/* LOGIN */
 .login-btn {
- padding: 0.45rem 1.1rem;
- border-radius: 999px;
- border: 1.5px solid #60a5fa;
- background: transparent;
- color: #60a5fa;
- font-size: 0.95rem;
- cursor: pointer;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
 }
-
-/* XP */
 #levelInfo {
- display: none;
- width: 140px;
- font-size: 0.8rem;
- color: #cbd5e1;
+  display: none;
+  width: 140px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
 }
 #levelText {
- white-space: nowrap;
+  white-space: nowrap;
 }
 #xpOuter {
- width: 100%;
- height: 5px;
- background: #1e293b;
- border-radius: 3px;
- margin-top: 4px;
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: 4px;
 }
 #xpBar {
- height: 100%;
- width: 0%;
- background: #60a5fa;
- border-radius: 3px;
- transition: width 0.35s ease;
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 3px;
+  transition: width 0.35s ease;
 }
-
 /* MOBILE */
 @media (max-width: 768px) {
- .header-inner {
- flex-direction: column;
- align-items: stretch;
- gap: 8px;
- }
- .header-left {
- justify-content: space-between;
- }
- .header-right {
- justify-content: space-between;
- width: 100%;
- }
- #levelInfo {
- width: 100%;
- }
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo {
+    width: 100%;
+  }
+  #ageGate .buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  #ageGate .btn {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
 }
 
 /* ================= CONTENT STYLES ================= */
 .products {
- display: grid;
- grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
- gap: 2rem;
- max-width: 1200px;
- margin: 0 auto;
- padding: 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
-
 .card {
- background: #020617;
- border-radius: 18px;
- overflow: hidden;
- transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #020617;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .card img.thumbnail {
- width: 100%;
- height: 220px;
- object-fit: cover;
- display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
 }
-
 .hero {
- position: relative;
- min-height: 100svh;
- display: flex;
- align-items: center;
- justify-content: center;
- padding: 4rem 1.25rem;
- text-align: center;
- overflow: hidden;
- background: linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)), url("./images/heromodels.jpg");
- background-size: cover;
- background-position: center;
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)), url("./images/heromodels.jpg");
+  background-size: cover;
+  background-position: center;
 }
 .hero-content { max-width: 900px; margin: 0 auto; }
 .hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 800; margin-bottom: 1rem; }
@@ -187,24 +248,21 @@ html, body {
 .btn { padding: 0.9rem 1.6rem; border-radius: 12px; font-weight: 600; text-decoration: none; transition: all 0.2s ease; display: inline-block; }
 .btn.primary { background: #2563eb; color: white; }
 .btn.primary:hover { background: #1d4ed8; transform: translateY(-3px); }
-
 .model-container {
- max-width: 1100px;
- height: 600px;
- margin: 4rem auto;
- background: #020617;
- border-radius: 18px;
- overflow: hidden;
- box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+  max-width: 1100px;
+  height: 600px;
+  margin: 4rem auto;
+  background: #020617;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
-
 model-viewer {
- width: 100%;
- height: 100%;
- background: #020617;
+  width: 100%;
+  height: 100%;
+  background: #020617;
 }
 .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-.card img.thumbnail { width: 100%; height: 220px; object-fit: cover; }
 .card-content { padding: 1.5rem; text-align: center; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; }
 .card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .card .details { color: #94a3b8; font-size: 0.9rem; margin: 0.5rem 0; }
@@ -215,49 +273,30 @@ model-viewer {
 .card-content .btn.view-btn { background: transparent; color: #60a5fa; border: 1.5px solid #60a5fa; margin-bottom: 0.8rem; }
 .card-content .btn.view-btn:hover { background: rgba(96,165,250,0.15); transform: translateY(-2px); }
 .delivery { font-size: 0.85rem; color: #64748b; margin-top: 1rem; }
-
 .filters { text-align: center; margin: 3rem 0 2rem; padding: 1rem; }
 .filters input, .filters select { padding: 0.7rem 1rem; margin: 0.5rem; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 1rem; }
-
 .section-nav { text-align: center; margin: 4rem 0 3rem; }
 .section-nav a { display: inline-block; margin: 0 1rem; padding: 0.9rem 2rem; background: #2563eb; color: white; border-radius: 12px; text-decoration: none; font-weight: 600; transition: background 0.3s; }
 .section-nav a:hover { background: #1d4ed8; }
-
-/* ================= FOOTER ================= */
+/* FOOTER */
 .site-footer {
- background: rgba(2,6,23,0.95);
- border-top: 1px solid #1e293b;
- padding: 3rem 1rem;
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
 }
 .footer-inner {
- max-width: 1200px;
- margin: 0 auto;
- display: flex;
- justify-content: space-between;
- flex-wrap: wrap;
- gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
 }
 .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .footer-nav a { color: #cbd5e1; text-decoration: none; }
 .footer-nav a:hover { color: #60a5fa; }
 .site-footer p { margin: 0; color: #94a3b8; }
-
-/* MOBILE ADJUSTMENTS */
-@media (max-width: 768px) {
- .model-container { height: 380px; margin: 2rem auto; border-radius: 14px; }
- .products { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.4rem; padding: 0 0.8rem; }
- .card img.thumbnail { height: 160px; }
- .card-content { padding: 1.2rem; min-height: auto; }
- .filters input, .filters select { display: block; width: 90%; margin: 0.8rem auto; }
- .section-nav a { display: block; width: 80%; max-width: 320px; margin: 1rem auto; }
- .hero-actions { flex-direction: column; }
- .btn { width: 100%; max-width: 320px; margin: auto; }
- .card-content .btn { max-width: 200px; padding: 0.7rem 1rem; font-size: 0.92rem; }
-}
-
-/* =========================
-   SOCIAL SHARE ICON STYLES
-   ========================= */
+/* SHARE BUTTONS */
 .share-actions {
   display: flex;
   gap: 12px;
@@ -265,7 +304,6 @@ model-viewer {
   margin-top: 12px;
   flex-wrap: wrap;
 }
-/* Base button */
 .share-btn {
   width: 42px;
   height: 42px;
@@ -276,130 +314,113 @@ model-viewer {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #94a3b8; /* default icon color */
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+  color: #94a3b8;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-/* SVG sizing */
 .share-btn svg {
   width: 20px;
   height: 20px;
   fill: currentColor;
 }
-/* Hover animation */
-.share-btn:hover {
-  transform: translateY(-2px) scale(1.08);
-}
-/* =========================
-   BRAND COLORS (HOVER)
-   ========================= */
-/* Twitter / X */
-.share-btn[data-platform="twitter"]:hover {
-  color: #1DA1F2;
-  border-color: #1DA1F2;
-}
-/* Reddit */
-.share-btn[data-platform="reddit"]:hover {
-  color: #FF4500;
-  border-color: #FF4500;
-}
-/* Discord */
-.share-btn[data-platform="discord"]:hover {
-  color: #5865F2;
-  border-color: #5865F2;
-}
-/* Facebook */
-.share-btn[data-platform="facebook"]:hover {
-  color: #1877F2;
-  border-color: #1877F2;
-}
-/* WhatsApp */
-.share-btn[data-platform="whatsapp"]:hover {
-  color: #25D366;
-  border-color: #25D366;
-}
-/* Copy link */
-.share-btn[data-platform="copy"]:hover {
-  color: #60a5fa;
-  border-color: #60a5fa;
-}
-/* =========================
-   ACTIVE PRESS & TOOLTIP
-   ========================= */
-.share-btn:active {
-  transform: scale(0.95);
-}
-.share-btn[title] {
-  position: relative;
+.share-btn:hover { transform: translateY(-2px) scale(1.08); }
+.share-btn[data-platform="twitter"]:hover { color: #1DA1F2; border-color: #1DA1F2; }
+.share-btn[data-platform="reddit"]:hover { color: #FF4500; border-color: #FF4500; }
+.share-btn[data-platform="discord"]:hover { color: #5865F2; border-color: #5865F2; }
+.share-btn[data-platform="facebook"]:hover { color: #1877F2; border-color: #1877F2; }
+.share-btn[data-platform="whatsapp"]:hover { color: #25D366; border-color: #25D366; }
+.share-btn[data-platform="copy"]:hover { color: #60a5fa; border-color: #60a5fa; }
+.share-btn:active { transform: scale(0.95); }
+
+/* MOBILE ADJUSTMENTS */
+@media (max-width: 768px) {
+  .model-container { height: 380px; margin: 2rem auto; border-radius: 14px; }
+  .products { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.4rem; padding: 0 0.8rem; }
+  .card img.thumbnail { height: 160px; }
+  .card-content { padding: 1.2rem; min-height: auto; }
+  .filters input, .filters select { display: block; width: 90%; margin: 0.8rem auto; }
+  .section-nav a { display: block; width: 80%; max-width: 320px; margin: 1rem auto; }
+  .hero-actions { flex-direction: column; }
+  .btn { width: 100%; max-width: 320px; margin: auto; }
+  .card-content .btn { max-width: 200px; padding: 0.7rem 1rem; font-size: 0.92rem; }
 }
 </style>
 </head>
-<body>
+<body class="age-gate-active">
 
-<!-- HEADER -->
-<header class="site-header">
- <div class="header-inner">
-  <div class="header-left">
-   <div class="logo"><a href="index.html">BowesProduct</a></div>
-   <nav class="main-nav">
-    <a href="index.html">Home</a>
-    <a href="models.html" class="active">Models</a>
-   </nav>
+<!-- AGE GATE -->
+<div id="ageGate">
+  <h2>You must be 18 or older to enter</h2>
+  <p>This website contains adult-themed anthropomorphic and fantasy 3D character models that may be considered NSFW.<br>By entering, you confirm you are at least 18 years of age and consent to viewing such content.</p>
+  <div class="buttons">
+    <button class="btn enter" id="enterBtn">I am 18 or older – Enter</button>
+    <button class="btn exit" id="exitBtn">I am under 18 – Exit</button>
   </div>
-  <div class="header-right">
-   <img id="profilePic" alt="Profile">
-   <div id="levelInfo">
-    <div id="levelText"></div>
-    <div id="xpOuter"><div id="xpBar"></div></div>
-   </div>
-   <button id="authBtn" class="login-btn">Login</button>
-  </div>
- </div>
-</header>
-
-<!-- HERO -->
-<section class="hero">
- <div class="hero-content">
-  <h1>3D Models</h1>
-  <p>Commercial-ready rigged characters and props with instant download</p>
-  <div class="hero-actions">
-   <a href="#rigged-models" class="btn primary">Browse Rigged Models</a>
-   <a href="#modelContainer" class="btn primary">Open 3D Viewer</a>
-  </div>
- </div>
-</section>
-
-<!-- SECTION NAV -->
-<div class="section-nav">
- <a href="#rigged-models">Rigged Models</a>
- <a href="#props">Props</a>
- <a href="#packs">Packs</a>
 </div>
 
-<!-- Model Viewer -->
-<div class="model-container" id="modelContainer">
- <model-viewer id="mainViewer"
-  src="./models/humanmale.glb"
-  poster="./thumbs/promotionalviewer.jpg"
-  alt="Human Male 3D Model"
-  camera-controls
-  auto-rotate
-  auto-rotate-delay="0"
-  rotation-per-second="30deg"
-  interaction-prompt="auto"
-  shadow-intensity="1"
-  exposure="0.9"
-  environment-image="neutral"
-  ar
-  ar-modes="webxr scene-viewer quick-look"
-  loading="eager"
-  reveal="interaction">
- </model-viewer>
-</div>
+<!-- MAIN CONTENT -->
+<div id="mainContent">
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="logo"><a href="index.html">BowesProduct</a></div>
+        <nav class="main-nav">
+          <a href="index.html">Home</a>
+          <a href="models.html" class="active">Models</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <img id="profilePic" alt="Profile">
+        <div id="levelInfo">
+          <div id="levelText"></div>
+          <div id="xpOuter"><div id="xpBar"></div></div>
+        </div>
+        <button id="authBtn" class="login-btn">Login</button>
+      </div>
+    </div>
+  </header>
 
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>3D Models</h1>
+      <p>Commercial-ready rigged characters and props with instant download</p>
+      <div class="hero-actions">
+        <a href="#rigged-models" class="btn primary">Browse Rigged Models</a>
+        <a href="#modelContainer" class="btn primary">Open 3D Viewer</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION NAV -->
+  <div class="section-nav">
+    <a href="#rigged-models">Rigged Models</a>
+    <a href="#props">Props</a>
+    <a href="#packs">Packs</a>
+  </div>
+
+  <!-- Model Viewer -->
+  <div class="model-container" id="modelContainer">
+    <model-viewer id="mainViewer"
+      src="./models/humanmale.glb"
+      poster="./thumbs/promotionalviewer.jpg"
+      alt="Human Male 3D Model"
+      camera-controls
+      auto-rotate
+      auto-rotate-delay="0"
+      rotation-per-second="30deg"
+      interaction-prompt="auto"
+      shadow-intensity="1"
+      exposure="0.9"
+      environment-image="neutral"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      loading="eager"
+      reveal="interaction">
+    </model-viewer>
+  </div>
+
+ 
 <!-- Rigged Models -->
 <section id="rigged-models">
  <h2 style="text-align:center; margin:4rem 0 1rem;">Rigged Models</h2>
@@ -853,19 +874,74 @@ model-viewer {
  <p style="font-size:1.4rem; max-width:800px; margin:2rem auto;">Product packs coming soon!</p>
  <p style="font-size:1.1rem;">Stay tuned for bundled deals on multiple models and props.</p>
 </section>
-<!-- FOOTER -->
-<footer class="site-footer">
- <div class="footer-inner">
-  <nav class="footer-nav">
-   <a href="about.html">About</a>
-   <a href="privacy.html">Privacy</a>
-   <a href="terms.html">Terms</a>
-   <a href="license.html">License</a>
-   <a href="refund.html">Refund</a>
-   <a href="rewards.html">Rewards</a>
-  </nav>
-  <p>© 2025 BowesProduct</p>
- </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav class="footer-nav">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="license.html">License</a>
+        <a href="refund.html">Refund</a>
+        <a href="rewards.html">Rewards</a>
+      </nav>
+      <p>© 2025 BowesProduct</p>
+    </div>
+    <div class="share-actions">
+      <!-- Your share buttons -->
+      <button class="share-btn" data-share data-platform="twitter" title="Share on X">/* SVG */</button>
+      <!-- ... other share buttons ... -->
+    </div>
+  </footer>
+</div>
+
+<script>
+// Age Gate
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
+const ageGate = document.getElementById('ageGate');
+const body = document.body;
+
+if (getCookie('ageVerified') === 'true') {
+  ageGate.style.display = 'none';
+  body.classList.remove('age-gate-active');
+}
+
+document.getElementById('enterBtn').addEventListener('click', () => {
+  const date = new Date();
+  date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days
+  document.cookie = `ageVerified=true; expires=${date.toUTCString()}; path=/; SameSite=Lax`;
+  ageGate.style.display = 'none';
+  body.classList.remove('age-gate-active');
+});
+
+document.getElementById('exitBtn').addEventListener('click', () => {
+  window.location.href = 'https://www.google.com';
+});
+
+// Your original scripts below (unchanged)
+window.addEventListener('scroll', () => {
+  document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+const viewer = document.getElementById("mainViewer");
+const modelContainer = document.getElementById("modelContainer");
+document.querySelectorAll(".view-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const card = btn.closest(".card");
+    const newModel = card.dataset.model;
+    const thumb = card.querySelector("img.thumbnail")?.src || "./thumbs/promotionalviewer.jpg";
+    viewer.src = newModel;
+    viewer.poster = thumb;
+    viewer.dismissPoster();
+    modelContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+});
+
 
  <!-- Share Buttons in Footer -->
  <div class="share-actions">
@@ -1062,4 +1138,3 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
-
