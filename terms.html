@@ -345,7 +345,7 @@ window.addEventListener("scroll", () => {
 });
 </script>
 
-<!-- FIREBASE AUTH + XP -->
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import {
@@ -435,7 +435,7 @@ onAuthStateChanged(auth, async (user) => {
 <script>
 (() => {
   const url = window.location.href;
-  const text = "Read the BowesProduct Terms of Service – clear and straightforward!";
+  const text = "Read the BowesProduct Refund Policy – fair and transparent!";
   document.querySelectorAll(".share-btn").forEach(btn => {
     btn.onclick = () => {
       const p = btn.dataset.platform;
@@ -453,13 +453,13 @@ onAuthStateChanged(auth, async (user) => {
       }
       if (p === "copy") {
         navigator.clipboard.writeText(url);
-        alert("Terms of Service link copied!");
+        alert("Refund Policy link copied!");
       }
       localStorage.setItem("shareEvent", JSON.stringify({ timestamp: Date.now() }));
     };
   });
 })();
 </script>
-
 </body>
 </html>
+
