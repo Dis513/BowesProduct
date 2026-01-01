@@ -225,15 +225,19 @@
         right: 0; 
         left: 0; 
         top: auto; 
-        bottom: 70px; 
+        bottom: 80px; 
         border-radius: 12px 12px 0 0; 
-        max-height: 45vh; 
+        max-height: calc(100vh - 160px); 
+        padding-bottom: 2rem;
       }
       #status {
         bottom: 70px;
         font-size: 0.8rem;
         left: 10px;
         right: 10px;
+      }
+      .site-footer {
+        height: 70px;
       }
     }
 
@@ -702,10 +706,13 @@
 
         if (alpha > 0) {
           const influence = alpha;
+          
+          // FIX: Set vertex colors directly to paint color without lerping
+          // This ensures the painted color matches exactly what's selected
           colors.setXYZ(i,
-            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
-            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
-            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
+            paintColor.r,
+            paintColor.g,
+            paintColor.b
           );
         }
       }
