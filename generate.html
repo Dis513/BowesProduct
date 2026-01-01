@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>BowesProduct – Generate 3D Models</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Generate commercial-ready 3D models using AI on BowesProduct.">
+  <meta name="description" content="Generate commercial-ready 3D models using all Meshy Pro AI features.">
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -26,7 +26,6 @@
       background: rgba(2,6,23,0.95);
       border-bottom: 1px solid #1e293b;
     }
-
     .header-inner {
       max-width: 1200px;
       margin: 0 auto;
@@ -35,254 +34,67 @@
       align-items: center;
       justify-content: space-between;
     }
+    .header-left { display: flex; align-items: center; gap: 1.6rem; }
+    .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
+    .main-nav { display: flex; gap: 1.4rem; }
+    .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
+    .main-nav a.active, .main-nav a:hover { color: #60a5fa; }
+    .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
+    #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+    .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+    #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
+    #levelText { white-space: nowrap; }
+    #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+    #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-    /* LEFT */
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1.6rem;
-    }
-    .logo a {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .main-nav {
-      display: flex;
-      gap: 1.4rem;
-    }
-    .main-nav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-    .main-nav a.active,
-    .main-nav a:hover {
-      color: #60a5fa;
-    }
-
-    /* RIGHT */
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      min-height: 44px;
-    }
-
-    /* PROFILE */
-    #profilePic {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid #60a5fa;
-      object-fit: cover;
-      display: none;
-    }
-
-    /* LOGIN */
-    .login-btn {
-      padding: 0.45rem 1.1rem;
-      border-radius: 999px;
-      border: 1.5px solid #60a5fa;
-      background: transparent;
-      color: #60a5fa;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    /* XP */
-    #levelInfo {
-      display: none;
-      width: 140px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-    }
-    #levelText {
-      white-space: nowrap;
-    }
-    #xpOuter {
-      width: 100%;
-      height: 5px;
-      background: #1e293b;
-      border-radius: 3px;
-      margin-top: 4px;
-    }
-    #xpBar {
-      height: 100%;
-      width: 0%;
-      background: #60a5fa;
-      border-radius: 3px;
-      transition: width 0.35s ease;
-    }
-
-    /* MOBILE HEADER */
     @media (max-width: 768px) {
-      .header-inner {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-      .header-left {
-        justify-content: space-between;
-      }
-      .header-right {
-        justify-content: space-between;
-        width: 100%;
-      }
-      #levelInfo {
-        width: 100%;
-      }
+      .header-inner { flex-direction: column; gap: 8px; }
+      .header-left { justify-content: space-between; }
+      .header-right { justify-content: space-between; width: 100%; }
+      #levelInfo { width: 100%; }
     }
 
-    /* ================= MAIN CONTENT ================= */
-    .main-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-      min-height: calc(100svh - 200px);
+    /* ================= MAIN ================= */
+    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; min-height: calc(100svh - 200px); }
+    h1 { text-align: center; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1.5rem; }
+    .credit-display { text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #60a5fa; }
+    .tabs { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .tab-btn { padding: 0.6rem 1.2rem; background: #1e293b; border: none; color: #e5e7eb; border-radius: 8px; cursor: pointer; }
+    .tab-btn.active { background: #60a5fa; color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .form-group { margin-bottom: 1.5rem; }
+    label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+    input[type="text"], input[type="file"], textarea, select {
+      width: 100%; padding: 0.8rem; background: #1e293b; border: 1px solid #334155; color: white; border-radius: 8px;
     }
-
-    h1 {
-      text-align: center;
-      font-size: clamp(2rem, 5vw, 3rem);
-      margin-bottom: 1.5rem;
-    }
-
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-    .tab-btn {
-      padding: 0.6rem 1.2rem;
-      background: #1e293b;
-      border: none;
-      color: #e5e7eb;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .tab-btn.active {
-      background: #60a5fa;
-      color: white;
-    }
-
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-    input[type="text"], textarea, select {
-      width: 100%;
-      padding: 0.8rem;
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: white;
-      border-radius: 8px;
-    }
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-
+    textarea { min-height: 120px; resize: vertical; }
+    .extra-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
     .generate-btn {
-      padding: 0.9rem 1.6rem;
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
+      padding: 0.9rem 1.6rem; background: #2563eb; color: white; border: none; border-radius: 12px;
+      font-weight: 600; cursor: pointer; width: 100%; margin-top: 1rem;
     }
-
-    .status {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #1e293b;
-      border-radius: 8px;
-      min-height: 50px;
-    }
-
-    .preview-thumbnails {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin: 1.5rem 0;
-    }
-    .thumbnail {
-      width: 200px;
-      cursor: pointer;
-      border: 2px solid transparent;
-    }
-    .thumbnail.selected {
-      border-color: #60a5fa;
-    }
-    .thumbnail img {
-      width: 100%;
-      border-radius: 8px;
-    }
-
-    model-viewer {
-      width: 100%;
-      height: 500px;
-      background: #0f172a;
-      border-radius: 12px;
-      margin: 2rem 0;
-    }
+    .status { margin-top: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px; min-height: 50px; }
+    .preview-thumbnails { display: flex; gap: 1rem; flex-wrap: wrap; margin: 2rem 0; }
+    .thumbnail { width: 200px; cursor: pointer; border: 3px solid transparent; border-radius: 8px; overflow: hidden; }
+    .thumbnail.selected { border-color: #60a5fa; }
+    .thumbnail img { width: 100%; display: block; }
+    model-viewer { width: 100%; height: 500px; background: #0f172a; border-radius: 12px; margin: 2rem 0; }
 
     /* ================= FOOTER ================= */
-    .site-footer {
-      background: rgba(2,6,23,0.95);
-      border-top: 1px solid #1e293b;
-      padding: 3rem 1rem;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-    .footer-nav {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .footer-nav a {
-      color: #cbd5e1;
-      text-decoration: none;
-    }
-    .footer-nav a:hover {
-      color: #60a5fa;
-    }
-    .site-footer p {
-      margin: 0;
-      color: #94a3b8;
-    }
+    .site-footer { background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 3rem 1rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+    .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .footer-nav a { color: #cbd5e1; text-decoration: none; }
+    .footer-nav a:hover { color: #60a5fa; }
+    .site-footer p { margin: 0; color: #94a3b8; }
   </style>
 </head>
-
 <body>
 
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-
     <div class="header-left">
       <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
@@ -291,69 +103,102 @@
         <a href="generate.html" class="active">Create</a>
       </nav>
     </div>
-
     <div class="header-right">
       <img id="profilePic" alt="Profile">
-
       <div id="levelInfo">
         <div id="levelText"></div>
         <div id="xpOuter"><div id="xpBar"></div></div>
       </div>
-
       <button id="authBtn" class="login-btn">Login</button>
     </div>
-
   </div>
 </header>
 
 <!-- MAIN CONTENT -->
 <main class="main-content">
-  <h1>Generate Your 3D Model</h1>
+  <h1>Generate 3D Models – All Meshy Pro Features</h1>
+  <div class="credit-display">Meshy Credits: <span id="credit-display">Login required</span></div>
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="text">Text to 3D</button>
     <button class="tab-btn" data-tab="image">Image to 3D</button>
+    <button class="tab-btn" data-tab="retexture">Retexture</button>
+    <button class="tab-btn" data-tab="remesh">Remesh</button>
   </div>
 
-  <!-- Text to 3D Tab -->
+  <!-- Text to 3D -->
   <div id="text" class="tab-content active">
     <div class="form-group">
       <label for="text-prompt">Prompt</label>
-      <textarea id="text-prompt" placeholder="Describe your 3D model, e.g., a futuristic sci-fi helmet, realistic style"></textarea>
+      <textarea id="text-prompt" placeholder="Describe your model, e.g. a futuristic sci-fi helmet"></textarea>
     </div>
     <div class="form-group">
-      <label for="art-style">Art Style</label>
-      <select id="art-style">
+      <label for="text-style">Art Style</label>
+      <select id="text-style">
         <option value="realistic">Realistic</option>
         <option value="cartoon">Cartoon</option>
         <option value="low-poly">Low Poly</option>
         <option value="sculpture">Sculpture</option>
       </select>
     </div>
-    <button class="generate-btn" id="generate-text">Generate Preview (costs credits)</button>
-    <div class="status" id="text-status">Ready to generate.</div>
+    <div class="extra-options">
+      <label><input type="checkbox" id="text-pbr" checked> Enable PBR Materials</label>
+      <label><input type="checkbox" id="text-remesh" checked> Auto Remesh</label>
+    </div>
+    <button class="generate-btn" id="generate-text-preview">Generate Preview (~20 credits)</button>
+    <div class="status" id="text-status">Ready</div>
 
     <div id="text-previews" class="preview-thumbnails" style="display:none;"></div>
-    <button class="generate-btn" id="refine-text" style="display:none;">Refine Selected (add texture, costs more credits)</button>
 
-    <model-viewer id="text-viewer" style="display:none;" camera-controls auto-rotate shadow-intensity="1" exposure="1"></model-viewer>
+    <div id="refine-section" style="display:none;">
+      <div class="form-group">
+        <label for="refine-prompt">Optional Refine / Texture Prompt</label>
+        <textarea id="refine-prompt" placeholder="e.g. add detailed metallic texture with scratches"></textarea>
+      </div>
+      <button class="generate-btn" id="generate-text-refine">Refine Selected (~40 credits)</button>
+    </div>
+
+    <model-viewer id="text-viewer" camera-controls auto-rotate shadow-intensity="1" exposure="1" style="display:none;"></model-viewer>
   </div>
 
-  <!-- Image to 3D Tab -->
+  <!-- Image to 3D -->
   <div id="image" class="tab-content">
     <div class="form-group">
-      <label for="image-upload">Upload Image</label>
+      <label for="image-upload">Upload Reference Image</label>
       <input type="file" id="image-upload" accept="image/*">
-      <p style="font-size:0.9rem; color:#94a3b8;">Or paste a public image URL below:</p>
-      <input type="text" id="image-url" placeholder="https://example.com/image.jpg">
+    </div>
+    <div class="extra-options">
+      <label><input type="checkbox" id="image-pbr" checked> Enable PBR</label>
+    </div>
+    <button class="generate-btn" id="generate-image">Generate from Image (~30 credits)</button>
+    <div class="status" id="image-status">Ready</div>
+    <model-viewer id="image-viewer" camera-controls auto-rotate shadow-intensity="1" style="display:none;"></model-viewer>
+  </div>
+
+  <!-- Retexture -->
+  <div id="retexture" class="tab-content">
+    <div class="form-group">
+      <label for="retex-model">Upload 3D Model (GLB/OBJ/FBX)</label>
+      <input type="file" id="retex-model" accept=".glb,.obj,.fbx">
     </div>
     <div class="form-group">
-      <label><input type="checkbox" id="enable-pbr" checked> Enable PBR Materials</label>
+      <label for="retex-prompt">Texture Prompt</label>
+      <textarea id="retex-prompt" placeholder="e.g. rusty metal with scratches"></textarea>
     </div>
-    <button class="generate-btn" id="generate-image">Generate 3D Model (costs credits)</button>
-    <div class="status" id="image-status">Ready to generate.</div>
+    <button class="generate-btn" id="generate-retex">Retexture Model (~15 credits)</button>
+    <div class="status" id="retex-status">Ready</div>
+    <model-viewer id="retex-viewer" camera-controls auto-rotate style="display:none;"></model-viewer>
+  </div>
 
-    <model-viewer id="image-viewer" style="display:none;" camera-controls auto-rotate shadow-intensity="1" exposure="1"></model-viewer>
+  <!-- Remesh -->
+  <div id="remesh" class="tab-content">
+    <div class="form-group">
+      <label for="remesh-model">Upload 3D Model (GLB/OBJ)</label>
+      <input type="file" id="remesh-model" accept=".glb,.obj">
+    </div>
+    <button class="generate-btn" id="generate-remesh">Remesh & Optimize (~10 credits)</button>
+    <div class="status" id="remesh-status">Ready</div>
+    <model-viewer id="remesh-viewer" camera-controls auto-rotate style="display:none;"></model-viewer>
   </div>
 </main>
 
@@ -368,11 +213,11 @@
       <a href="refund.html">Refund</a>
       <a href="rewards.html">Rewards</a>
     </nav>
-    <p>© 2025 BowesProduct</p>
+    <p>© 2026 BowesProduct</p>
   </div>
 </footer>
 
-<!-- FIREBASE AUTH & XP -->
+<!-- Firebase Auth & Credits -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -394,6 +239,7 @@ const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
+const creditDisplay = document.getElementById("credit-display");
 
 authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
@@ -402,6 +248,7 @@ onAuthStateChanged(auth, async (user) => {
     authBtn.textContent = "Login";
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
+    creditDisplay.textContent = "Login required";
     return;
   }
 
@@ -409,38 +256,35 @@ onAuthStateChanged(auth, async (user) => {
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
 
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
-
+  const userRef = doc(db, "users", user.uid);
+  let snap = await getDoc(userRef);
   if (!snap.exists()) {
-    await setDoc(ref, { xp: 10, meshyCredits: 100 }); // Starting credits
-    snap = await getDoc(ref);
+    await setDoc(userRef, { xp: 10, meshyCredits: 500 });
+    snap = await getDoc(userRef);
   }
 
   const data = snap.data();
   const xp = data.xp || 0;
   const levels = [0, 200, 500, 1000, 2000];
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
+  let level = levels.filter(l => xp >= l).length - 1;
+  let next = levels[level + 1] || levels[level];
   let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
-
   levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
+  xpBar.style.width = `${progress}%`;
   levelInfo.style.display = "block";
 
-  // Store user doc ref for later credit updates
-  window.currentUserDoc = ref;
+  window.currentUserRef = userRef;
   window.meshyCredits = data.meshyCredits || 0;
-  document.getElementById('text-status').textContent += ` | Your Meshy Credits: ${window.meshyCredits}`;
-  document.getElementById('image-status').textContent += ` | Your Meshy Credits: ${window.meshyCredits}`;
+  creditDisplay.textContent = window.meshyCredits;
 });
 </script>
 
-<!-- MESHY API INTEGRATION -->
+<!-- Meshy API Integration -->
 <script type="module">
-const MESHY_API_KEY = "msy_QI0Ee6mnAOh80TGWg9vnQe0l0D7nYI12a9Oq"; // Your key - keep secure in production!
+const MESHY_KEY = "msy_QI0Ee6mnAOh80TGWg9vnQe0l0D7nYI12a9Oq";
+const BASE_URL = "https://api.meshy.ai";
 
-// Tab switching
+// Tab handling
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -450,134 +294,205 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// Helper to poll task
-async function pollTask(taskId, endpoint, statusEl, onSuccess) {
+// Utility: deduct credits
+async function deductCredits(cost) {
+  if (!window.currentUserRef || window.meshyCredits < cost) {
+    alert("Not enough credits or not logged in");
+    return false;
+  }
+  await updateDoc(window.currentUserRef, { meshyCredits: increment(-cost) });
+  window.meshyCredits -= cost;
+  document.getElementById("credit-display").textContent = window.meshyCredits;
+  return true;
+}
+
+// Utility: poll task
+async function pollTask(taskId, endpoint, statusEl, viewerId, onSuccess = () => {}) {
   const interval = setInterval(async () => {
-    const res = await fetch(`https://api.meshy.ai/openapi/v2/${endpoint}/${taskId}`, {
-      headers: { "Authorization": `Bearer ${MESHY_API_KEY}` }
+    const res = await fetch(`${BASE_URL}/${endpoint}/${taskId}`, {
+      headers: { "Authorization": `Bearer ${MESHY_KEY}` }
     });
     const data = await res.json();
-    statusEl.textContent = `Progress: ${data.progress}% | Status: ${data.status}`;
+
+    statusEl.textContent = `Progress: ${data.progress || 0}% – ${data.status || 'Processing'}`;
 
     if (data.status === "SUCCEEDED") {
       clearInterval(interval);
+      statusEl.textContent = "Completed!";
+      const viewer = document.getElementById(viewerId);
+      viewer.src = data.model_urls?.glb || data.model_urls?.refined_glb || data.thumbnail_urls[0];
+      viewer.style.display = "block";
       onSuccess(data);
     } else if (data.status === "FAILED") {
       clearInterval(interval);
-      statusEl.textContent = "Generation failed.";
+      statusEl.textContent = "Failed – try again.";
     }
-  }, 5000);
+  }, 7000);
 }
 
-// Text to 3D
-document.getElementById('generate-text').addEventListener('click', async () => {
-  if (!window.currentUserDoc || window.meshyCredits < 20) {
-    alert("Login and have enough credits!");
-    return;
-  }
+// Text to 3D Preview
+document.getElementById("generate-text-preview").addEventListener("click", async () => {
+  if (!await deductCredits(20)) return;
 
-  const prompt = document.getElementById('text-prompt').value.trim();
+  const prompt = document.getElementById("text-prompt").value.trim();
   if (!prompt) return alert("Enter a prompt");
 
   const body = {
     mode: "preview",
     prompt,
-    art_style: document.getElementById('art-style').value,
-    should_remesh: true
+    art_style: document.getElementById("text-style").value,
+    enable_pbr: document.getElementById("text-pbr").checked
   };
 
-  const res = await fetch("https://api.meshy.ai/openapi/v2/text-to-3d", {
+  const res = await fetch(`${BASE_URL}/openapi/v2/text-to-3d`, {
     method: "POST",
-    headers: { "Authorization": `Bearer ${MESHY_API_KEY}`, "Content-Type": "application/json" },
+    headers: { "Authorization": `Bearer ${MESHY_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
-
   const data = await res.json();
   const taskId = data.result;
-  const statusEl = document.getElementById('text-status');
-  statusEl.textContent = "Generating preview...";
 
-  // Deduct credits (approx)
-  await updateDoc(window.currentUserDoc, { meshyCredits: increment(-20) });
-  window.meshyCredits -= 20;
+  const statusEl = document.getElementById("text-status");
+  statusEl.textContent = "Generating previews...";
 
-  pollTask(taskId, "text-to-3d", statusEl, (taskData) => {
-    statusEl.textContent = "Preview ready! Choose a variant.";
-    const previewsDiv = document.getElementById('text-previews');
+  pollTask(taskId, "openapi/v2/text-to-3d", statusEl, "text-viewer", (result) => {
+    const previewsDiv = document.getElementById("text-previews");
     previewsDiv.style.display = "flex";
     previewsDiv.innerHTML = "";
-    window.currentPreviews = taskData.thumbnail_urls || taskData.model_urls?.preview_glb || []; // Adjust based on actual response
+    window.currentThumbnails = result.thumbnail_urls || [];
 
-    taskData.thumbnail_urls.forEach((url, i) => {
-      const div = document.createElement('div');
-      div.className = 'thumbnail';
-      const img = document.createElement('img');
+    result.thumbnail_urls.forEach((url, i) => {
+      const thumb = document.createElement("div");
+      thumb.className = "thumbnail";
+      const img = document.createElement("img");
       img.src = url;
-      div.appendChild(img);
-      div.onclick = () => {
-        document.querySelectorAll('#text-previews .thumbnail').forEach(t => t.classList.remove('selected'));
-        div.classList.add('selected');
+      thumb.appendChild(img);
+      thumb.onclick = () => {
+        document.querySelectorAll("#text-previews .thumbnail").forEach(t => t.classList.remove("selected"));
+        thumb.classList.add("selected");
         window.selectedPreviewIndex = i;
       };
-      previewsDiv.appendChild(div);
+      previewsDiv.appendChild(thumb);
     });
 
-    document.getElementById('refine-text').style.display = "block";
+    document.getElementById("refine-section").style.display = "block";
+    window.lastPreviewTaskId = taskId;
   });
 });
 
-document.getElementById('refine-text').addEventListener('click', async () => {
-  if (window.meshyCredits < 50) return alert("Not enough credits for refine");
+// Text to 3D Refine
+document.getElementById("generate-text-refine").addEventListener("click", async () => {
+  if (typeof window.selectedPreviewIndex === "undefined") return alert("Select a preview first");
+  if (!await deductCredits(40)) return;
 
   const body = {
     mode: "refine",
-    preview_task_id: window.currentTaskId, // You'd store from preview
-    enable_pbr: true
+    preview_task_id: window.lastPreviewTaskId,
+    enable_pbr: document.getElementById("text-pbr").checked,
+    texture_prompt: document.getElementById("refine-prompt").value.trim() || undefined
   };
 
-  // Similar fetch and poll for refine...
-  // For brevity, implement similarly
-  alert("Refine logic similar - implement polling and model display");
-});
-
-// Image to 3D
-document.getElementById('generate-image').addEventListener('click', async () => {
-  if (!window.currentUserDoc || window.meshyCredits < 30) return alert("Not enough credits");
-
-  let imageUrl = document.getElementById('image-url').value.trim();
-  if (!imageUrl) {
-    const file = document.getElementById('image-upload').files[0];
-    if (!file) return alert("Provide image");
-    imageUrl = await new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  const body = {
-    image_url: imageUrl,
-    enable_pbr: document.getElementById('enable-pbr').checked
-  };
-
-  const res = await fetch("https://api.meshy.ai/openapi/v1/image-to-3d", {
+  const res = await fetch(`${BASE_URL}/openapi/v2/text-to-3d`, {
     method: "POST",
-    headers: { "Authorization": `Bearer ${MESHY_API_KEY}`, "Content-Type": "application/json" },
+    headers: { "Authorization": `Bearer ${MESHY_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
-
   const data = await res.json();
   const taskId = data.result;
 
-  await updateDoc(window.currentUserDoc, { meshyCredits: increment(-30) });
+  const statusEl = document.getElementById("text-status");
+  statusEl.textContent = "Refining model...";
+  pollTask(taskId, "openapi/v2/text-to-3d", statusEl, "text-viewer");
+});
 
-  const statusEl = document.getElementById('image-status');
-  pollTask(taskId, "image-to-3d", statusEl, (taskData) => {
-    const viewer = document.getElementById('image-viewer');
-    viewer.src = taskData.model_urls.glb;
-    viewer.style.display = "block";
-    statusEl.textContent = "Model ready!";
+// Image to 3D
+document.getElementById("generate-image").addEventListener("click", async () => {
+  if (!await deductCredits(30)) return;
+
+  const file = document.getElementById("image-upload").files[0];
+  if (!file) return alert("Upload an image");
+
+  const imageBase64 = await new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
   });
+
+  const body = {
+    image_url: imageBase64,
+    enable_pbr: document.getElementById("image-pbr").checked
+  };
+
+  const res = await fetch(`${BASE_URL}/openapi/v1/image-to-3d`, {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${MESHY_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  const taskId = data.result;
+
+  const statusEl = document.getElementById("image-status");
+  statusEl.textContent = "Generating from image...";
+  pollTask(taskId, "openapi/v1/image-to-3d", statusEl, "image-viewer");
+});
+
+// Retexture
+document.getElementById("generate-retex").addEventListener("click", async () => {
+  if (!await deductCredits(15)) return;
+
+  const file = document.getElementById("retex-model").files[0];
+  if (!file) return alert("Upload a model");
+
+  const modelBase64 = await new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+
+  const body = {
+    model_url: modelBase64,
+    prompt: document.getElementById("retex-prompt").value.trim()
+  };
+
+  const res = await fetch(`${BASE_URL}/openapi/v1/texture-generation`, {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${MESHY_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  const taskId = data.result;
+
+  const statusEl = document.getElementById("retex-status");
+  statusEl.textContent = "Retexturing...";
+  pollTask(taskId, "openapi/v1/texture-generation", statusEl, "retex-viewer");
+});
+
+// Remesh
+document.getElementById("generate-remesh").addEventListener("click", async () => {
+  if (!await deductCredits(10)) return;
+
+  const file = document.getElementById("remesh-model").files[0];
+  if (!file) return alert("Upload a model");
+
+  const modelBase64 = await new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+
+  const body = { model_url: modelBase64 };
+
+  const res = await fetch(`${BASE_URL}/openapi/v1/model-remesh`, {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${MESHY_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  const taskId = data.result;
+
+  const statusEl = document.getElementById("remesh-status");
+  statusEl.textContent = "Remeshing...";
+  pollTask(taskId, "openapi/v1/model-remesh", statusEl, "remesh-viewer");
 });
 </script>
 
