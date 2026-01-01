@@ -19,7 +19,9 @@
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
-    .site-header { position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; }
+    .site-header {
+      position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b;
+    }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 1.6rem; }
     .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
@@ -35,7 +37,7 @@
     #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
     #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 60px; }
-    #canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: default; }
+    #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
     .panel {
       position: absolute; top: 90px; right: 20px; width: 320px; max-height: calc(100vh - 180px);
@@ -99,11 +101,8 @@
       .tool-btn { height: 70px; font-size: 2.2rem; }
     }
 
-    /* Cursor styles */
-    #canvas.cursor-pan { cursor: grab; }
-    #canvas.cursor-pan:active { cursor: grabbing; }
-    #canvas.cursor-rotate { cursor: move; }
-    #canvas.cursor-paint { cursor: crosshair; }
+    /* Hide cursor when in pointer lock navigation */
+    #canvas.locked { cursor: none; }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -133,14 +132,13 @@
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
-  <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
+  <div id="status">Click canvas → Q or E = Navigation (cursor locks like Unity, mouse look + WASD move) • T = Paint Mode</div>
 
   <div class="panel">
     <h2>View Tools</h2>
     <div class="tool-buttons">
-      <button id="handTool" class="tool-btn" title="Pan View [Q]">✋</button>
-      <button id="rotateTool" class="tool-btn active" title="Rotate View [E]">↺</button>
-      <button id="paintToggleBtn" class="tool-btn" title="Toggle Paint Mode">🎨</button>
+      <button id="navTool" class="tool-btn active" title="Navigation Mode [Q/E]">🖱️</button>
+      <button id="paintToggleBtn" class="tool-btn" title="Paint Mode [T]">🎨</button>
     </div>
 
     <h2>Model</h2>
@@ -295,6 +293,7 @@
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
@@ -303,103 +302,76 @@
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
+  renderer.toneMapping = THREE.NoToneMapping; // No tone mapping = bright, exact colors
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020617);
 
-  const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+  const ambient = new THREE.AmbientLight(0xffffff, 1.2);
   scene.add(ambient);
-  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 3.0);
   dirLight.position.set(5, 10, 7);
   scene.add(dirLight);
 
   const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(3, 2, 5);
 
-  const controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.enablePan = true;
-  controls.enableZoom = true;
-  controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
+  const orbitControls = new OrbitControls(camera, canvas);
+  orbitControls.enableDamping = true;
+  orbitControls.dampingFactor = 0.05;
+  orbitControls.enableZoom = true;
 
-  let viewMode = 'rotate'; // 'rotate' or 'pan'
+  const pointerLockControls = new PointerLockControls(camera, canvas);
+
   let paintModeActive = false;
+  let navModeActive = false;
 
-  function updateControlsAndCursor() {
-    if (paintModeActive) {
-      controls.enabled = false;
-      canvas.className = 'cursor-paint';
-      return;
-    }
-
-    controls.enabled = true;
-    if (viewMode === 'rotate') {
-      controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
-      controls.touches.ONE = THREE.TOUCH.ROTATE;
-      canvas.className = 'cursor-rotate';
-    } else {
-      controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
-      controls.touches.ONE = THREE.TOUCH.PAN;
-      canvas.className = 'cursor-pan';
-    }
-  }
-
-  // Buttons
-  const handTool = document.getElementById('handTool');
-  const rotateTool = document.getElementById('rotateTool');
+  const navTool = document.getElementById('navTool');
   const paintToggleBtn = document.getElementById('paintToggleBtn');
   const paintToggle = document.getElementById('paintToggle');
 
-  function setViewMode(mode) {
-    viewMode = mode;
-    if (mode === 'pan') {
-      handTool.classList.add('active');
-      rotateTool.classList.remove('active');
-    } else {
-      rotateTool.classList.add('active');
-      handTool.classList.remove('active');
-    }
-    // If we switch to pan/rotate, automatically exit paint mode
+  function enterNavMode() {
     if (paintModeActive) togglePaintMode(false);
-    updateControlsAndCursor();
+    navModeActive = true;
+    canvas.classList.add('locked');
+    pointerLockControls.lock();
+    navTool.classList.add('active');
   }
 
-  handTool.onclick = () => setViewMode('pan');
-  rotateTool.onclick = () => setViewMode('rotate');
+  function exitNavMode() {
+    navModeActive = false;
+    canvas.classList.remove('locked');
+    navTool.classList.remove('active');
+  }
 
-  // Keyboard shortcuts - Unity style
+  function togglePaintMode(active) {
+    paintModeActive = active;
+    if (active && navModeActive) exitNavMode();
+    paintToggle.textContent = active ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
+    paintToggle.classList.toggle('active', active);
+    paintToggleBtn.classList.toggle('active', active);
+    if (!active) hideBrushCursor();
+  }
+
+  canvas.addEventListener('click', () => {
+    if (navModeActive) pointerLockControls.lock();
+  });
+
+  pointerLockControls.addEventListener('unlock', exitNavMode);
+
   window.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'q') {
-      setViewMode('pan');
-    } else if (e.key.toLowerCase() === 'e') {
-      setViewMode('rotate');
+    const key = e.key.toLowerCase();
+    if (key === 'q' || key === 'e') {
+      enterNavMode();
+    } else if (key === 't') {
+      togglePaintMode(!paintModeActive);
     }
   });
 
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
-  pmremGenerator.compileEquirectangularShader();
-  let currentEnvMap = null;
-
-  function loadEnvironment(url) {
-    if (url === 'neutral') {
-      scene.environment = null;
-      if (currentEnvMap) currentEnvMap.dispose();
-      currentEnvMap = null;
-      return;
-    }
-    new RGBELoader().load(url, (texture) => {
-      const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-      scene.environment = envMap;
-      texture.dispose();
-      if (currentEnvMap) currentEnvMap.dispose();
-      currentEnvMap = envMap;
-    });
-  }
-  loadEnvironment('neutral');
+  navTool.onclick = enterNavMode;
+  paintToggleBtn.onclick = () => togglePaintMode(!paintModeActive);
+  paintToggle.onclick = () => togglePaintMode(!paintModeActive);
 
   let currentModel = null;
   let paintedGeometries = [];
@@ -411,6 +383,11 @@
 
   const brushCursor = document.getElementById('brushCursor');
   const exportStatus = document.getElementById('exportStatus');
+  const brushShapeSelect = document.getElementById('brushShape');
+  const customBrushGroup = document.getElementById('customBrushGroup');
+  const uploadBrush = document.getElementById('uploadBrush');
+  const customBrushPreview = document.getElementById('customBrushPreview');
+  const previewCtx = customBrushPreview.getContext('2d');
 
   const gltfLoader = new GLTFLoader();
 
@@ -424,12 +401,11 @@
       scene.add(currentModel);
 
       const box = new THREE.Box3().setFromObject(currentModel);
-      const size = box.getSize(new THREE.Vector3());
-      modelSize = Math.max(size.x, size.y, size.z);
+      modelSize = Math.max(box.getSize(new THREE.Vector3()).x, box.getSize(new THREE.Vector3()).y, box.getSize(new THREE.Vector3()).z);
       const center = box.getCenter(new THREE.Vector3());
       camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
-      controls.target.copy(center);
-      controls.update();
+      orbitControls.target.copy(center);
+      orbitControls.update();
 
       paintedGeometries = [];
       currentModel.traverse((child) => {
@@ -437,8 +413,7 @@
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
             child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
           }
-          // FINAL COLOR FIX: force pure white base + no color tint
-          child.material.color.set(0xffffff);
+          child.material.color.set(0xffffff); // Force pure white base for bright colors
           child.material.vertexColors = true;
 
           if (!child.geometry.attributes.color) {
@@ -451,30 +426,14 @@
         }
       });
 
-      exportStatus.textContent = 'Model loaded!';
+      exportStatus.textContent = 'Model loaded successfully!';
       exportStatus.style.color = '#4ade80';
+    }, undefined, (error) => {
+      exportStatus.textContent = 'Error loading model';
+      exportStatus.style.color = '#ef4444';
     });
   }
 
-  function togglePaintMode(active) {
-    paintModeActive = active;
-    paintToggle.textContent = active ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
-    paintToggle.classList.toggle('active', active);
-    paintToggleBtn.classList.toggle('active', active);
-
-    if (active) {
-      // Switch to paint cursor and disable orbit
-      canvas.className = 'cursor-paint';
-      controls.enabled = false;
-    } else {
-      updateControlsAndCursor(); // back to current view mode
-    }
-  }
-
-  paintToggle.onclick = () => togglePaintMode(!paintModeActive);
-  paintToggleBtn.onclick = () => togglePaintMode(!paintModeActive);
-
-  // Painting logic...
   function getWorldBrushRadius() {
     if (!modelSize) return 0.5;
     return brushSize * (modelSize * 0.2);
@@ -493,28 +452,34 @@
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-    brushCursor.style.borderRadius = brushShape.includes('circle') || brushShape.includes('diamond') ? '50%' : '0';
+    brushCursor.style.borderRadius = (brushShape.includes('circle') || brushShape.includes('diamond')) ? '50%' : '0';
     brushCursor.style.display = 'block';
   }
 
   function projectRadiusToScreen(worldRadius) {
     if (!currentModel) return 100;
-    const distance = camera.position.distanceTo(controls.target);
+    const distance = camera.position.distanceTo(orbitControls.target);
     const fov = camera.fov * (Math.PI / 180);
     const screenHeightAtDistance = 2 * Math.tan(fov / 2) * distance;
     const pixelsPerUnit = window.innerHeight / screenHeightAtDistance;
     return worldRadius * pixelsPerUnit;
   }
 
+  function hideBrushCursor() {
+    brushCursor.style.display = 'none';
+  }
+
   function getBrushAlpha(localX, localY) {
     const dist = Math.sqrt(localX * localX + localY * localY);
     if (dist > 1) return 0;
+
     if (brushShape === 'custom' && customBrushData) {
       const u = Math.floor((localX * 0.5 + 0.5) * customBrushData.width);
       const v = Math.floor((localY * 0.5 + 0.5) * customBrushData.height);
       const idx = (v * customBrushData.width + u) * 4 + 3;
       return customBrushData.data[idx] / 255;
     }
+
     if (brushShape.includes('hard')) return 1;
     if (brushShape.includes('square')) {
       const maxDist = Math.max(Math.abs(localX), Math.abs(localY));
@@ -529,6 +494,7 @@
 
   function paintAt(point) {
     if (!paintModeActive || paintedGeometries.length === 0) return;
+
     const brushRadius = getWorldBrushRadius();
     const brushRadiusSquared = brushRadius * brushRadius;
     const vert = new THREE.Vector3();
@@ -536,6 +502,7 @@
     paintedGeometries.forEach(({ geometry, mesh }) => {
       const positions = geometry.attributes.position;
       const colors = geometry.attributes.color;
+
       const inverseMatrix = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
       const localPoint = point.clone().applyMatrix4(inverseMatrix);
 
@@ -543,11 +510,13 @@
         vert.set(positions.getX(i), positions.getY(i), positions.getZ(i));
         const offset = vert.sub(localPoint);
         const distanceSquared = offset.lengthSq();
+
         if (distanceSquared > brushRadiusSquared) continue;
 
         const localX = offset.x / brushRadius;
         const localY = offset.y / brushRadius;
         const alpha = getBrushAlpha(localX, localY);
+
         if (alpha > 0) {
           const influence = alpha;
           colors.setXYZ(i,
@@ -567,6 +536,7 @@
 
   canvas.addEventListener('pointermove', (e) => {
     updateBrushCursor(e.clientX, e.clientY);
+
     if (isPointerDown && paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -589,9 +559,32 @@
   });
 
   canvas.addEventListener('pointerup', () => isPointerDown = false);
-  canvas.addEventListener('pointerleave', () => { isPointerDown = false; });
+  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
 
-  // Other event listeners
+  brushShapeSelect.addEventListener('change', (e) => {
+    brushShape = e.target.value;
+    customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
+
+  uploadBrush.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const size = 64;
+      customBrushPreview.width = size;
+      customBrushPreview.height = size;
+      previewCtx.drawImage(img, 0, 0, size, size);
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = size;
+      tempCanvas.height = size;
+      const ctx = tempCanvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, size, size);
+      customBrushData = ctx.getImageData(0, 0, size, size);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+
   document.getElementById('uploadModel').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) loadModel(URL.createObjectURL(file));
@@ -612,7 +605,10 @@
     });
   }
 
-  document.getElementById('presetTexture').addEventListener('change', (e) => { if (e.target.value) applyTexture(e.target.value); });
+  document.getElementById('presetTexture').addEventListener('change', (e) => {
+    if (e.target.value) applyTexture(e.target.value);
+  });
+
   document.getElementById('uploadTexture').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) applyTexture(URL.createObjectURL(file));
@@ -639,11 +635,6 @@
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
   });
 
-  document.getElementById('brushShape').addEventListener('change', (e) => {
-    brushShape = e.target.value;
-    document.getElementById('customBrushGroup').style.display = brushShape === 'custom' ? 'block' : 'none';
-  });
-
   document.getElementById('clearPaint').addEventListener('click', () => {
     paintedGeometries.forEach(({ geometry }) => {
       geometry.attributes.color.array.fill(1);
@@ -651,9 +642,20 @@
     });
   });
 
-  document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
+  document.getElementById('envPreset').addEventListener('change', (e) => {
+    const url = e.target.value;
+    if (url === 'neutral') {
+      scene.environment = null;
+    } else {
+      new RGBELoader().load(url, (texture) => {
+        const envMap = new THREE.PMREMGenerator(renderer).fromEquirectangular(texture).texture;
+        scene.environment = envMap;
+        texture.dispose();
+      });
+    }
+  });
 
-  document.getElementById('exportBtn').addEventListener('click', async () => {
+  document.getElementById('exportBtn').addEventListener('click', () => {
     if (!currentModel) return;
     const exporter = new GLTFExporter();
     const exportModel = currentModel.clone();
@@ -680,11 +682,11 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  updateControlsAndCursor(); // initial
-
   function animate() {
     requestAnimationFrame(animate);
-    controls.update();
+    if (!navModeActive && !paintModeActive) {
+      orbitControls.update();
+    }
     renderer.render(scene, camera);
   }
   animate();
