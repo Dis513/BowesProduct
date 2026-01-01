@@ -2,268 +2,130 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Generate or Create – BowesProduct</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generate and Create 3D Models with Meshy API.">
+  <title>Generate or Create – BowesProduct</title>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      background: #020617;
+    body {
+      background-color: #020617;
       color: white;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      overflow-x: hidden;
+      margin: 0;
     }
 
-    /* ================= HEADER ================= */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(2,6,23,0.95);
+    .header {
+      background-color: rgba(2, 6, 23, 0.95);
+      padding: 1rem 2rem;
+      text-align: center;
       border-bottom: 1px solid #1e293b;
     }
 
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    /* LEFT */
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1.6rem;
-    }
-    .logo a {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .main-nav {
-      display: flex;
-      gap: 1.4rem;
-    }
-    .main-nav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-    .main-nav a:hover { color:#60a5fa; }
-
-    /* RIGHT */
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      min-height: 44px;
-    }
-
-    /* PROFILE */
-    #profilePic {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid #60a5fa;
-      object-fit: cover;
-      display: none;
-    }
-
-    /* LOGIN */
-    .login-btn {
-      padding: 0.45rem 1.1rem;
-      border-radius: 999px;
-      border: 1.5px solid #60a5fa;
-      background: transparent;
+    .header h1 {
       color: #60a5fa;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    /* ================= CONTENT ================= */
-    .content {
-      max-width: 900px;
-      margin: 4rem auto;
-      padding: 0 1.5rem;
-    }
-    h1, h2 { color:#60a5fa; }
-    p, li {
-      color:#cbd5e1;
-      line-height:1.8;
-    }
-
-    /* ================= FOOTER ================= */
-    .site-footer {
-      background: rgba(2,6,23,0.95);
-      border-top: 1px solid #1e293b;
-      padding: 3rem 1rem;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-    .footer-nav {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .footer-nav a {
-      color: #cbd5e1;
-      text-decoration: none;
-    }
-    .footer-nav a:hover {
-      color: #60a5fa;
-    }
-    .site-footer p {
       margin: 0;
-      color: #94a3b8;
     }
 
-    /* ================= MESHY CONTAINER ================= */
-    #meshy-container {
-      background: #1e293b;
-      padding: 2rem;
-      border-radius: 10px;
-      margin-top: 2rem;
+    .content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      text-align: center;
     }
 
-    #generateBtn {
-      margin-top: 1rem;
-    }
-
-    #modelPreview {
-      margin-top: 1rem;
-      background: #2d3748;
-      padding: 1rem;
+    .generate-btn {
+      background-color: #2563eb;
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      cursor: pointer;
       border-radius: 8px;
-      height: 400px;
-      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .generate-btn:hover {
+      background-color: #1d4ed8;
+    }
+
+    .output {
+      background-color: #1e293b;
+      padding: 2rem;
+      margin-top: 2rem;
+      border-radius: 8px;
+    }
+
+    .model-preview {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #60a5fa;
+      display: block;
+      margin: 0 auto;
     }
   </style>
 </head>
-
 <body>
 
-<!-- HEADER -->
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-left">
-      <div class="logo"><a href="index.html">BowesProduct</a></div>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="models.html">Models</a>
-        <a href="generate-or-create.html">Generate or Create</a>
-      </nav>
-    </div>
+  <!-- HEADER -->
+  <header class="header">
+    <h1>Generate or Create 3D Model</h1>
+  </header>
 
-    <div class="header-right">
-      <img id="profilePic" alt="Profile">
-      <div id="levelInfo">
-        <div id="levelText"></div>
-        <div id="xpOuter"><div id="xpBar"></div></div>
-      </div>
-      <button id="authBtn" class="login-btn">Login</button>
+  <!-- CONTENT -->
+  <div class="content">
+    <button id="generateBtn" class="generate-btn">Generate 3D Model</button>
+
+    <div id="output" class="output" style="display: none;">
+      <h2>Generated 3D Model:</h2>
+      <img id="modelPreview" class="model-preview" alt="3D Model Preview" />
+      <p>Model generated successfully! You can now download or use it in your project.</p>
     </div>
   </div>
-</header>
 
-<!-- CONTENT -->
-<div class="content">
-  <h1>Generate or Create 3D Models with Meshy AI</h1>
-  <p>Use the power of Meshy AI to generate custom 3D models quickly and easily. Just click below to start the process and see the magic happen!</p>
+  <!-- Meshy API Script -->
+  <script>
+    // Your Meshy API Key
+    const API_KEY = 'msy_v1UeJLbZ1CNLgsfWoG8vHoy8RsoEO0nVchy5';
+    const API_URL = 'https://api.meshy.ai/v1/generate/model';  // The correct Meshy API endpoint
 
-  <!-- Meshy API Integration -->
-  <div id="meshy-container">
-    <h2>Generate a Custom 3D Model</h2>
-    <p>Select parameters and generate a model based on your preferences:</p>
-    
-    <!-- Form to select model options -->
-    <label for="modelType">Model Type:</label>
-    <select id="modelType">
-      <option value="character">Character</option>
-      <option value="environment">Environment</option>
-      <option value="vehicle">Vehicle</option>
-    </select>
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+      try {
+        // Request data from Meshy API
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            // Customize these parameters based on the Meshy API documentation
+            model_type: 'character',    // Type of model to generate
+            style: 'realistic',        // Choose model style, e.g., realistic, cartoon
+            format: 'fbx',             // Model format (you can choose other formats such as 'glb', 'fbx', etc.)
+            color: 'blue',             // Optional color selection for the model
+            quality: 'high',           // Optional: quality level (can be 'low', 'medium', 'high')
+            features: ['human', 'clothing', 'armor']  // Example features you can add to customize the model
+          })
+        });
 
-    <label for="style">Style:</label>
-    <select id="style">
-      <option value="realistic">Realistic</option>
-      <option value="cartoon">Cartoon</option>
-      <option value="stylized">Stylized</option>
-    </select>
+        const data = await response.json();
 
-    <button id="generateBtn" class="login-btn">Generate Model</button>
-    <div id="modelPreview">
-      <!-- Preview of the generated model -->
-      <p id="loadingMessage">Click "Generate Model" to view your creation here!</p>
-    </div>
-  </div>
-</div>
+        // Check if the response is successful
+        if (response.ok && data.model_url) {
+          // Display model preview
+          document.getElementById('modelPreview').src = data.model_url;
+          document.getElementById('output').style.display = 'block';
+        } else {
+          throw new Error('Failed to generate model');
+        }
 
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
-      <a href="rewards.html">Rewards</a>
-    </nav>
-    <p>© 2025 BowesProduct</p>
-  </div>
-</footer>
-
-<!-- ================= MESHY API INTEGRATION ================= -->
-<script>
-  const apiUrl = 'https://api.mesy.ai/generate';  // Replace with the actual API endpoint
-  const apiKey = 'msy_v1UeJLbZ1CNLgsfWoG8vHoy8RsoEO0nVchy5'; // Your API Key
-
-  document.getElementById('generateBtn').addEventListener('click', async () => {
-    const modelType = document.getElementById('modelType').value;
-    const style = document.getElementById('style').value;
-
-    const loadingMessage = document.getElementById('loadingMessage');
-    const modelPreview = document.getElementById('modelPreview');
-    loadingMessage.textContent = 'Generating model, please wait...';
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          modelType,
-          style,
-        })
-      });
-
-      const data = await response.json();
-      if (data && data.modelUrl) {
-        modelPreview.innerHTML = `<iframe src="${data.modelUrl}" width="100%" height="100%" frameborder="0"></iframe>`;
-        loadingMessage.textContent = '';  // Clear loading message
-      } else {
-        loadingMessage.textContent = 'Failed to generate model. Try again later.';
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while generating the 3D model. Please try again.');
       }
-    } catch (error) {
-      console.error('Error generating model:', error);
-      loadingMessage.textContent = 'An error occurred. Please try again.';
-    }
-  });
-</script>
+    });
+  </script>
 
 </body>
 </html>
