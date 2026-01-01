@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,7 +93,6 @@ body.age-gate-active::before {
  background: rgba(2, 6, 23, 0.75);
  backdrop-filter: blur(12px);
  z-index: 9998;
- pointer-events: auto;
 }
 body.age-gate-active .site-header,
 body.age-gate-active .hero,
@@ -101,6 +101,7 @@ body.age-gate-active section,
 body.age-gate-active footer {
  pointer-events: none;
  user-select: none;
+ opacity: 0.5;
 }
 
 /* ================= HEADER ================= */
@@ -111,9 +112,7 @@ body.age-gate-active footer {
  background: rgba(2,6,23,0.95);
  border-bottom: 1px solid #1e293b;
 }
-.site-header.scrolled {
- box-shadow: 0 6px 30px rgba(0,0,0,0.4);
-}
+.site-header.scrolled { box-shadow: 0 6px 30px rgba(0,0,0,0.4); }
 
 .header-inner {
  max-width: 1200px;
@@ -123,124 +122,22 @@ body.age-gate-active footer {
  align-items: center;
  justify-content: space-between;
 }
+.header-left { display: flex; align-items: center; gap: 1.6rem; }
+.logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
+.main-nav { display: flex; gap: 1.4rem; }
+.main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
+.main-nav a:hover, .main-nav a.active { color: #60a5fa; }
+.main-nav a.active { font-weight: 600; }
 
-/* LEFT */
-.header-left {
- display: flex;
- align-items: center;
- gap: 1.6rem;
-}
-.logo a {
- font-size: 1.3rem;
- font-weight: 700;
- color: white;
- text-decoration: none;
- white-space: nowrap;
-}
-.main-nav {
- display: flex;
- gap: 1.4rem;
-}
-.main-nav a {
- color: #e5e7eb;
- text-decoration: none;
- font-size: 0.95rem;
-}
-.main-nav a.active,
-.main-nav a:hover {
- color: #60a5fa;
-}
+.header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
+#profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+.login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+#levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
+#levelText { white-space: nowrap; }
+#xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+#xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-/* RIGHT */
-.header-right {
- display: flex;
- align-items: center;
- gap: 0.8rem;
- min-height: 44px;
-}
-#profilePic {
- width: 32px;
- height: 32px;
- border-radius: 50%;
- border: 2px solid #60a5fa;
- object-fit: cover;
- display: none;
-}
-.login-btn {
- padding: 0.45rem 1.1rem;
- border-radius: 999px;
- border: 1.5px solid #60a5fa;
- background: transparent;
- color: #60a5fa;
- font-size: 0.95rem;
- cursor: pointer;
-}
-#levelInfo {
- display: none;
- width: 140px;
- font-size: 0.8rem;
- color: #cbd5e1;
-}
-#levelText {
- white-space: nowrap;
-}
-#xpOuter {
- width: 100%;
- height: 5px;
- background: #1e293b;
- border-radius: 3px;
- margin-top: 4px;
-}
-#xpBar {
- height: 100%;
- width: 0%;
- background: #60a5fa;
- border-radius: 3px;
- transition: width 0.35s ease;
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
- .header-inner {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 8px;
- }
- .header-left {
-  justify-content: space-between;
- }
- .header-right {
-  justify-content: space-between;
-  width: 100%;
- }
- #levelInfo {
-  width: 100%;
- }
-}
-
-/* ================= CONTENT STYLES ================= */
-.products {
- display: grid;
- grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
- gap: 2rem;
- max-width: 1200px;
- margin: 0 auto;
- padding: 0 1rem;
-}
-
-.card {
- background: #020617;
- border-radius: 18px;
- overflow: hidden;
- transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card img.thumbnail {
- width: 100%;
- height: 220px;
- object-fit: cover;
- display: block;
-}
-
+/* HERO */
 .hero {
  position: relative;
  min-height: 100svh;
@@ -262,6 +159,7 @@ body.age-gate-active footer {
 .btn.primary { background: #2563eb; color: white; }
 .btn.primary:hover { background: #1d4ed8; transform: translateY(-3px); }
 
+/* MODEL CONTAINER */
 .model-container {
  max-width: 1100px;
  height: 600px;
@@ -271,97 +169,54 @@ body.age-gate-active footer {
  overflow: hidden;
  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
-model-viewer {
- width: 100%;
- height: 100%;
- background: #020617;
-}
+model-viewer { width: 100%; height: 100%; background: #020617; }
 
+/* PRODUCTS GRID & CARDS */
+.products {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+ gap: 2rem;
+ max-width: 1200px;
+ margin: 0 auto;
+ padding: 0 1rem;
+}
+.card {
+ background: #020617;
+ border-radius: 18px;
+ overflow: hidden;
+ transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card img.thumbnail { width: 100%; height: 220px; object-fit: cover; display: block; }
 .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
 .card-content { padding: 1.5rem; text-align: center; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; }
 .card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .card .details { color: #94a3b8; font-size: 0.9rem; margin: 0.5rem 0; }
 .price { font-size: 1.2rem; font-weight: 700; color: #60a5fa; margin: 0.8rem 0; }
-.card-content .btn { padding: 0.75rem 1.2rem; font-size: 0.95rem; margin: 0.5rem auto 0; width: 100%; max-width: 220px; box-sizing: border-box; }
+.card-content .btn { padding: 0.75rem 1.2rem; font-size: 0.95rem; margin: 0.5rem auto 0; width: 100%; max-width: 220px; }
 .card-content .btn.primary { background: #2563eb; color: white; }
 .card-content .btn.primary:hover { background: #1d4ed8; transform: translateY(-2px); }
 .card-content .btn.view-btn { background: transparent; color: #60a5fa; border: 1.5px solid #60a5fa; margin-bottom: 0.8rem; }
 .card-content .btn.view-btn:hover { background: rgba(96,165,250,0.15); transform: translateY(-2px); }
 .delivery { font-size: 0.85rem; color: #64748b; margin-top: 1rem; }
 
+/* FILTERS */
 .filters { text-align: center; margin: 3rem 0 2rem; padding: 1rem; }
 .filters input, .filters select { padding: 0.7rem 1rem; margin: 0.5rem; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 1rem; }
 
+/* SECTION NAV */
 .section-nav { text-align: center; margin: 4rem 0 3rem; }
 .section-nav a { display: inline-block; margin: 0 1rem; padding: 0.9rem 2rem; background: #2563eb; color: white; border-radius: 12px; text-decoration: none; font-weight: 600; transition: background 0.3s; }
 .section-nav a:hover { background: #1d4ed8; }
 
-/* ================= FOOTER ================= */
-.site-footer {
- background: rgba(2,6,23,0.95);
- border-top: 1px solid #1e293b;
- padding: 3rem 1rem;
-}
-.footer-inner {
- max-width: 1200px;
- margin: 0 auto;
- display: flex;
- justify-content: space-between;
- flex-wrap: wrap;
- gap: 1.5rem;
- align-items: center;
-}
-.footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+/* FOOTER & SHARE */
+.site-footer { background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 3rem 1rem; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; align-items: center; }
 .footer-nav a { color: #cbd5e1; text-decoration: none; }
 .footer-nav a:hover { color: #60a5fa; }
-.site-footer p { margin: 0; color: #94a3b8; }
-
-/* MOBILE ADJUSTMENTS */
-@media (max-width: 768px) {
- .model-container { height: 380px; margin: 2rem auto; border-radius: 14px; }
- .products { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.4rem; padding: 0 0.8rem; }
- .card img.thumbnail { height: 160px; }
- .card-content { padding: 1.2rem; min-height: auto; }
- .filters input, .filters select { display: block; width: 90%; margin: 0.8rem auto; }
- .section-nav a { display: block; width: 80%; max-width: 320px; margin: 1rem auto; }
- .hero-actions { flex-direction: column; }
- .btn { width: 100%; max-width: 320px; margin: auto; }
- .card-content .btn { max-width: 200px; padding: 0.7rem 1rem; font-size: 0.92rem; }
- .footer-inner {
-  flex-direction: column;
-  text-align: center;
- }
-}
-
-/* SOCIAL SHARE ICON STYLES */
-.share-actions {
- display: flex;
- gap: 12px;
- justify-content: center;
- margin-top: 12px;
- flex-wrap: wrap;
-}
-.share-btn {
- width: 42px;
- height: 42px;
- border-radius: 50%;
- background: #020617;
- border: 1px solid #1e293b;
- display: inline-flex;
- align-items: center;
- justify-content: center;
- cursor: pointer;
- color: #94a3b8;
- transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-.share-btn svg {
- width: 20px;
- height: 20px;
- fill: currentColor;
-}
-.share-btn:hover {
- transform: translateY(-2px) scale(1.08);
-}
+.share-actions { display: flex; gap: 12px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+.share-btn { width: 42px; height: 42px; border-radius: 50%; background: #020617; border: 1px solid #1e293b; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #94a3b8; transition: all 0.15s ease; }
+.share-btn svg { width: 20px; height: 20px; fill: currentColor; }
+.share-btn:hover { transform: translateY(-2px) scale(1.08); }
 .share-btn[data-platform="twitter"]:hover { color: #1DA1F2; border-color: #1DA1F2; }
 .share-btn[data-platform="reddit"]:hover { color: #FF4500; border-color: #FF4500; }
 .share-btn[data-platform="discord"]:hover { color: #5865F2; border-color: #5865F2; }
@@ -369,11 +224,24 @@ model-viewer {
 .share-btn[data-platform="whatsapp"]:hover { color: #25D366; border-color: #25D366; }
 .share-btn[data-platform="copy"]:hover { color: #60a5fa; border-color: #60a5fa; }
 .share-btn:active { transform: scale(0.95); }
+
+/* MOBILE */
+@media (max-width: 768px) {
+ .model-container { height: 380px; margin: 2rem auto; }
+ .products { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.4rem; padding: 0 0.8rem; }
+ .card img.thumbnail { height: 160px; }
+ .card-content { padding: 1.2rem; min-height: auto; }
+ .filters input, .filters select { display: block; width: 90%; margin: 0.8rem auto; }
+ .section-nav a { display: block; width: 80%; max-width: 320px; margin: 1rem auto; }
+ .hero-actions { flex-direction: column; }
+ .btn { width: 100%; max-width: 320px; margin: auto; }
+ .footer-inner { flex-direction: column; text-align: center; }
+}
 </style>
 </head>
 <body class="age-gate-active">
 
-<!-- NSFW AGE VERIFICATION MODAL -->
+<!-- AGE GATE -->
 <div id="ageGate">
  <div class="age-gate-content">
   <h1>NSFW Warning – 18+</h1>
@@ -427,7 +295,7 @@ model-viewer {
  <a href="#packs">Packs</a>
 </div>
 
-<!-- Model Viewer -->
+<!-- MAIN 3D VIEWER -->
 <div class="model-container" id="modelContainer">
  <model-viewer id="mainViewer"
   src="./models/humanmale.glb"
@@ -447,6 +315,26 @@ model-viewer {
   reveal="interaction">
  </model-viewer>
 </div>
+
+<!-- RIGGED MODELS -->
+<section id="rigged-models">
+ <h2 style="text-align:center; margin:4rem 0 1rem;">Rigged Models</h2>
+ <div class="filters">
+  <input type="text" id="searchInput" placeholder="Search models...">
+  <select id="genderFilter">
+   <option value="all">All Genders</option>
+   <option value="male">Male</option>
+   <option value="female">Female</option>
+  </select>
+  <select id="categoryFilter">
+   <option value="all">All Categories</option>
+   <option value="humanoid">Humanoid</option>
+   <option value="anthropomorphic">Anthropomorphic</option>
+   <option value="fantasy">Fantasy</option>
+   <option value="alien">Alien</option>
+  </select>
+ </div>
+ <div class="products" id="riggedProducts">
 
 <!-- Rigged Models -->
 <section id="rigged-models">
@@ -1147,11 +1035,202 @@ if (propsSearch) {
 })();
 </script>
 
-<!-- Firebase + Auth script (your existing one) -->
+<!-- FOOTER -->
+<footer class="site-footer">
+ <div class="footer-inner">
+  <nav class="footer-nav">
+   <a href="about.html">About</a>
+   <a href="privacy.html">Privacy</a>
+   <a href="terms.html">Terms</a>
+   <a href="license.html">License</a>
+   <a href="refund.html">Refund</a>
+   <a href="rewards.html">Rewards</a>
+  </nav>
+  <p>© 2026 BowesProduct</p>
+  <div class="share-actions">
+   <button class="share-btn" data-platform="twitter" title="Share on X"><svg viewBox="0 0 24 24"><path d="M18.9 2H22l-7.3 8.3L23 22h-6.6l-5.2-6.7L5.2 22H2l7.8-8.9L1 2h6.7l4.7 6.1L18.9 2z"/></svg></button>
+   <!-- other share buttons -->
+   <button class="share-btn" data-platform="copy" title="Copy link"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Z"/></svg></button>
+  </div>
+ </div>
+</footer>
+
+<script>
+// Age Gate
+document.getElementById('enterBtn').addEventListener('click', () => {
+ document.getElementById('ageGate').classList.add('hidden');
+ document.body.classList.remove('age-gate-active');
+});
+document.getElementById('leaveBtn').addEventListener('click', () => {
+ window.location.href = 'https://www.google.com';
+});
+
+// Sticky header
+window.addEventListener('scroll', () => {
+ document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// Model viewer switching
+const viewer = document.getElementById("mainViewer");
+const modelContainer = document.getElementById("modelContainer");
+document.querySelectorAll(".view-btn").forEach(btn => {
+ btn.addEventListener("click", () => {
+  const card = btn.closest(".card");
+  const newModel = card.dataset.model;
+  const thumb = card.querySelector("img.thumbnail")?.src || "./thumbs/promotionalviewer.jpg";
+  viewer.src = newModel;
+  viewer.poster = thumb;
+  viewer.dismissPoster();
+  modelContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+ });
+});
+
+// Rigged Models Filtering
+const searchInput = document.getElementById("searchInput");
+const genderFilter = document.getElementById("genderFilter");
+const categoryFilter = document.getElementById("categoryFilter");
+const riggedContainer = document.getElementById("riggedProducts");
+
+function filterRigged() {
+ const term = searchInput.value.toLowerCase();
+ const gender = genderFilter.value;
+ const category = categoryFilter.value;
+ const cards = riggedContainer.querySelectorAll(".card");
+ cards.forEach(card => {
+  const title = card.querySelector("h3").textContent.toLowerCase();
+  const g = card.dataset.gender || "";
+  const c = card.dataset.category || "";
+  const match = title.includes(term) && (gender === "all" || g === gender) && (category === "all" || c === category);
+  card.style.display = match ? "" : "none";
+ });
+}
+searchInput.addEventListener("input", filterRigged);
+genderFilter.addEventListener("change", filterRigged);
+categoryFilter.addEventListener("change", filterRigged);
+
+// Share buttons
+(() => {
+ const url = window.location.href;
+ const text = "Check out BowesProduct – high-quality commercial 3D assets!";
+ document.querySelectorAll(".share-btn").forEach(btn => {
+  btn.onclick = () => {
+   const p = btn.dataset.platform;
+   if (p === "twitter") window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+   if (p === "reddit") window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
+   if (p === "facebook") window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+   if (p === "whatsapp") window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
+   if (p === "discord") { navigator.clipboard.writeText(text + " " + url); alert("Copied to clipboard for Discord!"); }
+   if (p === "copy") { navigator.clipboard.writeText(url); alert("Page link copied!"); }
+  };
+ });
+})();
+</script>
+
+<!-- Firebase Auth + Daily XP (same as working about.html) -->
 <script type="module">
- // ... your full Firebase script here (unchanged)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import {
+ getAuth,
+ GoogleAuthProvider,
+ signInWithPopup,
+ signInWithRedirect,
+ getRedirectResult,
+ signOut,
+ onAuthStateChanged,
+ setPersistence,
+ browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import {
+ getFirestore,
+ doc,
+ getDoc,
+ setDoc
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+ apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+ authDomain: "bowesproduct.firebaseapp.com",
+ projectId: "bowesproduct"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+await setPersistence(auth, browserLocalPersistence);
+getRedirectResult(auth).catch(console.error);
+
+const isInAppBrowser = /FBAN|FBAV|Instagram|Line|Zalo/i.test(navigator.userAgent);
+
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+authBtn.onclick = () => {
+ if (auth.currentUser) {
+  signOut(auth);
+ } else {
+  if (isInAppBrowser) {
+   signInWithRedirect(auth, provider);
+  } else {
+   signInWithPopup(auth, provider).catch((error) => {
+    console.error("Login error:", error);
+    alert("Login failed: " + error.message);
+   });
+  }
+ }
+};
+
+onAuthStateChanged(auth, async (user) => {
+ if (!user) {
+  authBtn.textContent = "Login";
+  profilePic.style.display = "none";
+  levelInfo.style.display = "none";
+  return;
+ }
+
+ authBtn.textContent = "Logout";
+ profilePic.src = user.photoURL || "";
+ profilePic.style.display = "block";
+
+ const ref = doc(db, "users", user.uid);
+ let snap = await getDoc(ref);
+
+ let data = snap.data() || {};
+ let xp = data.xp || 0;
+ let lastLoginDate = data.lastLoginDate ? data.lastLoginDate.toDate() : null;
+
+ const today = new Date();
+ today.setHours(0, 0, 0, 0);
+
+ let addedDailyXP = false;
+
+ if (!lastLoginDate || lastLoginDate < today) {
+  xp += 10;
+  addedDailyXP = true;
+  await setDoc(ref, { xp: xp, lastLoginDate: today }, { merge: true });
+ } else if (!snap.exists()) {
+  xp = 10;
+  await setDoc(ref, { xp: xp, lastLoginDate: today });
+ }
+
+ const levels = [0, 200, 500, 1000, 2000];
+ let level = levels.filter(v => xp >= v).length - 1;
+ let next = levels[level + 1] ?? levels[level];
+ let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
+
+ levelText.textContent = `Level ${level} • ${xp} XP`;
+ xpBar.style.width = progress + "%";
+ levelInfo.style.display = "block";
+
+ if (addedDailyXP) {
+  alert("Daily login bonus! +10 XP");
+ }
+});
 </script>
 
 </body>
 </html>
-
