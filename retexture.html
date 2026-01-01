@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retexture Pro – BowesProduct</title>
 
-  <!-- es-module-shims for compatibility -->
+  <!-- es-module-shims + import map -->
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
-
-  <!-- Import map for Three.js -->
   <script type="importmap">
   {
     "imports": {
@@ -23,10 +21,7 @@
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
     /* HEADER */
-    .site-header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
-    }
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 1.6rem; }
     .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
@@ -164,14 +159,19 @@
     </div>
     <div class="control-group">
       <label for="brushSize">Brush Size <span id="brushSizeVal">0.5</span></label>
-      <input type="range" id="brushSize" min="0.1" max="3" step="0.1" value="0.5">
+      <input type="range" id="brushSize" min="0.05" max="5" step="0.05" value="0.5">
     </div>
     <div class="control-group">
       <label for="brushShape">Brush Shape</label>
       <select id="brushShape">
-        <option value="circle">Circle (soft)</option>
-        <option value="hard">Hard Circle</option>
-        <option value="square">Square</option>
+        <option value="soft-circle">Soft Circle</option>
+        <option value="hard-circle">Hard Circle</option>
+        <option value="square-soft">Square (soft)</option>
+        <option value="square-hard">Square (hard)</option>
+        <option value="diamond-soft">Diamond (soft)</option>
+        <option value="diamond-hard">Diamond (hard)</option>
+        <option value="star">Star</option>
+        <option value="cross">Cross</option>
       </select>
     </div>
     <button id="paintToggle">Activate Paint Mode</button>
@@ -262,7 +262,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC -->
+<!-- THREE.JS RETEXTURE LOGIC - HIGHLY PRECISE + MANY BRUSH SHAPES -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -318,7 +318,7 @@
   let paintedGeometries = [];
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 0.5;
-  let brushShape = 'circle';
+  let brushShape = 'soft-circle';
   let paintModeActive = false;
 
   const brushCursor = document.getElementById('brushCursor');
@@ -368,21 +368,44 @@
     if (!paintModeActive) return;
     brushCursor.style.left = x + 'px';
     brushCursor.style.top = y + 'px';
-    const pixelSize = brushSize * 60;
+    const pixelSize = brushSize * 80; // Larger multiplier for better visibility across sizes
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
-    brushCursor.style.borderRadius = (brushShape === 'square') ? '0' : '50%';
+    brushCursor.style.clipPath = getClipPath(brushShape);
     brushCursor.style.display = 'block';
   }
 
-  function hideBrushCursor() {
-    brushCursor.style.display = 'none';
+  function getClipPath(shape) {
+    switch (shape) {
+      case 'square-soft':
+      case 'square-hard':
+        return 'none';
+      case 'diamond-soft':
+      case 'diamond-hard':
+        return 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)';
+      case 'star':
+        return 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+      case 'cross':
+        return 'polygon(20% 0%, 80% 0%, 80% 20%, 100% 20%, 100% 80%, 80% 80%, 80% 100%, 20% 100%, 20% 80%, 0% 80%, 0% 20%, 20% 20%)';
+      default:
+        return 'circle(50%)';
+    }
   }
 
   function getInfluence(dist, shape) {
-    if (shape === 'hard') return dist < 1 ? 1 : 0;
-    if (shape === 'square') return dist < 1 ? 1 - dist : 0;
-    return 1 - dist; // soft circle
+    const hard = shape.includes('hard');
+    if (hard) return dist < 1 ? 1 : 0;
+    return 1 - Math.pow(dist, 2); // Smooth quadratic falloff for soft shapes
+  }
+
+  function getNormalizedDistance(vec, shape) {
+    const x = Math.abs(vec.x) / brushSize;
+    const y = Math.abs(vec.y) / brushSize;
+    const z = Math.abs(vec.z) / brushSize;
+
+    if (shape.includes('square')) return Math.max(x, y, z);
+    if (shape.includes('diamond')) return (x + y + z);
+    return vec.length() / brushSize; // circle
   }
 
   function paintAt(point) {
@@ -396,11 +419,7 @@
       for (let i = 0; i < positions.count; i++) {
         vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(matrixWorld);
         const distVec = vert.sub(point);
-        let dist = distVec.length() / brushSize;
-
-        if (brushShape === 'square') {
-          dist = Math.max(Math.abs(distVec.x), Math.abs(distVec.y), Math.abs(distVec.z)) / brushSize;
-        }
+        const dist = getNormalizedDistance(distVec, brushShape);
 
         if (dist < 1) {
           const influence = getInfluence(dist, brushShape);
@@ -453,7 +472,7 @@
 
   brushShapeSelect.addEventListener('change', (e) => {
     brushShape = e.target.value;
-    brushCursor.style.borderRadius = (brushShape === 'square') ? '0' : '50%';
+    brushCursor.style.clipPath = getClipPath(brushShape);
   });
 
   document.getElementById('uploadModel').addEventListener('change', (e) => {
@@ -501,7 +520,7 @@
 
   document.getElementById('brushSize').addEventListener('input', (e) => {
     brushSize = parseFloat(e.target.value);
-    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(1);
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
   });
 
   document.getElementById('clearPaint').addEventListener('click', () => {
