@@ -572,15 +572,32 @@ document.getElementById('paintColor').addEventListener('input', (e) => {
           // Store original material
           originalMaterials.set(child.uuid, child.material.clone());
           
-          if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-            child.material = new THREE.MeshStandardMaterial({
-              map: child.material.map,
-              color: child.material.color,
-              metalness: child.material.metalness ?? 0,
-              roughness: child.material.roughness ?? 0.5
-            });
-          }
-          child.material.vertexColors = true;
+         child.material = new THREE.MeshStandardMaterial({
+  map: child.material.map || null,
+
+  // Neutral base so vertex paint is not multiplied
+  color: new THREE.Color(0xffffff),
+
+  metalness: child.material.metalness ?? 0,
+  roughness: child.material.roughness ?? 0.5,
+
+  // Paint is unlit (fixes dark colors)
+  emissive: new THREE.Color(0x000000),
+  emissiveIntensity: 1,
+
+  // CRITICAL
+  vertexColors: true
+});
+
+child.material.needsUpdate = true;
+
+  // IMPORTANT
+  color: new THREE.Color(0xffffff),     // neutral base
+  emissive: new THREE.Color(0x000000),  // paint goes here
+  emissiveIntensity: 1,
+  vertexColors: true
+});
+
           if (!child.geometry.attributes.color) {
             const count = child.geometry.attributes.position.count;
             const colors = new Float32Array(count * 3).fill(1);
@@ -726,11 +743,12 @@ function getWorldBrushRadius() {
 
         if (alpha > 0) {
           const influence = alpha;
-          colors.setXYZ(i,
-            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
-            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
-            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
-          );
+         colors.setXYZ(i,
+  THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
+  THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
+  THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
+);
+
         }
       }
       colors.needsUpdate = true;
@@ -1005,6 +1023,7 @@ function getWorldBrushRadius() {
 
 </body>
 </html>
+
 
 
 
