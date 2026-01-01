@@ -35,7 +35,7 @@
     h1 { grid-column: 1 / -1; text-align: center; }
 
     .controls { background: #0f172a; padding: 1.5rem; border-radius: 12px; }
-    .form-group { margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1.5rem; }
     label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
     input[type="color"] { width: 100%; height: 50px; border: none; border-radius: 8px; cursor: pointer; }
     input[type="range"] { width: 100%; }
@@ -89,25 +89,21 @@
     </div>
 
     <div class="form-group">
-      <label>Metallic <span id="metallic-value">0.0</span></label>
+      <label>Metallic <span id="metallic-value">0.00</span></label>
       <input type="range" id="metallic" min="0" max="1" step="0.01" value="0">
     </div>
 
     <div class="form-group">
-      <label>Roughness <span id="roughness-value">0.4</span></label>
+      <label>Roughness <span id="roughness-value">0.40</span></label>
       <input type="range" id="roughness" min="0" max="1" step="0.01" value="0.4">
     </div>
 
-    <button id="apply-texture">Apply New Material</button>
+    <button id="apply-texture">Apply Changes (Live Preview)</button>
     <button id="download-btn">Download Retextured Model</button>
-
-    <p style="margin-top:2rem; font-size:0.9rem; color:#94a3b8;">
-      Instant client-side retexturing – works on any standard PBR GLB/GLTF model.
-    </p>
   </div>
 
   <div id="viewer-container">
-    <div id="status">Upload a model to start</div>
+    <div id="status">Upload a GLB model to start</div>
   </div>
 </main>
 
@@ -125,7 +121,7 @@
   </div>
 </footer>
 
-<!-- Firebase Auth (fixed new user XP) -->
+<!-- Firebase Auth -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -180,7 +176,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 </script>
 
-<!-- Three.js Retexture Tool (now with FileReader parse for reliable local loading) -->
+<!-- Three.js Retexture Tool - LIVE PREVIEW FIXED -->
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -207,9 +203,9 @@ function initViewer() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
-  const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+  const ambient = new THREE.AmbientLight(0xffffff, 1.5);
   scene.add(ambient);
-  const dir = new THREE.DirectionalLight(0xffffff, 1);
+  const dir = new THREE.DirectionalLight(0xffffff, 1.2);
   dir.position.set(5, 10, 7.5);
   scene.add(dir);
 
@@ -230,7 +226,7 @@ function animate() {
 
 initViewer();
 
-// Load model using FileReader + loader.parse (bypasses any blob URL issues)
+// Load model
 document.getElementById('model-upload').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -240,42 +236,42 @@ document.getElementById('model-upload').addEventListener('change', (e) => {
   const reader = new FileReader();
   reader.onload = (event) => {
     const arrayBuffer = event.target.result;
-
     const loader = new GLTFLoader();
+
     loader.parse(arrayBuffer, '', (gltf) => {
       if (currentModel) scene.remove(currentModel);
 
       currentModel = gltf.scene;
       scene.add(currentModel);
 
-      // Auto fit model to view
+      // Auto-fit
       const box = new THREE.Box3().setFromObject(currentModel);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
       const fov = camera.fov * (Math.PI / 180);
       let distance = maxDim / (2 * Math.tan(fov / 2));
-      distance *= 2; // safety margin
+      distance *= 2.5;
 
+      controls.target.copy(center);
       camera.position.copy(center);
       camera.position.z += distance;
-      controls.target.copy(center);
       controls.update();
 
-      status.textContent = "Model loaded – adjust & apply material";
-      document.getElementById('download-btn').style.display = 'none';
-    }, (error) => {
-      status.textContent = "Error parsing model";
-      console.error(error);
+      status.textContent = "Model loaded – changes are LIVE!";
+      document.getElementById('download-btn').style.display = 'block';
+      applyMaterialChanges(); // Apply current settings immediately
+    }, (err) => {
+      status.textContent = "Load error – check console";
+      console.error(err);
     });
   };
-
   reader.readAsArrayBuffer(file);
 });
 
-// Apply material changes
-document.getElementById('apply-texture').addEventListener('click', () => {
-  if (!currentModel) return alert("Upload a model first");
+// LIVE UPDATE FUNCTION
+function applyMaterialChanges() {
+  if (!currentModel) return;
 
   const baseColor = new THREE.Color(document.getElementById('base-color').value);
   const metallic = parseFloat(document.getElementById('metallic').value);
@@ -283,25 +279,34 @@ document.getElementById('apply-texture').addEventListener('click', () => {
 
   currentModel.traverse((child) => {
     if (child.isMesh && child.material) {
-      // Works for MeshStandardMaterial and MeshPhysicalMaterial
-      if ('color' in child.material) child.material.color = baseColor;
+      if ('color' in child.material) child.material.color.copy(baseColor);
       if ('metalness' in child.material) child.material.metalness = metallic;
       if ('roughness' in child.material) child.material.roughness = roughness;
       child.material.needsUpdate = true;
     }
   });
+}
 
-  status.textContent = "Material applied!";
-  document.getElementById('download-btn').style.display = 'block';
+// Live preview on any change
+document.getElementById('base-color').addEventListener('input', applyMaterialChanges);
+document.getElementById('metallic').addEventListener('input', applyMaterialChanges);
+document.getElementById('roughness').addEventListener('input', applyMaterialChanges);
+
+// Live slider values
+document.getElementById('metallic').addEventListener('input', (e) => {
+  document.getElementById('metallic-value').textContent = parseFloat(e.target.value).toFixed(2);
+});
+document.getElementById('roughness').addEventListener('input', (e) => {
+  document.getElementById('roughness-value').textContent = parseFloat(e.target.value).toFixed(2);
 });
 
-// Slider live values
-document.getElementById('metallic').addEventListener('input', (e) => document.getElementById('metallic-value').textContent = e.target.value);
-document.getElementById('roughness').addEventListener('input', (e) => document.getElementById('roughness-value').textContent = e.target.value);
+// Initial values
+document.getElementById('metallic-value').textContent = '0.00';
+document.getElementById('roughness-value').textContent = '0.40';
 
-// Download retextured model
+// Download
 document.getElementById('download-btn').addEventListener('click', () => {
-  if (!currentModel) return;
+  if (!currentModel) return alert("No model loaded");
 
   const exporter = new GLTFExporter();
   exporter.parse(currentModel, (result) => {
