@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retexture Pro – BowesProduct</title>
 
-  <!-- es-module-shims + import map -->
+  <!-- es-module-shims for compatibility -->
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
+
+  <!-- Import map for Three.js -->
   <script type="importmap">
   {
     "imports": {
@@ -21,7 +23,10 @@
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
     /* HEADER */
-    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); }
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
+    }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 1.6rem; }
     .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
@@ -56,12 +61,18 @@
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 20px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
-    /* Brush cursor */
+    /* Brush cursor - now uses background image for full custom support */
     #brushCursor {
-      position: absolute; pointer-events: none; border: 2px solid rgba(255, 68, 68, 0.8);
-      background: rgba(255, 68, 68, 0.15);
-      transform: translate(-50%, -50%); z-index: 20; display: none;
-      transition: all 0.1s ease;
+      position: absolute;
+      pointer-events: none;
+      width: 100px; height: 100px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      display: none;
+      filter: drop-shadow(0 0 4px rgba(0,0,0,0.8));
     }
 
     /* Custom brush preview */
@@ -115,7 +126,7 @@
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
-  <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint • Pinch/scroll to zoom</div>
+  <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
 
   <div class="panel">
     <h2>Model</h2>
@@ -268,7 +279,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - ULTRA PRECISE + CUSTOM BRUSH -->
+<!-- THREE.JS RETEXTURE LOGIC - FINAL WORKING VERSION -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -325,7 +336,7 @@
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 0.5;
   let brushShape = 'soft-circle';
-  let customBrushTexture = null; // THREE.Texture for custom brush
+  let customBrushCanvas = null;
   let paintModeActive = false;
 
   const brushCursor = document.getElementById('brushCursor');
@@ -382,6 +393,17 @@
     const pixelSize = brushSize * 80;
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
+
+    // Update visual
+    if (brushShape === 'custom' && customBrushCanvas) {
+      brushCursor.style.backgroundImage = `url(${customBrushCanvas.toDataURL()})`;
+    } else {
+      brushCursor.style.backgroundImage = 'none';
+      brushCursor.style.backgroundColor = paintColor.getStyle() + '33';
+      brushCursor.style.border = `2px solid ${paintColor.getStyle()}`;
+      brushCursor.style.borderRadius = brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle' ? '50%' : '0';
+    }
+
     brushCursor.style.display = 'block';
   }
 
@@ -393,12 +415,10 @@
     const u = localX * 0.5 + 0.5;
     const v = localY * 0.5 + 0.5;
 
-    if (shape === 'custom' && customBrushTexture) {
-      // Sample texture at u,v (flipped Y for canvas)
-      const canvas = customBrushTexture.image;
-      const ctx = canvas.getContext('2d');
-      const data = ctx.getImageData(u * canvas.width, (1 - v) * canvas.height, 1, 1).data;
-      return data[3] / 255; // alpha
+    if (shape === 'custom' && customBrushCanvas) {
+      const ctx = customBrushCanvas.getContext('2d');
+      const data = ctx.getImageData(u * customBrushCanvas.width, v * customBrushCanvas.height, 1, 1).data;
+      return data[3] / 255;
     }
 
     const dist = Math.sqrt(localX * localX + localY * localY);
@@ -412,16 +432,7 @@
       const manhattan = Math.abs(localX) + Math.abs(localY);
       return shape.includes('hard') ? (manhattan <= 1 ? 1 : 0) : (1 - manhattan);
     }
-    if (shape === 'star') {
-      const angle = Math.atan2(localY, localX);
-      const radius = dist + 0.2 * Math.sin(5 * angle);
-      return radius <= 1 ? 1 - dist : 0;
-    }
-    if (shape === 'cross') {
-      const thickness = 0.2;
-      return (Math.abs(localX) < thickness || Math.abs(localY) < thickness) ? 1 : 0;
-    }
-    return 1 - Math.pow(dist, 2); // soft circle
+    return 1 - Math.pow(dist, 2);
   }
 
   function paintAt(point) {
@@ -491,6 +502,7 @@
   brushShapeSelect.addEventListener('change', (e) => {
     brushShape = e.target.value;
     customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+    updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
   });
 
   uploadBrush.addEventListener('change', (e) => {
@@ -498,14 +510,16 @@
     if (!file) return;
     const img = new Image();
     img.onload = () => {
-      const size = Math.max(img.width, img.height);
+      const size = 64; // fixed size for performance
       customBrushPreview.width = size;
       customBrushPreview.height = size;
-      previewCtx.fillStyle = '#000';
-      previewCtx.fillRect(0, 0, size, size);
       previewCtx.drawImage(img, 0, 0, size, size);
-      customBrushTexture = new THREE.CanvasTexture(customBrushPreview);
-      customBrushTexture.needsUpdate = true;
+      customBrushCanvas = document.createElement('canvas');
+      customBrushCanvas.width = size;
+      customBrushCanvas.height = size;
+      const ctx = customBrushCanvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, size, size);
+      updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
     };
     img.src = URL.createObjectURL(file);
   });
@@ -549,13 +563,13 @@
 
   document.getElementById('paintColor').addEventListener('input', (e) => {
     paintColor.set(e.target.value);
-    brushCursor.style.borderColor = e.target.value + 'cc';
-    brushCursor.style.background = e.target.value + '26';
+    updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
   });
 
   document.getElementById('brushSize').addEventListener('input', (e) => {
     brushSize = parseFloat(e.target.value);
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
+    updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
   });
 
   document.getElementById('clearPaint').addEventListener('click', () => {
