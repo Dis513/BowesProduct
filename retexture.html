@@ -139,7 +139,7 @@
       width: 100%; 
       height: 100%; 
       padding-top: 70px; 
-      padding-bottom: 70px; /* Space for footer */
+      padding-bottom: 60px; /* Space for footer */
     }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
@@ -153,7 +153,6 @@
       border: 1px solid #1e293b; 
       border-radius: 12px;
       padding: 1.5rem; 
-      padding-bottom: 3rem;
       overflow-y: auto; 
       z-index: 10; 
       backdrop-filter: blur(10px);
@@ -193,13 +192,6 @@
     #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
     #paintToggle.active { background: #f87171; }
 
-    /* Export button styling */
-    #exportBtn {
-      margin-top: 1.5rem;
-      padding: 0.75rem;
-      font-size: 1rem;
-    }
-
     /* FOOTER */
     .site-footer { 
       position: fixed; 
@@ -209,7 +201,6 @@
       background: rgba(2,6,23,0.95); 
       border-top: 1px solid #1e293b; 
       padding: 1rem; 
-      height: 70px;
       z-index: 1000; 
       backdrop-filter: blur(10px); 
     }
@@ -227,17 +218,16 @@
     .footer-nav a:hover { color: #60a5fa; }
     .site-footer p { margin: 0; color: #94a3b8; }
 
-    /* Mobile Responsive */
+    /* Mobile Responsive - Export Button Fix */
     @media (max-width: 900px) {
       .panel { 
         width: 100%; 
         right: 0; 
         left: 0; 
         top: auto; 
-        bottom: 80px; 
+        bottom: 60px; 
         border-radius: 12px 12px 0 0; 
-        max-height: calc(100vh - 160px);
-        padding-bottom: 2rem;
+        max-height: 45vh; 
       }
       #status {
         bottom: 70px;
@@ -245,11 +235,8 @@
         left: 10px;
         right: 10px;
       }
-      #exportBtn {
-        position: sticky;
-        bottom: 0;
-        margin-top: 1rem;
-        z-index: 5;
+      .site-footer {
+        height: 60px;
       }
     }
 
@@ -717,13 +704,14 @@
         const alpha = getBrushAlpha(localX, localY);
 
         if (alpha > 0) {
-          // FIX: Direct color assignment for exact color matching
-          // Convert hex to RGB values directly without lerping
-          colors.setXYZ(i,
-            paintColor.r,
-            paintColor.g,
-            paintColor.b
-          );
+          // FIX: Set vertex color directly to match paint color exactly
+          // Convert the paintColor to linear space first, then set
+          const r = paintColor.r;
+          const g = paintColor.g;
+          const b = paintColor.b;
+          
+          // Override the vertex color completely (no blending)
+          colors.setXYZ(i, r, g, b);
         }
       }
       colors.needsUpdate = true;
