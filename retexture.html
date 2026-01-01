@@ -64,6 +64,12 @@
       transition: all 0.1s ease;
     }
 
+    /* Custom brush preview */
+    #customBrushPreview {
+      width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem;
+      image-rendering: pixelated;
+    }
+
     /* Paint toggle */
     #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
     #paintToggle.active { background: #f87171; }
@@ -78,13 +84,6 @@
 
     @media (max-width: 900px) {
       .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 70px; border-radius: 12px 12px 0 0; max-height: 50vh; }
-    }
-    @media (max-width: 768px) {
-      .header-inner { flex-direction: column; align-items: stretch; gap: 8px; }
-      .header-left { justify-content: space-between; }
-      .header-right { justify-content: space-between; width: 100%; }
-      #levelInfo { width: 100%; }
-      #container { padding-top: 110px; }
     }
   </style>
 </head>
@@ -116,7 +115,7 @@
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
-  <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
+  <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint • Pinch/scroll to zoom</div>
 
   <div class="panel">
     <h2>Model</h2>
@@ -158,7 +157,7 @@
       <input type="color" id="paintColor" value="#ff4444">
     </div>
     <div class="control-group">
-      <label for="brushSize">Brush Size <span id="brushSizeVal">0.5</span></label>
+      <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
       <input type="range" id="brushSize" min="0.05" max="5" step="0.05" value="0.5">
     </div>
     <div class="control-group">
@@ -172,7 +171,14 @@
         <option value="diamond-hard">Diamond (hard)</option>
         <option value="star">Star</option>
         <option value="cross">Cross</option>
+        <option value="custom">Custom Brush (upload PNG)</option>
       </select>
+    </div>
+    <div class="control-group" id="customBrushGroup" style="display:none;">
+      <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
+      <input type="file" id="uploadBrush" accept="image/png">
+      <canvas id="customBrushPreview" width="80" height="80"></canvas>
+      <div class="hint">White = full paint, black = no paint</div>
     </div>
     <button id="paintToggle">Activate Paint Mode</button>
     <button id="clearPaint">Clear All Paint</button>
@@ -262,7 +268,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - HIGHLY PRECISE + MANY BRUSH SHAPES -->
+<!-- THREE.JS RETEXTURE LOGIC - ULTRA PRECISE + CUSTOM BRUSH -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -319,11 +325,16 @@
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 0.5;
   let brushShape = 'soft-circle';
+  let customBrushTexture = null; // THREE.Texture for custom brush
   let paintModeActive = false;
 
   const brushCursor = document.getElementById('brushCursor');
   const paintToggle = document.getElementById('paintToggle');
   const brushShapeSelect = document.getElementById('brushShape');
+  const customBrushGroup = document.getElementById('customBrushGroup');
+  const uploadBrush = document.getElementById('uploadBrush');
+  const customBrushPreview = document.getElementById('customBrushPreview');
+  const previewCtx = customBrushPreview.getContext('2d');
 
   const gltfLoader = new GLTFLoader();
 
@@ -368,44 +379,49 @@
     if (!paintModeActive) return;
     brushCursor.style.left = x + 'px';
     brushCursor.style.top = y + 'px';
-    const pixelSize = brushSize * 80; // Larger multiplier for better visibility across sizes
+    const pixelSize = brushSize * 80;
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
-    brushCursor.style.clipPath = getClipPath(brushShape);
     brushCursor.style.display = 'block';
   }
 
-  function getClipPath(shape) {
-    switch (shape) {
-      case 'square-soft':
-      case 'square-hard':
-        return 'none';
-      case 'diamond-soft':
-      case 'diamond-hard':
-        return 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)';
-      case 'star':
-        return 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
-      case 'cross':
-        return 'polygon(20% 0%, 80% 0%, 80% 20%, 100% 20%, 100% 80%, 80% 80%, 80% 100%, 20% 100%, 20% 80%, 0% 80%, 0% 20%, 20% 20%)';
-      default:
-        return 'circle(50%)';
+  function hideBrushCursor() {
+    brushCursor.style.display = 'none';
+  }
+
+  function getBrushAlpha(localX, localY, shape) {
+    const u = localX * 0.5 + 0.5;
+    const v = localY * 0.5 + 0.5;
+
+    if (shape === 'custom' && customBrushTexture) {
+      // Sample texture at u,v (flipped Y for canvas)
+      const canvas = customBrushTexture.image;
+      const ctx = canvas.getContext('2d');
+      const data = ctx.getImageData(u * canvas.width, (1 - v) * canvas.height, 1, 1).data;
+      return data[3] / 255; // alpha
     }
-  }
 
-  function getInfluence(dist, shape) {
-    const hard = shape.includes('hard');
-    if (hard) return dist < 1 ? 1 : 0;
-    return 1 - Math.pow(dist, 2); // Smooth quadratic falloff for soft shapes
-  }
+    const dist = Math.sqrt(localX * localX + localY * localY);
 
-  function getNormalizedDistance(vec, shape) {
-    const x = Math.abs(vec.x) / brushSize;
-    const y = Math.abs(vec.y) / brushSize;
-    const z = Math.abs(vec.z) / brushSize;
-
-    if (shape.includes('square')) return Math.max(x, y, z);
-    if (shape.includes('diamond')) return (x + y + z);
-    return vec.length() / brushSize; // circle
+    if (shape.includes('hard')) return dist <= 1 ? 1 : 0;
+    if (shape.includes('square')) {
+      const maxDist = Math.max(Math.abs(localX), Math.abs(localY));
+      return shape.includes('hard') ? (maxDist <= 1 ? 1 : 0) : (1 - maxDist);
+    }
+    if (shape.includes('diamond')) {
+      const manhattan = Math.abs(localX) + Math.abs(localY);
+      return shape.includes('hard') ? (manhattan <= 1 ? 1 : 0) : (1 - manhattan);
+    }
+    if (shape === 'star') {
+      const angle = Math.atan2(localY, localX);
+      const radius = dist + 0.2 * Math.sin(5 * angle);
+      return radius <= 1 ? 1 - dist : 0;
+    }
+    if (shape === 'cross') {
+      const thickness = 0.2;
+      return (Math.abs(localX) < thickness || Math.abs(localY) < thickness) ? 1 : 0;
+    }
+    return 1 - Math.pow(dist, 2); // soft circle
   }
 
   function paintAt(point) {
@@ -418,11 +434,13 @@
 
       for (let i = 0; i < positions.count; i++) {
         vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(matrixWorld);
-        const distVec = vert.sub(point);
-        const dist = getNormalizedDistance(distVec, brushShape);
+        const offset = vert.sub(point);
+        if (offset.length() > brushSize) continue;
 
-        if (dist < 1) {
-          const influence = getInfluence(dist, brushShape);
+        const local = offset.divideScalar(brushSize);
+        const alpha = getBrushAlpha(local.x, local.y, brushShape);
+        if (alpha > 0) {
+          const influence = alpha;
           colors.setXYZ(i,
             THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
             THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
@@ -472,7 +490,24 @@
 
   brushShapeSelect.addEventListener('change', (e) => {
     brushShape = e.target.value;
-    brushCursor.style.clipPath = getClipPath(brushShape);
+    customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
+
+  uploadBrush.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const size = Math.max(img.width, img.height);
+      customBrushPreview.width = size;
+      customBrushPreview.height = size;
+      previewCtx.fillStyle = '#000';
+      previewCtx.fillRect(0, 0, size, size);
+      previewCtx.drawImage(img, 0, 0, size, size);
+      customBrushTexture = new THREE.CanvasTexture(customBrushPreview);
+      customBrushTexture.needsUpdate = true;
+    };
+    img.src = URL.createObjectURL(file);
   });
 
   document.getElementById('uploadModel').addEventListener('change', (e) => {
