@@ -447,10 +447,10 @@
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMappingExposure = 1.6;
+ renderer.toneMapping = THREE.NoToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020617);
@@ -1005,6 +1005,7 @@ function getWorldBrushRadius() {
 
 </body>
 </html>
+
 
 
 
