@@ -1,455 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Retexture – BowesProduct</title>
+  <title>Retexture Pro – BowesProduct (Three.js)</title>
 
-  <!-- model-viewer -->
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+  <!-- Three.js + modules -->
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+    import { RGBELoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/RGBELoader.js';
+    import { GLTFExporter } from 'https://unpkg.com/three@0.160.0/examples/jsm/exporters/GLTFExporter.js';
+
+    window.THREE = THREE;
+    window.OrbitControls = OrbitControls;
+    window.GLTFLoader = GLTFLoader;
+    window.RGBELoader = RGBELoader;
+    window.GLTFExporter = GLTFExporter;
   </script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      background: #020617;
-      color: white;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      overflow-x: hidden;
-    }
-
-    /* HEADER */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(2,6,23,0.95);
-      border-bottom: 1px solid #1e293b;
-    }
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1.6rem;
-    }
-    .logo a {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .main-nav {
-      display: flex;
-      gap: 1.4rem;
-    }
-    .main-nav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-    .main-nav a:hover { color:#60a5fa; }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      min-height: 44px;
-    }
-    #profilePic {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid #60a5fa;
-      object-fit: cover;
-      display: none;
-    }
-    .login-btn {
-      padding: 0.45rem 1.1rem;
-      border-radius: 999px;
-      border: 1.5px solid #60a5fa;
-      background: transparent;
-      color: #60a5fa;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-    #levelInfo {
-      display: none;
-      width: 140px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-    }
-    #levelText { white-space: nowrap; }
-    #xpOuter {
-      width: 100%;
-      height: 5px;
-      background: #1e293b;
-      border-radius: 3px;
-      margin-top: 4px;
-    }
-    #xpBar {
-      height: 100%;
-      width: 0%;
-      background: #60a5fa;
-      border-radius: 3px;
-      transition: width 0.35s ease;
-    }
-
-    /* CONTENT */
-    .content {
-      max-width: 1000px;
-      margin: 3rem auto 4rem;
-      padding: 0 1.5rem;
-    }
-    h1, h2 { color:#60a5fa; }
-    p, li {
-      color:#cbd5e1;
-      line-height:1.8;
-    }
-
-    .viewer-row {
-      display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
-      gap: 2rem;
-      align-items: flex-start;
-      margin-top: 2rem;
-    }
-    model-viewer {
-      width: 100%;
-      height: 450px;
-      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
-      border-radius: 12px;
-      border: 1px solid #1e293b;
-    }
-
+    html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, sans-serif; overflow: hidden; }
+    #container { position: relative; width: 100%; height: 100%; }
+    #canvas { display: block; width: 100%; height: 100%; }
+    
     .panel {
-      background: #020617;
-      border-radius: 12px;
+      position: absolute;
+      top: 20px; right: 20px;
+      width: 320px; max-height: 90vh;
+      background: rgba(2, 6, 23, 0.95);
       border: 1px solid #1e293b;
-      padding: 1.25rem 1.5rem;
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-y: auto;
+      z-index: 10;
+      backdrop-filter: blur(10px);
     }
-    .panel h2 {
-      margin-top: 0;
-      margin-bottom: 0.75rem;
-    }
-    .control-group {
-      margin-bottom: 1rem;
-    }
-    .control-group label {
-      display: block;
-      font-size: 0.9rem;
-      color: #e5e7eb;
-      margin-bottom: 0.3rem;
-    }
-    select, input[type="file"] {
-      width: 100%;
+    .panel h2 { color: #60a5fa; margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; }
+    .control-group { margin-bottom: 1.2rem; }
+    label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
+    input, select, button {
+      width: 100%; padding: 0.5rem;
+      border-radius: 0.375rem; border: 1px solid #1f2937;
+      background: #020617; color: #e5e7eb;
       font: inherit;
-      padding: 0.4rem 0.5rem;
-      border-radius: 0.375rem;
-      border: 1px solid #1f2937;
-      background: #020617;
-      color: #e5e7eb;
     }
-    .hint {
-      font-size: 0.8rem;
-      color: #9ca3af;
-      margin-top: 0.35rem;
-    }
-
-    /* FOOTER */
-    .site-footer {
-      background: rgba(2,6,23,0.95);
-      border-top: 1px solid #1e293b;
-      padding: 3rem 1rem;
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-    .footer-nav {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .footer-nav a {
-      color: #cbd5e1;
-      text-decoration: none;
-    }
-    .footer-nav a:hover { color: #60a5fa; }
-    .site-footer p {
-      margin: 0;
-      color: #94a3b8;
-    }
+    input[type="range"] { padding: 0.3rem 0; }
+    input[type="color"] { height: 44px; padding: 0.2rem; }
+    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
+    button:hover { background: #3b82f6; }
+    .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
+    #brushSize { width: 100%; }
+    #status { position: absolute; bottom: 20px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
     @media (max-width: 900px) {
-      .viewer-row {
-        grid-template-columns: 1fr;
-      }
-      model-viewer {
-        height: 380px;
-      }
-    }
-    @media (max-width: 768px) {
-      .header-inner {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-      .header-left {
-        justify-content: space-between;
-      }
-      .header-right {
-        justify-content: space-between;
-        width: 100%;
-      }
-      #levelInfo {
-        width: 100%;
-      }
+      .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 0; border-radius: 12px 12px 0 0; max-height: 60vh; }
     }
   </style>
 </head>
-
 <body>
+  <div id="container">
+    <canvas id="canvas"></canvas>
+    <div id="status">Drag to rotate • Click/drag to paint • Scroll to zoom</div>
 
-<!-- HEADER -->
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-left">
-      <div class="logo"><a href="index.html">BowesProduct</a></div>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="models.html">Models</a>
-        <a href="retexture.html">Retexture</a>
-      </nav>
-    </div>
-
-    <div class="header-right">
-      <img id="profilePic" alt="Profile">
-      <div id="levelInfo">
-        <div id="levelText"></div>
-        <div id="xpOuter"><div id="xpBar"></div></div>
-      </div>
-      <button id="authBtn" class="login-btn">Login</button>
-    </div>
-  </div>
-</header>
-
-<!-- CONTENT -->
-<div class="content">
-  <h1>Retexture Your Model</h1>
-  <p>
-    Upload a GLB model and then swap its base color texture using the controls.  
-    FBX must be converted to GLB before upload, since the viewer only understands glTF/GLB directly in the browser. [web:31][web:39]
-  </p>
-
-  <div class="viewer-row">
-    <!-- MODEL VIEWER -->
-    <model-viewer id="retextureViewer"
-      src="models/example.glb"
-      alt="Retexturable 3D model"
-      ar
-      camera-controls
-      exposure="1.0"
-      environment-image="neutral"
-      shadow-intensity="0.8">
-    </model-viewer>
-
-    <!-- CONTROL PANEL -->
     <div class="panel">
-      <h2>Model & Texture</h2>
-
+      <h2>Model</h2>
       <div class="control-group">
-        <label for="uploadModel">Upload GLB model</label>
-        <input type="file" id="uploadModel" accept=".glb,model/gltf-binary">
-        <div class="hint">
-          Export GLB from your DCC (or convert FBX to GLB) before uploading. [web:31]
-        </div>
+        <label>Upload GLB (FBX → GLB first)</label>
+        <input type="file" id="uploadModel" accept=".glb,.gltf">
+        <div class="hint">Convert FBX to GLB in Blender or online tools.</div>
       </div>
 
+      <h2>Texture</h2>
       <div class="control-group">
-        <label for="presetTexture">Preset textures</label>
+        <label>Preset Textures</label>
         <select id="presetTexture">
-          <option value="">Default material</option>
-          <!-- Update these with your own texture files -->
-          <option value="textures/wood_basecolor.jpg">Warm wood</option>
-          <option value="textures/metal_basecolor.jpg">Brushed metal</option>
-          <option value="textures/plastic_basecolor.jpg">Matte plastic</option>
+          <option value="">Original / None</option>
+          <option value="textures/wood_basecolor.jpg">Warm Wood</option>
+          <option value="textures/metal_basecolor.jpg">Brushed Metal</option>
+          <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
+          <option value="textures/fabric_basecolor.jpg">Fabric</option>
         </select>
-        <div class="hint">Applies a preset image on the material’s base color.</div>
+      </div>
+      <div class="control-group">
+        <label>Custom Texture</label>
+        <input type="file" id="uploadTexture" accept="image/*">
       </div>
 
+      <h2>Material</h2>
       <div class="control-group">
-        <label for="uploadTexture">Upload custom texture</label>
-        <input type="file" id="uploadTexture" accept="image/*">
-        <div class="hint">PNG/JPG mapped onto the model’s existing UVs.</div>
+        <label>Metallic <span id="metallicVal">0.0</span></label>
+        <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
       </div>
+      <div class="control-group">
+        <label>Roughness <span id="roughnessVal">0.5</span></label>
+        <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
+      </div>
+
+      <h2>Vertex Color Painting</h2>
+      <div class="control-group">
+        <label>Brush Color</label>
+        <input type="color" id="paintColor" value="#ff4444">
+      </div>
+      <div class="control-group">
+        <label>Brush Size <span id="brushSizeVal">10</span></label>
+        <input type="range" id="brushSize" min="1" max="50" value="10">
+      </div>
+      <button id="clearPaint">Clear All Paint</button>
+
+      <h2>Lighting</h2>
+      <div class="control-group">
+        <label>Environment</label>
+        <select id="envPreset">
+          <option value="neutral">Neutral</option>
+          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/equirectangular/royal_esplanade_1k.hdr">Royal Esplanade</option>
+          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/equirectangular/spruit_sunrise_1k.hdr">Sunrise</option>
+          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/equirectangular/moonless_golf_1k.hdr">Night</option>
+        </select>
+      </div>
+
+      <h2>Export</h2>
+      <button id="exportBtn">Export Modified GLB</button>
     </div>
   </div>
-</div>
 
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-nav">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="license.html">License</a>
-      <a href="refund.html">Refund</a>
-      <a href="rewards.html">Rewards</a>
-    </nav>
-    <p>© 2025 BowesProduct</p>
-  </div>
-</footer>
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+    import { RGBELoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/RGBELoader.js';
+    import { GLTFExporter } from 'https://unpkg.com/three@0.160.0/examples/jsm/exporters/GLTFExporter.js';
 
-<!-- FIREBASE + RETEXTURE LOGIC -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-  import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc
-  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    // Scene setup
+    const canvas = document.getElementById('canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-  /* ========== FIREBASE INIT ========== */
-  const firebaseConfig = {
-    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-    authDomain: "bowesproduct.firebaseapp.com",
-    projectId: "bowesproduct"
-    // You can add appId, etc., from your console if desired, but these are enough for basic web auth/Firestore. [web:31]
-  };
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x020617);
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(3, 2, 5);
 
-  const authBtn = document.getElementById("authBtn");
-  const profilePic = document.getElementById("profilePic");
-  const levelInfo = document.getElementById("levelInfo");
-  const levelText = document.getElementById("levelText");
-  const xpBar = document.getElementById("xpBar");
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
 
-  if (authBtn) {
-    authBtn.onclick = () =>
-      auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
-  }
+    // Lighting
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!authBtn || !profilePic || !levelInfo || !levelText || !xpBar) return;
-
-    if (!user) {
-      authBtn.textContent = "Login";
-      profilePic.style.display = "none";
-      levelInfo.style.display = "none";
-      return;
-    }
-
-    authBtn.textContent = "Logout";
-    profilePic.src = user.photoURL || "";
-    profilePic.style.display = "block";
-
-    const ref = doc(db, "users", user.uid);
-    let snap = await getDoc(ref);
-
-    if (!snap.exists()) {
-      await setDoc(ref, { xp: 10 });
-      snap = await getDoc(ref);
-    }
-
-    const xp = snap.data().xp || 0;
-    const levels = [0, 200, 500, 1000, 2000];
-    let level = levels.filter(v => xp >= v).length - 1;
-    let next = levels[level + 1] ?? levels[level];
-    let progress = next === levels[level]
-      ? 100
-      : ((xp - levels[level]) / (next - levels[level])) * 100;
-
-    levelText.textContent = `Level ${level} • ${xp} XP`;
-    xpBar.style.width = progress + "%";
-    levelInfo.style.display = "block";
-  });
-
-  /* ========== RETEXTURE + GLB UPLOAD LOGIC ========== */
-  const modelViewer = document.getElementById('retextureViewer');
-  const presetSelect = document.getElementById('presetTexture');
-  const uploadTextureInput = document.getElementById('uploadTexture');
-  const uploadModelInput = document.getElementById('uploadModel');
-
-  // Handle GLB upload: assign blob URL to model-viewer src [web:31]
-  uploadModelInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.name.toLowerCase().endsWith('.glb')) {
-      alert('Please upload a .glb file. Convert FBX to GLB before upload.');
-      uploadModelInput.value = '';
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(file);
-    modelViewer.src = objectUrl;
-  });
-
-  // When the model is loaded, wire up material retexturing [web:31]
-  modelViewer.addEventListener('load', () => {
-    const material = modelViewer.model?.materials?.[0];
-    if (!material) return;
-
-    const applyTextureUrl = async (url) => {
-      if (!url) {
-        // Reset to original material (no override)
-        material.pbrMetallicRoughness.baseColorTexture.setTexture(null);
+    let currentEnvMap = null;
+    function loadEnvironment(url) {
+      if (url === 'neutral') {
+        scene.environment = null;
+        scene.background = new THREE.Color(0x020617);
         return;
       }
-      const texture = await modelViewer.createTexture(url);
-      material.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
-    };
+      new RGBELoader().load(url, (texture) => {
+        const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+        scene.environment = envMap;
+        scene.background = envMap;
+        texture.dispose();
+        currentEnvMap = envMap;
+      });
+    }
+    loadEnvironment('neutral');
 
-    // Preset dropdown
-    presetSelect.addEventListener('change', (e) => {
-      const url = e.target.value;
-      applyTextureUrl(url);
-      uploadTextureInput.value = "";
-    });
+    // Model
+    let currentModel = null;
+    let paintedGeometry = null;
+    let paintColor = new THREE.Color('#ff4444');
+    let brushSize = 10;
 
-    // Custom image upload
-    uploadTextureInput.addEventListener('change', (e) => {
+    const loader = new GLTFLoader();
+    function loadModel(url) {
+      loader.load(url, (gltf) => {
+        if (currentModel) scene.remove(currentModel);
+        currentModel = gltf.scene;
+        scene.add(currentModel);
+
+        // Enable vertex colors on all meshes
+        currentModel.traverse((child) => {
+          if (child.isMesh) {
+            child.material.vertexColors = true;
+            if (!child.geometry.attributes.color) {
+              const colors = new Float32Array(child.geometry.attributes.position.count * 3);
+              colors.fill(1); // white
+              child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            }
+            paintedGeometry = child.geometry; // paint on first mesh for simplicity
+          }
+        });
+
+        // Fit camera
+        const box = new THREE.Box3().setFromObject(currentModel);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        camera.position.copy(center).add(new THREE.Vector3(maxDim, maxDim * 0.7, maxDim));
+        controls.target.copy(center);
+        controls.update();
+      });
+    }
+
+    // Default model
+    loadModel('models/example.glb');
+
+    // Painting
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let isPainting = false;
+
+    function paintAt(point, normal) {
+      if (!paintedGeometry) return;
+      const positions = paintedGeometry.attributes.position;
+      const colors = paintedGeometry.attributes.color;
+      const brushSq = brushSize * brushSize;
+
+      for (let i = 0; i < positions.count; i++) {
+        const vx = positions.getX(i);
+        const vy = positions.getY(i);
+        const vz = positions.getZ(i);
+        const vert = new THREE.Vector3(vx, vy, vz).applyMatrix4(currentModel.matrixWorld);
+
+        const distSq = point.distanceToSquared(vert);
+        if (distSq < brushSq) {
+          const influence = 1 - Math.sqrt(distSq) / brushSize;
+          colors.setXYZ(i,
+            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
+            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
+            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
+          );
+        }
+      }
+      colors.needsUpdate = true;
+    }
+
+    canvas.addEventListener('pointerdown', (e) => { isPainting = true; onMouseMove(e); });
+    canvas.addEventListener('pointerup', () => { isPainting = false; });
+    canvas.addEventListener('pointermove', onMouseMove);
+
+    function onMouseMove(event) {
+      if (!isPainting || !currentModel) return;
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) {
+        paintAt(intersects[0].point, intersects[0].face.normal);
+      }
+    }
+
+    // UI Controls
+    document.getElementById('uploadModel').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async (ev) => {
-        const dataUrl = ev.target.result;
-        await applyTextureUrl(dataUrl);
-        presetSelect.value = "";
-      };
-      reader.readAsDataURL(file);
+      if (file) loadModel(URL.createObjectURL(file));
     });
-  });
-</script>
 
+    document.getElementById('presetTexture').addEventListener('change', (e) => {
+      const url = e.target.value;
+      if (url) applyTexture(url);
+    });
+
+    document.getElementById('uploadTexture').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        applyTexture(url);
+      }
+    });
+
+    function applyTexture(url) {
+      new THREE.TextureLoader().load(url, (tex) => {
+        tex.flipY = false;
+        tex.colorSpace = THREE.SRGBColorSpace;
+        currentModel.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.material.map = tex;
+            child.material.needsUpdate = true;
+          }
+        });
+      });
+    }
+
+    document.getElementById('metallicSlider').addEventListener('input', (e) => {
+      document.getElementById('metallicVal').textContent = e.target.value;
+      currentModel.traverse((child) => {
+        if (child.isMesh) child.material.metalness = parseFloat(e.target.value);
+      });
+    });
+
+    document.getElementById('roughnessSlider').addEventListener('input', (e) => {
+      document.getElementById('roughnessVal').textContent = e.target.value;
+      currentModel.traverse((child) => {
+        if (child.isMesh) child.material.roughness = parseFloat(e.target.value);
+      });
+    });
+
+    document.getElementById('paintColor').addEventListener('input', (e) => {
+      paintColor.set(e.target.value);
+    });
+
+    document.getElementById('brushSize').addEventListener('input', (e) => {
+      brushSize = parseFloat(e.target.value);
+      document.getElementById('brushSizeVal').textContent = brushSize;
+    });
+
+    document.getElementById('clearPaint').addEventListener('click', () => {
+      if (!paintedGeometry) return;
+      const colors = paintedGeometry.attributes.color;
+      for (let i = 0; i < colors.count; i++) colors.setXYZ(i, 1, 1, 1);
+      colors.needsUpdate = true;
+    });
+
+    document.getElementById('envPreset').addEventListener('change', (e) => {
+      loadEnvironment(e.target.value);
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const exporter = new GLTFExporter();
+      exporter.parse(
+        currentModel,
+        (glb) => {
+          const blob = new Blob([glb], { type: 'application/octet-stream' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'retextured_model.glb';
+          link.click();
+        },
+        { binary: true }
+      );
+    });
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+
+  <!-- Attribution -->
+  <div style="position:absolute;bottom:8px;right:8px;font-size:0.7rem;color:#64748b;">
+    Powered by Three.js (MIT License) • Model viewer & painting by Grok @ xAI
+  </div>
 </body>
 </html>
