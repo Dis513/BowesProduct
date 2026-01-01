@@ -155,7 +155,7 @@
     button:hover { background: #3b82f6; }
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 80px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
-    /* Brush cursor */
+    /* Brush cursor - transparent inside, only outline */
     #brushCursor {
       position: fixed;
       pointer-events: none;
@@ -168,15 +168,15 @@
       background: transparent;
       will-change: left, top, width, height, border-color, border-radius;
     }
-    /* Smaller eyedropper cursor */
+    /* Tiny eyedropper cursor */
     #eyedropperCursor {
       position: fixed;
       pointer-events: none;
       transform: translate(-50%, -50%);
       z-index: 9999;
       display: none;
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTE0LjcuM0wxMy4zIDEuN0wxNi42IDVMNy4zIDE0LjNMOS43IDE2LjdsMi40LTIuNEwxNi42IDE5bDEuNC0xLjRMMTQuNy4zeiIvPjwvc3ZnPg==') no-repeat center;
       background-size: contain;
     }
@@ -266,7 +266,7 @@
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
   <div id="eyedropperCursor"></div>
-  <div id="status">Upload a model → Drag to rotate • Hold Alt + Click to eyedropper • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
+  <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Click color picker → Click on model to eyedrop (tiny dropper appears) • Pinch/scroll to zoom</div>
   <div class="panel">
     <h2>Model</h2>
     <div class="control-group">
@@ -284,7 +284,6 @@
         <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
         <option value="textures/fabric_basecolor.jpg">Fabric</option>
       </select>
-      <div class="hint">If presets don't load, upload your own below.</div>
     </div>
     <div class="control-group">
       <label for="uploadTexture">Custom Texture</label>
@@ -303,7 +302,7 @@
     <div class="control-group">
       <label for="paintColor">Brush Color</label>
       <input type="color" id="paintColor" value="#ff4444">
-      <div class="hint">Hold Alt + Click on model to pick color (eyedropper)</div>
+      <div class="hint">Open the color picker above, then click on the model to sample color (tiny eyedropper will appear)</div>
     </div>
     <div class="control-group">
       <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
@@ -449,7 +448,6 @@
   function loadEnvironment(url) {
     if (url === 'neutral') {
       scene.environment = null;
-      scene.background = new THREE.Color(0x020617);
       if (currentEnvMap) currentEnvMap.dispose();
       currentEnvMap = null;
       return;
@@ -457,7 +455,6 @@
     new RGBELoader().load(url, (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
       scene.environment = envMap;
-      scene.background = envMap;
       texture.dispose();
       if (currentEnvMap) currentEnvMap.dispose();
       currentEnvMap = envMap;
@@ -472,11 +469,12 @@
   let brushShape = 'soft-circle';
   let customBrushData = null;
   let paintModeActive = false;
-  let modelSize = null;
+  let eyedropperMode = false;
 
   const brushCursor = document.getElementById('brushCursor');
   const eyedropperCursor = document.getElementById('eyedropperCursor');
   const paintToggle = document.getElementById('paintToggle');
+  const paintColorInput = document.getElementById('paintColor');
   const exportStatus = document.getElementById('exportStatus');
   const gltfLoader = new GLTFLoader();
 
@@ -491,7 +489,7 @@
 
       const box = new THREE.Box3().setFromObject(currentModel);
       const size = box.getSize(new THREE.Vector3());
-      modelSize = Math.max(size.x, size.y, size.z);
+      const modelSize = Math.max(size.x, size.y, size.z);
       const center = box.getCenter(new THREE.Vector3());
       camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
       controls.target.copy(center);
@@ -531,6 +529,9 @@
   }
 
   function getWorldBrushRadius() {
+    const box = new THREE.Box3().setFromObject(currentModel);
+    const size = box.getSize(new THREE.Vector3());
+    const modelSize = Math.max(size.x, size.y, size.z);
     if (!modelSize) return 0.5;
     return brushSize * (modelSize * 0.2);
   }
@@ -638,9 +639,22 @@
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
+  // Detect when color picker is open
+  paintColorInput.addEventListener('focus', () => {
+    eyedropperMode = true;
+    controls.enabled = false;
+    hideCursors();
+  });
+
+  paintColorInput.addEventListener('blur', () => {
+    eyedropperMode = false;
+    controls.enabled = !paintModeActive;
+    hideCursors();
+  });
+
   canvas.addEventListener('pointermove', (e) => {
-    updateBrushCursor(e.clientX, e.clientY);
-    if (e.altKey) updateEyedropperCursor(e.clientX, e.clientY);
+    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY);
+    if (eyedropperMode) updateEyedropperCursor(e.clientX, e.clientY);
   });
 
   canvas.addEventListener('pointerdown', (e) => {
@@ -653,12 +667,13 @@
     const intersects = raycaster.intersectObject(currentModel, true);
 
     if (intersects.length > 0) {
-      if (e.altKey) {
-        // Eyedropper
+      if (eyedropperMode) {
         const picked = pickColorAt(intersects[0]);
         if (picked) {
           paintColor.copy(picked);
-          document.getElementById('paintColor').value = '#' + picked.getHexString();
+          paintColorInput.value = '#' + picked.getHexString();
+          // Close picker on mobile if needed
+          paintColorInput.blur();
         }
       } else if (paintModeActive) {
         paintAt(intersects[0].point);
@@ -667,7 +682,7 @@
   });
 
   canvas.addEventListener('pointermove', (e) => {
-    if (paintModeActive && e.buttons === 1 && !e.altKey && currentModel) {
+    if (paintModeActive && e.buttons === 1 && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
       mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
@@ -678,27 +693,24 @@
   });
 
   canvas.addEventListener('pointerleave', hideCursors);
-  canvas.addEventListener('pointerenter', (e) => {
-    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY);
-  });
 
   paintToggle.addEventListener('click', () => {
     paintModeActive = !paintModeActive;
     paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
     paintToggle.classList.toggle('active', paintModeActive);
-    controls.enabled = !paintModeActive;
+    controls.enabled = !paintModeActive && !eyedropperMode;
     if (!paintModeActive) hideCursors();
   });
 
-  // All other controls (texture, material, etc.) unchanged and working
   document.getElementById('uploadModel').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) loadModel(URL.createObjectURL(file));
   });
 
   function applyTexture(url) {
-    if (!currentModel || !url) {
-      currentModel?.traverse((child) => {
+    if (!currentModel) return;
+    if (!url) {
+      currentModel.traverse((child) => {
         if (child.isMesh) child.material.map = null;
       });
       return;
@@ -728,10 +740,7 @@
     const v = parseFloat(e.target.value);
     document.getElementById('metallicVal').textContent = v.toFixed(2);
     currentModel?.traverse((child) => {
-      if (child.isMesh && child.material instanceof THREE.MeshStandardMaterial) {
-        child.material.metalness = v;
-        child.material.needsUpdate = true;
-      }
+      if (child.isMesh) child.material.metalness = v;
     });
   });
 
@@ -739,10 +748,7 @@
     const v = parseFloat(e.target.value);
     document.getElementById('roughnessVal').textContent = v.toFixed(2);
     currentModel?.traverse((child) => {
-      if (child.isMesh && child.material instanceof THREE.MeshStandardMaterial) {
-        child.material.roughness = v;
-        child.material.needsUpdate = true;
-      }
+      if (child.isMesh) child.material.roughness = v;
     });
   });
 
@@ -755,6 +761,30 @@
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
   });
 
+  document.getElementById('brushShape').addEventListener('change', (e) => {
+    brushShape = e.target.value;
+    document.getElementById('customBrushGroup').style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
+
+  document.getElementById('uploadBrush').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const size = 64;
+      const preview = document.getElementById('customBrushPreview');
+      preview.width = size;
+      preview.height = size;
+      preview.getContext('2d').drawImage(img, 0, 0, size, size);
+      const temp = document.createElement('canvas');
+      temp.width = size; temp.height = size;
+      const ctx = temp.getContext('2d');
+      ctx.drawImage(img, 0, 0, size, size);
+      customBrushData = ctx.getImageData(0, 0, size, size);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+
   document.getElementById('clearPaint').addEventListener('click', () => {
     paintedGeometries.forEach(({ geometry }) => {
       geometry.attributes.color.array.fill(1);
@@ -764,27 +794,45 @@
 
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
-  // Export unchanged and working
   document.getElementById('exportBtn').addEventListener('click', async () => {
-    if (!currentModel) return;
-    const exporter = new GLTFExporter();
-    const exportModel = currentModel.clone();
-    exportModel.traverse((child) => {
-      if (child.isMesh) {
-        child.material.vertexColors = true;
-        child.geometry.attributes.color.needsUpdate = true;
-        child.material = child.material.clone();
-      }
-    });
-    exporter.parse(exportModel, (result) => {
-      const blob = new Blob([result], { type: 'application/octet-stream' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'retextured_model.glb';
-      link.click();
-      exportStatus.textContent = 'Exported successfully!';
-      exportStatus.style.color = '#4ade80';
-    }, { binary: true });
+    if (!currentModel) {
+      exportStatus.textContent = 'No model to export!';
+      exportStatus.style.color = '#ef4444';
+      return;
+    }
+    exportStatus.textContent = 'Preparing export...';
+    exportStatus.style.color = '#60a5fa';
+    try {
+      const exporter = new GLTFExporter();
+      const exportModel = currentModel.clone();
+      exportModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material.vertexColors = true;
+          if (!child.geometry.attributes.color) {
+            const count = child.geometry.attributes.position.count;
+            const colors = new Float32Array(count * 3).fill(1);
+            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          }
+          child.geometry.attributes.color.needsUpdate = true;
+          child.material = child.material.clone();
+          child.material.needsUpdate = true;
+        }
+      });
+      exporter.parse(exportModel, (result) => {
+        if (result instanceof ArrayBuffer) {
+          const blob = new Blob([result], { type: 'application/octet-stream' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'retextured_model.glb';
+          link.click();
+          exportStatus.textContent = 'Exported successfully!';
+          exportStatus.style.color = '#4ade80';
+        }
+      }, { binary: true });
+    } catch (err) {
+      exportStatus.textContent = 'Export failed';
+      exportStatus.style.color = '#ef4444';
+    }
   });
 
   window.addEventListener('resize', () => {
