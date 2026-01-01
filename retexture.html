@@ -153,17 +153,18 @@
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 20px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
-    /* Brush cursor - transparent inside, only colored outline */
+    /* Brush cursor - transparent inside, only outline */
     #brushCursor {
-      position: absolute;
+      position: fixed;
       pointer-events: none;
       transform: translate(-50%, -50%);
       z-index: 9999;
       display: none;
-      border: 3px solid #ff4444;
+      border: 3px solid transparent;
       border-radius: 50%;
-      background: transparent;
       box-sizing: border-box;
+      background: transparent;
+      will-change: left, top, width, height, border-color, border-radius;
     }
 
     /* Custom brush preview */
@@ -188,6 +189,7 @@
       .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 70px; border-radius: 12px 12px 0 0; max-height: 50vh; }
     }
   </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
@@ -370,7 +372,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - FINAL FIXED -->
+<!-- THREE.JS RETEXTURE LOGIC - FIXED CURSOR + ACCURACY -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -429,6 +431,8 @@
   let brushShape = 'soft-circle';
   let customBrushData = null;
   let paintModeActive = false;
+  let modelBoundingBox = null;
+  let modelSize = null;
 
   const brushCursor = document.getElementById('brushCursor');
   const paintToggle = document.getElementById('paintToggle');
@@ -445,6 +449,18 @@
       if (currentModel) scene.remove(currentModel);
       currentModel = gltf.scene;
       scene.add(currentModel);
+
+      // Calculate model bounding box for accurate brush sizing
+      const box = new THREE.Box3().setFromObject(currentModel);
+      modelBoundingBox = box;
+      const size = box.getSize(new THREE.Vector3());
+      modelSize = Math.max(size.x, size.y, size.z);
+      const center = box.getCenter(new THREE.Vector3());
+      
+      // Position camera based on model size
+      camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
+      controls.target.copy(center);
+      controls.update();
 
       paintedGeometries = [];
       currentModel.traverse((child) => {
@@ -463,42 +479,69 @@
             const colors = new Float32Array(count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
-          paintedGeometries.push({ geometry: child.geometry, matrixWorld: child.matrixWorld.clone() });
+          paintedGeometries.push({ 
+            geometry: child.geometry, 
+            matrixWorld: child.matrixWorld.clone(),
+            mesh: child 
+          });
         }
       });
-
-      const box = new THREE.Box3().setFromObject(currentModel);
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z);
-      camera.position.copy(center).add(new THREE.Vector3(maxDim, maxDim * 0.7, maxDim));
-      controls.target.copy(center);
-      controls.update();
     });
+  }
+
+  function getWorldBrushRadius() {
+    // Convert brush size slider (0.05-5) to world units based on model size
+    // Base it on model dimensions for consistency across different models
+    if (!modelSize) return 0.5;
+    return brushSize * (modelSize * 0.2); // Scale brush size relative to model
   }
 
   function updateBrushCursor(clientX, clientY) {
     if (!paintModeActive) return;
-
+    
     brushCursor.style.left = clientX + 'px';
     brushCursor.style.top = clientY + 'px';
-
-    // Visual size - larger multiplier for better visibility
-    const visualSize = brushSize * 100;
-    brushCursor.style.width = visualSize + 'px';
-    brushCursor.style.height = visualSize + 'px';
+    
+    // Calculate cursor size in screen space
+    const worldRadius = getWorldBrushRadius();
+    
+    // Project world radius to screen space
+    const screenRadius = projectRadiusToScreen(worldRadius);
+    
+    const pixelSize = screenRadius * 2; // Diameter
+    brushCursor.style.width = pixelSize + 'px';
+    brushCursor.style.height = pixelSize + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-
-    // Shape-specific border radius
-    if (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle' || brushShape.includes('diamond')) {
+    
+    // Set border radius based on shape
+    if (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle') {
       brushCursor.style.borderRadius = '50%';
     } else if (brushShape.includes('square')) {
       brushCursor.style.borderRadius = '0';
+    } else if (brushShape.includes('diamond')) {
+      brushCursor.style.borderRadius = '50%';
     } else {
       brushCursor.style.borderRadius = '50%';
     }
-
+    
     brushCursor.style.display = 'block';
+  }
+
+  function projectRadiusToScreen(worldRadius) {
+    // Project a world-space radius to screen-space pixels
+    if (!currentModel) return 100;
+    
+    // Get camera position and model center
+    const distance = camera.position.distanceTo(controls.target);
+    
+    // Calculate screen size based on distance and camera FOV
+    const fov = camera.fov * (Math.PI / 180);
+    const screenHeightAtDistance = 2 * Math.tan(fov / 2) * distance;
+    const screenHeightPixels = window.innerHeight;
+    
+    // Convert world units to pixels
+    const pixelsPerUnit = screenHeightPixels / screenHeightAtDistance;
+    return worldRadius * pixelsPerUnit;
   }
 
   function hideBrushCursor() {
@@ -531,25 +574,44 @@
   function paintAt(point) {
     if (!paintModeActive || paintedGeometries.length === 0) return;
 
+    const brushRadius = getWorldBrushRadius();
+    const brushRadiusSquared = brushRadius * brushRadius;
+    
     const vert = new THREE.Vector3();
-    paintedGeometries.forEach(({ geometry, matrixWorld }) => {
+    
+    paintedGeometries.forEach(({ geometry, matrixWorld, mesh }) => {
       const positions = geometry.attributes.position;
       const colors = geometry.attributes.color;
 
-      for (let i = 0; i < positions.count; i++) {
-        vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(matrixWorld);
-        const offset = vert.sub(point);
-        if (offset.length() > brushSize) continue;
+      // Get inverse world matrix to transform point to local space
+      const inverseMatrix = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
+      const localPoint = point.clone().applyMatrix4(inverseMatrix);
 
-        const localX = offset.x / brushSize;
-        const localY = offset.y / brushSize;
+      for (let i = 0; i < positions.count; i++) {
+        vert.set(positions.getX(i), positions.getY(i), positions.getZ(i));
+        
+        // Calculate distance in local space (more efficient)
+        const offset = vert.sub(localPoint);
+        const distanceSquared = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
+        
+        if (distanceSquared > brushRadiusSquared) continue;
+
+        // Normalize distance to [0, 1] for brush falloff
+        const distance = Math.sqrt(distanceSquared);
+        const normalizedDist = distance / brushRadius;
+        
+        // Calculate local coordinates for brush shape falloff
+        const localX = offset.x / brushRadius;
+        const localY = offset.y / brushRadius;
+        
         const alpha = getBrushAlpha(localX, localY);
 
         if (alpha > 0) {
+          const influence = alpha;
           colors.setXYZ(i,
-            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, alpha),
-            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, alpha),
-            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, alpha)
+            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
+            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
+            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
           );
         }
       }
@@ -574,10 +636,29 @@
     }
   });
 
-  canvas.addEventListener('pointerdown', () => { isPointerDown = true; });
+  canvas.addEventListener('pointerdown', (e) => { 
+    isPointerDown = true; 
+    // Also paint on single click
+    if (paintModeActive && currentModel) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
+    }
+  });
+  
   canvas.addEventListener('pointerup', () => { isPointerDown = false; });
-  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
-  canvas.addEventListener('mouseenter', (e) => { if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); });
+  
+  canvas.addEventListener('pointerleave', () => { 
+    isPointerDown = false; 
+    hideBrushCursor(); 
+  });
+  
+  canvas.addEventListener('mouseenter', (e) => { 
+    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); 
+  });
 
   paintToggle.addEventListener('click', () => {
     paintModeActive = !paintModeActive;
@@ -591,8 +672,9 @@
     brushShape = e.target.value;
     customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
     if (paintModeActive) {
-      const rect = canvas.getBoundingClientRect();
-      updateBrushCursor(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+      updateBrushCursor(x, y);
     }
   });
 
@@ -612,8 +694,9 @@
       ctx.drawImage(img, 0, 0, size, size);
       customBrushData = ctx.getImageData(0, 0, size, size);
       if (paintModeActive) {
-        const rect = canvas.getBoundingClientRect();
-        updateBrushCursor(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+        const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+        updateBrushCursor(x, y);
       }
     };
     img.src = URL.createObjectURL(file);
@@ -659,8 +742,9 @@
   document.getElementById('paintColor').addEventListener('input', (e) => {
     paintColor.set(e.target.value);
     if (paintModeActive) {
-      const rect = canvas.getBoundingClientRect();
-      updateBrushCursor(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+      updateBrushCursor(x, y);
     }
   });
 
@@ -668,8 +752,9 @@
     brushSize = parseFloat(e.target.value);
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
     if (paintModeActive) {
-      const rect = canvas.getBoundingClientRect();
-      updateBrushCursor(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+      updateBrushCursor(x, y);
     }
   });
 
