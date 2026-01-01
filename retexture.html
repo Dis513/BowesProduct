@@ -134,13 +134,28 @@
     }
 
     /* MAIN */
-    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; }
+    #container { 
+      position: relative; 
+      width: 100%; 
+      height: 100%; 
+      padding-top: 70px; 
+      padding-bottom: 60px; /* Space for footer */
+    }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
     .panel {
-      position: absolute; top: 90px; right: 20px; width: 320px; max-height: calc(100vh - 120px);
-      background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px;
-      padding: 1.5rem; overflow-y: auto; z-index: 10; backdrop-filter: blur(10px);
+      position: absolute; 
+      top: 90px; 
+      right: 20px; 
+      width: 320px; 
+      max-height: calc(100vh - 180px); /* Account for header and footer */
+      background: rgba(2, 6, 23, 0.95); 
+      border: 1px solid #1e293b; 
+      border-radius: 12px;
+      padding: 1.5rem; 
+      overflow-y: auto; 
+      z-index: 10; 
+      backdrop-filter: blur(10px);
     }
     .panel h2 { color: #60a5fa; margin: 0 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
@@ -151,7 +166,7 @@
     button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
     button:hover { background: #3b82f6; }
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
-    #status { position: absolute; bottom: 20px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
+    #status { position: absolute; bottom: 80px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
     /* Brush cursor - transparent inside, only outline */
     #brushCursor {
@@ -178,15 +193,62 @@
     #paintToggle.active { background: #f87171; }
 
     /* FOOTER */
-    .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
-    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; }
+    .site-footer { 
+      position: fixed; 
+      bottom: 0; 
+      left: 0; 
+      right: 0; 
+      background: rgba(2,6,23,0.95); 
+      border-top: 1px solid #1e293b; 
+      padding: 1rem; 
+      z-index: 1000; 
+      backdrop-filter: blur(10px); 
+    }
+    .footer-inner { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      display: flex; 
+      justify-content: space-between; 
+      flex-wrap: wrap; 
+      gap: 1rem; 
+      font-size: 0.85rem; 
+    }
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
     .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
     .site-footer p { margin: 0; color: #94a3b8; }
 
+    /* Mobile Responsive */
     @media (max-width: 900px) {
-      .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 70px; border-radius: 12px 12px 0 0; max-height: 50vh; }
+      .panel { 
+        width: 100%; 
+        right: 0; 
+        left: 0; 
+        top: auto; 
+        bottom: 70px; 
+        border-radius: 12px 12px 0 0; 
+        max-height: 45vh; 
+      }
+      #status {
+        bottom: 70px;
+        font-size: 0.8rem;
+        left: 10px;
+        right: 10px;
+      }
+    }
+
+    /* Touch-friendly controls for mobile */
+    @media (hover: none) and (pointer: coarse) {
+      .control-group {
+        margin-bottom: 1.5rem;
+      }
+      button {
+        padding: 0.75rem;
+        margin-top: 1rem;
+      }
+      input[type="range"] {
+        height: 48px;
+      }
     }
   </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
@@ -300,6 +362,7 @@
 
     <h2>Export</h2>
     <button id="exportBtn">Export Modified GLB</button>
+    <div id="exportStatus" style="margin-top: 0.5rem; font-size: 0.8rem; color: #94a3b8;"></div>
   </div>
 </div>
 
@@ -372,7 +435,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - FIXED CURSOR + ACCURACY -->
+<!-- THREE.JS RETEXTURE LOGIC - FIXED EXPORT + MOBILE -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -381,7 +444,7 @@
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
   const canvas = document.getElementById('canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -403,6 +466,13 @@
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
+  controls.enablePan = true;
+  controls.enableZoom = true;
+  // Better mobile touch support
+  controls.touches = {
+    ONE: THREE.TOUCH.ROTATE,
+    TWO: THREE.TOUCH.DOLLY_PAN
+  };
 
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
@@ -425,6 +495,7 @@
   loadEnvironment('neutral');
 
   let currentModel = null;
+  let originalModelUrl = null;
   let paintedGeometries = [];
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 0.5;
@@ -433,6 +504,7 @@
   let paintModeActive = false;
   let modelBoundingBox = null;
   let modelSize = null;
+  let originalMaterials = new Map(); // Store original materials
 
   const brushCursor = document.getElementById('brushCursor');
   const paintToggle = document.getElementById('paintToggle');
@@ -441,13 +513,22 @@
   const uploadBrush = document.getElementById('uploadBrush');
   const customBrushPreview = document.getElementById('customBrushPreview');
   const previewCtx = customBrushPreview.getContext('2d');
+  const exportStatus = document.getElementById('exportStatus');
 
   const gltfLoader = new GLTFLoader();
 
   function loadModel(url) {
+    exportStatus.textContent = 'Loading model...';
+    exportStatus.style.color = '#60a5fa';
+    
     gltfLoader.load(url, (gltf) => {
-      if (currentModel) scene.remove(currentModel);
+      if (currentModel) {
+        scene.remove(currentModel);
+        originalMaterials.clear();
+      }
+      
       currentModel = gltf.scene;
+      originalModelUrl = url;
       scene.add(currentModel);
 
       // Calculate model bounding box for accurate brush sizing
@@ -465,6 +546,9 @@
       paintedGeometries = [];
       currentModel.traverse((child) => {
         if (child.isMesh) {
+          // Store original material
+          originalMaterials.set(child.uuid, child.material.clone());
+          
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
             child.material = new THREE.MeshStandardMaterial({
               map: child.material.map,
@@ -486,6 +570,16 @@
           });
         }
       });
+      
+      exportStatus.textContent = 'Model loaded successfully!';
+      exportStatus.style.color = '#4ade80';
+    }, 
+    (progress) => {
+      exportStatus.textContent = `Loading: ${Math.round((progress.loaded / progress.total) * 100)}%`;
+    },
+    (error) => {
+      exportStatus.textContent = 'Error loading model: ' + error.message;
+      exportStatus.style.color = '#ef4444';
     });
   }
 
@@ -712,6 +806,7 @@
     new THREE.TextureLoader().load(url, (tex) => {
       tex.flipY = false;
       tex.colorSpace = THREE.SRGBColorSpace;
+      tex.encoding = THREE.sRGBEncoding;
       currentModel.traverse((child) => {
         if (child.isMesh) {
           child.material.map = tex.clone();
@@ -767,16 +862,107 @@
 
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
-  document.getElementById('exportBtn').addEventListener('click', () => {
-    if (!currentModel) return;
-    const exporter = new GLTFExporter();
-    exporter.parse(currentModel, (glb) => {
-      const blob = new Blob([glb], { type: 'application/octet-stream' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'retextured_model.glb';
-      link.click();
-    }, { binary: true });
+  // FIXED EXPORT FUNCTION
+  document.getElementById('exportBtn').addEventListener('click', async () => {
+    if (!currentModel) {
+      exportStatus.textContent = 'No model to export!';
+      exportStatus.style.color = '#ef4444';
+      return;
+    }
+
+    exportStatus.textContent = 'Preparing export...';
+    exportStatus.style.color = '#60a5fa';
+
+    try {
+      const exporter = new GLTFExporter();
+      
+      // Create a clone of the model for export to avoid modifying the scene
+      const exportModel = currentModel.clone();
+      
+      // Ensure all materials are properly set for export
+      exportModel.traverse((child) => {
+        if (child.isMesh) {
+          // Make sure vertex colors are enabled
+          child.material.vertexColors = true;
+          
+          // Ensure color attribute exists and is up to date
+          if (!child.geometry.attributes.color) {
+            const count = child.geometry.attributes.position.count;
+            const colors = new Float32Array(count * 3).fill(1);
+            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          }
+          child.geometry.attributes.color.needsUpdate = true;
+          
+          // Clone the material to ensure it's properly exported
+          child.material = child.material.clone();
+          
+          // Ensure all material properties are set
+          child.material.needsUpdate = true;
+        }
+      });
+
+      exportStatus.textContent = 'Exporting model...';
+      
+      // Parse with proper options for GLB export
+      exporter.parse(
+        exportModel,
+        (result) => {
+          if (result instanceof ArrayBuffer) {
+            // It's a GLB (binary)
+            const blob = new Blob([result], { type: 'application/octet-stream' });
+            const fileSize = blob.size;
+            console.log('Export size:', fileSize, 'bytes');
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'retextured_model.glb';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            
+            // Trigger download
+            link.click();
+            
+            // Clean up
+            setTimeout(() => {
+              document.body.removeChild(link);
+              URL.revokeObjectURL(link.href);
+            }, 100);
+            
+            exportStatus.textContent = `Exported successfully! (${(fileSize / 1024).toFixed(2)} KB)`;
+            exportStatus.style.color = '#4ade80';
+          } else {
+            // It's GLTF (JSON)
+            const output = JSON.stringify(result, null, 2);
+            const blob = new Blob([output], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'retextured_model.gltf';
+            link.click();
+            
+            exportStatus.textContent = `Exported successfully! (${(blob.size / 1024).toFixed(2)} KB)`;
+            exportStatus.style.color = '#4ade80';
+          }
+        },
+        (error) => {
+          console.error('Export error:', error);
+          exportStatus.textContent = 'Export failed: ' + error.message;
+          exportStatus.style.color = '#ef4444';
+        },
+        {
+          binary: true, // Export as GLB
+          maxTextureSize: 4096,
+          animations: [],
+          onlyVisible: false,
+          truncateDrawRange: true,
+          includeCustomExtensions: false
+        }
+      );
+    } catch (error) {
+      console.error('Export error:', error);
+      exportStatus.textContent = 'Export failed: ' + error.message;
+      exportStatus.style.color = '#ef4444';
+    }
   });
 
   window.addEventListener('resize', () => {
