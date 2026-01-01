@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retexture Pro – BowesProduct</title>
 
-  <!-- es-module-shims + import map -->
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
   <script type="importmap">
   {
@@ -20,142 +19,30 @@
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
-    /* ================= HEADER ================= */
     .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(2,6,23,0.95);
-      border-bottom: 1px solid #1e293b;
+      position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b;
     }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .header-left { display: flex; align-items: center; gap: 1.6rem; }
+    .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
+    .main-nav { display: flex; gap: 1.4rem; }
+    .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
+    .main-nav a.active, .main-nav a:hover { color: #60a5fa; }
+    .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
+    #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+    .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+    #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
+    #levelText { white-space: nowrap; }
+    #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+    #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1.6rem;
-    }
-    .logo a {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .main-nav {
-      display: flex;
-      gap: 1.4rem;
-    }
-    .main-nav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-    .main-nav a.active,
-    .main-nav a:hover {
-      color: #60a5fa;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      min-height: 44px;
-    }
-
-    #profilePic {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid #60a5fa;
-      object-fit: cover;
-      display: none;
-    }
-
-    .login-btn {
-      padding: 0.45rem 1.1rem;
-      border-radius: 999px;
-      border: 1.5px solid #60a5fa;
-      background: transparent;
-      color: #60a5fa;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    #levelInfo {
-      display: none;
-      width: 140px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-    }
-    #levelText {
-      white-space: nowrap;
-    }
-    #xpOuter {
-      width: 100%;
-      height: 5px;
-      background: #1e293b;
-      border-radius: 3px;
-      margin-top: 4px;
-    }
-    #xpBar {
-      height: 100%;
-      width: 0%;
-      background: #60a5fa;
-      border-radius: 3px;
-      transition: width 0.35s ease;
-    }
-
-    /* MOBILE HEADER */
-    @media (max-width: 768px) {
-      .header-inner {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-      .header-left {
-        justify-content: space-between;
-      }
-      .header-right {
-        justify-content: space-between;
-        width: 100%;
-      }
-      #levelInfo {
-        width: 100%;
-      }
-    }
-
-    /* MAIN */
-    #container { 
-      position: relative; 
-      width: 100%; 
-      height: 100%; 
-      padding-top: 70px; 
-      padding-bottom: 60px;
-    }
+    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 60px; }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
     .panel {
-      position: absolute; 
-      top: 90px; 
-      right: 20px; 
-      width: 320px; 
-      max-height: calc(100vh - 180px);
-      background: rgba(2, 6, 23, 0.95); 
-      border: 1px solid #1e293b; 
-      border-radius: 12px;
-      padding: 1.5rem; 
-      overflow-y: auto; 
-      z-index: 10; 
-      backdrop-filter: blur(10px);
+      position: absolute; top: 90px; right: 20px; width: 320px; max-height: calc(100vh - 180px);
+      background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem;
+      overflow-y: auto; z-index: 10; backdrop-filter: blur(10px);
     }
     .panel h2 { color: #60a5fa; margin: 0 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
@@ -163,89 +50,63 @@
     input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
     input[type="range"] { padding: 0.3rem 0; }
     input[type="color"] { height: 44px; padding: 0.2rem; }
-    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
+    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; height: 48px; font-size: 1rem; }
     button:hover { background: #3b82f6; }
+    button.active { background: #f87171; }
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 80px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
-    /* Brush cursor */
+    /* Mobile-friendly tool buttons */
+    .tool-buttons {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .tool-btn {
+      flex: 1;
+      min-width: 80px;
+      height: 60px;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: #1e293b;
+      color: #e5e7eb;
+      border: 2px solid #334155;
+    }
+    .tool-btn.active {
+      background: #60a5fa;
+      border-color: #60a5fa;
+      color: white;
+    }
+
     #brushCursor {
-      position: fixed;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-      display: none;
-      border: 3px solid transparent;
-      border-radius: 50%;
-      box-sizing: border-box;
-      background: transparent;
-      will-change: left, top, width, height, border-color, border-radius;
+      position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none;
+      border: 3px solid transparent; border-radius: 50%; box-sizing: border-box; background: transparent;
+      will-change: left, top, width, height, border-color;
     }
 
-    #customBrushPreview {
-      width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem;
-      image-rendering: pixelated;
-    }
+    #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
 
-    #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
-    #paintToggle.active { background: #f87171; }
-
-    /* FOOTER */
-    .site-footer { 
-      position: fixed; 
-      bottom: 0; 
-      left: 0; 
-      right: 0; 
-      background: rgba(2,6,23,0.95); 
-      border-top: 1px solid #1e293b; 
-      padding: 1rem; 
-      z-index: 1000; 
-      backdrop-filter: blur(10px); 
-    }
-    .footer-inner { 
-      max-width: 1200px; 
-      margin: 0 auto; 
-      display: flex; 
-      justify-content: space-between; 
-      flex-wrap: wrap; 
-      gap: 1rem; 
-      font-size: 0.85rem; 
-    }
+    .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; }
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
     .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
     .site-footer p { margin: 0; color: #94a3b8; }
 
-    /* Mobile Responsive */
     @media (max-width: 900px) {
-      .panel { 
-        width: 100%; 
-        right: 0; 
-        left: 0; 
-        top: auto; 
-        bottom: 70px; 
-        border-radius: 12px 12px 0 0; 
-        max-height: 45vh; 
-      }
-      #status {
-        bottom: 70px;
-        font-size: 0.8rem;
-        left: 10px;
-        right: 10px;
-      }
-    }
-
-    @media (hover: none) and (pointer: coarse) {
-      .control-group { margin-bottom: 1.5rem; }
-      button { padding: 0.75rem; margin-top: 1rem; }
-      input[type="range"] { height: 48px; }
+      .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 70px; border-radius: 12px 12px 0 0; max-height: 50vh; }
+      #status { bottom: 70px; font-size: 0.8rem; left: 10px; right: 10px; }
+      .tool-btn { height: 70px; font-size: 2.2rem; }
     }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
     <div class="header-left">
@@ -267,13 +128,19 @@
   </div>
 </header>
 
-<!-- MAIN 3D VIEWER -->
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
   <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
 
   <div class="panel">
+    <h2>View Tools</h2>
+    <div class="tool-buttons">
+      <button id="handTool" class="tool-btn" title="Pan View [Q]">✋</button>
+      <button id="rotateTool" class="tool-btn active" title="Rotate View [E]">↺</button>
+      <button id="paintToggleBtn" class="tool-btn" title="Toggle Paint Mode">🎨</button>
+    </div>
+
     <h2>Model</h2>
     <div class="control-group">
       <label for="uploadModel">Upload GLB/GLTF</label>
@@ -325,8 +192,6 @@
         <option value="square-hard">Square (hard)</option>
         <option value="diamond-soft">Diamond (soft)</option>
         <option value="diamond-hard">Diamond (hard)</option>
-        <option value="star">Star</option>
-        <option value="cross">Cross</option>
         <option value="custom">Custom Brush (upload PNG)</option>
       </select>
     </div>
@@ -356,7 +221,6 @@
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
@@ -371,7 +235,7 @@
   </div>
 </footer>
 
-<!-- FIREBASE AUTH + XP -->
+<!-- Firebase Auth (your original) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -425,7 +289,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - FIXED COLOR DARKNESS -->
+<!-- MAIN THREE.JS SCRIPT -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -458,14 +322,51 @@
   controls.dampingFactor = 0.05;
   controls.enablePan = true;
   controls.enableZoom = true;
-  controls.touches = {
-    ONE: THREE.TOUCH.ROTATE,
-    TWO: THREE.TOUCH.DOLLY_PAN
+  controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
+
+  let viewMode = 'rotate'; // 'rotate' or 'pan'
+
+  function updateViewMode() {
+    if (viewMode === 'rotate') {
+      controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
+      controls.touches.ONE = THREE.TOUCH.ROTATE;
+    } else {
+      controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
+      controls.touches.ONE = THREE.TOUCH.PAN;
+    }
+  }
+  updateViewMode();
+
+  // Tool buttons
+  const handTool = document.getElementById('handTool');
+  const rotateTool = document.getElementById('rotateTool');
+  const paintToggleBtn = document.getElementById('paintToggleBtn');
+  const paintToggle = document.getElementById('paintToggle');
+
+  handTool.onclick = () => {
+    viewMode = 'pan';
+    handTool.classList.add('active');
+    rotateTool.classList.remove('active');
+    updateViewMode();
   };
+
+  rotateTool.onclick = () => {
+    viewMode = 'rotate';
+    rotateTool.classList.add('active');
+    handTool.classList.remove('active');
+    updateViewMode();
+  };
+
+  // Keyboard shortcuts
+  window.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'q') handTool.click();
+    if (e.key.toLowerCase() === 'e') rotateTool.click();
+  });
 
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
   let currentEnvMap = null;
+
   function loadEnvironment(url) {
     if (url === 'neutral') {
       scene.environment = null;
@@ -484,24 +385,21 @@
   loadEnvironment('neutral');
 
   let currentModel = null;
-  let originalModelUrl = null;
   let paintedGeometries = [];
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 0.5;
   let brushShape = 'soft-circle';
   let customBrushData = null;
   let paintModeActive = false;
-  let modelBoundingBox = null;
   let modelSize = null;
 
   const brushCursor = document.getElementById('brushCursor');
-  const paintToggle = document.getElementById('paintToggle');
+  const exportStatus = document.getElementById('exportStatus');
   const brushShapeSelect = document.getElementById('brushShape');
   const customBrushGroup = document.getElementById('customBrushGroup');
   const uploadBrush = document.getElementById('uploadBrush');
   const customBrushPreview = document.getElementById('customBrushPreview');
   const previewCtx = customBrushPreview.getContext('2d');
-  const exportStatus = document.getElementById('exportStatus');
 
   const gltfLoader = new GLTFLoader();
 
@@ -510,20 +408,14 @@
     exportStatus.style.color = '#60a5fa';
 
     gltfLoader.load(url, (gltf) => {
-      if (currentModel) {
-        scene.remove(currentModel);
-      }
-
+      if (currentModel) scene.remove(currentModel);
       currentModel = gltf.scene;
-      originalModelUrl = url;
       scene.add(currentModel);
 
       const box = new THREE.Box3().setFromObject(currentModel);
-      modelBoundingBox = box;
       const size = box.getSize(new THREE.Vector3());
       modelSize = Math.max(size.x, size.y, size.z);
       const center = box.getCenter(new THREE.Vector3());
-
       camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
       controls.target.copy(center);
       controls.update();
@@ -532,17 +424,9 @@
       currentModel.traverse((child) => {
         if (child.isMesh) {
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-            child.material = new THREE.MeshStandardMaterial({
-              map: child.material.map,
-              color: child.material.color,
-              metalness: child.material.metalness ?? 0,
-              roughness: child.material.roughness ?? 0.5
-            });
+            child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
           }
-
-          // FIX: Force white base color so vertex paint isn't darkened
-          child.material.color.set(0xffffff);
-
+          child.material.color.set(0xffffff); // FIX: pure white base
           child.material.vertexColors = true;
 
           if (!child.geometry.attributes.color) {
@@ -551,23 +435,12 @@
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
 
-          paintedGeometries.push({ 
-            geometry: child.geometry, 
-            matrixWorld: child.matrixWorld.clone(),
-            mesh: child 
-          });
+          paintedGeometries.push({ geometry: child.geometry, mesh: child });
         }
       });
 
       exportStatus.textContent = 'Model loaded successfully!';
       exportStatus.style.color = '#4ade80';
-    }, 
-    (progress) => {
-      exportStatus.textContent = `Loading: ${Math.round((progress.loaded / progress.total) * 100)}%`;
-    },
-    (error) => {
-      exportStatus.textContent = 'Error loading model: ' + error.message;
-      exportStatus.style.color = '#ef4444';
     });
   }
 
@@ -578,27 +451,15 @@
 
   function updateBrushCursor(clientX, clientY) {
     if (!paintModeActive) return;
-
     brushCursor.style.left = clientX + 'px';
     brushCursor.style.top = clientY + 'px';
-
     const worldRadius = getWorldBrushRadius();
     const screenRadius = projectRadiusToScreen(worldRadius);
     const pixelSize = screenRadius * 2;
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-
-    if (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle') {
-      brushCursor.style.borderRadius = '50%';
-    } else if (brushShape.includes('square')) {
-      brushCursor.style.borderRadius = '0';
-    } else if (brushShape.includes('diamond')) {
-      brushCursor.style.borderRadius = '50%';
-    } else {
-      brushCursor.style.borderRadius = '50%';
-    }
-
+    brushCursor.style.borderRadius = brushShape.includes('circle') || brushShape.includes('diamond') ? '50%' : '0';
     brushCursor.style.display = 'block';
   }
 
@@ -607,26 +468,21 @@
     const distance = camera.position.distanceTo(controls.target);
     const fov = camera.fov * (Math.PI / 180);
     const screenHeightAtDistance = 2 * Math.tan(fov / 2) * distance;
-    const screenHeightPixels = window.innerHeight;
-    const pixelsPerUnit = screenHeightPixels / screenHeightAtDistance;
+    const pixelsPerUnit = window.innerHeight / screenHeightAtDistance;
     return worldRadius * pixelsPerUnit;
   }
 
-  function hideBrushCursor() {
-    brushCursor.style.display = 'none';
-  }
+  function hideBrushCursor() { brushCursor.style.display = 'none'; }
 
   function getBrushAlpha(localX, localY) {
     const dist = Math.sqrt(localX * localX + localY * localY);
     if (dist > 1) return 0;
-
     if (brushShape === 'custom' && customBrushData) {
       const u = Math.floor((localX * 0.5 + 0.5) * customBrushData.width);
       const v = Math.floor((localY * 0.5 + 0.5) * customBrushData.height);
       const idx = (v * customBrushData.width + u) * 4 + 3;
       return customBrushData.data[idx] / 255;
     }
-
     if (brushShape.includes('hard')) return 1;
     if (brushShape.includes('square')) {
       const maxDist = Math.max(Math.abs(localX), Math.abs(localY));
@@ -641,34 +497,25 @@
 
   function paintAt(point) {
     if (!paintModeActive || paintedGeometries.length === 0) return;
-
     const brushRadius = getWorldBrushRadius();
     const brushRadiusSquared = brushRadius * brushRadius;
     const vert = new THREE.Vector3();
 
-    paintedGeometries.forEach(({ geometry, matrixWorld, mesh }) => {
+    paintedGeometries.forEach(({ geometry, mesh }) => {
       const positions = geometry.attributes.position;
       const colors = geometry.attributes.color;
-
       const inverseMatrix = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
       const localPoint = point.clone().applyMatrix4(inverseMatrix);
 
       for (let i = 0; i < positions.count; i++) {
         vert.set(positions.getX(i), positions.getY(i), positions.getZ(i));
-
         const offset = vert.sub(localPoint);
-        const distanceSquared = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
-
+        const distanceSquared = offset.lengthSq();
         if (distanceSquared > brushRadiusSquared) continue;
-
-        const distance = Math.sqrt(distanceSquared);
-        const normalizedDist = distance / brushRadius;
 
         const localX = offset.x / brushRadius;
         const localY = offset.y / brushRadius;
-
         const alpha = getBrushAlpha(localX, localY);
-
         if (alpha > 0) {
           const influence = alpha;
           colors.setXYZ(i,
@@ -688,7 +535,6 @@
 
   canvas.addEventListener('pointermove', (e) => {
     updateBrushCursor(e.clientX, e.clientY);
-
     if (isPointerDown && paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -699,8 +545,8 @@
     }
   });
 
-  canvas.addEventListener('pointerdown', (e) => { 
-    isPointerDown = true; 
+  canvas.addEventListener('pointerdown', (e) => {
+    isPointerDown = true;
     if (paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -711,26 +557,27 @@
     }
   });
 
-  canvas.addEventListener('pointerup', () => { isPointerDown = false; });
+  canvas.addEventListener('pointerup', () => isPointerDown = false);
   canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
   canvas.addEventListener('mouseenter', (e) => { if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); });
 
-  paintToggle.addEventListener('click', () => {
-    paintModeActive = !paintModeActive;
-    paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
-    paintToggle.classList.toggle('active', paintModeActive);
-    controls.enabled = !paintModeActive;
-    if (!paintModeActive) hideBrushCursor();
-  });
+  function togglePaintMode(active) {
+    paintModeActive = active;
+    paintToggle.textContent = active ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
+    paintToggle.classList.toggle('active', active);
+    paintToggleBtn.classList.toggle('active', active);
+
+    // Completely lock camera when painting
+    controls.enabled = !active;
+    if (!active) hideBrushCursor();
+  }
+
+  paintToggle.onclick = () => togglePaintMode(!paintModeActive);
+  paintToggleBtn.onclick = () => togglePaintMode(!paintModeActive);
 
   brushShapeSelect.addEventListener('change', (e) => {
     brushShape = e.target.value;
     customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
-    if (paintModeActive) {
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
-    }
   });
 
   uploadBrush.addEventListener('change', (e) => {
@@ -748,11 +595,6 @@
       const ctx = tempCanvas.getContext('2d');
       ctx.drawImage(img, 0, 0, size, size);
       customBrushData = ctx.getImageData(0, 0, size, size);
-      if (paintModeActive) {
-        const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-        const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-        updateBrushCursor(x, y);
-      }
     };
     img.src = URL.createObjectURL(file);
   });
@@ -767,11 +609,10 @@
     new THREE.TextureLoader().load(url, (tex) => {
       tex.flipY = false;
       tex.colorSpace = THREE.SRGBColorSpace;
-
       currentModel.traverse((child) => {
         if (child.isMesh) {
           child.material.map = tex.clone();
-          child.material.color.set(0xffffff); // FIX: keep base color white
+          child.material.color.set(0xffffff); // keep white
           child.material.needsUpdate = true;
         }
       });
@@ -798,21 +639,11 @@
 
   document.getElementById('paintColor').addEventListener('input', (e) => {
     paintColor.set(e.target.value);
-    if (paintModeActive) {
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
-    }
   });
 
   document.getElementById('brushSize').addEventListener('input', (e) => {
     brushSize = parseFloat(e.target.value);
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
-    if (paintModeActive) {
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
-    }
   });
 
   document.getElementById('clearPaint').addEventListener('click', () => {
@@ -826,75 +657,34 @@
 
   document.getElementById('exportBtn').addEventListener('click', async () => {
     if (!currentModel) {
-      exportStatus.textContent = 'No model to export!';
+      exportStatus.textContent = 'No model loaded!';
       exportStatus.style.color = '#ef4444';
       return;
     }
-
-    exportStatus.textContent = 'Preparing export...';
+    exportStatus.textContent = 'Exporting...';
     exportStatus.style.color = '#60a5fa';
 
-    try {
-      const exporter = new GLTFExporter();
+    const exporter = new GLTFExporter();
+    const exportModel = currentModel.clone();
+    exportModel.traverse((child) => {
+      if (child.isMesh) {
+        child.material.vertexColors = true;
+        child.material = child.material.clone();
+        child.material.needsUpdate = true;
+      }
+    });
 
-      const exportModel = currentModel.clone();
-
-      exportModel.traverse((child) => {
-        if (child.isMesh) {
-          child.material.vertexColors = true;
-          if (!child.geometry.attributes.color) {
-            const count = child.geometry.attributes.position.count;
-            const colors = new Float32Array(count * 3).fill(1);
-            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-          }
-          child.geometry.attributes.color.needsUpdate = true;
-          child.material = child.material.clone();
-          child.material.needsUpdate = true;
-        }
-      });
-
-      exportStatus.textContent = 'Exporting model...';
-
-      exporter.parse(
-        exportModel,
-        (result) => {
-          if (result instanceof ArrayBuffer) {
-            const blob = new Blob([result], { type: 'application/octet-stream' });
-            const fileSize = blob.size;
-
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'retextured_model.glb';
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-
-            setTimeout(() => {
-              document.body.removeChild(link);
-              URL.revokeObjectURL(link.href);
-            }, 100);
-
-            exportStatus.textContent = `Exported successfully! (${(fileSize / 1024).toFixed(2)} KB)`;
-            exportStatus.style.color = '#4ade80';
-          }
-        },
-        (error) => {
-          console.error('Export error:', error);
-          exportStatus.textContent = 'Export failed: ' + error.message;
-          exportStatus.style.color = '#ef4444';
-        },
-        {
-          binary: true,
-          maxTextureSize: 4096,
-          truncateDrawRange: true,
-          includeCustomExtensions: false
-        }
-      );
-    } catch (error) {
-      console.error('Export error:', error);
-      exportStatus.textContent = 'Export failed: ' + error.message;
-      exportStatus.style.color = '#ef4444';
-    }
+    exporter.parse(exportModel, (result) => {
+      if (result instanceof ArrayBuffer) {
+        const blob = new Blob([result], { type: 'application/octet-stream' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'retextured_model.glb';
+        link.click();
+        exportStatus.textContent = 'Exported successfully!';
+        exportStatus.style.color = '#4ade80';
+      }
+    }, { binary: true });
   });
 
   window.addEventListener('resize', () => {
