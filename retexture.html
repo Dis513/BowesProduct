@@ -324,7 +324,7 @@
     </div>
     <div class="control-group">
       <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
-      <input type="range" id="brushSize" min="0.05" max="5" step="0.05" value="0.5">
+     <input type="range" id="brushSize" min="0.005" max="1" step="0.005" value="0.05">
     </div>
     <div class="control-group">
       <label for="brushShape">Brush Shape</label>
@@ -450,6 +450,7 @@
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.2;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMappingExposure = 1.6;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020617);
@@ -605,12 +606,13 @@ document.getElementById('paintColor').addEventListener('input', (e) => {
     });
   }
 
-  function getWorldBrushRadius() {
-    // Convert brush size slider (0.05-5) to world units based on model size
-    // Base it on model dimensions for consistency across different models
-    if (!modelSize) return 0.5;
-    return brushSize * (modelSize * 0.2); // Scale brush size relative to model
-  }
+function getWorldBrushRadius() {
+  if (!modelSize) return 0.01;
+
+  // 10× smaller and predictable
+  return brushSize * (modelSize * 0.02);
+}
+
 
   function updateBrushCursor(clientX, clientY) {
     if (!paintModeActive) return;
@@ -1003,5 +1005,6 @@ document.getElementById('paintColor').addEventListener('input', (e) => {
 
 </body>
 </html>
+
 
 
