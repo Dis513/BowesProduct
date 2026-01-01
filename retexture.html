@@ -218,14 +218,14 @@
     .footer-nav a:hover { color: #60a5fa; }
     .site-footer p { margin: 0; color: #94a3b8; }
 
-    /* Mobile Responsive - Export Button Fix */
+    /* Mobile Responsive */
     @media (max-width: 900px) {
       .panel { 
         width: 100%; 
         right: 0; 
         left: 0; 
         top: auto; 
-        bottom: 60px; 
+        bottom: 70px; 
         border-radius: 12px 12px 0 0; 
         max-height: 45vh; 
       }
@@ -234,9 +234,6 @@
         font-size: 0.8rem;
         left: 10px;
         right: 10px;
-      }
-      .site-footer {
-        height: 60px;
       }
     }
 
@@ -704,14 +701,12 @@
         const alpha = getBrushAlpha(localX, localY);
 
         if (alpha > 0) {
-          // FIX: Set vertex color directly to match paint color exactly
-          // Convert the paintColor to linear space first, then set
-          const r = paintColor.r;
-          const g = paintColor.g;
-          const b = paintColor.b;
-          
-          // Override the vertex color completely (no blending)
-          colors.setXYZ(i, r, g, b);
+          const influence = alpha;
+          colors.setXYZ(i,
+            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
+            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
+            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
+          );
         }
       }
       colors.needsUpdate = true;
