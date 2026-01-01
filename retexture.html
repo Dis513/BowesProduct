@@ -22,8 +22,11 @@
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
-    /* ================= HEADER ================= */
-    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); }
+    /* HEADER */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
+    }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 1.6rem; }
     .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
@@ -38,21 +41,14 @@
     #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
     #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-    /* ================= MAIN CONTENT ================= */
+    /* MAIN */
     #container { position: relative; width: 100%; height: 100%; padding-top: 70px; }
-    #canvas { display: block; width: 100%; height: 100%; touch-action: none; } /* important for mobile */
+    #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
     .panel {
-      position: absolute;
-      top: 90px; right: 20px;
-      width: 320px; max-height: calc(100vh - 120px);
-      background: rgba(2, 6, 23, 0.95);
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 1.5rem;
-      overflow-y: auto;
-      z-index: 10;
-      backdrop-filter: blur(10px);
+      position: absolute; top: 90px; right: 20px; width: 320px; max-height: calc(100vh - 120px);
+      background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px;
+      padding: 1.5rem; overflow-y: auto; z-index: 10; backdrop-filter: blur(10px);
     }
     .panel h2 { color: #60a5fa; margin: 0 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
@@ -65,20 +61,19 @@
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 20px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
-    /* Brush cursor overlay */
+    /* Brush cursor */
     #brushCursor {
-      position: absolute;
-      pointer-events: none;
-      border: 2px solid rgba(255, 68, 68, 0.8);
-      border-radius: 50%;
-      background: rgba(255, 68, 68, 0.15);
-      transform: translate(-50%, -50%);
-      z-index: 20;
-      display: none;
+      position: absolute; pointer-events: none; border: 2px solid rgba(255, 68, 68, 0.8);
+      border-radius: 50%; background: rgba(255, 68, 68, 0.15);
+      transform: translate(-50%, -50%); z-index: 20; display: none;
       transition: width 0.1s ease, height 0.1s ease;
     }
 
-    /* ================= FOOTER ================= */
+    /* Paint toggle */
+    #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
+    #paintToggle.active { background: #f87171; }
+
+    /* FOOTER */
     .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
     .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; }
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
@@ -126,7 +121,7 @@
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
-  <div id="status">Upload a model → Drag to rotate • Touch & drag to paint • Pinch to zoom</div>
+  <div id="status">Upload a model → Drag to rotate • Tap "Activate Paint Mode" to paint • Pinch/scroll to zoom</div>
 
   <div class="panel">
     <h2>Model</h2>
@@ -171,6 +166,7 @@
       <label for="brushSize">Brush Size <span id="brushSizeVal">10</span></label>
       <input type="range" id="brushSize" min="1" max="50" value="10">
     </div>
+    <button id="paintToggle">Activate Paint Mode</button>
     <button id="clearPaint">Clear All Paint</button>
 
     <h2>Lighting</h2>
@@ -204,13 +200,18 @@
   </div>
 </footer>
 
-<!-- FIREBASE AUTH + XP (unchanged) -->
+<!-- FIREBASE AUTH + XP -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-  const firebaseConfig = { apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA", authDomain: "bowesproduct.firebaseapp.com", projectId: "bowesproduct" };
+  const firebaseConfig = {
+    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+    authDomain: "bowesproduct.firebaseapp.com",
+    projectId: "bowesproduct"
+  };
+
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -225,13 +226,22 @@
   authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
   onAuthStateChanged(auth, async (user) => {
-    if (!user) { authBtn.textContent = "Login"; profilePic.style.display = "none"; levelInfo.style.display = "none"; return; }
+    if (!user) {
+      authBtn.textContent = "Login";
+      profilePic.style.display = "none";
+      levelInfo.style.display = "none";
+      return;
+    }
     authBtn.textContent = "Logout";
-    profilePic.src = user.photoURL || ""; profilePic.style.display = "block";
+    profilePic.src = user.photoURL || "";
+    profilePic.style.display = "block";
 
     const ref = doc(db, "users", user.uid);
     let snap = await getDoc(ref);
-    if (!snap.exists()) { await setDoc(ref, { xp: 10 }); snap = await getDoc(ref); }
+    if (!snap.exists()) {
+      await setDoc(ref, { xp: 10 });
+      snap = await getDoc(ref);
+    }
     const xp = snap.data().xp || 0;
     const levels = [0, 200, 500, 1000, 2000];
     let level = levels.filter(v => xp >= v).length - 1;
@@ -244,7 +254,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC (fixed painting + visible brush) -->
+<!-- THREE.JS RETEXTURE LOGIC -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -276,7 +286,6 @@
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
 
-  // Environment (unchanged)
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
   let currentEnvMap = null;
@@ -298,11 +307,13 @@
   loadEnvironment('neutral');
 
   let currentModel = null;
-  let paintedGeometry = null;
+  let paintedGeometries = [];
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 10;
+  let paintModeActive = false;
 
   const brushCursor = document.getElementById('brushCursor');
+  const paintToggle = document.getElementById('paintToggle');
 
   const gltfLoader = new GLTFLoader();
 
@@ -312,7 +323,7 @@
       currentModel = gltf.scene;
       scene.add(currentModel);
 
-      paintedGeometry = null;
+      paintedGeometries = [];
       currentModel.traverse((child) => {
         if (child.isMesh) {
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
@@ -329,7 +340,7 @@
             const colors = new Float32Array(count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
-          if (!paintedGeometry) paintedGeometry = child.geometry;
+          paintedGeometries.push({ geometry: child.geometry, worldMatrix: child.matrixWorld });
         }
       });
 
@@ -343,12 +354,8 @@
     });
   }
 
-  // Painting + visible brush cursor
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-  let isPainting = false;
-
   function updateBrushCursor(x, y) {
+    if (!paintModeActive) return;
     brushCursor.style.left = x + 'px';
     brushCursor.style.top = y + 'px';
     const size = brushSize * 2;
@@ -362,51 +369,66 @@
   }
 
   function paintAt(point) {
-    if (!paintedGeometry || !currentModel) return;
-    const positions = paintedGeometry.attributes.position;
-    const colors = paintedGeometry.attributes.color;
-    const brushSq = brushSize * brushSize;
-    const worldMatrix = currentModel.matrixWorld;
-    const vert = new THREE.Vector3();
+    if (!paintModeActive || paintedGeometries.length === 0) return;
 
-    for (let i = 0; i < positions.count; i++) {
-      vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(worldMatrix);
-      const distSq = point.distanceToSquared(vert);
-      if (distSq < brushSq) {
-        const influence = 1 - Math.sqrt(distSq) / brushSize;
-        colors.setXYZ(i,
-          THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
-          THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
-          THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
-        );
+    paintedGeometries.forEach(({ geometry, worldMatrix }) => {
+      const positions = geometry.attributes.position;
+      const colors = geometry.attributes.color;
+      const brushSq = brushSize * brushSize;
+      const vert = new THREE.Vector3();
+
+      for (let i = 0; i < positions.count; i++) {
+        vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(worldMatrix);
+        const distSq = point.distanceToSquared(vert);
+        if (distSq < brushSq) {
+          const influence = 1 - Math.sqrt(distSq) / brushSize;
+          colors.setXYZ(i,
+            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
+            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
+            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
+          );
+        }
       }
-    }
-    colors.needsUpdate = true;
+      colors.needsUpdate = true;
+    });
   }
 
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let isPointerDown = false;
+
   canvas.addEventListener('pointermove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
     updateBrushCursor(e.clientX, e.clientY);
 
-    if (isPainting && currentModel) {
-      mouse.x = (x / canvas.clientWidth) * 2 - 1;
-      mouse.y = -(y / canvas.clientHeight) * 2 + 1;
+    if (isPointerDown && paintModeActive && currentModel) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(currentModel, true);
       if (intersects.length > 0) paintAt(intersects[0].point);
     }
   });
 
-  canvas.addEventListener('pointerdown', () => { isPainting = true; });
-  canvas.addEventListener('pointerup', () => { isPainting = false; });
-  canvas.addEventListener('pointerleave', () => { isPainting = false; hideBrushCursor(); });
+  canvas.addEventListener('pointerdown', () => { isPointerDown = true; });
+  canvas.addEventListener('pointerup', () => { isPointerDown = false; });
+  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
+  canvas.addEventListener('mouseenter', (e) => { if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); });
 
-  // Hide cursor when not over canvas
-  canvas.addEventListener('mouseenter', () => { if (currentModel) updateBrushCursor(event.clientX, event.clientY); });
+  paintToggle.addEventListener('click', () => {
+    paintModeActive = !paintModeActive;
+    if (paintModeActive) {
+      paintToggle.textContent = 'Deactivate Paint Mode';
+      paintToggle.classList.add('active');
+      controls.enabled = false;
+    } else {
+      paintToggle.textContent = 'Activate Paint Mode';
+      paintToggle.classList.remove('active');
+      controls.enabled = true;
+      hideBrushCursor();
+    }
+  });
 
-  // UI controls
   document.getElementById('uploadModel').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) loadModel(URL.createObjectURL(file));
@@ -456,9 +478,10 @@
   });
 
   document.getElementById('clearPaint').addEventListener('click', () => {
-    if (!paintedGeometry) return;
-    paintedGeometry.attributes.color.array.fill(1);
-    paintedGeometry.attributes.color.needsUpdate = true;
+    paintedGeometries.forEach(({ geometry }) => {
+      geometry.attributes.color.array.fill(1);
+      geometry.attributes.color.needsUpdate = true;
+    });
   });
 
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
