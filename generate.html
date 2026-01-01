@@ -63,6 +63,15 @@
       display: block;
       margin: 0 auto;
     }
+
+    .login-btn {
+      background-color: #60a5fa;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
   </style>
 </head>
 <body>
@@ -74,23 +83,75 @@
 
   <!-- CONTENT -->
   <div class="content">
-    <button id="generateBtn" class="generate-btn">Generate 3D Model</button>
+    <button id="generateBtn" class="generate-btn" disabled>Generate 3D Model</button>
 
     <div id="output" class="output" style="display: none;">
       <h2>Generated 3D Model:</h2>
       <img id="modelPreview" class="model-preview" alt="3D Model Preview" />
       <p>Model generated successfully! You can now download or use it in your project.</p>
     </div>
+
+    <!-- Firebase Login Section -->
+    <button id="loginBtn" class="login-btn">Login with Google</button>
+    <button id="logoutBtn" class="login-btn" style="display: none;">Logout</button>
   </div>
 
-  <!-- Meshy API Script -->
-  <script>
-    // Your Meshy API Key
-    const API_KEY = 'msy_v1UeJLbZ1CNLgsfWoG8vHoy8RsoEO0nVchy5';
-    const API_URL = 'https://api.meshy.ai/v1/generate/model';  // The correct Meshy API endpoint
+  <!-- Firebase & Meshy API Script -->
+  <script type="module">
+    // Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-    document.getElementById('generateBtn').addEventListener('click', async () => {
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA", // Replace with your own API key
+      authDomain: "bowesproduct.firebaseapp.com",
+      projectId: "bowesproduct"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    const db = getFirestore(app);
+
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const generateBtn = document.getElementById("generateBtn");
+    const profilePic = document.getElementById("profilePic");
+
+    loginBtn.addEventListener('click', () => {
+      signInWithPopup(auth, provider);
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      signOut(auth);
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+        generateBtn.disabled = false; // Enable the generate button after login
+      } else {
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+        generateBtn.disabled = true; // Disable the generate button if not logged in
+      }
+    });
+
+    // Meshy API Integration
+    const API_KEY = 'msy_v1UeJLbZ1CNLgsfWoG8vHoy8RsoEO0nVchy5';
+    const API_URL = 'https://api.meshy.ai/v1/generate/model';
+
+    generateBtn.addEventListener('click', async () => {
       try {
+        // Ensure user is logged in before generating model
+        const user = auth.currentUser;
+        if (!user) {
+          alert('Please log in to generate a model.');
+          return;
+        }
+
         // Request data from Meshy API
         const response = await fetch(API_URL, {
           method: 'POST',
@@ -99,19 +160,17 @@
             'Authorization': `Bearer ${API_KEY}`
           },
           body: JSON.stringify({
-            // Customize these parameters based on the Meshy API documentation
-            model_type: 'character',    // Type of model to generate
-            style: 'realistic',        // Choose model style, e.g., realistic, cartoon
-            format: 'fbx',             // Model format (you can choose other formats such as 'glb', 'fbx', etc.)
-            color: 'blue',             // Optional color selection for the model
-            quality: 'high',           // Optional: quality level (can be 'low', 'medium', 'high')
-            features: ['human', 'clothing', 'armor']  // Example features you can add to customize the model
+            model_type: 'character',
+            style: 'realistic',
+            format: 'obj',
+            color: 'blue',
+            quality: 'high',
+            features: ['human', 'clothing', 'armor']
           })
         });
 
         const data = await response.json();
 
-        // Check if the response is successful
         if (response.ok && data.model_url) {
           // Display model preview
           document.getElementById('modelPreview').src = data.model_url;
