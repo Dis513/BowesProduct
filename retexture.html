@@ -155,15 +155,16 @@
 
     /* Brush cursor - transparent inside, only outline */
     #brushCursor {
-      position: absolute;
+      position: fixed;
       pointer-events: none;
       transform: translate(-50%, -50%);
-      z-index: 20;
+      z-index: 9999;
       display: none;
       border: 3px solid transparent;
       border-radius: 50%;
       box-sizing: border-box;
       background: transparent;
+      will-change: left, top, width, height, border-color, border-radius;
     }
 
     /* Custom brush preview */
@@ -188,6 +189,7 @@
       .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 70px; border-radius: 12px 12px 0 0; max-height: 50vh; }
     }
   </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
@@ -477,15 +479,29 @@
     });
   }
 
-  function updateBrushCursor(x, y) {
+  function updateBrushCursor(clientX, clientY) {
     if (!paintModeActive) return;
-    brushCursor.style.left = x + 'px';
-    brushCursor.style.top = y + 'px';
-    const pixelSize = brushSize * 80;
+    
+    brushCursor.style.left = clientX + 'px';
+    brushCursor.style.top = clientY + 'px';
+    
+    // Scale brush size for better visual feedback - adjust multiplier as needed
+    const pixelSize = brushSize * 150; 
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-    brushCursor.style.borderRadius = (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle') ? '50%' : (brushShape.includes('square') ? '0' : '50%');
+    
+    // Set border radius based on shape
+    if (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle') {
+      brushCursor.style.borderRadius = '50%';
+    } else if (brushShape.includes('square')) {
+      brushCursor.style.borderRadius = '0';
+    } else if (brushShape.includes('diamond')) {
+      brushCursor.style.borderRadius = '50%';
+    } else {
+      brushCursor.style.borderRadius = '50%';
+    }
+    
     brushCursor.style.display = 'block';
   }
 
@@ -527,8 +543,12 @@
       for (let i = 0; i < positions.count; i++) {
         vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(matrixWorld);
         const offset = vert.sub(point);
-        if (offset.length() > brushSize) continue;
+        
+        // Use accurate brush size in world coordinates
+        const distance = offset.length();
+        if (distance > brushSize) continue;
 
+        // Normalize coordinates to [-1, 1] range for brush falloff calculation
         const localX = offset.x / brushSize;
         const localY = offset.y / brushSize;
         const alpha = getBrushAlpha(localX, localY);
@@ -563,10 +583,29 @@
     }
   });
 
-  canvas.addEventListener('pointerdown', () => { isPointerDown = true; });
+  canvas.addEventListener('pointerdown', (e) => { 
+    isPointerDown = true; 
+    // Also paint on single click
+    if (paintModeActive && currentModel) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
+    }
+  });
+  
   canvas.addEventListener('pointerup', () => { isPointerDown = false; });
-  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
-  canvas.addEventListener('mouseenter', (e) => { if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); });
+  
+  canvas.addEventListener('pointerleave', () => { 
+    isPointerDown = false; 
+    hideBrushCursor(); 
+  });
+  
+  canvas.addEventListener('mouseenter', (e) => { 
+    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); 
+  });
 
   paintToggle.addEventListener('click', () => {
     paintModeActive = !paintModeActive;
@@ -579,7 +618,12 @@
   brushShapeSelect.addEventListener('change', (e) => {
     brushShape = e.target.value;
     customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
-    if (paintModeActive) updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
+    if (paintModeActive) {
+      // Get current cursor position from stored values
+      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+      updateBrushCursor(x, y);
+    }
   });
 
   uploadBrush.addEventListener('change', (e) => {
@@ -597,7 +641,11 @@
       const ctx = tempCanvas.getContext('2d');
       ctx.drawImage(img, 0, 0, size, size);
       customBrushData = ctx.getImageData(0, 0, size, size);
-      if (paintModeActive) updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
+      if (paintModeActive) {
+        const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+        const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+        updateBrushCursor(x, y);
+      }
     };
     img.src = URL.createObjectURL(file);
   });
@@ -641,13 +689,21 @@
 
   document.getElementById('paintColor').addEventListener('input', (e) => {
     paintColor.set(e.target.value);
-    if (paintModeActive) updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
+    if (paintModeActive) {
+      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+      updateBrushCursor(x, y);
+    }
   });
 
   document.getElementById('brushSize').addEventListener('input', (e) => {
     brushSize = parseFloat(e.target.value);
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
-    if (paintModeActive) updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
+    if (paintModeActive) {
+      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+      updateBrushCursor(x, y);
+    }
   });
 
   document.getElementById('clearPaint').addEventListener('click', () => {
