@@ -165,6 +165,7 @@
     input[type="color"] { height: 44px; padding: 0.2rem; }
     button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
     button:hover { background: #3b82f6; }
+    button.active { background: #f87171; }
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 80px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
@@ -182,6 +183,20 @@
       will-change: left, top, width, height, border-color, border-radius;
     }
 
+    /* Eyedropper cursor */
+    #eyedropperCursor {
+      position: fixed;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid white;
+      border-radius: 50%;
+      background: transparent;
+    }
+
     /* Custom brush preview */
     #customBrushPreview {
       width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem;
@@ -191,6 +206,7 @@
     /* Paint toggle */
     #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
     #paintToggle.active { background: #f87171; }
+    #eyedropperToggle.active { background: #f59e0b; }
 
     /* FOOTER */
     .site-footer { 
@@ -281,6 +297,7 @@
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
+  <div id="eyedropperCursor"></div>
   <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
 
   <div class="panel">
@@ -347,6 +364,7 @@
       <div class="hint">White = full paint, black = no paint</div>
     </div>
     <button id="paintToggle">Activate Paint Mode</button>
+    <button id="eyedropperToggle">Activate Eyedropper</button>
     <button id="clearPaint">Clear All Paint</button>
 
     <h2>Lighting</h2>
@@ -435,7 +453,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - FIXED EXPORT + MOBILE -->
+<!-- THREE.JS RETEXTURE LOGIC - FIXED EYEDROPPER + ENVIRONMENT + MOBILE -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -477,21 +495,62 @@
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
   let currentEnvMap = null;
+
+  // FIXED: Improved environment loading with proper cleanup and error handling
   function loadEnvironment(url) {
     if (url === 'neutral') {
       scene.environment = null;
-      if (currentEnvMap) currentEnvMap.dispose();
-      currentEnvMap = null;
+      scene.background = new THREE.Color(0x020617);
+      if (currentEnvMap) {
+        currentEnvMap.dispose();
+        currentEnvMap = null;
+      }
       return;
     }
-    new RGBELoader().load(url, (texture) => {
-      const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-      scene.environment = envMap;
-      texture.dispose();
-      if (currentEnvMap) currentEnvMap.dispose();
-      currentEnvMap = envMap;
-    });
+
+    const statusEl = document.getElementById('exportStatus');
+    statusEl.textContent = 'Loading environment...';
+    statusEl.style.color = '#60a5fa';
+
+    new RGBELoader()
+      .load(
+        url,
+        (texture) => {
+          texture.mapping = THREE.EquirectangularReflectionMapping;
+          
+          // Generate environment map using PMREM
+          const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+          
+          // Apply environment
+          scene.environment = envMap;
+          scene.background = envMap;
+          
+          // Clean up old texture
+          if (currentEnvMap) {
+            currentEnvMap.dispose();
+          }
+          currentEnvMap = envMap;
+          
+          // Dispose original texture
+          texture.dispose();
+          
+          statusEl.textContent = 'Environment loaded!';
+          statusEl.style.color = '#4ade80';
+        },
+        (progress) => {
+          if (progress.total > 0) {
+            statusEl.textContent = `Loading environment: ${Math.round((progress.loaded / progress.total) * 100)}%`;
+          }
+        },
+        (error) => {
+          console.error('Error loading environment:', error);
+          statusEl.textContent = 'Error loading environment. Check console.';
+          statusEl.style.color = '#ef4444';
+        }
+      );
   }
+
+  // Initialize with neutral environment
   loadEnvironment('neutral');
 
   let currentModel = null;
@@ -502,12 +561,15 @@
   let brushShape = 'soft-circle';
   let customBrushData = null;
   let paintModeActive = false;
+  let eyedropperModeActive = false;
   let modelBoundingBox = null;
   let modelSize = null;
   let originalMaterials = new Map(); // Store original materials
 
   const brushCursor = document.getElementById('brushCursor');
+  const eyedropperCursor = document.getElementById('eyedropperCursor');
   const paintToggle = document.getElementById('paintToggle');
+  const eyedropperToggle = document.getElementById('eyedropperToggle');
   const brushShapeSelect = document.getElementById('brushShape');
   const customBrushGroup = document.getElementById('customBrushGroup');
   const uploadBrush = document.getElementById('uploadBrush');
@@ -621,6 +683,14 @@
     brushCursor.style.display = 'block';
   }
 
+  function updateEyedropperCursor(clientX, clientY) {
+    if (!eyedropperModeActive) return;
+    
+    eyedropperCursor.style.left = clientX + 'px';
+    eyedropperCursor.style.top = clientY + 'px';
+    eyedropperCursor.style.display = 'block';
+  }
+
   function projectRadiusToScreen(worldRadius) {
     // Project a world-space radius to screen-space pixels
     if (!currentModel) return 100;
@@ -640,6 +710,10 @@
 
   function hideBrushCursor() {
     brushCursor.style.display = 'none';
+  }
+
+  function hideEyedropperCursor() {
+    eyedropperCursor.style.display = 'none';
   }
 
   function getBrushAlpha(localX, localY) {
@@ -713,12 +787,73 @@
     });
   }
 
+  // FIXED: Improved eyedropper to properly sample vertex colors
+  function pickColorAt(point) {
+    if (!currentModel || !eyedropperModeActive) return;
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    const rect = canvas.getBoundingClientRect();
+    
+    // Calculate mouse position for raycasting (this should already be done, but let's make sure)
+    mouse.x = ((point.x - rect.left) / canvas.clientWidth) * 2 - 1;
+    mouse.y = -((point.y - rect.top) / canvas.clientHeight) * 2 + 1;
+    
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(currentModel, true);
+    
+    if (intersects.length > 0) {
+      const intersect = intersects[0];
+      const face = intersect.face;
+      const mesh = intersect.object;
+      
+      // Get the geometry and color attribute
+      const geometry = mesh.geometry;
+      const colors = geometry.attributes.color;
+      
+      if (!colors) return;
+      
+      // Get barycentric coordinates of the intersection point
+      const barycentric = intersect.uv;
+      
+      // Get the three vertex indices of the face
+      const a = face.a;
+      const b = face.b;
+      const c = face.c;
+      
+      // Get the colors at each vertex
+      const colorA = new THREE.Color().fromArray(colors.array, a * 3);
+      const colorB = new THREE.Color().fromArray(colors.array, b * 3);
+      const colorC = new THREE.Color().fromArray(colors.array, c * 3);
+      
+      // Interpolate colors using barycentric coordinates
+      const finalColor = new THREE.Color()
+        .copy(colorA)
+        .lerp(colorB, barycentric.x)
+        .lerp(colorC, barycentric.y);
+      
+      // Update the paint color
+      paintColor.copy(finalColor);
+      
+      // Update the color picker input
+      const paintColorInput = document.getElementById('paintColor');
+      paintColorInput.value = '#' + paintColor.getHexString();
+      
+      // Visual feedback
+      exportStatus.textContent = `Picked color: ${paintColor.getHexString()}`;
+      exportStatus.style.color = '#f59e0b';
+      
+      console.log('Picked color:', paintColor.getHexString());
+    }
+  }
+
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   let isPointerDown = false;
 
   canvas.addEventListener('pointermove', (e) => {
     updateBrushCursor(e.clientX, e.clientY);
+    updateEyedropperCursor(e.clientX, e.clientY);
 
     if (isPointerDown && paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
@@ -732,7 +867,14 @@
 
   canvas.addEventListener('pointerdown', (e) => { 
     isPointerDown = true; 
-    // Also paint on single click
+    
+    // Handle eyedropper mode - pick color on click
+    if (eyedropperModeActive && currentModel) {
+      pickColorAt({ x: e.clientX, y: e.clientY });
+      return;
+    }
+    
+    // Handle paint mode - paint on click
     if (paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -747,11 +889,13 @@
   
   canvas.addEventListener('pointerleave', () => { 
     isPointerDown = false; 
-    hideBrushCursor(); 
+    hideBrushCursor();
+    hideEyedropperCursor();
   });
   
   canvas.addEventListener('mouseenter', (e) => { 
-    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); 
+    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY);
+    if (eyedropperModeActive) updateEyedropperCursor(e.clientX, e.clientY);
   });
 
   paintToggle.addEventListener('click', () => {
@@ -760,6 +904,33 @@
     paintToggle.classList.toggle('active', paintModeActive);
     controls.enabled = !paintModeActive;
     if (!paintModeActive) hideBrushCursor();
+    
+    // Deactivate eyedropper if paint mode is activated
+    if (paintModeActive && eyedropperModeActive) {
+      eyedropperModeActive = false;
+      eyedropperToggle.classList.remove('active');
+      eyedropperToggle.textContent = 'Activate Eyedropper';
+      controls.enabled = false;
+      hideEyedropperCursor();
+    }
+  });
+
+  // FIXED: Eyedropper toggle with proper mode management
+  eyedropperToggle.addEventListener('click', () => {
+    eyedropperModeActive = !eyedropperModeActive;
+    eyedropperToggle.textContent = eyedropperModeActive ? 'Deactivate Eyedropper' : 'Activate Eyedropper';
+    eyedropperToggle.classList.toggle('active', eyedropperModeActive);
+    controls.enabled = !eyedropperModeActive;
+    if (!eyedropperModeActive) hideEyedropperCursor();
+    
+    // Deactivate paint mode if eyedropper is activated
+    if (eyedropperModeActive && paintModeActive) {
+      paintModeActive = false;
+      paintToggle.classList.remove('active');
+      paintToggle.textContent = 'Activate Paint Mode';
+      controls.enabled = false;
+      hideBrushCursor();
+    }
   });
 
   brushShapeSelect.addEventListener('change', (e) => {
