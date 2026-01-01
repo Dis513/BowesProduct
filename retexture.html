@@ -183,20 +183,6 @@
       will-change: left, top, width, height, border-color, border-radius;
     }
 
-    /* Eyedropper cursor */
-    #eyedropperCursor {
-      position: fixed;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 10000;
-      display: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid white;
-      border-radius: 50%;
-      background: transparent;
-    }
-
     /* Custom brush preview */
     #customBrushPreview {
       width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem;
@@ -206,7 +192,6 @@
     /* Paint toggle */
     #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
     #paintToggle.active { background: #f87171; }
-    #eyedropperToggle.active { background: #f59e0b; }
 
     /* FOOTER */
     .site-footer { 
@@ -297,7 +282,6 @@
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
-  <div id="eyedropperCursor"></div>
   <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
 
   <div class="panel">
@@ -336,8 +320,11 @@
 
     <h2>Vertex Color Painting</h2>
     <div class="control-group">
-      <label for="paintColor">Brush Color</label>
-      <input type="color" id="paintColor" value="#ff4444">
+      <label>Base Color</label>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <input type="color" id="paintColor" value="#ff4444" style="flex: 1;">
+        <button id="eyedropperBtn" title="Eyedropper" style="width: auto; padding: 0.5rem 0.8rem; margin: 0; flex-shrink: 0;">🎨</button>
+      </div>
     </div>
     <div class="control-group">
       <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
@@ -364,7 +351,6 @@
       <div class="hint">White = full paint, black = no paint</div>
     </div>
     <button id="paintToggle">Activate Paint Mode</button>
-    <button id="eyedropperToggle">Activate Eyedropper</button>
     <button id="clearPaint">Clear All Paint</button>
 
     <h2>Lighting</h2>
@@ -453,7 +439,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - FIXED EYEDROPPER + ENVIRONMENT + MOBILE -->
+<!-- THREE.JS RETEXTURE LOGIC - FIXED EYEDROPPER + ENVIRONMENT + BRUSH SHAPES -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -492,12 +478,15 @@
     TWO: THREE.TOUCH.DOLLY_PAN
   };
 
+  // Create PMREM generator
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
   let currentEnvMap = null;
 
   // FIXED: Improved environment loading with proper cleanup and error handling
   function loadEnvironment(url) {
+    const statusEl = document.getElementById('exportStatus');
+    
     if (url === 'neutral') {
       scene.environment = null;
       scene.background = new THREE.Color(0x020617);
@@ -505,27 +494,35 @@
         currentEnvMap.dispose();
         currentEnvMap = null;
       }
+      statusEl.textContent = 'Environment reset to neutral';
+      statusEl.style.color = '#94a3b8';
       return;
     }
 
-    const statusEl = document.getElementById('exportStatus');
-    statusEl.textContent = 'Loading environment...';
+    statusEl.textContent = 'Loading environment HDR...';
     statusEl.style.color = '#60a5fa';
+
+    console.log('Loading environment:', url);
 
     new RGBELoader()
       .load(
         url,
         (texture) => {
+          console.log('HDR texture loaded, processing...');
+          
+          // Set proper mapping
           texture.mapping = THREE.EquirectangularReflectionMapping;
+          texture.colorSpace = THREE.SRGBColorSpace;
           
           // Generate environment map using PMREM
           const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+          envMap.mapping = THREE.EquirectangularReflectionMapping;
           
           // Apply environment
           scene.environment = envMap;
           scene.background = envMap;
           
-          // Clean up old texture
+          // Clean up old texture and map
           if (currentEnvMap) {
             currentEnvMap.dispose();
           }
@@ -534,18 +531,25 @@
           // Dispose original texture
           texture.dispose();
           
-          statusEl.textContent = 'Environment loaded!';
+          statusEl.textContent = 'Environment loaded successfully!';
           statusEl.style.color = '#4ade80';
+          console.log('Environment applied successfully');
         },
         (progress) => {
           if (progress.total > 0) {
-            statusEl.textContent = `Loading environment: ${Math.round((progress.loaded / progress.total) * 100)}%`;
+            const percent = Math.round((progress.loaded / progress.total) * 100);
+            statusEl.textContent = `Loading environment: ${percent}%`;
+            console.log(`Loading progress: ${percent}%`);
           }
         },
         (error) => {
           console.error('Error loading environment:', error);
-          statusEl.textContent = 'Error loading environment. Check console.';
+          statusEl.textContent = 'Error loading environment. URL may be invalid.';
           statusEl.style.color = '#ef4444';
+          
+          // Fallback to neutral on error
+          scene.environment = null;
+          scene.background = new THREE.Color(0x020617);
         }
       );
   }
@@ -567,9 +571,8 @@
   let originalMaterials = new Map(); // Store original materials
 
   const brushCursor = document.getElementById('brushCursor');
-  const eyedropperCursor = document.getElementById('eyedropperCursor');
   const paintToggle = document.getElementById('paintToggle');
-  const eyedropperToggle = document.getElementById('eyedropperToggle');
+  const eyedropperBtn = document.getElementById('eyedropperBtn');
   const brushShapeSelect = document.getElementById('brushShape');
   const customBrushGroup = document.getElementById('customBrushGroup');
   const uploadBrush = document.getElementById('uploadBrush');
@@ -675,20 +678,17 @@
     } else if (brushShape.includes('square')) {
       brushCursor.style.borderRadius = '0';
     } else if (brushShape.includes('diamond')) {
+      brushCursor.style.borderRadius = '0';
+      brushCursor.style.transform = 'translate(-50%, -50%) rotate(45deg)';
+    } else if (brushShape === 'star' || brushShape === 'cross') {
+      brushCursor.style.borderRadius = '0';
+    } else if (brushShape === 'custom') {
       brushCursor.style.borderRadius = '50%';
     } else {
       brushCursor.style.borderRadius = '50%';
     }
     
     brushCursor.style.display = 'block';
-  }
-
-  function updateEyedropperCursor(clientX, clientY) {
-    if (!eyedropperModeActive) return;
-    
-    eyedropperCursor.style.left = clientX + 'px';
-    eyedropperCursor.style.top = clientY + 'px';
-    eyedropperCursor.style.display = 'block';
   }
 
   function projectRadiusToScreen(worldRadius) {
@@ -712,30 +712,76 @@
     brushCursor.style.display = 'none';
   }
 
-  function hideEyedropperCursor() {
-    eyedropperCursor.style.display = 'none';
-  }
-
+  // FIXED: Completely rewritten brush alpha function with proper support for all shapes
   function getBrushAlpha(localX, localY) {
-    const dist = Math.sqrt(localX * localX + localY * localY);
-    if (dist > 1) return 0;
-
+    // Normalize to range [-1, 1]
+    const x = localX;
+    const y = localY;
+    const dist = Math.sqrt(x * x + y * y);
+    
+    // Base shapes
+    if (brushShape === 'soft-circle' || brushShape === 'hard-circle') {
+      if (dist > 1) return 0;
+      if (brushShape === 'hard-circle') return 1;
+      return 1 - Math.pow(dist, 2); // Soft falloff
+    }
+    
+    if (brushShape === 'square-soft' || brushShape === 'square-hard') {
+      // Square extends from -1 to 1 in both directions
+      if (Math.abs(x) > 1 || Math.abs(y) > 1) return 0;
+      if (brushShape === 'square-hard') return 1;
+      // Soft edges - use max distance from center within square
+      const maxDist = Math.max(Math.abs(x), Math.abs(y));
+      return 1 - Math.pow(maxDist, 2);
+    }
+    
+    if (brushShape === 'diamond-soft' || brushShape === 'diamond-hard') {
+      // Diamond: |x| + |y| <= 1
+      const manhattan = Math.abs(x) + Math.abs(y);
+      if (manhattan > 1) return 0;
+      if (brushShape === 'diamond-hard') return 1;
+      return 1 - Math.pow(manhattan, 2);
+    }
+    
+    if (brushShape === 'star') {
+      // 5-pointed star shape
+      if (dist > 1) return 0;
+      const angle = Math.atan2(y, x);
+      // Create 5 points
+      const points = 5;
+      const starAngle = angle + Math.PI / 2;
+      const radiusMod = 1 - 0.5 * (1 + Math.cos(points * starAngle)) / 2;
+      if (dist > radiusMod) return 0;
+      // Soft edges
+      return 1 - Math.pow(dist / radiusMod, 2);
+    }
+    
+    if (brushShape === 'cross') {
+      // Cross shape: thin arms
+      const armWidth = 0.3;
+      const isHorizontal = Math.abs(y) < armWidth && Math.abs(x) <= 1;
+      const isVertical = Math.abs(x) < armWidth && Math.abs(y) <= 1;
+      if (!isHorizontal && !isVertical) return 0;
+      // Soft edges
+      const maxDist = Math.max(Math.abs(x), Math.abs(y));
+      return 1 - Math.pow(maxDist, 2);
+    }
+    
     if (brushShape === 'custom' && customBrushData) {
-      const u = Math.floor((localX * 0.5 + 0.5) * customBrushData.width);
-      const v = Math.floor((localY * 0.5 + 0.5) * customBrushData.height);
+      if (dist > 1) return 0;
+      // Map [-1, 1] to [0, 1] for texture coordinates
+      const u = Math.floor((x * 0.5 + 0.5) * customBrushData.width);
+      const v = Math.floor((y * 0.5 + 0.5) * customBrushData.height);
+      
+      // Check bounds
+      if (u < 0 || u >= customBrushData.width || v < 0 || v >= customBrushData.height) return 0;
+      
       const idx = (v * customBrushData.width + u) * 4 + 3;
       return customBrushData.data[idx] / 255;
     }
-
-    if (brushShape.includes('hard')) return 1;
-    if (brushShape.includes('square')) {
-      const maxDist = Math.max(Math.abs(localX), Math.abs(localY));
-      return brushShape.includes('hard') ? 1 : (1 - maxDist);
-    }
-    if (brushShape.includes('diamond')) {
-      const manhattan = Math.abs(localX) + Math.abs(localY);
-      return brushShape.includes('hard') ? 1 : (1 - manhattan);
-    }
+    
+    // Default to soft circle
+    if (dist > 1) return 0;
     return 1 - Math.pow(dist, 2);
   }
 
@@ -787,17 +833,17 @@
     });
   }
 
-  // FIXED: Improved eyedropper to properly sample vertex colors
-  function pickColorAt(point) {
+  // FIXED: Improved eyedropper to properly sample vertex colors with high precision
+  function pickColorAt(screenX, screenY) {
     if (!currentModel || !eyedropperModeActive) return;
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     const rect = canvas.getBoundingClientRect();
     
-    // Calculate mouse position for raycasting (this should already be done, but let's make sure)
-    mouse.x = ((point.x - rect.left) / canvas.clientWidth) * 2 - 1;
-    mouse.y = -((point.y - rect.top) / canvas.clientHeight) * 2 + 1;
+    // Calculate mouse position for raycasting
+    mouse.x = ((screenX - rect.left) / canvas.clientWidth) * 2 - 1;
+    mouse.y = -((screenY - rect.top) / canvas.clientHeight) * 2 + 1;
     
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(currentModel, true);
@@ -811,10 +857,22 @@
       const geometry = mesh.geometry;
       const colors = geometry.attributes.color;
       
-      if (!colors) return;
+      if (!colors) {
+        console.log('No color attribute found');
+        return;
+      }
       
-      // Get barycentric coordinates of the intersection point
-      const barycentric = intersect.uv;
+      // Use barycentric coordinates for accurate color sampling
+      let u, v, w;
+      
+      if (intersect.uv) {
+        u = intersect.uv.x;
+        v = intersect.uv.y;
+        w = 1 - u - v;
+      } else {
+        // Fallback if no UV available
+        u = v = w = 1/3;
+      }
       
       // Get the three vertex indices of the face
       const a = face.a;
@@ -828,9 +886,9 @@
       
       // Interpolate colors using barycentric coordinates
       const finalColor = new THREE.Color()
-        .copy(colorA)
-        .lerp(colorB, barycentric.x)
-        .lerp(colorC, barycentric.y);
+        .copy(colorA).multiplyScalar(w)
+        .add(colorB.clone().multiplyScalar(u))
+        .add(colorC.clone().multiplyScalar(v));
       
       // Update the paint color
       paintColor.copy(finalColor);
@@ -840,10 +898,12 @@
       paintColorInput.value = '#' + paintColor.getHexString();
       
       // Visual feedback
-      exportStatus.textContent = `Picked color: ${paintColor.getHexString()}`;
+      exportStatus.textContent = `Picked: #${paintColor.getHexString()}`;
       exportStatus.style.color = '#f59e0b';
       
-      console.log('Picked color:', paintColor.getHexString());
+      console.log('Picked color:', paintColor.getHexString(), 'from barycentric:', {u, v, w});
+    } else {
+      console.log('No intersection found');
     }
   }
 
@@ -853,7 +913,6 @@
 
   canvas.addEventListener('pointermove', (e) => {
     updateBrushCursor(e.clientX, e.clientY);
-    updateEyedropperCursor(e.clientX, e.clientY);
 
     if (isPointerDown && paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
@@ -870,7 +929,12 @@
     
     // Handle eyedropper mode - pick color on click
     if (eyedropperModeActive && currentModel) {
-      pickColorAt({ x: e.clientX, y: e.clientY });
+      pickColorAt(e.clientX, e.clientY);
+      // Auto-deactivate after picking
+      eyedropperModeActive = false;
+      eyedropperBtn.style.background = '';
+      eyedropperBtn.textContent = '🎨';
+      controls.enabled = true;
       return;
     }
     
@@ -890,12 +954,10 @@
   canvas.addEventListener('pointerleave', () => { 
     isPointerDown = false; 
     hideBrushCursor();
-    hideEyedropperCursor();
   });
   
   canvas.addEventListener('mouseenter', (e) => { 
     if (paintModeActive) updateBrushCursor(e.clientX, e.clientY);
-    if (eyedropperModeActive) updateEyedropperCursor(e.clientX, e.clientY);
   });
 
   paintToggle.addEventListener('click', () => {
@@ -908,29 +970,37 @@
     // Deactivate eyedropper if paint mode is activated
     if (paintModeActive && eyedropperModeActive) {
       eyedropperModeActive = false;
-      eyedropperToggle.classList.remove('active');
-      eyedropperToggle.textContent = 'Activate Eyedropper';
-      controls.enabled = false;
-      hideEyedropperCursor();
+      eyedropperBtn.style.background = '';
+      eyedropperBtn.textContent = '🎨';
     }
   });
 
-  // FIXED: Eyedropper toggle with proper mode management
-  eyedropperToggle.addEventListener('click', () => {
+  // FIXED: Small eyedropper button that toggles mode
+  eyedropperBtn.addEventListener('click', () => {
     eyedropperModeActive = !eyedropperModeActive;
-    eyedropperToggle.textContent = eyedropperModeActive ? 'Deactivate Eyedropper' : 'Activate Eyedropper';
-    eyedropperToggle.classList.toggle('active', eyedropperModeActive);
-    controls.enabled = !eyedropperModeActive;
-    if (!eyedropperModeActive) hideEyedropperCursor();
     
-    // Deactivate paint mode if eyedropper is activated
-    if (eyedropperModeActive && paintModeActive) {
-      paintModeActive = false;
-      paintToggle.classList.remove('active');
-      paintToggle.textContent = 'Activate Paint Mode';
-      controls.enabled = false;
-      hideBrushCursor();
+    if (eyedropperModeActive) {
+      eyedropperBtn.style.background = '#f59e0b';
+      eyedropperBtn.textContent = '✓';
+      exportStatus.textContent = 'Eyedropper active - click on model to pick color';
+      exportStatus.style.color = '#f59e0b';
+      
+      // Deactivate paint mode if it's active
+      if (paintModeActive) {
+        paintModeActive = false;
+        paintToggle.classList.remove('active');
+        paintToggle.textContent = 'Activate Paint Mode';
+        controls.enabled = false;
+        hideBrushCursor();
+      }
+    } else {
+      eyedropperBtn.style.background = '';
+      eyedropperBtn.textContent = '🎨';
+      exportStatus.textContent = 'Eyedropper deactivated';
+      exportStatus.style.color = '#94a3b8';
     }
+    
+    controls.enabled = !eyedropperModeActive;
   });
 
   brushShapeSelect.addEventListener('change', (e) => {
@@ -943,27 +1013,67 @@
     }
   });
 
+  // FIXED: Custom brush upload handler with proper error handling
   uploadBrush.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    
+    // Check if file is PNG
+    if (!file.type.includes('png')) {
+      exportStatus.textContent = 'Please upload a PNG file';
+      exportStatus.style.color = '#ef4444';
+      return;
+    }
+    
+    exportStatus.textContent = 'Loading custom brush...';
+    exportStatus.style.color = '#60a5fa';
+    
     const img = new Image();
     img.onload = () => {
+      console.log('Brush image loaded:', img.width, 'x', img.height);
+      
       const size = 64;
       customBrushPreview.width = size;
       customBrushPreview.height = size;
+      
+      // Clear and draw image on preview canvas
+      previewCtx.clearRect(0, 0, size, size);
       previewCtx.drawImage(img, 0, 0, size, size);
+      
+      // Create temporary canvas for image data extraction
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = size;
       tempCanvas.height = size;
       const ctx = tempCanvas.getContext('2d');
       ctx.drawImage(img, 0, 0, size, size);
-      customBrushData = ctx.getImageData(0, 0, size, size);
-      if (paintModeActive) {
-        const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-        const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-        updateBrushCursor(x, y);
+      
+      try {
+        customBrushData = ctx.getImageData(0, 0, size, size);
+        console.log('Custom brush data extracted:', customBrushData.width, 'x', customBrushData.height);
+        
+        exportStatus.textContent = 'Custom brush loaded successfully!';
+        exportStatus.style.color = '#4ade80';
+        
+        if (paintModeActive) {
+          const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
+          const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
+          updateBrushCursor(x, y);
+        }
+      } catch (error) {
+        console.error('Error extracting brush data:', error);
+        exportStatus.textContent = 'Error loading brush: ' + error.message;
+        exportStatus.style.color = '#ef4444';
+        customBrushData = null;
       }
     };
+    
+    img.onerror = (error) => {
+      console.error('Error loading brush image:', error);
+      exportStatus.textContent = 'Error loading brush image';
+      exportStatus.style.color = '#ef4444';
+      customBrushData = null;
+    };
+    
     img.src = URL.createObjectURL(file);
   });
 
