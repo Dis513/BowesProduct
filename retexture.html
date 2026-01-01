@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retexture Pro – BowesProduct</title>
 
-  <!-- es-module-shims for compatibility -->
+  <!-- es-module-shims + import map -->
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
-
-  <!-- Import map for Three.js -->
   <script type="importmap">
   {
     "imports": {
@@ -23,10 +21,7 @@
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
     /* HEADER */
-    .site-header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
-    }
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 1.6rem; }
     .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
@@ -61,18 +56,18 @@
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 20px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
-    /* Brush cursor - now uses background image for full custom support */
+    /* Brush cursor - uses canvas for ALL shapes including custom */
     #brushCursor {
       position: absolute;
       pointer-events: none;
-      width: 100px; height: 100px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
       transform: translate(-50%, -50%);
       z-index: 20;
       display: none;
-      filter: drop-shadow(0 0 4px rgba(0,0,0,0.8));
+    }
+    #brushCursor canvas {
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
     }
 
     /* Custom brush preview */
@@ -125,7 +120,7 @@
 <!-- MAIN 3D VIEWER -->
 <div id="container">
   <canvas id="canvas"></canvas>
-  <div id="brushCursor"></div>
+  <div id="brushCursor"><canvas id="brushCanvas"></canvas></div>
   <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
 
   <div class="panel">
@@ -279,7 +274,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - FINAL WORKING VERSION -->
+<!-- THREE.JS RETEXTURE LOGIC - FULLY FIXED BRUSHES + PRECISION -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -340,6 +335,8 @@
   let paintModeActive = false;
 
   const brushCursor = document.getElementById('brushCursor');
+  const brushCanvas = document.getElementById('brushCanvas');
+  const brushCtx = brushCanvas.getContext('2d');
   const paintToggle = document.getElementById('paintToggle');
   const brushShapeSelect = document.getElementById('brushShape');
   const customBrushGroup = document.getElementById('customBrushGroup');
@@ -386,6 +383,61 @@
     });
   }
 
+  function drawBrushPreview() {
+    const size = 128; // high res for crisp cursor
+    brushCanvas.width = size;
+    brushCanvas.height = size;
+    brushCtx.clearRect(0, 0, size, size);
+
+    brushCtx.fillStyle = paintColor.getStyle() + '66';
+    brushCtx.strokeStyle = paintColor.getStyle();
+    brushCtx.lineWidth = 4;
+
+    if (brushShape === 'custom' && customBrushCanvas) {
+      brushCtx.drawImage(customBrushCanvas, 0, 0, size, size);
+    } else {
+      const center = size / 2;
+      const radius = size / 2 - 2;
+
+      if (brushShape.includes('circle')) {
+        brushCtx.beginPath();
+        brushCtx.arc(center, center, radius, 0, Math.PI * 2);
+        brushCtx.fill();
+        brushCtx.stroke();
+      } else if (brushShape.includes('square')) {
+        const half = radius;
+        brushCtx.fillRect(center - half, center - half, size - 4, size - 4);
+        brushCtx.strokeRect(center - half, center - half, size - 4, size - 4);
+      } else if (brushShape.includes('diamond')) {
+        brushCtx.beginPath();
+        brushCtx.moveTo(center, center - radius);
+        brushCtx.lineTo(center + radius, center);
+        brushCtx.lineTo(center, center + radius);
+        brushCtx.lineTo(center - radius, center);
+        brushCtx.closePath();
+        brushCtx.fill();
+        brushCtx.stroke();
+      } else if (brushShape === 'star') {
+        // Simple 5-point star
+        const outer = radius;
+        const inner = radius * 0.5;
+        brushCtx.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const r = i % 2 === 0 ? outer : inner;
+          const angle = i * Math.PI / 5 - Math.PI / 2;
+          brushCtx.lineTo(center + r * Math.cos(angle), center + r * Math.sin(angle));
+        }
+        brushCtx.closePath();
+        brushCtx.fill();
+        brushCtx.stroke();
+      } else if (brushShape === 'cross') {
+        const thickness = radius * 0.3;
+        brushCtx.fillRect(center - thickness, 0, thickness * 2, size);
+        brushCtx.fillRect(0, center - thickness, size, thickness * 2);
+      }
+    }
+  }
+
   function updateBrushCursor(x, y) {
     if (!paintModeActive) return;
     brushCursor.style.left = x + 'px';
@@ -393,17 +445,7 @@
     const pixelSize = brushSize * 80;
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
-
-    // Update visual
-    if (brushShape === 'custom' && customBrushCanvas) {
-      brushCursor.style.backgroundImage = `url(${customBrushCanvas.toDataURL()})`;
-    } else {
-      brushCursor.style.backgroundImage = 'none';
-      brushCursor.style.backgroundColor = paintColor.getStyle() + '33';
-      brushCursor.style.border = `2px solid ${paintColor.getStyle()}`;
-      brushCursor.style.borderRadius = brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle' ? '50%' : '0';
-    }
-
+    drawBrushPreview();
     brushCursor.style.display = 'block';
   }
 
@@ -412,16 +454,15 @@
   }
 
   function getBrushAlpha(localX, localY, shape) {
-    const u = localX * 0.5 + 0.5;
-    const v = localY * 0.5 + 0.5;
+    const dist = Math.sqrt(localX * localX + localY * localY);
 
     if (shape === 'custom' && customBrushCanvas) {
+      const u = localX * 0.5 + 0.5;
+      const v = localY * 0.5 + 0.5;
       const ctx = customBrushCanvas.getContext('2d');
       const data = ctx.getImageData(u * customBrushCanvas.width, v * customBrushCanvas.height, 1, 1).data;
       return data[3] / 255;
     }
-
-    const dist = Math.sqrt(localX * localX + localY * localY);
 
     if (shape.includes('hard')) return dist <= 1 ? 1 : 0;
     if (shape.includes('square')) {
@@ -502,6 +543,7 @@
   brushShapeSelect.addEventListener('change', (e) => {
     brushShape = e.target.value;
     customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+    drawBrushPreview();
     updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
   });
 
@@ -510,7 +552,7 @@
     if (!file) return;
     const img = new Image();
     img.onload = () => {
-      const size = 64; // fixed size for performance
+      const size = 64;
       customBrushPreview.width = size;
       customBrushPreview.height = size;
       previewCtx.drawImage(img, 0, 0, size, size);
@@ -519,6 +561,7 @@
       customBrushCanvas.height = size;
       const ctx = customBrushCanvas.getContext('2d');
       ctx.drawImage(img, 0, 0, size, size);
+      drawBrushPreview();
       updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
     };
     img.src = URL.createObjectURL(file);
@@ -563,6 +606,7 @@
 
   document.getElementById('paintColor').addEventListener('input', (e) => {
     paintColor.set(e.target.value);
+    drawBrushPreview();
     updateBrushCursor(brushCursor.style.left.replace('px', ''), brushCursor.style.top.replace('px', ''));
   });
 
