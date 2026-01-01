@@ -153,18 +153,17 @@
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 20px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
-    /* Brush cursor - transparent inside, only outline */
+    /* Brush cursor - transparent inside, only colored outline */
     #brushCursor {
-      position: fixed;
+      position: absolute;
       pointer-events: none;
       transform: translate(-50%, -50%);
       z-index: 9999;
       display: none;
-      border: 3px solid transparent;
+      border: 3px solid #ff4444;
       border-radius: 50%;
-      box-sizing: border-box;
       background: transparent;
-      will-change: left, top, width, height, border-color, border-radius;
+      box-sizing: border-box;
     }
 
     /* Custom brush preview */
@@ -189,7 +188,6 @@
       .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 70px; border-radius: 12px 12px 0 0; max-height: 50vh; }
     }
   </style>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
@@ -372,7 +370,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - FIXED CURSOR + ACCURACY -->
+<!-- THREE.JS RETEXTURE LOGIC - FINAL FIXED -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -481,27 +479,25 @@
 
   function updateBrushCursor(clientX, clientY) {
     if (!paintModeActive) return;
-    
+
     brushCursor.style.left = clientX + 'px';
     brushCursor.style.top = clientY + 'px';
-    
-    // Scale brush size for better visual feedback - adjust multiplier as needed
-    const pixelSize = brushSize * 150; 
-    brushCursor.style.width = pixelSize + 'px';
-    brushCursor.style.height = pixelSize + 'px';
+
+    // Visual size - larger multiplier for better visibility
+    const visualSize = brushSize * 100;
+    brushCursor.style.width = visualSize + 'px';
+    brushCursor.style.height = visualSize + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-    
-    // Set border radius based on shape
-    if (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle') {
+
+    // Shape-specific border radius
+    if (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle' || brushShape.includes('diamond')) {
       brushCursor.style.borderRadius = '50%';
     } else if (brushShape.includes('square')) {
       brushCursor.style.borderRadius = '0';
-    } else if (brushShape.includes('diamond')) {
-      brushCursor.style.borderRadius = '50%';
     } else {
       brushCursor.style.borderRadius = '50%';
     }
-    
+
     brushCursor.style.display = 'block';
   }
 
@@ -543,22 +539,17 @@
       for (let i = 0; i < positions.count; i++) {
         vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(matrixWorld);
         const offset = vert.sub(point);
-        
-        // Use accurate brush size in world coordinates
-        const distance = offset.length();
-        if (distance > brushSize) continue;
+        if (offset.length() > brushSize) continue;
 
-        // Normalize coordinates to [-1, 1] range for brush falloff calculation
         const localX = offset.x / brushSize;
         const localY = offset.y / brushSize;
         const alpha = getBrushAlpha(localX, localY);
 
         if (alpha > 0) {
-          const influence = alpha;
           colors.setXYZ(i,
-            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
-            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
-            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
+            THREE.MathUtils.lerp(colors.getX(i), paintColor.r, alpha),
+            THREE.MathUtils.lerp(colors.getY(i), paintColor.g, alpha),
+            THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, alpha)
           );
         }
       }
@@ -583,29 +574,10 @@
     }
   });
 
-  canvas.addEventListener('pointerdown', (e) => { 
-    isPointerDown = true; 
-    // Also paint on single click
-    if (paintModeActive && currentModel) {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(currentModel, true);
-      if (intersects.length > 0) paintAt(intersects[0].point);
-    }
-  });
-  
+  canvas.addEventListener('pointerdown', () => { isPointerDown = true; });
   canvas.addEventListener('pointerup', () => { isPointerDown = false; });
-  
-  canvas.addEventListener('pointerleave', () => { 
-    isPointerDown = false; 
-    hideBrushCursor(); 
-  });
-  
-  canvas.addEventListener('mouseenter', (e) => { 
-    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); 
-  });
+  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
+  canvas.addEventListener('mouseenter', (e) => { if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); });
 
   paintToggle.addEventListener('click', () => {
     paintModeActive = !paintModeActive;
@@ -619,10 +591,8 @@
     brushShape = e.target.value;
     customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
     if (paintModeActive) {
-      // Get current cursor position from stored values
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
+      const rect = canvas.getBoundingClientRect();
+      updateBrushCursor(rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
   });
 
@@ -642,9 +612,8 @@
       ctx.drawImage(img, 0, 0, size, size);
       customBrushData = ctx.getImageData(0, 0, size, size);
       if (paintModeActive) {
-        const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-        const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-        updateBrushCursor(x, y);
+        const rect = canvas.getBoundingClientRect();
+        updateBrushCursor(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
     };
     img.src = URL.createObjectURL(file);
@@ -690,9 +659,8 @@
   document.getElementById('paintColor').addEventListener('input', (e) => {
     paintColor.set(e.target.value);
     if (paintModeActive) {
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
+      const rect = canvas.getBoundingClientRect();
+      updateBrushCursor(rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
   });
 
@@ -700,9 +668,8 @@
     brushSize = parseFloat(e.target.value);
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
     if (paintModeActive) {
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
+      const rect = canvas.getBoundingClientRect();
+      updateBrushCursor(rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
   });
 
