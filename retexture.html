@@ -1,42 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>BowesProduct – Retexture 3D Model</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BowesProduct – Retexture 3D Model</title>
 
-  <!-- Correct Three.js import using Skypack -->
-  <script type="module">
-    import * as THREE from 'https://cdn.skypack.dev/three@0.145.0/build/three.module.js';
-    import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.145.0/examples/jsm/loaders/GLTFLoader.js';
-    import { GLTFExporter } from 'https://cdn.skypack.dev/three@0.145.0/examples/jsm/exporters/GLTFExporter.js';
-    import { OrbitControls } from 'https://cdn.skypack.dev/three@0.145.0/examples/jsm/controls/OrbitControls.js';
+  <!-- Three.js & Modules -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/exporters/GLTFExporter.js"></script>
 
-    // Initialize the scene and the camera
+  <style>
+    /* General reset and styles */
+    * {
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      margin: 0;
+      height: 100%;
+      background: #020617;
+      color: white;
+      font-family: system-ui, sans-serif;
+    }
+
+    .main-content {
+      display: flex;
+      gap: 2rem;
+      padding: 2rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #viewer-container {
+      flex: 1;
+      height: 600px;
+      background: #0f172a;
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .controls {
+      background: #0f172a;
+      padding: 1.5rem;
+      border-radius: 12px;
+      width: 300px;
+    }
+
+    #status {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input[type="color"],
+    input[type="range"],
+    button {
+      width: 100%;
+    }
+
+    button {
+      padding: 0.9rem 1.6rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    #download-btn {
+      background: #16a34a;
+      display: none;
+    }
+
+    /* Footer styles */
+    .site-footer {
+      background: rgba(2, 6, 23, 0.95);
+      border-top: 1px solid #1e293b;
+      padding: 3rem 1rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+    }
+
+    .footer-nav a:hover {
+      color: #60a5fa;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="logo"><a href="index.html">BowesProduct</a></div>
+        <nav class="main-nav">
+          <a href="index.html">Home</a>
+          <a href="models.html">Models</a>
+          <a href="retexture.html" class="active">Retexture</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="controls">
+      <h1>Retexture Tool</h1>
+      <div class="form-group">
+        <label>Upload GLB Model</label>
+        <input type="file" id="model-upload" accept=".glb">
+      </div>
+
+      <div class="form-group">
+        <label>Base Color</label>
+        <input type="color" id="base-color" value="#ffffff">
+      </div>
+
+      <div class="form-group">
+        <label>Metallic <span id="metallic-value">0.0</span></label>
+        <input type="range" id="metallic" min="0" max="1" step="0.01" value="0">
+      </div>
+
+      <div class="form-group">
+        <label>Roughness <span id="roughness-value">0.4</span></label>
+        <input type="range" id="roughness" min="0" max="1" step="0.01" value="0.4">
+      </div>
+
+      <button id="apply-texture">Apply Material</button>
+      <button id="download-btn">Download GLB</button>
+    </div>
+
+    <div id="viewer-container">
+      <div id="status">Upload a GLB to start (check console for logs)</div>
+      <div id="attribution">
+        3D Model Viewer by <a href="https://threejs.org/" target="_blank">Three.js</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav class="footer-nav">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="license.html">License</a>
+        <a href="refund.html">Refund</a>
+        <a href="rewards.html">Rewards</a>
+      </nav>
+      <p>© 2026 BowesProduct</p>
+    </div>
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+
+  <!-- Firebase Authentication Script -->
+  <script>
+    // Firebase Setup and Auth (keep as is)
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+      authDomain: "bowesproduct.firebaseapp.com",
+      projectId: "bowesproduct"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    document.getElementById("authBtn").onclick = () => auth.currentUser ? firebase.auth().signOut() : firebase.auth().signInWithPopup(provider);
+  </script>
+
+  <!-- 3D Model Loading and Retexture Script -->
+  <script>
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 5;
-
-    // Initialize the renderer and add it to the DOM
     let renderer = new THREE.WebGLRenderer({ antialias: true });
-    let container = document.getElementById('viewer-container');
+
+    // Initialize canvas
+    const container = document.getElementById('viewer-container');
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
 
-    // Setup the scene background and lights
+    // Scene Lighting
     scene.background = new THREE.Color(0x020617);
-    let ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambientLight);
-    let directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 10, 7);
     scene.add(directionalLight);
 
-    // Initialize the controls
-    let controls = new OrbitControls(camera, renderer.domElement);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
     let currentModel;
 
+    // Animate loop
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
@@ -44,14 +237,14 @@
     }
     animate();
 
-    // Update the camera and renderer on window resize
+    // On window resize
     window.addEventListener('resize', () => {
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
     });
 
-    // Handle file upload for GLB models
+    // Model Upload Handler
     document.getElementById('model-upload').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -59,13 +252,11 @@
       const reader = new FileReader();
       reader.onload = (event) => {
         const arrayBuffer = event.target.result;
-        const loader = new GLTFLoader();
+        const loader = new THREE.GLTFLoader();
         loader.parse(arrayBuffer, '', (gltf) => {
           if (currentModel) scene.remove(currentModel);
-
           currentModel = gltf.scene;
           scene.add(currentModel);
-
           const box = new THREE.Box3().setFromObject(currentModel);
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
@@ -81,14 +272,14 @@
 
           document.getElementById('status').textContent = "Model loaded";
         }, undefined, (error) => {
-          console.error('Parse error:', error);
-          document.getElementById('status').textContent = "Parse error - see console";
+          console.error('Error loading model:', error);
+          document.getElementById('status').textContent = "Error loading model";
         });
       };
       reader.readAsArrayBuffer(file);
     });
 
-    // Apply materials to the model
+    // Apply texture to the model
     document.getElementById('apply-texture').addEventListener('click', () => {
       if (!currentModel) {
         alert("Upload a model first");
@@ -112,20 +303,11 @@
       document.getElementById('download-btn').style.display = 'block';
     });
 
-    // Update metallic and roughness values in the UI
-    document.getElementById('metallic').addEventListener('input', (e) => {
-      document.getElementById('metallic-value').textContent = e.target.value;
-    });
-
-    document.getElementById('roughness').addEventListener('input', (e) => {
-      document.getElementById('roughness-value').textContent = e.target.value;
-    });
-
-    // Download the retextured model
+    // Download retextured model
     document.getElementById('download-btn').addEventListener('click', () => {
       if (!currentModel) return;
 
-      const exporter = new GLTFExporter();
+      const exporter = new THREE.GLTFExporter();
       exporter.parse(currentModel, (result) => {
         const blob = new Blob([result], { type: 'application/octet-stream' });
         const url = URL.createObjectURL(blob);
@@ -136,85 +318,8 @@
         URL.revokeObjectURL(url);
       }, { binary: true });
     });
+
   </script>
-
-  <style>
-    * { box-sizing: border-box; }
-    html, body { margin: 0; background: #020617; color: white; font-family: system-ui; height: 100%; }
-    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; display: flex; gap: 2rem; }
-    .controls { background: #0f172a; padding: 1.5rem; border-radius: 12px; width: 300px; }
-    #viewer-container { flex: 1; height: 600px; background: #0f172a; border-radius: 12px; position: relative; }
-    #status { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 8px; }
-
-    .form-group { margin-bottom: 1rem; }
-    label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
-    input[type="color"] { width: 100%; height: 50px; border: none; border-radius: 8px; cursor: pointer; }
-    input[type="range"] { width: 100%; }
-    button { padding: 0.9rem 1.6rem; background: #2563eb; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 1rem; }
-    #download-btn { background: #16a34a; display: none; }
-
-    #attribution {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      font-size: 0.8rem;
-      color: white;
-      background-color: rgba(0,0,0,0.5);
-      padding: 5px 10px;
-      border-radius: 5px;
-    }
-
-    #attribution a {
-      color: #60a5fa;
-      text-decoration: none;
-    }
-  </style>
-
-</head>
-<body>
-
-<header class="site-header">
-  <!-- ... header code ... -->
-</header>
-
-<main class="main-content">
-  <div class="controls">
-    <h1>Retexture Tool</h1>
-    <div class="form-group">
-      <label>Upload GLB Model</label>
-      <input type="file" id="model-upload" accept=".glb">
-    </div>
-
-    <div class="form-group">
-      <label>Base Color</label>
-      <input type="color" id="base-color" value="#ffffff">
-    </div>
-
-    <div class="form-group">
-      <label>Metallic <span id="metallic-value">0.0</span></label>
-      <input type="range" id="metallic" min="0" max="1" step="0.01" value="0">
-    </div>
-
-    <div class="form-group">
-      <label>Roughness <span id="roughness-value">0.4</span></label>
-      <input type="range" id="roughness" min="0" max="1" step="0.01" value="0.4">
-    </div>
-
-    <button id="apply-texture">Apply Material</button>
-    <button id="download-btn">Download GLB</button>
-  </div>
-
-  <div id="viewer-container">
-    <div id="status">Upload a GLB to start (check console for logs)</div>
-    <div id="attribution">
-      3D Model Viewer by <a href="https://threejs.org/" target="_blank">Three.js</a> &amp; Firebase
-    </div>
-  </div>
-</main>
-
-<footer class="site-footer">
-  <!-- footer code -->
-</footer>
-
 </body>
+
 </html>
