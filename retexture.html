@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retexture Pro – BowesProduct (Three.js)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retexture Pro – BowesProduct (Three.js Fixed)</title>
+
+  <!-- Import maps polyfill for older browsers + full compatibility -->
+  <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+
+  <!-- Import map to enable bare "three" specifier (required since r137+) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.182.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.182.0/examples/jsm/"
+    }
+  }
+  </script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, sans-serif; overflow: hidden; }
     #container { position: relative; width: 100%; height: 100%; }
     #canvas { display: block; width: 100%; height: 100%; }
-    
+
     .panel {
       position: absolute;
       top: 20px; right: 20px;
@@ -53,9 +66,9 @@
     <div class="panel">
       <h2>Model</h2>
       <div class="control-group">
-        <label>Upload GLB (FBX → GLB first)</label>
-        <input type="file" id="uploadModel" accept=".glb,.gltf" />
-        <div class="hint">Convert FBX to GLB in Blender or online tools.</div>
+        <label>Upload GLB (convert FBX → GLB first)</label>
+        <input type="file" id="uploadModel" accept=".glb,.gltf">
+        <div class="hint">Use Blender or online converter.</div>
       </div>
 
       <h2>Texture</h2>
@@ -71,27 +84,27 @@
       </div>
       <div class="control-group">
         <label>Custom Texture</label>
-        <input type="file" id="uploadTexture" accept="image/*" />
+        <input type="file" id="uploadTexture" accept="image/*">
       </div>
 
       <h2>Material</h2>
       <div class="control-group">
-        <label>Metallic <span id="metallicVal">0.0</span></label>
-        <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0" />
+        <label>Metallic <span id="metallicVal">0.00</span></label>
+        <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
       </div>
       <div class="control-group">
-        <label>Roughness <span id="roughnessVal">0.5</span></label>
-        <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5" />
+        <label>Roughness <span id="roughnessVal">0.50</span></label>
+        <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
       </div>
 
       <h2>Vertex Color Painting</h2>
       <div class="control-group">
         <label>Brush Color</label>
-        <input type="color" id="paintColor" value="#ff4444" />
+        <input type="color" id="paintColor" value="#ff4444">
       </div>
       <div class="control-group">
         <label>Brush Size <span id="brushSizeVal">10</span></label>
-        <input type="range" id="brushSize" min="1" max="50" value="10" />
+        <input type="range" id="brushSize" min="1" max="50" value="10">
       </div>
       <button id="clearPaint">Clear All Paint</button>
 
@@ -100,9 +113,9 @@
         <label>Environment</label>
         <select id="envPreset">
           <option value="neutral">Neutral</option>
-          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/equirectangular/royal_esplanade_1k.hdr">Royal Esplanade</option>
-          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/equirectangular/spruit_sunrise_1k.hdr">Sunrise</option>
-          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/equirectangular/moonless_golf_1k.hdr">Night</option>
+          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
+          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
+          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
         </select>
       </div>
 
@@ -112,20 +125,19 @@
   </div>
 
   <div style="position:absolute;bottom:8px;right:8px;font-size:0.7rem;color:#64748b;">
-    Powered by Three.js (MIT License) • Model viewer &amp; painting by Grok @ xAI
+    Powered by Three.js r182 (MIT License) • Retexture tool by Grok @ xAI
   </div>
 
-  <!-- Single module script with CDN imports; no bare "three" specifier -->
   <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-    import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
-    import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
-    import { RGBELoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/RGBELoader.js';
-    import { GLTFExporter } from 'https://unpkg.com/three@0.160.0/examples/jsm/exporters/GLTFExporter.js';
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+    import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
     // Scene setup
     const canvas = document.getElementById('canvas');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -142,7 +154,7 @@
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
 
-    // Lighting / environment
+    // Environment
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
 
@@ -151,85 +163,70 @@
       if (url === 'neutral') {
         scene.environment = null;
         scene.background = new THREE.Color(0x020617);
-        if (currentEnvMap) {
-          currentEnvMap.dispose();
-          currentEnvMap = null;
-        }
+        if (currentEnvMap) currentEnvMap.dispose();
+        currentEnvMap = null;
         return;
       }
-      new RGBELoader().load(
-        url,
-        (texture) => {
-          const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-          scene.environment = envMap;
-          scene.background = envMap;
-          texture.dispose();
-          if (currentEnvMap && currentEnvMap !== envMap) currentEnvMap.dispose();
-          currentEnvMap = envMap;
-        },
-        undefined,
-        (err) => console.error('Error loading HDR:', err)
-      );
+      new RGBELoader().load(url, (texture) => {
+        const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+        scene.environment = envMap;
+        scene.background = envMap;
+        texture.dispose();
+        if (currentEnvMap && currentEnvMap !== envMap) currentEnvMap.dispose();
+        currentEnvMap = envMap;
+      });
     }
     loadEnvironment('neutral');
 
-    // Model handling
+    // Model
     let currentModel = null;
-    let paintedGeometry = null;
+    let paintedGeometry = null; // We paint only on the first mesh for simplicity
     let paintColor = new THREE.Color('#ff4444');
     let brushSize = 10;
 
-    const loader = new GLTFLoader();
+    const gltfLoader = new GLTFLoader();
 
     function loadModel(url) {
-      loader.load(
-        url,
-        (gltf) => {
-          if (currentModel) scene.remove(currentModel);
-          currentModel = gltf.scene;
-          scene.add(currentModel);
+      gltfLoader.load(url, (gltf) => {
+        if (currentModel) scene.remove(currentModel);
+        currentModel = gltf.scene;
+        scene.add(currentModel);
 
-          currentModel.traverse((child) => {
-            if (child.isMesh) {
-              child.material.vertexColors = true;
-              if (!child.geometry.attributes.color) {
-                const colors = new Float32Array(child.geometry.attributes.position.count * 3);
-                colors.fill(1); // white
-                child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-              }
-              paintedGeometry = child.geometry; // paint first mesh
+        currentModel.traverse((child) => {
+          if (child.isMesh) {
+            child.material.vertexColors = true;
+            if (!child.geometry.attributes.color) {
+              const count = child.geometry.attributes.position.count;
+              const colors = new Float32Array(count * 3);
+              colors.fill(1); // white
+              child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
             }
-          });
+            // Use first mesh for painting
+            if (!paintedGeometry) paintedGeometry = child.geometry;
+          }
+        });
 
-          const box = new THREE.Box3().setFromObject(currentModel);
-          const center = box.getCenter(new THREE.Vector3());
-          const size = box.getSize(new THREE.Vector3());
-          const maxDim = Math.max(size.x, size.y, size.z);
-          camera.position.copy(center).add(new THREE.Vector3(maxDim, maxDim * 0.7, maxDim));
-          controls.target.copy(center);
-          controls.update();
-        },
-        undefined,
-        (error) => {
-          console.error('Error loading model:', error);
-        }
-      );
+        // Auto-frame
+        const box = new THREE.Box3().setFromObject(currentModel);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        camera.position.copy(center).add(new THREE.Vector3(maxDim, maxDim * 0.7, maxDim));
+        controls.target.copy(center);
+        controls.update();
+      });
     }
-
-    // Optional default model; comment out if you do not have this file
-    // loadModel('models/example.glb');
 
     // Painting
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     let isPainting = false;
 
-    function paintAt(point, normal) {
+    function paintAt(point) {
       if (!paintedGeometry || !currentModel) return;
       const positions = paintedGeometry.attributes.position;
       const colors = paintedGeometry.attributes.color;
       const brushSq = brushSize * brushSize;
-
       const worldMatrix = currentModel.matrixWorld;
       const vert = new THREE.Vector3();
 
@@ -238,8 +235,7 @@
         const distSq = point.distanceToSquared(vert);
         if (distSq < brushSq) {
           const influence = 1 - Math.sqrt(distSq) / brushSize;
-          colors.setXYZ(
-            i,
+          colors.setXYZ(i,
             THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
             THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
             THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
@@ -249,99 +245,66 @@
       colors.needsUpdate = true;
     }
 
+    canvas.addEventListener('pointerdown', (e) => { isPainting = true; onPointerMove(e); });
+    canvas.addEventListener('pointerup', () => isPainting = false);
+    canvas.addEventListener('pointerleave', () => isPainting = false);
+    canvas.addEventListener('pointermove', onPointerMove);
+
     function onPointerMove(event) {
       if (!isPainting || !currentModel) return;
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(currentModel, true);
-      if (intersects.length > 0) {
-        paintAt(intersects[0].point, intersects[0].face.normal);
-      }
+      if (intersects.length > 0) paintAt(intersects[0].point);
     }
 
-    canvas.addEventListener('pointerdown', (e) => {
-      isPainting = true;
-      onPointerMove(e);
-    });
-    canvas.addEventListener('pointerup', () => {
-      isPainting = false;
-    });
-    canvas.addEventListener('pointerleave', () => {
-      isPainting = false;
-    });
-    canvas.addEventListener('pointermove', onPointerMove);
-
-    // UI controls
+    // UI
     document.getElementById('uploadModel').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (!file) return;
-      const url = URL.createObjectURL(file);
-      loadModel(url);
-      // optional: revoke later
-      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      if (file) loadModel(URL.createObjectURL(file));
     });
 
     function applyTexture(url) {
       if (!currentModel) return;
-      const texLoader = new THREE.TextureLoader();
-      texLoader.load(
-        url,
-        (tex) => {
-          tex.flipY = false;
-          tex.colorSpace = THREE.SRGBColorSpace;
-          currentModel.traverse((child) => {
-            if (child.isMesh && child.material) {
-              child.material.map = tex;
-              child.material.needsUpdate = true;
-            }
-          });
-        },
-        undefined,
-        (err) => console.error('Error loading texture:', err)
-      );
+      new THREE.TextureLoader().load(url, (tex) => {
+        tex.flipY = false;
+        tex.colorSpace = THREE.SRGBColorSpace;
+        currentModel.traverse((child) => {
+          if (child.isMesh) {
+            child.material.map = tex;
+            child.material.needsUpdate = true;
+          }
+        });
+      });
     }
 
     document.getElementById('presetTexture').addEventListener('change', (e) => {
-      const url = e.target.value;
-      if (url) applyTexture(url);
+      if (e.target.value) applyTexture(e.target.value);
     });
 
     document.getElementById('uploadTexture').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (!file) return;
-      const url = URL.createObjectURL(file);
-      applyTexture(url);
-      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      if (file) applyTexture(URL.createObjectURL(file));
     });
 
     document.getElementById('metallicSlider').addEventListener('input', (e) => {
       const v = parseFloat(e.target.value);
       document.getElementById('metallicVal').textContent = v.toFixed(2);
-      if (!currentModel) return;
-      currentModel.traverse((child) => {
-        if (child.isMesh && child.material && 'metalness' in child.material) {
-          child.material.metalness = v;
-        }
+      currentModel?.traverse((child) => {
+        if (child.isMesh) child.material.metalness = v;
       });
     });
 
     document.getElementById('roughnessSlider').addEventListener('input', (e) => {
       const v = parseFloat(e.target.value);
       document.getElementById('roughnessVal').textContent = v.toFixed(2);
-      if (!currentModel) return;
-      currentModel.traverse((child) => {
-        if (child.isMesh && child.material && 'roughness' in child.material) {
-          child.material.roughness = v;
-        }
+      currentModel?.traverse((child) => {
+        if (child.isMesh) child.material.roughness = v;
       });
     });
 
-    document.getElementById('paintColor').addEventListener('input', (e) => {
-      paintColor.set(e.target.value);
-    });
-
+    document.getElementById('paintColor').addEventListener('input', (e) => paintColor.set(e.target.value));
     document.getElementById('brushSize').addEventListener('input', (e) => {
       brushSize = parseFloat(e.target.value);
       document.getElementById('brushSizeVal').textContent = brushSize;
@@ -350,41 +313,30 @@
     document.getElementById('clearPaint').addEventListener('click', () => {
       if (!paintedGeometry) return;
       const colors = paintedGeometry.attributes.color;
-      for (let i = 0; i < colors.count; i++) {
-        colors.setXYZ(i, 1, 1, 1);
-      }
+      for (let i = 0; i < colors.count; i++) colors.setXYZ(i, 1, 1, 1);
       colors.needsUpdate = true;
     });
 
-    document.getElementById('envPreset').addEventListener('change', (e) => {
-      loadEnvironment(e.target.value);
-    });
+    document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
     document.getElementById('exportBtn').addEventListener('click', () => {
       if (!currentModel) return;
       const exporter = new GLTFExporter();
-      exporter.parse(
-        currentModel,
-        (glb) => {
-          const blob = new Blob([glb], { type: 'application/octet-stream' });
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = 'retextured_model.glb';
-          link.click();
-          setTimeout(() => URL.revokeObjectURL(link.href), 30000);
-        },
-        { binary: true }
-      );
+      exporter.parse(currentModel, (glb) => {
+        const blob = new Blob([glb], { type: 'application/octet-stream' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'retextured_model.glb';
+        link.click();
+      }, { binary: true });
     });
 
-    // Resize
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Animation loop
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
