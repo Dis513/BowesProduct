@@ -5,15 +5,15 @@
   <title>BowesProduct – Retexture 3D Model</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script type="module" src="https://unpkg.com/three@0.162.0/build/three.module.js"></script>
-  <script type="module" src="https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js"></script>
-  <script type="module" src="https://unpkg.com/three@0.162.0/examples/jsm/exporters/GLTFExporter.js"></script>
-  <script type="module" src="https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js"></script>
+  <!-- Latest Three.js without specific version for better compatibility -->
+  <script type="module" src="https://unpkg.com/three/build/three.module.js"></script>
+  <script type="module" src="https://unpkg.com/three/examples/jsm/loaders/GLTFLoader.js"></script>
+  <script type="module" src="https://unpkg.com/three/examples/jsm/exporters/GLTFExporter.js"></script>
+  <script type="module" src="https://unpkg.com/three/examples/jsm/controls/OrbitControls.js"></script>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow-x: hidden; height: 100%; }
-
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #020617; color: white; font-family: system-ui; height: 100%; }
     .site-header { position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 1.6rem; }
@@ -29,23 +29,19 @@
     #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
     #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
-    @media (max-width: 968px) { .main-content { grid-template-columns: 1fr; } }
+    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; display: flex; gap: 2rem; }
+    .controls { background: #0f172a; padding: 1.5rem; border-radius: 12px; width: 300px; }
+    #viewer-container { flex: 1; height: 600px; background: #0f172a; border-radius: 12px; position: relative; }
+    #status { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 8px; }
 
-    h1 { grid-column: 1 / -1; text-align: center; }
-
-    .controls { background: #0f172a; padding: 1.5rem; border-radius: 12px; }
-    .form-group { margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
     label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
     input[type="color"] { width: 100%; height: 50px; border: none; border-radius: 8px; cursor: pointer; }
     input[type="range"] { width: 100%; }
     button { padding: 0.9rem 1.6rem; background: #2563eb; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 1rem; }
     #download-btn { background: #16a34a; display: none; }
 
-    #viewer-container { height: 600px; background: #0f172a; border-radius: 12px; overflow: hidden; position: relative; }
-    #status { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 8px; }
-
-    .site-footer { background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 3rem 1rem; margin-top: 4rem; }
+    .site-footer { background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 3rem 1rem; }
     .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
     .footer-nav a { color: #cbd5e1; text-decoration: none; margin-right: 1.5rem; }
     .footer-nav a:hover { color: #60a5fa; }
@@ -75,12 +71,11 @@
 </header>
 
 <main class="main-content">
-  <h1>Retexture Your Purchased 3D Model</h1>
-
   <div class="controls">
+    <h1>Retexture Tool</h1>
     <div class="form-group">
-      <label>Upload Your GLB Model</label>
-      <input type="file" id="model-upload" accept=".glb,.gltf">
+      <label>Upload GLB Model</label>
+      <input type="file" id="model-upload" accept=".glb">
     </div>
 
     <div class="form-group">
@@ -89,21 +84,21 @@
     </div>
 
     <div class="form-group">
-      <label>Metallic <span id="metallic-value">0.00</span></label>
+      <label>Metallic <span id="metallic-value">0.0</span></label>
       <input type="range" id="metallic" min="0" max="1" step="0.01" value="0">
     </div>
 
     <div class="form-group">
-      <label>Roughness <span id="roughness-value">0.40</span></label>
+      <label>Roughness <span id="roughness-value">0.4</span></label>
       <input type="range" id="roughness" min="0" max="1" step="0.01" value="0.4">
     </div>
 
-    <button id="apply-texture">Apply Changes (Live Preview)</button>
-    <button id="download-btn">Download Retextured Model</button>
+    <button id="apply-texture">Apply Material</button>
+    <button id="download-btn">Download GLB</button>
   </div>
 
   <div id="viewer-container">
-    <div id="status">Upload a GLB model to start</div>
+    <div id="status">Upload a GLB to start (check console for logs)</div>
   </div>
 </main>
 
@@ -121,7 +116,7 @@
   </div>
 </footer>
 
-<!-- Firebase Auth -->
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -141,27 +136,28 @@ const provider = new GoogleAuthProvider();
 document.getElementById("authBtn").onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
 onAuthStateChanged(auth, async (user) => {
+  const authBtn = document.getElementById("authBtn");
   const profilePic = document.getElementById("profilePic");
   const levelInfo = document.getElementById("levelInfo");
   const levelText = document.getElementById("levelText");
   const xpBar = document.getElementById("xpBar");
 
   if (!user) {
-    document.getElementById("authBtn").textContent = "Login";
+    authBtn.textContent = "Login";
     profilePic.style.display = "none";
     levelInfo.style.display = "none";
     return;
   }
 
-  document.getElementById("authBtn").textContent = "Logout";
+  authBtn.textContent = "Logout";
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
 
-  const userRef = doc(db, "users", user.uid);
-  let snap = await getDoc(userRef);
+  const ref = doc(db, "users", user.uid);
+  let snap = await getDoc(ref);
   if (!snap.exists()) {
-    await setDoc(userRef, { xp: 10 });
-    snap = await getDoc(userRef);
+    await setDoc(ref, { xp: 10 });
+    snap = await getDoc(ref);
   }
 
   const xp = snap.data().xp || 0;
@@ -171,107 +167,104 @@ onAuthStateChanged(auth, async (user) => {
   let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
 
   levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = `${progress}%`;
+  xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
 </script>
 
-<!-- Three.js Retexture Tool - LIVE PREVIEW FIXED -->
+<!-- Three.js with debugging -->
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 
-let scene, camera, renderer, controls, currentModel;
+console.log('Three.js script loaded');
 
-const container = document.getElementById('viewer-container');
-const status = document.getElementById('status');
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
 
-function initViewer() {
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x020617);
+let renderer = new THREE.WebGLRenderer({ antialias: true });
+let container = document.getElementById('viewer-container');
+renderer.setSize(container.clientWidth, container.clientHeight);
+container.appendChild(renderer.domElement);
+console.log('Renderer appended to container');
 
-  camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.01, 1000);
-  camera.position.set(0, 0, 5);
+scene.background = new THREE.Color(0x020617);
+let ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+scene.add(ambientLight);
+let directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5, 10, 7);
+scene.add(directionalLight);
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
-  container.appendChild(renderer.domElement);
+let controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-
-  const ambient = new THREE.AmbientLight(0xffffff, 1.5);
-  scene.add(ambient);
-  const dir = new THREE.DirectionalLight(0xffffff, 1.2);
-  dir.position.set(5, 10, 7.5);
-  scene.add(dir);
-
-  window.addEventListener('resize', () => {
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
-  });
-
-  animate();
-}
+let currentModel;
 
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
 }
+animate();
+console.log('Animate loop started');
 
-initViewer();
+window.addEventListener('resize', () => {
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  console.log('Window resized');
+});
 
-// Load model
 document.getElementById('model-upload').addEventListener('change', (e) => {
+  console.log('File selected');
   const file = e.target.files[0];
   if (!file) return;
 
-  status.textContent = "Loading model...";
-
   const reader = new FileReader();
   reader.onload = (event) => {
+    console.log('File read as ArrayBuffer');
     const arrayBuffer = event.target.result;
-    const loader = new GLTFLoader();
 
+    const loader = new GLTFLoader();
     loader.parse(arrayBuffer, '', (gltf) => {
+      console.log('GLTF parsed successfully');
       if (currentModel) scene.remove(currentModel);
 
       currentModel = gltf.scene;
       scene.add(currentModel);
 
-      // Auto-fit
       const box = new THREE.Box3().setFromObject(currentModel);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
       const fov = camera.fov * (Math.PI / 180);
-      let distance = maxDim / (2 * Math.tan(fov / 2));
-      distance *= 2.5;
+      let distance = Math.abs(maxDim / Math.sin(fov / 2));
+      distance *= 1.5; // margin
 
-      controls.target.copy(center);
       camera.position.copy(center);
       camera.position.z += distance;
+      controls.target.copy(center);
       controls.update();
 
-      status.textContent = "Model loaded – changes are LIVE!";
-      document.getElementById('download-btn').style.display = 'block';
-      applyMaterialChanges(); // Apply current settings immediately
-    }, (err) => {
-      status.textContent = "Load error – check console";
-      console.error(err);
+      document.getElementById('status').textContent = "Model loaded";
+      console.log('Model added to scene');
+    }, undefined, (error) => {
+      console.error('Parse error:', error);
+      document.getElementById('status').textContent = "Parse error - see console";
     });
   };
   reader.readAsArrayBuffer(file);
 });
 
-// LIVE UPDATE FUNCTION
-function applyMaterialChanges() {
-  if (!currentModel) return;
+document.getElementById('apply-texture').addEventListener('click', () => {
+  console.log('Apply button clicked');
+  if (!currentModel) {
+    alert("Upload a model first");
+    return;
+  }
 
   const baseColor = new THREE.Color(document.getElementById('base-color').value);
   const metallic = parseFloat(document.getElementById('metallic').value);
@@ -279,34 +272,31 @@ function applyMaterialChanges() {
 
   currentModel.traverse((child) => {
     if (child.isMesh && child.material) {
-      if ('color' in child.material) child.material.color.copy(baseColor);
-      if ('metalness' in child.material) child.material.metalness = metallic;
-      if ('roughness' in child.material) child.material.roughness = roughness;
+      child.material.color = baseColor;
+      child.material.metalness = metallic;
+      child.material.roughness = roughness;
       child.material.needsUpdate = true;
     }
   });
-}
 
-// Live preview on any change
-document.getElementById('base-color').addEventListener('input', applyMaterialChanges);
-document.getElementById('metallic').addEventListener('input', applyMaterialChanges);
-document.getElementById('roughness').addEventListener('input', applyMaterialChanges);
+  document.getElementById('status').textContent = "Material applied";
+  document.getElementById('download-btn').style.display = 'block';
+  console.log('Material applied');
+});
 
-// Live slider values
 document.getElementById('metallic').addEventListener('input', (e) => {
-  document.getElementById('metallic-value').textContent = parseFloat(e.target.value).toFixed(2);
+  document.getElementById('metallic-value').textContent = e.target.value;
+  console.log('Metallic slider updated to', e.target.value);
 });
+
 document.getElementById('roughness').addEventListener('input', (e) => {
-  document.getElementById('roughness-value').textContent = parseFloat(e.target.value).toFixed(2);
+  document.getElementById('roughness-value').textContent = e.target.value;
+  console.log('Roughness slider updated to', e.target.value);
 });
 
-// Initial values
-document.getElementById('metallic-value').textContent = '0.00';
-document.getElementById('roughness-value').textContent = '0.40';
-
-// Download
 document.getElementById('download-btn').addEventListener('click', () => {
-  if (!currentModel) return alert("No model loaded");
+  console.log('Download button clicked');
+  if (!currentModel) return;
 
   const exporter = new GLTFExporter();
   exporter.parse(currentModel, (result) => {
@@ -317,6 +307,7 @@ document.getElementById('download-btn').addEventListener('click', () => {
     a.download = 'retextured_model.glb';
     a.click();
     URL.revokeObjectURL(url);
+    console.log('Model exported and downloaded');
   }, { binary: true });
 });
 </script>
