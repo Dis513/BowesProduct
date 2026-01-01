@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retexture Pro – BowesProduct</title>
-
   <!-- es-module-shims + import map -->
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
   <script type="importmap">
@@ -15,11 +14,9 @@
     }
   }
   </script>
-
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
-
     /* ================= HEADER ================= */
     .site-header {
       position: sticky;
@@ -28,7 +25,6 @@
       background: rgba(2,6,23,0.95);
       border-bottom: 1px solid #1e293b;
     }
-
     .header-inner {
       max-width: 1200px;
       margin: 0 auto;
@@ -37,7 +33,6 @@
       align-items: center;
       justify-content: space-between;
     }
-
     .header-left {
       display: flex;
       align-items: center;
@@ -63,14 +58,12 @@
     .main-nav a:hover {
       color: #60a5fa;
     }
-
     .header-right {
       display: flex;
       align-items: center;
       gap: 0.8rem;
       min-height: 44px;
     }
-
     #profilePic {
       width: 32px;
       height: 32px;
@@ -79,7 +72,6 @@
       object-fit: cover;
       display: none;
     }
-
     .login-btn {
       padding: 0.45rem 1.1rem;
       border-radius: 999px;
@@ -89,7 +81,6 @@
       font-size: 0.95rem;
       cursor: pointer;
     }
-
     #levelInfo {
       display: none;
       width: 140px;
@@ -113,7 +104,6 @@
       border-radius: 3px;
       transition: width 0.35s ease;
     }
-
     /* MOBILE HEADER */
     @media (max-width: 768px) {
       .header-inner {
@@ -132,29 +122,27 @@
         width: 100%;
       }
     }
-
     /* MAIN */
-    #container { 
-      position: relative; 
-      width: 100%; 
-      height: 100%; 
-      padding-top: 70px; 
+    #container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding-top: 70px;
       padding-bottom: 60px; /* Space for footer */
     }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-
     .panel {
-      position: absolute; 
-      top: 90px; 
-      right: 20px; 
-      width: 320px; 
+      position: absolute;
+      top: 90px;
+      right: 20px;
+      width: 320px;
       max-height: calc(100vh - 180px); /* Account for header and footer */
-      background: rgba(2, 6, 23, 0.95); 
-      border: 1px solid #1e293b; 
+      background: rgba(2, 6, 23, 0.95);
+      border: 1px solid #1e293b;
       border-radius: 12px;
-      padding: 1.5rem; 
-      overflow-y: auto; 
-      z-index: 10; 
+      padding: 1.5rem;
+      overflow-y: auto;
+      z-index: 10;
       backdrop-filter: blur(10px);
     }
     .panel h2 { color: #60a5fa; margin: 0 0 1rem; font-size: 1.1rem; }
@@ -167,7 +155,6 @@
     button:hover { background: #3b82f6; }
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 80px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
-
     /* Brush cursor - transparent inside, only outline */
     #brushCursor {
       position: fixed;
@@ -181,53 +168,61 @@
       background: transparent;
       will-change: left, top, width, height, border-color, border-radius;
     }
-
+    /* Eyedropper cursor */
+    #eyedropperCursor {
+      position: fixed;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      display: none;
+      width: 20px;
+      height: 20px;
+      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTE0LjcuM0wxMy4zIDEuN0wxNi42IDVMNy4zIDE0LjNMOS43IDE2LjdsMi40LTIuNEwxNi42IDE5bDEuNC0xLjRMMTQuNy4zeiIvPjwvc3ZnPg==') no-repeat center;
+      background-size: contain;
+    }
     /* Custom brush preview */
     #customBrushPreview {
       width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem;
       image-rendering: pixelated;
     }
-
     /* Paint toggle */
     #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
     #paintToggle.active { background: #f87171; }
-
     /* FOOTER */
-    .site-footer { 
-      position: fixed; 
-      bottom: 0; 
-      left: 0; 
-      right: 0; 
-      background: rgba(2,6,23,0.95); 
-      border-top: 1px solid #1e293b; 
-      padding: 1rem; 
-      z-index: 1000; 
-      backdrop-filter: blur(10px); 
+    .site-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(2,6,23,0.95);
+      border-top: 1px solid #1e293b;
+      padding: 1rem;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
     }
-    .footer-inner { 
-      max-width: 1200px; 
-      margin: 0 auto; 
-      display: flex; 
-      justify-content: space-between; 
-      flex-wrap: wrap; 
-      gap: 1rem; 
-      font-size: 0.85rem; 
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.85rem;
     }
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
     .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
     .site-footer p { margin: 0; color: #94a3b8; }
-
     /* Mobile Responsive */
     @media (max-width: 900px) {
-      .panel { 
-        width: 100%; 
-        right: 0; 
-        left: 0; 
-        top: auto; 
-        bottom: 70px; 
-        border-radius: 12px 12px 0 0; 
-        max-height: 45vh; 
+      .panel {
+        width: 100%;
+        right: 0;
+        left: 0;
+        top: auto;
+        bottom: 70px;
+        border-radius: 12px 12px 0 0;
+        max-height: 45vh;
       }
       #status {
         bottom: 70px;
@@ -236,7 +231,6 @@
         right: 10px;
       }
     }
-
     /* Touch-friendly controls for mobile */
     @media (hover: none) and (pointer: coarse) {
       .control-group {
@@ -254,7 +248,6 @@
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
-
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
@@ -276,13 +269,12 @@
     </div>
   </div>
 </header>
-
 <!-- MAIN 3D VIEWER -->
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
+  <div id="eyedropperCursor"></div>
   <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
-
   <div class="panel">
     <h2>Model</h2>
     <div class="control-group">
@@ -290,7 +282,6 @@
       <input type="file" id="uploadModel" accept=".glb,.gltf">
       <div class="hint">FBX must be converted to GLB/GLTF first.</div>
     </div>
-
     <h2>Texture</h2>
     <div class="control-group">
       <label for="presetTexture">Preset Textures</label>
@@ -301,12 +292,12 @@
         <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
         <option value="textures/fabric_basecolor.jpg">Fabric</option>
       </select>
+      <div class="hint">If presets don't load, upload your own below.</div>
     </div>
     <div class="control-group">
       <label for="uploadTexture">Custom Texture</label>
       <input type="file" id="uploadTexture" accept="image/*">
     </div>
-
     <h2>Material</h2>
     <div class="control-group">
       <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
@@ -316,12 +307,12 @@
       <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
       <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
     </div>
-
     <h2>Vertex Color Painting</h2>
     <div class="control-group">
       <label for="paintColor">Brush Color</label>
       <input type="color" id="paintColor" value="#ff4444">
     </div>
+    <button id="eyedropperToggle">Activate Eyedropper (Pick Color from Model)</button>
     <div class="control-group">
       <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
       <input type="range" id="brushSize" min="0.05" max="5" step="0.05" value="0.5">
@@ -348,7 +339,6 @@
     </div>
     <button id="paintToggle">Activate Paint Mode</button>
     <button id="clearPaint">Clear All Paint</button>
-
     <h2>Lighting</h2>
     <div class="control-group">
       <label for="envPreset">Environment</label>
@@ -359,13 +349,11 @@
         <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
       </select>
     </div>
-
     <h2>Export</h2>
     <button id="exportBtn">Export Modified GLB</button>
     <div id="exportStatus" style="margin-top: 0.5rem; font-size: 0.8rem; color: #94a3b8;"></div>
   </div>
 </div>
-
 <!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
@@ -380,32 +368,26 @@
     <p>© 2025 BowesProduct</p>
   </div>
 </footer>
-
 <!-- FIREBASE AUTH + XP -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
   const firebaseConfig = {
     apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
     authDomain: "bowesproduct.firebaseapp.com",
     projectId: "bowesproduct"
   };
-
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
-
   const authBtn = document.getElementById("authBtn");
   const profilePic = document.getElementById("profilePic");
   const levelInfo = document.getElementById("levelInfo");
   const levelText = document.getElementById("levelText");
   const xpBar = document.getElementById("xpBar");
-
   authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
-
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       authBtn.textContent = "Login";
@@ -416,7 +398,6 @@
     authBtn.textContent = "Logout";
     profilePic.src = user.photoURL || "";
     profilePic.style.display = "block";
-
     const ref = doc(db, "users", user.uid);
     let snap = await getDoc(ref);
     if (!snap.exists()) {
@@ -428,21 +409,18 @@
     let level = levels.filter(v => xp >= v).length - 1;
     let next = levels[level + 1] ?? levels[level];
     let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
-
     levelText.textContent = `Level ${level} • ${xp} XP`;
     xpBar.style.width = progress + "%";
     levelInfo.style.display = "block";
   });
 </script>
-
-<!-- THREE.JS RETEXTURE LOGIC - FIXED EXPORT + MOBILE -->
+<!-- THREE.JS RETEXTURE LOGIC - FIXED EYEDROPPER, MATERIALS, ENVIRONMENT -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
-
   const canvas = document.getElementById('canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -450,19 +428,15 @@
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.2;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020617);
-
   const ambient = new THREE.AmbientLight(0xffffff, 0.6);
   scene.add(ambient);
   const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
   dirLight.position.set(5, 10, 7);
   scene.add(dirLight);
-
   const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(3, 2, 5);
-
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
@@ -473,13 +447,13 @@
     ONE: THREE.TOUCH.ROTATE,
     TWO: THREE.TOUCH.DOLLY_PAN
   };
-
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
   let currentEnvMap = null;
   function loadEnvironment(url) {
     if (url === 'neutral') {
       scene.environment = null;
+      scene.background = new THREE.Color(0x020617);
       if (currentEnvMap) currentEnvMap.dispose();
       currentEnvMap = null;
       return;
@@ -487,13 +461,13 @@
     new RGBELoader().load(url, (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
       scene.environment = envMap;
+      scene.background = envMap; // Set background to HDR for better reflections/visuals
       texture.dispose();
       if (currentEnvMap) currentEnvMap.dispose();
       currentEnvMap = envMap;
     });
   }
   loadEnvironment('neutral');
-
   let currentModel = null;
   let originalModelUrl = null;
   let paintedGeometries = [];
@@ -502,60 +476,64 @@
   let brushShape = 'soft-circle';
   let customBrushData = null;
   let paintModeActive = false;
+  let eyedropperActive = false;
   let modelBoundingBox = null;
   let modelSize = null;
   let originalMaterials = new Map(); // Store original materials
-
   const brushCursor = document.getElementById('brushCursor');
+  const eyedropperCursor = document.getElementById('eyedropperCursor');
   const paintToggle = document.getElementById('paintToggle');
+  const eyedropperToggle = document.getElementById('eyedropperToggle');
   const brushShapeSelect = document.getElementById('brushShape');
   const customBrushGroup = document.getElementById('customBrushGroup');
   const uploadBrush = document.getElementById('uploadBrush');
   const customBrushPreview = document.getElementById('customBrushPreview');
   const previewCtx = customBrushPreview.getContext('2d');
   const exportStatus = document.getElementById('exportStatus');
-
   const gltfLoader = new GLTFLoader();
-
   function loadModel(url) {
     exportStatus.textContent = 'Loading model...';
     exportStatus.style.color = '#60a5fa';
-    
+   
     gltfLoader.load(url, (gltf) => {
       if (currentModel) {
         scene.remove(currentModel);
         originalMaterials.clear();
       }
-      
+     
       currentModel = gltf.scene;
       originalModelUrl = url;
       scene.add(currentModel);
-
       // Calculate model bounding box for accurate brush sizing
       const box = new THREE.Box3().setFromObject(currentModel);
       modelBoundingBox = box;
       const size = box.getSize(new THREE.Vector3());
       modelSize = Math.max(size.x, size.y, size.z);
       const center = box.getCenter(new THREE.Vector3());
-      
+     
       // Position camera based on model size
       camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
       controls.target.copy(center);
       controls.update();
-
       paintedGeometries = [];
       currentModel.traverse((child) => {
         if (child.isMesh) {
           // Store original material
           originalMaterials.set(child.uuid, child.material.clone());
-          
+         
+          // Ensure MeshStandardMaterial for PBR properties
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-            child.material = new THREE.MeshStandardMaterial({
+            const newMat = new THREE.MeshStandardMaterial({
               map: child.material.map,
               color: child.material.color,
               metalness: child.material.metalness ?? 0,
-              roughness: child.material.roughness ?? 0.5
+              roughness: child.material.roughness ?? 0.5,
+              normalMap: child.material.normalMap,
+              aoMap: child.material.aoMap,
+              emissive: child.material.emissive,
+              emissiveMap: child.material.emissiveMap
             });
+            child.material = newMat;
           }
           child.material.vertexColors = true;
           if (!child.geometry.attributes.color) {
@@ -563,17 +541,17 @@
             const colors = new Float32Array(count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
-          paintedGeometries.push({ 
-            geometry: child.geometry, 
+          paintedGeometries.push({
+            geometry: child.geometry,
             matrixWorld: child.matrixWorld.clone(),
-            mesh: child 
+            mesh: child
           });
         }
       });
-      
+     
       exportStatus.textContent = 'Model loaded successfully!';
       exportStatus.style.color = '#4ade80';
-    }, 
+    },
     (progress) => {
       exportStatus.textContent = `Loading: ${Math.round((progress.loaded / progress.total) * 100)}%`;
     },
@@ -582,32 +560,24 @@
       exportStatus.style.color = '#ef4444';
     });
   }
-
   function getWorldBrushRadius() {
-    // Convert brush size slider (0.05-5) to world units based on model size
-    // Base it on model dimensions for consistency across different models
     if (!modelSize) return 0.5;
-    return brushSize * (modelSize * 0.2); // Scale brush size relative to model
+    return brushSize * (modelSize * 0.2);
   }
-
   function updateBrushCursor(clientX, clientY) {
     if (!paintModeActive) return;
-    
+   
     brushCursor.style.left = clientX + 'px';
     brushCursor.style.top = clientY + 'px';
-    
-    // Calculate cursor size in screen space
+   
     const worldRadius = getWorldBrushRadius();
-    
-    // Project world radius to screen space
     const screenRadius = projectRadiusToScreen(worldRadius);
-    
-    const pixelSize = screenRadius * 2; // Diameter
+   
+    const pixelSize = screenRadius * 2;
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-    
-    // Set border radius based on shape
+   
     if (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle') {
       brushCursor.style.borderRadius = '50%';
     } else if (brushShape.includes('square')) {
@@ -617,42 +587,37 @@
     } else {
       brushCursor.style.borderRadius = '50%';
     }
-    
+   
     brushCursor.style.display = 'block';
   }
-
+  function updateEyedropperCursor(clientX, clientY) {
+    if (!eyedropperActive) return;
+    eyedropperCursor.style.left = clientX + 'px';
+    eyedropperCursor.style.top = clientY + 'px';
+    eyedropperCursor.style.display = 'block';
+  }
+  function hideCursors() {
+    brushCursor.style.display = 'none';
+    eyedropperCursor.style.display = 'none';
+  }
   function projectRadiusToScreen(worldRadius) {
-    // Project a world-space radius to screen-space pixels
     if (!currentModel) return 100;
-    
-    // Get camera position and model center
     const distance = camera.position.distanceTo(controls.target);
-    
-    // Calculate screen size based on distance and camera FOV
     const fov = camera.fov * (Math.PI / 180);
     const screenHeightAtDistance = 2 * Math.tan(fov / 2) * distance;
     const screenHeightPixels = window.innerHeight;
-    
-    // Convert world units to pixels
     const pixelsPerUnit = screenHeightPixels / screenHeightAtDistance;
     return worldRadius * pixelsPerUnit;
   }
-
-  function hideBrushCursor() {
-    brushCursor.style.display = 'none';
-  }
-
   function getBrushAlpha(localX, localY) {
     const dist = Math.sqrt(localX * localX + localY * localY);
     if (dist > 1) return 0;
-
     if (brushShape === 'custom' && customBrushData) {
       const u = Math.floor((localX * 0.5 + 0.5) * customBrushData.width);
       const v = Math.floor((localY * 0.5 + 0.5) * customBrushData.height);
       const idx = (v * customBrushData.width + u) * 4 + 3;
       return customBrushData.data[idx] / 255;
     }
-
     if (brushShape.includes('hard')) return 1;
     if (brushShape.includes('square')) {
       const maxDist = Math.max(Math.abs(localX), Math.abs(localY));
@@ -664,42 +629,32 @@
     }
     return 1 - Math.pow(dist, 2);
   }
-
   function paintAt(point) {
     if (!paintModeActive || paintedGeometries.length === 0) return;
-
     const brushRadius = getWorldBrushRadius();
     const brushRadiusSquared = brushRadius * brushRadius;
-    
+   
     const vert = new THREE.Vector3();
-    
+   
     paintedGeometries.forEach(({ geometry, matrixWorld, mesh }) => {
       const positions = geometry.attributes.position;
       const colors = geometry.attributes.color;
-
-      // Get inverse world matrix to transform point to local space
       const inverseMatrix = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
       const localPoint = point.clone().applyMatrix4(inverseMatrix);
-
       for (let i = 0; i < positions.count; i++) {
         vert.set(positions.getX(i), positions.getY(i), positions.getZ(i));
-        
-        // Calculate distance in local space (more efficient)
+       
         const offset = vert.sub(localPoint);
-        const distanceSquared = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
-        
+        const distanceSquared = offset.lengthSq();
+       
         if (distanceSquared > brushRadiusSquared) continue;
-
-        // Normalize distance to [0, 1] for brush falloff
         const distance = Math.sqrt(distanceSquared);
         const normalizedDist = distance / brushRadius;
-        
-        // Calculate local coordinates for brush shape falloff
+       
         const localX = offset.x / brushRadius;
         const localY = offset.y / brushRadius;
-        
+       
         const alpha = getBrushAlpha(localX, localY);
-
         if (alpha > 0) {
           const influence = alpha;
           colors.setXYZ(i,
@@ -712,13 +667,37 @@
       colors.needsUpdate = true;
     });
   }
+  function pickColorAt(intersect) {
+    const mesh = intersect.object;
+    const geometry = mesh.geometry;
+    const face = intersect.face;
+    const colors = geometry.attributes.color;
+    if (!colors) return null;
 
+    // Barycentric weights
+    const a = face.a;
+    const b = face.b;
+    const c = face.c;
+    const uv = intersect.uv;
+
+    const u = uv.x;
+    const v = uv.y;
+    const wA = 1 - u - v;
+    const wB = u;
+    const wC = v;
+
+    const r = wA * colors.getX(a) + wB * colors.getX(b) + wC * colors.getX(c);
+    const g = wA * colors.getY(a) + wB * colors.getY(b) + wC * colors.getY(c);
+    const b = wA * colors.getZ(a) + wB * colors.getZ(b) + wC * colors.getZ(c);
+
+    return new THREE.Color(r, g, b);
+  }
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   let isPointerDown = false;
-
   canvas.addEventListener('pointermove', (e) => {
     updateBrushCursor(e.clientX, e.clientY);
+    updateEyedropperCursor(e.clientX, e.clientY);
 
     if (isPointerDown && paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
@@ -729,11 +708,22 @@
       if (intersects.length > 0) paintAt(intersects[0].point);
     }
   });
-
-  canvas.addEventListener('pointerdown', (e) => { 
-    isPointerDown = true; 
-    // Also paint on single click
-    if (paintModeActive && currentModel) {
+  canvas.addEventListener('pointerdown', (e) => {
+    isPointerDown = true;
+    if (eyedropperActive && currentModel) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0 && intersects[0].face) {
+        const picked = pickColorAt(intersects[0]);
+        if (picked) {
+          paintColor.copy(picked);
+          document.getElementById('paintColor').value = '#' + picked.getHexString();
+        }
+      }
+    } else if (paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
       mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
@@ -742,36 +732,43 @@
       if (intersects.length > 0) paintAt(intersects[0].point);
     }
   });
-  
+ 
   canvas.addEventListener('pointerup', () => { isPointerDown = false; });
-  
-  canvas.addEventListener('pointerleave', () => { 
-    isPointerDown = false; 
-    hideBrushCursor(); 
+ 
+  canvas.addEventListener('pointerleave', () => {
+    isPointerDown = false;
+    hideCursors();
   });
-  
-  canvas.addEventListener('mouseenter', (e) => { 
-    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); 
+ 
+  canvas.addEventListener('mouseenter', (e) => {
+    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY);
+    if (eyedropperActive) updateEyedropperCursor(e.clientX, e.clientY);
   });
-
   paintToggle.addEventListener('click', () => {
     paintModeActive = !paintModeActive;
+    eyedropperActive = false;
+    eyedropperToggle.classList.remove('active');
     paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
     paintToggle.classList.toggle('active', paintModeActive);
-    controls.enabled = !paintModeActive;
-    if (!paintModeActive) hideBrushCursor();
+    controls.enabled = !paintModeActive && !eyedropperActive;
+    hideCursors();
   });
-
+  eyedropperToggle.addEventListener('click', () => {
+    eyedropperActive = !eyedropperActive;
+    paintModeActive = false;
+    paintToggle.classList.remove('active');
+    eyedropperToggle.textContent = eyedropperActive ? 'Deactivate Eyedropper' : 'Activate Eyedropper (Pick Color from Model)';
+    eyedropperToggle.classList.toggle('active', eyedropperActive);
+    controls.enabled = !eyedropperActive && !paintModeActive;
+    hideCursors();
+  });
   brushShapeSelect.addEventListener('change', (e) => {
     brushShape = e.target.value;
     customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
     if (paintModeActive) {
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
+      updateBrushCursor(parseFloat(brushCursor.style.left) || window.innerWidth / 2, parseFloat(brushCursor.style.top) || window.innerHeight / 2);
     }
   });
-
   uploadBrush.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -788,80 +785,73 @@
       ctx.drawImage(img, 0, 0, size, size);
       customBrushData = ctx.getImageData(0, 0, size, size);
       if (paintModeActive) {
-        const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-        const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-        updateBrushCursor(x, y);
+        updateBrushCursor(parseFloat(brushCursor.style.left) || window.innerWidth / 2, parseFloat(brushCursor.style.top) || window.innerHeight / 2);
       }
     };
     img.src = URL.createObjectURL(file);
   });
-
   document.getElementById('uploadModel').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) loadModel(URL.createObjectURL(file));
   });
-
   function applyTexture(url) {
     if (!currentModel) return;
     new THREE.TextureLoader().load(url, (tex) => {
       tex.flipY = false;
       tex.colorSpace = THREE.SRGBColorSpace;
-      tex.encoding = THREE.sRGBEncoding;
       currentModel.traverse((child) => {
-        if (child.isMesh) {
+        if (child.isMesh && child.material instanceof THREE.MeshStandardMaterial) {
           child.material.map = tex.clone();
           child.material.needsUpdate = true;
         }
       });
     });
   }
-
-  document.getElementById('presetTexture').addEventListener('change', (e) => { if (e.target.value) applyTexture(e.target.value); });
+  document.getElementById('presetTexture').addEventListener('change', (e) => { if (e.target.value) applyTexture(e.target.value); else applyTexture(''); });
   document.getElementById('uploadTexture').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) applyTexture(URL.createObjectURL(file));
   });
-
   document.getElementById('metallicSlider').addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
     document.getElementById('metallicVal').textContent = v.toFixed(2);
-    currentModel?.traverse((child) => { if (child.isMesh) child.material.metalness = v; });
+    currentModel?.traverse((child) => { 
+      if (child.isMesh && child.material instanceof THREE.MeshStandardMaterial) {
+        child.material.metalness = v;
+        child.material.needsUpdate = true;
+      }
+    });
   });
-
   document.getElementById('roughnessSlider').addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
     document.getElementById('roughnessVal').textContent = v.toFixed(2);
-    currentModel?.traverse((child) => { if (child.isMesh) child.material.roughness = v; });
+    currentModel?.traverse((child) => { 
+      if (child.isMesh && child.material instanceof THREE.MeshStandardMaterial) {
+        child.material.roughness = v;
+        child.material.needsUpdate = true;
+      }
+    });
   });
-
   document.getElementById('paintColor').addEventListener('input', (e) => {
     paintColor.set(e.target.value);
     if (paintModeActive) {
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
+      updateBrushCursor(parseFloat(brushCursor.style.left) || window.innerWidth / 2, parseFloat(brushCursor.style.top) || window.innerHeight / 2);
     }
   });
-
   document.getElementById('brushSize').addEventListener('input', (e) => {
     brushSize = parseFloat(e.target.value);
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
     if (paintModeActive) {
-      const x = parseFloat(brushCursor.style.left) || window.innerWidth / 2;
-      const y = parseFloat(brushCursor.style.top) || window.innerHeight / 2;
-      updateBrushCursor(x, y);
+      updateBrushCursor(parseFloat(brushCursor.style.left) || window.innerWidth / 2, parseFloat(brushCursor.style.top) || window.innerHeight / 2);
     }
   });
-
   document.getElementById('clearPaint').addEventListener('click', () => {
     paintedGeometries.forEach(({ geometry }) => {
       geometry.attributes.color.array.fill(1);
       geometry.attributes.color.needsUpdate = true;
     });
   });
-
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
-
   // FIXED EXPORT FUNCTION
   document.getElementById('exportBtn').addEventListener('click', async () => {
     if (!currentModel) {
@@ -869,77 +859,58 @@
       exportStatus.style.color = '#ef4444';
       return;
     }
-
     exportStatus.textContent = 'Preparing export...';
     exportStatus.style.color = '#60a5fa';
-
     try {
       const exporter = new GLTFExporter();
-      
-      // Create a clone of the model for export to avoid modifying the scene
+     
       const exportModel = currentModel.clone();
-      
-      // Ensure all materials are properly set for export
+     
       exportModel.traverse((child) => {
         if (child.isMesh) {
-          // Make sure vertex colors are enabled
           child.material.vertexColors = true;
-          
-          // Ensure color attribute exists and is up to date
+         
           if (!child.geometry.attributes.color) {
             const count = child.geometry.attributes.position.count;
             const colors = new Float32Array(count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
           child.geometry.attributes.color.needsUpdate = true;
-          
-          // Clone the material to ensure it's properly exported
+         
           child.material = child.material.clone();
-          
-          // Ensure all material properties are set
+         
           child.material.needsUpdate = true;
         }
       });
-
       exportStatus.textContent = 'Exporting model...';
-      
-      // Parse with proper options for GLB export
+     
       exporter.parse(
         exportModel,
         (result) => {
           if (result instanceof ArrayBuffer) {
-            // It's a GLB (binary)
             const blob = new Blob([result], { type: 'application/octet-stream' });
             const fileSize = blob.size;
-            console.log('Export size:', fileSize, 'bytes');
-            
-            // Create download link
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = 'retextured_model.glb';
             link.style.display = 'none';
             document.body.appendChild(link);
-            
-            // Trigger download
             link.click();
-            
-            // Clean up
             setTimeout(() => {
               document.body.removeChild(link);
               URL.revokeObjectURL(link.href);
             }, 100);
-            
+           
             exportStatus.textContent = `Exported successfully! (${(fileSize / 1024).toFixed(2)} KB)`;
             exportStatus.style.color = '#4ade80';
           } else {
-            // It's GLTF (JSON)
             const output = JSON.stringify(result, null, 2);
             const blob = new Blob([output], { type: 'text/plain' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = 'retextured_model.gltf';
             link.click();
-            
+           
             exportStatus.textContent = `Exported successfully! (${(blob.size / 1024).toFixed(2)} KB)`;
             exportStatus.style.color = '#4ade80';
           }
@@ -950,7 +921,7 @@
           exportStatus.style.color = '#ef4444';
         },
         {
-          binary: true, // Export as GLB
+          binary: true,
           maxTextureSize: 4096,
           animations: [],
           onlyVisible: false,
@@ -964,13 +935,11 @@
       exportStatus.style.color = '#ef4444';
     }
   });
-
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
-
   function animate() {
     requestAnimationFrame(animate);
     controls.update();
@@ -978,6 +947,5 @@
   }
   animate();
 </script>
-
 </body>
 </html>
