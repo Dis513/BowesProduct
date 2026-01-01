@@ -139,7 +139,7 @@
       width: 100%; 
       height: 100%; 
       padding-top: 70px; 
-      padding-bottom: 60px; /* Space for footer */
+      padding-bottom: 60px;
     }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
@@ -148,7 +148,7 @@
       top: 90px; 
       right: 20px; 
       width: 320px; 
-      max-height: calc(100vh - 180px); /* Account for header and footer */
+      max-height: calc(100vh - 180px);
       background: rgba(2, 6, 23, 0.95); 
       border: 1px solid #1e293b; 
       border-radius: 12px;
@@ -168,7 +168,7 @@
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 80px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
-    /* Brush cursor - transparent inside, only outline */
+    /* Brush cursor */
     #brushCursor {
       position: fixed;
       pointer-events: none;
@@ -182,13 +182,11 @@
       will-change: left, top, width, height, border-color, border-radius;
     }
 
-    /* Custom brush preview */
     #customBrushPreview {
       width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem;
       image-rendering: pixelated;
     }
 
-    /* Paint toggle */
     #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
     #paintToggle.active { background: #f87171; }
 
@@ -237,21 +235,13 @@
       }
     }
 
-    /* Touch-friendly controls for mobile */
     @media (hover: none) and (pointer: coarse) {
-      .control-group {
-        margin-bottom: 1.5rem;
-      }
-      button {
-        padding: 0.75rem;
-        margin-top: 1rem;
-      }
-      input[type="range"] {
-        height: 48px;
-      }
+      .control-group { margin-bottom: 1.5rem; }
+      button { padding: 0.75rem; margin-top: 1rem; }
+      input[type="range"] { height: 48px; }
     }
   </style>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
@@ -435,7 +425,7 @@
   });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC - FIXED EXPORT + MOBILE -->
+<!-- THREE.JS RETEXTURE LOGIC - FIXED COLOR DARKNESS -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -468,7 +458,6 @@
   controls.dampingFactor = 0.05;
   controls.enablePan = true;
   controls.enableZoom = true;
-  // Better mobile touch support
   controls.touches = {
     ONE: THREE.TOUCH.ROTATE,
     TWO: THREE.TOUCH.DOLLY_PAN
@@ -504,7 +493,6 @@
   let paintModeActive = false;
   let modelBoundingBox = null;
   let modelSize = null;
-  let originalMaterials = new Map(); // Store original materials
 
   const brushCursor = document.getElementById('brushCursor');
   const paintToggle = document.getElementById('paintToggle');
@@ -520,25 +508,22 @@
   function loadModel(url) {
     exportStatus.textContent = 'Loading model...';
     exportStatus.style.color = '#60a5fa';
-    
+
     gltfLoader.load(url, (gltf) => {
       if (currentModel) {
         scene.remove(currentModel);
-        originalMaterials.clear();
       }
-      
+
       currentModel = gltf.scene;
       originalModelUrl = url;
       scene.add(currentModel);
 
-      // Calculate model bounding box for accurate brush sizing
       const box = new THREE.Box3().setFromObject(currentModel);
       modelBoundingBox = box;
       const size = box.getSize(new THREE.Vector3());
       modelSize = Math.max(size.x, size.y, size.z);
       const center = box.getCenter(new THREE.Vector3());
-      
-      // Position camera based on model size
+
       camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
       controls.target.copy(center);
       controls.update();
@@ -546,9 +531,6 @@
       paintedGeometries = [];
       currentModel.traverse((child) => {
         if (child.isMesh) {
-          // Store original material
-          originalMaterials.set(child.uuid, child.material.clone());
-          
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
             child.material = new THREE.MeshStandardMaterial({
               map: child.material.map,
@@ -557,12 +539,18 @@
               roughness: child.material.roughness ?? 0.5
             });
           }
+
+          // FIX: Force white base color so vertex paint isn't darkened
+          child.material.color.set(0xffffff);
+
           child.material.vertexColors = true;
+
           if (!child.geometry.attributes.color) {
             const count = child.geometry.attributes.position.count;
             const colors = new Float32Array(count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
+
           paintedGeometries.push({ 
             geometry: child.geometry, 
             matrixWorld: child.matrixWorld.clone(),
@@ -570,7 +558,7 @@
           });
         }
       });
-      
+
       exportStatus.textContent = 'Model loaded successfully!';
       exportStatus.style.color = '#4ade80';
     }, 
@@ -584,30 +572,23 @@
   }
 
   function getWorldBrushRadius() {
-    // Convert brush size slider (0.05-5) to world units based on model size
-    // Base it on model dimensions for consistency across different models
     if (!modelSize) return 0.5;
-    return brushSize * (modelSize * 0.2); // Scale brush size relative to model
+    return brushSize * (modelSize * 0.2);
   }
 
   function updateBrushCursor(clientX, clientY) {
     if (!paintModeActive) return;
-    
+
     brushCursor.style.left = clientX + 'px';
     brushCursor.style.top = clientY + 'px';
-    
-    // Calculate cursor size in screen space
+
     const worldRadius = getWorldBrushRadius();
-    
-    // Project world radius to screen space
     const screenRadius = projectRadiusToScreen(worldRadius);
-    
-    const pixelSize = screenRadius * 2; // Diameter
+    const pixelSize = screenRadius * 2;
     brushCursor.style.width = pixelSize + 'px';
     brushCursor.style.height = pixelSize + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-    
-    // Set border radius based on shape
+
     if (brushShape.includes('circle') || brushShape === 'soft-circle' || brushShape === 'hard-circle') {
       brushCursor.style.borderRadius = '50%';
     } else if (brushShape.includes('square')) {
@@ -617,23 +598,16 @@
     } else {
       brushCursor.style.borderRadius = '50%';
     }
-    
+
     brushCursor.style.display = 'block';
   }
 
   function projectRadiusToScreen(worldRadius) {
-    // Project a world-space radius to screen-space pixels
     if (!currentModel) return 100;
-    
-    // Get camera position and model center
     const distance = camera.position.distanceTo(controls.target);
-    
-    // Calculate screen size based on distance and camera FOV
     const fov = camera.fov * (Math.PI / 180);
     const screenHeightAtDistance = 2 * Math.tan(fov / 2) * distance;
     const screenHeightPixels = window.innerHeight;
-    
-    // Convert world units to pixels
     const pixelsPerUnit = screenHeightPixels / screenHeightAtDistance;
     return worldRadius * pixelsPerUnit;
   }
@@ -670,34 +644,29 @@
 
     const brushRadius = getWorldBrushRadius();
     const brushRadiusSquared = brushRadius * brushRadius;
-    
     const vert = new THREE.Vector3();
-    
+
     paintedGeometries.forEach(({ geometry, matrixWorld, mesh }) => {
       const positions = geometry.attributes.position;
       const colors = geometry.attributes.color;
 
-      // Get inverse world matrix to transform point to local space
       const inverseMatrix = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
       const localPoint = point.clone().applyMatrix4(inverseMatrix);
 
       for (let i = 0; i < positions.count; i++) {
         vert.set(positions.getX(i), positions.getY(i), positions.getZ(i));
-        
-        // Calculate distance in local space (more efficient)
+
         const offset = vert.sub(localPoint);
         const distanceSquared = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
-        
+
         if (distanceSquared > brushRadiusSquared) continue;
 
-        // Normalize distance to [0, 1] for brush falloff
         const distance = Math.sqrt(distanceSquared);
         const normalizedDist = distance / brushRadius;
-        
-        // Calculate local coordinates for brush shape falloff
+
         const localX = offset.x / brushRadius;
         const localY = offset.y / brushRadius;
-        
+
         const alpha = getBrushAlpha(localX, localY);
 
         if (alpha > 0) {
@@ -732,7 +701,6 @@
 
   canvas.addEventListener('pointerdown', (e) => { 
     isPointerDown = true; 
-    // Also paint on single click
     if (paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -742,17 +710,10 @@
       if (intersects.length > 0) paintAt(intersects[0].point);
     }
   });
-  
+
   canvas.addEventListener('pointerup', () => { isPointerDown = false; });
-  
-  canvas.addEventListener('pointerleave', () => { 
-    isPointerDown = false; 
-    hideBrushCursor(); 
-  });
-  
-  canvas.addEventListener('mouseenter', (e) => { 
-    if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); 
-  });
+  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
+  canvas.addEventListener('mouseenter', (e) => { if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); });
 
   paintToggle.addEventListener('click', () => {
     paintModeActive = !paintModeActive;
@@ -806,10 +767,11 @@
     new THREE.TextureLoader().load(url, (tex) => {
       tex.flipY = false;
       tex.colorSpace = THREE.SRGBColorSpace;
-      tex.encoding = THREE.sRGBEncoding;
+
       currentModel.traverse((child) => {
         if (child.isMesh) {
           child.material.map = tex.clone();
+          child.material.color.set(0xffffff); // FIX: keep base color white
           child.material.needsUpdate = true;
         }
       });
@@ -862,7 +824,6 @@
 
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
-  // FIXED EXPORT FUNCTION
   document.getElementById('exportBtn').addEventListener('click', async () => {
     if (!currentModel) {
       exportStatus.textContent = 'No model to export!';
@@ -875,72 +836,45 @@
 
     try {
       const exporter = new GLTFExporter();
-      
-      // Create a clone of the model for export to avoid modifying the scene
+
       const exportModel = currentModel.clone();
-      
-      // Ensure all materials are properly set for export
+
       exportModel.traverse((child) => {
         if (child.isMesh) {
-          // Make sure vertex colors are enabled
           child.material.vertexColors = true;
-          
-          // Ensure color attribute exists and is up to date
           if (!child.geometry.attributes.color) {
             const count = child.geometry.attributes.position.count;
             const colors = new Float32Array(count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
           child.geometry.attributes.color.needsUpdate = true;
-          
-          // Clone the material to ensure it's properly exported
           child.material = child.material.clone();
-          
-          // Ensure all material properties are set
           child.material.needsUpdate = true;
         }
       });
 
       exportStatus.textContent = 'Exporting model...';
-      
-      // Parse with proper options for GLB export
+
       exporter.parse(
         exportModel,
         (result) => {
           if (result instanceof ArrayBuffer) {
-            // It's a GLB (binary)
             const blob = new Blob([result], { type: 'application/octet-stream' });
             const fileSize = blob.size;
-            console.log('Export size:', fileSize, 'bytes');
-            
-            // Create download link
+
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = 'retextured_model.glb';
             link.style.display = 'none';
             document.body.appendChild(link);
-            
-            // Trigger download
             link.click();
-            
-            // Clean up
+
             setTimeout(() => {
               document.body.removeChild(link);
               URL.revokeObjectURL(link.href);
             }, 100);
-            
+
             exportStatus.textContent = `Exported successfully! (${(fileSize / 1024).toFixed(2)} KB)`;
-            exportStatus.style.color = '#4ade80';
-          } else {
-            // It's GLTF (JSON)
-            const output = JSON.stringify(result, null, 2);
-            const blob = new Blob([output], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'retextured_model.gltf';
-            link.click();
-            
-            exportStatus.textContent = `Exported successfully! (${(blob.size / 1024).toFixed(2)} KB)`;
             exportStatus.style.color = '#4ade80';
           }
         },
@@ -950,10 +884,8 @@
           exportStatus.style.color = '#ef4444';
         },
         {
-          binary: true, // Export as GLB
+          binary: true,
           maxTextureSize: 4096,
-          animations: [],
-          onlyVisible: false,
           truncateDrawRange: true,
           includeCustomExtensions: false
         }
