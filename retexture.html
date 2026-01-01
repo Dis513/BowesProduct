@@ -1,24 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Retexture Pro – BowesProduct (Three.js)</title>
-
-  <!-- Three.js + modules -->
-  <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-    import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
-    import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
-    import { RGBELoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/RGBELoader.js';
-    import { GLTFExporter } from 'https://unpkg.com/three@0.160.0/examples/jsm/exporters/GLTFExporter.js';
-
-    window.THREE = THREE;
-    window.OrbitControls = OrbitControls;
-    window.GLTFLoader = GLTFLoader;
-    window.RGBELoader = RGBELoader;
-    window.GLTFExporter = GLTFExporter;
-  </script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -69,7 +54,7 @@
       <h2>Model</h2>
       <div class="control-group">
         <label>Upload GLB (FBX → GLB first)</label>
-        <input type="file" id="uploadModel" accept=".glb,.gltf">
+        <input type="file" id="uploadModel" accept=".glb,.gltf" />
         <div class="hint">Convert FBX to GLB in Blender or online tools.</div>
       </div>
 
@@ -86,27 +71,27 @@
       </div>
       <div class="control-group">
         <label>Custom Texture</label>
-        <input type="file" id="uploadTexture" accept="image/*">
+        <input type="file" id="uploadTexture" accept="image/*" />
       </div>
 
       <h2>Material</h2>
       <div class="control-group">
         <label>Metallic <span id="metallicVal">0.0</span></label>
-        <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
+        <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0" />
       </div>
       <div class="control-group">
         <label>Roughness <span id="roughnessVal">0.5</span></label>
-        <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
+        <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5" />
       </div>
 
       <h2>Vertex Color Painting</h2>
       <div class="control-group">
         <label>Brush Color</label>
-        <input type="color" id="paintColor" value="#ff4444">
+        <input type="color" id="paintColor" value="#ff4444" />
       </div>
       <div class="control-group">
         <label>Brush Size <span id="brushSizeVal">10</span></label>
-        <input type="range" id="brushSize" min="1" max="50" value="10">
+        <input type="range" id="brushSize" min="1" max="50" value="10" />
       </div>
       <button id="clearPaint">Clear All Paint</button>
 
@@ -126,6 +111,11 @@
     </div>
   </div>
 
+  <div style="position:absolute;bottom:8px;right:8px;font-size:0.7rem;color:#64748b;">
+    Powered by Three.js (MIT License) • Model viewer &amp; painting by Grok @ xAI
+  </div>
+
+  <!-- Single module script with CDN imports; no bare "three" specifier -->
   <script type="module">
     import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
     import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
@@ -152,7 +142,7 @@
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
 
-    // Lighting
+    // Lighting / environment
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
 
@@ -161,57 +151,73 @@
       if (url === 'neutral') {
         scene.environment = null;
         scene.background = new THREE.Color(0x020617);
+        if (currentEnvMap) {
+          currentEnvMap.dispose();
+          currentEnvMap = null;
+        }
         return;
       }
-      new RGBELoader().load(url, (texture) => {
-        const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-        scene.environment = envMap;
-        scene.background = envMap;
-        texture.dispose();
-        currentEnvMap = envMap;
-      });
+      new RGBELoader().load(
+        url,
+        (texture) => {
+          const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+          scene.environment = envMap;
+          scene.background = envMap;
+          texture.dispose();
+          if (currentEnvMap && currentEnvMap !== envMap) currentEnvMap.dispose();
+          currentEnvMap = envMap;
+        },
+        undefined,
+        (err) => console.error('Error loading HDR:', err)
+      );
     }
     loadEnvironment('neutral');
 
-    // Model
+    // Model handling
     let currentModel = null;
     let paintedGeometry = null;
     let paintColor = new THREE.Color('#ff4444');
     let brushSize = 10;
 
     const loader = new GLTFLoader();
+
     function loadModel(url) {
-      loader.load(url, (gltf) => {
-        if (currentModel) scene.remove(currentModel);
-        currentModel = gltf.scene;
-        scene.add(currentModel);
+      loader.load(
+        url,
+        (gltf) => {
+          if (currentModel) scene.remove(currentModel);
+          currentModel = gltf.scene;
+          scene.add(currentModel);
 
-        // Enable vertex colors on all meshes
-        currentModel.traverse((child) => {
-          if (child.isMesh) {
-            child.material.vertexColors = true;
-            if (!child.geometry.attributes.color) {
-              const colors = new Float32Array(child.geometry.attributes.position.count * 3);
-              colors.fill(1); // white
-              child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          currentModel.traverse((child) => {
+            if (child.isMesh) {
+              child.material.vertexColors = true;
+              if (!child.geometry.attributes.color) {
+                const colors = new Float32Array(child.geometry.attributes.position.count * 3);
+                colors.fill(1); // white
+                child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+              }
+              paintedGeometry = child.geometry; // paint first mesh
             }
-            paintedGeometry = child.geometry; // paint on first mesh for simplicity
-          }
-        });
+          });
 
-        // Fit camera
-        const box = new THREE.Box3().setFromObject(currentModel);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        camera.position.copy(center).add(new THREE.Vector3(maxDim, maxDim * 0.7, maxDim));
-        controls.target.copy(center);
-        controls.update();
-      });
+          const box = new THREE.Box3().setFromObject(currentModel);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+          camera.position.copy(center).add(new THREE.Vector3(maxDim, maxDim * 0.7, maxDim));
+          controls.target.copy(center);
+          controls.update();
+        },
+        undefined,
+        (error) => {
+          console.error('Error loading model:', error);
+        }
+      );
     }
 
-    // Default model
-    loadModel('models/example.glb');
+    // Optional default model; comment out if you do not have this file
+    // loadModel('models/example.glb');
 
     // Painting
     const raycaster = new THREE.Raycaster();
@@ -219,21 +225,21 @@
     let isPainting = false;
 
     function paintAt(point, normal) {
-      if (!paintedGeometry) return;
+      if (!paintedGeometry || !currentModel) return;
       const positions = paintedGeometry.attributes.position;
       const colors = paintedGeometry.attributes.color;
       const brushSq = brushSize * brushSize;
 
-      for (let i = 0; i < positions.count; i++) {
-        const vx = positions.getX(i);
-        const vy = positions.getY(i);
-        const vz = positions.getZ(i);
-        const vert = new THREE.Vector3(vx, vy, vz).applyMatrix4(currentModel.matrixWorld);
+      const worldMatrix = currentModel.matrixWorld;
+      const vert = new THREE.Vector3();
 
+      for (let i = 0; i < positions.count; i++) {
+        vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(worldMatrix);
         const distSq = point.distanceToSquared(vert);
         if (distSq < brushSq) {
           const influence = 1 - Math.sqrt(distSq) / brushSize;
-          colors.setXYZ(i,
+          colors.setXYZ(
+            i,
             THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
             THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
             THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
@@ -243,11 +249,7 @@
       colors.needsUpdate = true;
     }
 
-    canvas.addEventListener('pointerdown', (e) => { isPainting = true; onMouseMove(e); });
-    canvas.addEventListener('pointerup', () => { isPainting = false; });
-    canvas.addEventListener('pointermove', onMouseMove);
-
-    function onMouseMove(event) {
+    function onPointerMove(event) {
       if (!isPainting || !currentModel) return;
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -259,11 +261,47 @@
       }
     }
 
-    // UI Controls
+    canvas.addEventListener('pointerdown', (e) => {
+      isPainting = true;
+      onPointerMove(e);
+    });
+    canvas.addEventListener('pointerup', () => {
+      isPainting = false;
+    });
+    canvas.addEventListener('pointerleave', () => {
+      isPainting = false;
+    });
+    canvas.addEventListener('pointermove', onPointerMove);
+
+    // UI controls
     document.getElementById('uploadModel').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (file) loadModel(URL.createObjectURL(file));
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      loadModel(url);
+      // optional: revoke later
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
     });
+
+    function applyTexture(url) {
+      if (!currentModel) return;
+      const texLoader = new THREE.TextureLoader();
+      texLoader.load(
+        url,
+        (tex) => {
+          tex.flipY = false;
+          tex.colorSpace = THREE.SRGBColorSpace;
+          currentModel.traverse((child) => {
+            if (child.isMesh && child.material) {
+              child.material.map = tex;
+              child.material.needsUpdate = true;
+            }
+          });
+        },
+        undefined,
+        (err) => console.error('Error loading texture:', err)
+      );
+    }
 
     document.getElementById('presetTexture').addEventListener('change', (e) => {
       const url = e.target.value;
@@ -272,36 +310,31 @@
 
     document.getElementById('uploadTexture').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (file) {
-        const url = URL.createObjectURL(file);
-        applyTexture(url);
-      }
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      applyTexture(url);
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
     });
 
-    function applyTexture(url) {
-      new THREE.TextureLoader().load(url, (tex) => {
-        tex.flipY = false;
-        tex.colorSpace = THREE.SRGBColorSpace;
-        currentModel.traverse((child) => {
-          if (child.isMesh && child.material) {
-            child.material.map = tex;
-            child.material.needsUpdate = true;
-          }
-        });
-      });
-    }
-
     document.getElementById('metallicSlider').addEventListener('input', (e) => {
-      document.getElementById('metallicVal').textContent = e.target.value;
+      const v = parseFloat(e.target.value);
+      document.getElementById('metallicVal').textContent = v.toFixed(2);
+      if (!currentModel) return;
       currentModel.traverse((child) => {
-        if (child.isMesh) child.material.metalness = parseFloat(e.target.value);
+        if (child.isMesh && child.material && 'metalness' in child.material) {
+          child.material.metalness = v;
+        }
       });
     });
 
     document.getElementById('roughnessSlider').addEventListener('input', (e) => {
-      document.getElementById('roughnessVal').textContent = e.target.value;
+      const v = parseFloat(e.target.value);
+      document.getElementById('roughnessVal').textContent = v.toFixed(2);
+      if (!currentModel) return;
       currentModel.traverse((child) => {
-        if (child.isMesh) child.material.roughness = parseFloat(e.target.value);
+        if (child.isMesh && child.material && 'roughness' in child.material) {
+          child.material.roughness = v;
+        }
       });
     });
 
@@ -317,7 +350,9 @@
     document.getElementById('clearPaint').addEventListener('click', () => {
       if (!paintedGeometry) return;
       const colors = paintedGeometry.attributes.color;
-      for (let i = 0; i < colors.count; i++) colors.setXYZ(i, 1, 1, 1);
+      for (let i = 0; i < colors.count; i++) {
+        colors.setXYZ(i, 1, 1, 1);
+      }
       colors.needsUpdate = true;
     });
 
@@ -326,6 +361,7 @@
     });
 
     document.getElementById('exportBtn').addEventListener('click', () => {
+      if (!currentModel) return;
       const exporter = new GLTFExporter();
       exporter.parse(
         currentModel,
@@ -335,6 +371,7 @@
           link.href = URL.createObjectURL(blob);
           link.download = 'retextured_model.glb';
           link.click();
+          setTimeout(() => URL.revokeObjectURL(link.href), 30000);
         },
         { binary: true }
       );
@@ -355,10 +392,5 @@
     }
     animate();
   </script>
-
-  <!-- Attribution -->
-  <div style="position:absolute;bottom:8px;right:8px;font-size:0.7rem;color:#64748b;">
-    Powered by Three.js (MIT License) • Model viewer & painting by Grok @ xAI
-  </div>
 </body>
 </html>
