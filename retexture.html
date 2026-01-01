@@ -19,9 +19,7 @@
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
-    .site-header {
-      position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b;
-    }
+    .site-header { position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 1.6rem; }
     .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
@@ -37,7 +35,7 @@
     #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
     #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 60px; }
-    #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+    #canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: default; }
 
     .panel {
       position: absolute; top: 90px; right: 20px; width: 320px; max-height: calc(100vh - 180px);
@@ -56,7 +54,6 @@
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 80px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
-    /* Mobile-friendly tool buttons */
     .tool-buttons {
       display: flex;
       gap: 0.8rem;
@@ -95,13 +92,18 @@
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
     .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
-    .site-footer p { margin: 0; color: #94a3b8; }
 
     @media (max-width: 900px) {
       .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 70px; border-radius: 12px 12px 0 0; max-height: 50vh; }
       #status { bottom: 70px; font-size: 0.8rem; left: 10px; right: 10px; }
       .tool-btn { height: 70px; font-size: 2.2rem; }
     }
+
+    /* Cursor styles */
+    #canvas.cursor-pan { cursor: grab; }
+    #canvas.cursor-pan:active { cursor: grabbing; }
+    #canvas.cursor-rotate { cursor: move; }
+    #canvas.cursor-paint { cursor: crosshair; }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -235,7 +237,7 @@
   </div>
 </footer>
 
-<!-- Firebase Auth (your original) -->
+<!-- Firebase Auth -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -325,42 +327,57 @@
   controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
 
   let viewMode = 'rotate'; // 'rotate' or 'pan'
+  let paintModeActive = false;
 
-  function updateViewMode() {
+  function updateControlsAndCursor() {
+    if (paintModeActive) {
+      controls.enabled = false;
+      canvas.className = 'cursor-paint';
+      return;
+    }
+
+    controls.enabled = true;
     if (viewMode === 'rotate') {
       controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
       controls.touches.ONE = THREE.TOUCH.ROTATE;
+      canvas.className = 'cursor-rotate';
     } else {
       controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
       controls.touches.ONE = THREE.TOUCH.PAN;
+      canvas.className = 'cursor-pan';
     }
   }
-  updateViewMode();
 
-  // Tool buttons
+  // Buttons
   const handTool = document.getElementById('handTool');
   const rotateTool = document.getElementById('rotateTool');
   const paintToggleBtn = document.getElementById('paintToggleBtn');
   const paintToggle = document.getElementById('paintToggle');
 
-  handTool.onclick = () => {
-    viewMode = 'pan';
-    handTool.classList.add('active');
-    rotateTool.classList.remove('active');
-    updateViewMode();
-  };
+  function setViewMode(mode) {
+    viewMode = mode;
+    if (mode === 'pan') {
+      handTool.classList.add('active');
+      rotateTool.classList.remove('active');
+    } else {
+      rotateTool.classList.add('active');
+      handTool.classList.remove('active');
+    }
+    // If we switch to pan/rotate, automatically exit paint mode
+    if (paintModeActive) togglePaintMode(false);
+    updateControlsAndCursor();
+  }
 
-  rotateTool.onclick = () => {
-    viewMode = 'rotate';
-    rotateTool.classList.add('active');
-    handTool.classList.remove('active');
-    updateViewMode();
-  };
+  handTool.onclick = () => setViewMode('pan');
+  rotateTool.onclick = () => setViewMode('rotate');
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts - Unity style
   window.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'q') handTool.click();
-    if (e.key.toLowerCase() === 'e') rotateTool.click();
+    if (e.key.toLowerCase() === 'q') {
+      setViewMode('pan');
+    } else if (e.key.toLowerCase() === 'e') {
+      setViewMode('rotate');
+    }
   });
 
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -390,16 +407,10 @@
   let brushSize = 0.5;
   let brushShape = 'soft-circle';
   let customBrushData = null;
-  let paintModeActive = false;
   let modelSize = null;
 
   const brushCursor = document.getElementById('brushCursor');
   const exportStatus = document.getElementById('exportStatus');
-  const brushShapeSelect = document.getElementById('brushShape');
-  const customBrushGroup = document.getElementById('customBrushGroup');
-  const uploadBrush = document.getElementById('uploadBrush');
-  const customBrushPreview = document.getElementById('customBrushPreview');
-  const previewCtx = customBrushPreview.getContext('2d');
 
   const gltfLoader = new GLTFLoader();
 
@@ -426,7 +437,8 @@
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
             child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
           }
-          child.material.color.set(0xffffff); // FIX: pure white base
+          // FINAL COLOR FIX: force pure white base + no color tint
+          child.material.color.set(0xffffff);
           child.material.vertexColors = true;
 
           if (!child.geometry.attributes.color) {
@@ -439,18 +451,40 @@
         }
       });
 
-      exportStatus.textContent = 'Model loaded successfully!';
+      exportStatus.textContent = 'Model loaded!';
       exportStatus.style.color = '#4ade80';
     });
   }
 
+  function togglePaintMode(active) {
+    paintModeActive = active;
+    paintToggle.textContent = active ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
+    paintToggle.classList.toggle('active', active);
+    paintToggleBtn.classList.toggle('active', active);
+
+    if (active) {
+      // Switch to paint cursor and disable orbit
+      canvas.className = 'cursor-paint';
+      controls.enabled = false;
+    } else {
+      updateControlsAndCursor(); // back to current view mode
+    }
+  }
+
+  paintToggle.onclick = () => togglePaintMode(!paintModeActive);
+  paintToggleBtn.onclick = () => togglePaintMode(!paintModeActive);
+
+  // Painting logic...
   function getWorldBrushRadius() {
     if (!modelSize) return 0.5;
     return brushSize * (modelSize * 0.2);
   }
 
   function updateBrushCursor(clientX, clientY) {
-    if (!paintModeActive) return;
+    if (!paintModeActive) {
+      brushCursor.style.display = 'none';
+      return;
+    }
     brushCursor.style.left = clientX + 'px';
     brushCursor.style.top = clientY + 'px';
     const worldRadius = getWorldBrushRadius();
@@ -471,8 +505,6 @@
     const pixelsPerUnit = window.innerHeight / screenHeightAtDistance;
     return worldRadius * pixelsPerUnit;
   }
-
-  function hideBrushCursor() { brushCursor.style.display = 'none'; }
 
   function getBrushAlpha(localX, localY) {
     const dist = Math.sqrt(localX * localX + localY * localY);
@@ -546,59 +578,20 @@
   });
 
   canvas.addEventListener('pointerdown', (e) => {
+    if (!paintModeActive) return;
     isPointerDown = true;
-    if (paintModeActive && currentModel) {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(currentModel, true);
-      if (intersects.length > 0) paintAt(intersects[0].point);
-    }
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(currentModel, true);
+    if (intersects.length > 0) paintAt(intersects[0].point);
   });
 
   canvas.addEventListener('pointerup', () => isPointerDown = false);
-  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
-  canvas.addEventListener('mouseenter', (e) => { if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); });
+  canvas.addEventListener('pointerleave', () => { isPointerDown = false; });
 
-  function togglePaintMode(active) {
-    paintModeActive = active;
-    paintToggle.textContent = active ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
-    paintToggle.classList.toggle('active', active);
-    paintToggleBtn.classList.toggle('active', active);
-
-    // Completely lock camera when painting
-    controls.enabled = !active;
-    if (!active) hideBrushCursor();
-  }
-
-  paintToggle.onclick = () => togglePaintMode(!paintModeActive);
-  paintToggleBtn.onclick = () => togglePaintMode(!paintModeActive);
-
-  brushShapeSelect.addEventListener('change', (e) => {
-    brushShape = e.target.value;
-    customBrushGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
-  });
-
-  uploadBrush.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const img = new Image();
-    img.onload = () => {
-      const size = 64;
-      customBrushPreview.width = size;
-      customBrushPreview.height = size;
-      previewCtx.drawImage(img, 0, 0, size, size);
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = size;
-      tempCanvas.height = size;
-      const ctx = tempCanvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, size, size);
-      customBrushData = ctx.getImageData(0, 0, size, size);
-    };
-    img.src = URL.createObjectURL(file);
-  });
-
+  // Other event listeners
   document.getElementById('uploadModel').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) loadModel(URL.createObjectURL(file));
@@ -612,7 +605,7 @@
       currentModel.traverse((child) => {
         if (child.isMesh) {
           child.material.map = tex.clone();
-          child.material.color.set(0xffffff); // keep white
+          child.material.color.set(0xffffff);
           child.material.needsUpdate = true;
         }
       });
@@ -646,6 +639,11 @@
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
   });
 
+  document.getElementById('brushShape').addEventListener('change', (e) => {
+    brushShape = e.target.value;
+    document.getElementById('customBrushGroup').style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
+
   document.getElementById('clearPaint').addEventListener('click', () => {
     paintedGeometries.forEach(({ geometry }) => {
       geometry.attributes.color.array.fill(1);
@@ -656,24 +654,15 @@
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
   document.getElementById('exportBtn').addEventListener('click', async () => {
-    if (!currentModel) {
-      exportStatus.textContent = 'No model loaded!';
-      exportStatus.style.color = '#ef4444';
-      return;
-    }
-    exportStatus.textContent = 'Exporting...';
-    exportStatus.style.color = '#60a5fa';
-
+    if (!currentModel) return;
     const exporter = new GLTFExporter();
     const exportModel = currentModel.clone();
     exportModel.traverse((child) => {
       if (child.isMesh) {
         child.material.vertexColors = true;
         child.material = child.material.clone();
-        child.material.needsUpdate = true;
       }
     });
-
     exporter.parse(exportModel, (result) => {
       if (result instanceof ArrayBuffer) {
         const blob = new Blob([result], { type: 'application/octet-stream' });
@@ -681,8 +670,6 @@
         link.href = URL.createObjectURL(blob);
         link.download = 'retextured_model.glb';
         link.click();
-        exportStatus.textContent = 'Exported successfully!';
-        exportStatus.style.color = '#4ade80';
       }
     }, { binary: true });
   });
@@ -692,6 +679,8 @@
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
+
+  updateControlsAndCursor(); // initial
 
   function animate() {
     requestAnimationFrame(animate);
