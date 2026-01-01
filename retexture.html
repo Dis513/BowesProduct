@@ -23,99 +23,24 @@
     html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
     /* ================= HEADER ================= */
-    .site-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      background: rgba(2,6,23,0.95);
-      border-bottom: 1px solid #1e293b;
-      backdrop-filter: blur(10px);
-    }
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1.6rem;
-    }
-    .logo a {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .main-nav {
-      display: flex;
-      gap: 1.4rem;
-    }
-    .main-nav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .header-left { display: flex; align-items: center; gap: 1.6rem; }
+    .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
+    .main-nav { display: flex; gap: 1.4rem; }
+    .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
     .main-nav a:hover { color:#60a5fa; }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      min-height: 44px;
-    }
-    #profilePic {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid #60a5fa;
-      object-fit: cover;
-      display: none;
-    }
-    .login-btn {
-      padding: 0.45rem 1.1rem;
-      border-radius: 999px;
-      border: 1.5px solid #60a5fa;
-      background: transparent;
-      color: #60a5fa;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-    #levelInfo {
-      display: none;
-      width: 140px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-    }
+    .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
+    #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+    .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+    #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
     #levelText { white-space: nowrap; }
-    #xpOuter {
-      width: 100%;
-      height: 5px;
-      background: #1e293b;
-      border-radius: 3px;
-      margin-top: 4px;
-    }
-    #xpBar {
-      height: 100%;
-      width: 0%;
-      background: #60a5fa;
-      border-radius: 3px;
-      transition: width 0.35s ease;
-    }
+    #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+    #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
     /* ================= MAIN CONTENT ================= */
-    #container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding-top: 70px; /* space for fixed header */
-    }
-    #canvas { display: block; width: 100%; height: 100%; }
+    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; }
+    #canvas { display: block; width: 100%; height: 100%; touch-action: none; } /* important for mobile */
 
     .panel {
       position: absolute;
@@ -132,12 +57,7 @@
     .panel h2 { color: #60a5fa; margin: 0 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
     label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; cursor: pointer; }
-    input, select, button {
-      width: 100%; padding: 0.5rem;
-      border-radius: 0.375rem; border: 1px solid #1f2937;
-      background: #020617; color: #e5e7eb;
-      font: inherit;
-    }
+    input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
     input[type="range"] { padding: 0.3rem 0; }
     input[type="color"] { height: 44px; padding: 0.2rem; }
     button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
@@ -145,36 +65,24 @@
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
     #status { position: absolute; bottom: 20px; left: 20px; font-size: 0.9rem; color: #94a3b8; }
 
+    /* Brush cursor overlay */
+    #brushCursor {
+      position: absolute;
+      pointer-events: none;
+      border: 2px solid rgba(255, 68, 68, 0.8);
+      border-radius: 50%;
+      background: rgba(255, 68, 68, 0.15);
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      display: none;
+      transition: width 0.1s ease, height 0.1s ease;
+    }
+
     /* ================= FOOTER ================= */
-    .site-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(2,6,23,0.95);
-      border-top: 1px solid #1e293b;
-      padding: 1rem;
-      z-index: 1000;
-      backdrop-filter: blur(10px);
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-      font-size: 0.85rem;
-    }
-    .footer-nav {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .footer-nav a {
-      color: #cbd5e1;
-      text-decoration: none;
-    }
+    .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; }
+    .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
     .site-footer p { margin: 0; color: #94a3b8; }
 
@@ -217,7 +125,8 @@
 <!-- MAIN 3D VIEWER -->
 <div id="container">
   <canvas id="canvas"></canvas>
-  <div id="status">Upload a model → Drag to rotate • Click/drag to paint • Scroll to zoom</div>
+  <div id="brushCursor"></div>
+  <div id="status">Upload a model → Drag to rotate • Touch & drag to paint • Pinch to zoom</div>
 
   <div class="panel">
     <h2>Model</h2>
@@ -295,280 +204,289 @@
   </div>
 </footer>
 
-<!-- FIREBASE AUTH + XP -->
+<!-- FIREBASE AUTH + XP (unchanged) -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct"
-};
+  const firebaseConfig = { apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA", authDomain: "bowesproduct.firebaseapp.com", projectId: "bowesproduct" };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
+  const authBtn = document.getElementById("authBtn");
+  const profilePic = document.getElementById("profilePic");
+  const levelInfo = document.getElementById("levelInfo");
+  const levelText = document.getElementById("levelText");
+  const xpBar = document.getElementById("xpBar");
 
-const authBtn = document.getElementById("authBtn");
-const profilePic = document.getElementById("profilePic");
-const levelInfo = document.getElementById("levelInfo");
-const levelText = document.getElementById("levelText");
-const xpBar = document.getElementById("xpBar");
+  authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
-authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { authBtn.textContent = "Login"; profilePic.style.display = "none"; levelInfo.style.display = "none"; return; }
+    authBtn.textContent = "Logout";
+    profilePic.src = user.photoURL || ""; profilePic.style.display = "block";
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    authBtn.textContent = "Login";
-    profilePic.style.display = "none";
-    levelInfo.style.display = "none";
-    return;
-  }
-  authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL || "";
-  profilePic.style.display = "block";
+    const ref = doc(db, "users", user.uid);
+    let snap = await getDoc(ref);
+    if (!snap.exists()) { await setDoc(ref, { xp: 10 }); snap = await getDoc(ref); }
+    const xp = snap.data().xp || 0;
+    const levels = [0, 200, 500, 1000, 2000];
+    let level = levels.filter(v => xp >= v).length - 1;
+    let next = levels[level + 1] ?? levels[level];
+    let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
 
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
-  if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
-    snap = await getDoc(ref);
-  }
-  const xp = snap.data().xp || 0;
-  const levels = [0, 200, 500, 1000, 2000];
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
-  let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
-
-  levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
-  levelInfo.style.display = "block";
-});
+    levelText.textContent = `Level ${level} • ${xp} XP`;
+    xpBar.style.width = progress + "%";
+    levelInfo.style.display = "block";
+  });
 </script>
 
-<!-- THREE.JS RETEXTURE LOGIC (fixed lighting & painting) -->
+<!-- THREE.JS RETEXTURE LOGIC (fixed painting + visible brush) -->
 <script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+  import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
-// Scene setup
-const canvas = document.getElementById('canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x020617);
-
-// Add ambient + directional light so models aren't black
-const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambient);
-const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-dirLight.position.set(5, 10, 7);
-scene.add(dirLight);
-
-const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(3, 2, 5);
-
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
-controls.dampingFactor = 0.05;
-
-// Environment
-const pmremGenerator = new THREE.PMREMGenerator(renderer);
-pmremGenerator.compileEquirectangularShader();
-
-let currentEnvMap = null;
-function loadEnvironment(url) {
-  if (url === 'neutral') {
-    scene.environment = null;
-    if (currentEnvMap) currentEnvMap.dispose();
-    currentEnvMap = null;
-    return;
-  }
-  new RGBELoader().load(url, (texture) => {
-    const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-    scene.environment = envMap;
-    texture.dispose();
-    if (currentEnvMap) currentEnvMap.dispose();
-    currentEnvMap = envMap;
-  });
-}
-loadEnvironment('neutral');
-
-// Model & painting
-let currentModel = null;
-let paintedGeometry = null;
-let paintColor = new THREE.Color('#ff4444');
-let brushSize = 10;
-
-const gltfLoader = new GLTFLoader();
-
-function loadModel(url) {
-  gltfLoader.load(url, (gltf) => {
-    if (currentModel) scene.remove(currentModel);
-    currentModel = gltf.scene;
-    scene.add(currentModel);
-
-    paintedGeometry = null;
-    currentModel.traverse((child) => {
-      if (child.isMesh) {
-        // Ensure PBR material
-        if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-          child.material = new THREE.MeshStandardMaterial({
-            map: child.material.map,
-            color: child.material.color,
-            metalness: child.material.metalness ?? 0,
-            roughness: child.material.roughness ?? 0.5
-          });
-        }
-        child.material.vertexColors = true;
-        if (!child.geometry.attributes.color) {
-          const count = child.geometry.attributes.position.count;
-          const colors = new Float32Array(count * 3).fill(1);
-          child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        }
-        if (!paintedGeometry) paintedGeometry = child.geometry;
-      }
-    });
-
-    const box = new THREE.Box3().setFromObject(currentModel);
-    const center = box.getCenter(new THREE.Vector3());
-    const size = box.getSize(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z);
-    camera.position.copy(center).add(new THREE.Vector3(maxDim, maxDim * 0.7, maxDim));
-    controls.target.copy(center);
-    controls.update();
-  });
-}
-
-// Painting
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-let isPainting = false;
-
-function paintAt(point) {
-  if (!paintedGeometry || !currentModel) return;
-  const positions = paintedGeometry.attributes.position;
-  const colors = paintedGeometry.attributes.color;
-  const brushSq = brushSize * brushSize;
-  const worldMatrix = currentModel.matrixWorld;
-  const vert = new THREE.Vector3();
-
-  for (let i = 0; i < positions.count; i++) {
-    vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(worldMatrix);
-    const distSq = point.distanceToSquared(vert);
-    if (distSq < brushSq) {
-      const influence = 1 - Math.sqrt(distSq) / brushSize;
-      colors.setXYZ(i,
-        THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
-        THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
-        THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
-      );
-    }
-  }
-  colors.needsUpdate = true;
-}
-
-canvas.addEventListener('pointerdown', (e) => { isPainting = true; onPointerMove(e); });
-canvas.addEventListener('pointerup', () => isPainting = false);
-canvas.addEventListener('pointerleave', () => isPainting = false);
-canvas.addEventListener('pointermove', onPointerMove);
-
-function onPointerMove(event) {
-  if (!isPainting || !currentModel) return;
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObject(currentModel, true);
-  if (intersects.length > 0) paintAt(intersects[0].point);
-}
-
-// UI controls (same as before)
-document.getElementById('uploadModel').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file) loadModel(URL.createObjectURL(file));
-});
-
-function applyTexture(url) {
-  if (!currentModel) return;
-  new THREE.TextureLoader().load(url, (tex) => {
-    tex.flipY = false;
-    tex.colorSpace = THREE.SRGBColorSpace;
-    currentModel.traverse((child) => {
-      if (child.isMesh) {
-        child.material.map = tex.clone();
-        child.material.needsUpdate = true;
-      }
-    });
-  });
-}
-
-document.getElementById('presetTexture').addEventListener('change', (e) => { if (e.target.value) applyTexture(e.target.value); });
-document.getElementById('uploadTexture').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file) applyTexture(URL.createObjectURL(file));
-});
-
-document.getElementById('metallicSlider').addEventListener('input', (e) => {
-  const v = parseFloat(e.target.value);
-  document.getElementById('metallicVal').textContent = v.toFixed(2);
-  currentModel?.traverse((child) => { if (child.isMesh) child.material.metalness = v; });
-});
-
-document.getElementById('roughnessSlider').addEventListener('input', (e) => {
-  const v = parseFloat(e.target.value);
-  document.getElementById('roughnessVal').textContent = v.toFixed(2);
-  currentModel?.traverse((child) => { if (child.isMesh) child.material.roughness = v; });
-});
-
-document.getElementById('paintColor').addEventListener('input', (e) => paintColor.set(e.target.value));
-document.getElementById('brushSize').addEventListener('input', (e) => {
-  brushSize = parseFloat(e.target.value);
-  document.getElementById('brushSizeVal').textContent = brushSize;
-});
-
-document.getElementById('clearPaint').addEventListener('click', () => {
-  if (!paintedGeometry) return;
-  paintedGeometry.attributes.color.array.fill(1);
-  paintedGeometry.attributes.color.needsUpdate = true;
-});
-
-document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
-
-document.getElementById('exportBtn').addEventListener('click', () => {
-  if (!currentModel) return;
-  const exporter = new GLTFExporter();
-  exporter.parse(currentModel, (glb) => {
-    const blob = new Blob([glb], { type: 'application/octet-stream' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'retextured_model.glb';
-    link.click();
-  }, { binary: true });
-});
-
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+  const canvas = document.getElementById('canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
-});
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
-animate();
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x020617);
+
+  const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambient);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  dirLight.position.set(5, 10, 7);
+  scene.add(dirLight);
+
+  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(3, 2, 5);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+
+  // Environment (unchanged)
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  pmremGenerator.compileEquirectangularShader();
+  let currentEnvMap = null;
+  function loadEnvironment(url) {
+    if (url === 'neutral') {
+      scene.environment = null;
+      if (currentEnvMap) currentEnvMap.dispose();
+      currentEnvMap = null;
+      return;
+    }
+    new RGBELoader().load(url, (texture) => {
+      const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+      scene.environment = envMap;
+      texture.dispose();
+      if (currentEnvMap) currentEnvMap.dispose();
+      currentEnvMap = envMap;
+    });
+  }
+  loadEnvironment('neutral');
+
+  let currentModel = null;
+  let paintedGeometry = null;
+  let paintColor = new THREE.Color('#ff4444');
+  let brushSize = 10;
+
+  const brushCursor = document.getElementById('brushCursor');
+
+  const gltfLoader = new GLTFLoader();
+
+  function loadModel(url) {
+    gltfLoader.load(url, (gltf) => {
+      if (currentModel) scene.remove(currentModel);
+      currentModel = gltf.scene;
+      scene.add(currentModel);
+
+      paintedGeometry = null;
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          if (!(child.material instanceof THREE.MeshStandardMaterial)) {
+            child.material = new THREE.MeshStandardMaterial({
+              map: child.material.map,
+              color: child.material.color,
+              metalness: child.material.metalness ?? 0,
+              roughness: child.material.roughness ?? 0.5
+            });
+          }
+          child.material.vertexColors = true;
+          if (!child.geometry.attributes.color) {
+            const count = child.geometry.attributes.position.count;
+            const colors = new Float32Array(count * 3).fill(1);
+            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          }
+          if (!paintedGeometry) paintedGeometry = child.geometry;
+        }
+      });
+
+      const box = new THREE.Box3().setFromObject(currentModel);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      camera.position.copy(center).add(new THREE.Vector3(maxDim, maxDim * 0.7, maxDim));
+      controls.target.copy(center);
+      controls.update();
+    });
+  }
+
+  // Painting + visible brush cursor
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let isPainting = false;
+
+  function updateBrushCursor(x, y) {
+    brushCursor.style.left = x + 'px';
+    brushCursor.style.top = y + 'px';
+    const size = brushSize * 2;
+    brushCursor.style.width = size + 'px';
+    brushCursor.style.height = size + 'px';
+    brushCursor.style.display = 'block';
+  }
+
+  function hideBrushCursor() {
+    brushCursor.style.display = 'none';
+  }
+
+  function paintAt(point) {
+    if (!paintedGeometry || !currentModel) return;
+    const positions = paintedGeometry.attributes.position;
+    const colors = paintedGeometry.attributes.color;
+    const brushSq = brushSize * brushSize;
+    const worldMatrix = currentModel.matrixWorld;
+    const vert = new THREE.Vector3();
+
+    for (let i = 0; i < positions.count; i++) {
+      vert.set(positions.getX(i), positions.getY(i), positions.getZ(i)).applyMatrix4(worldMatrix);
+      const distSq = point.distanceToSquared(vert);
+      if (distSq < brushSq) {
+        const influence = 1 - Math.sqrt(distSq) / brushSize;
+        colors.setXYZ(i,
+          THREE.MathUtils.lerp(colors.getX(i), paintColor.r, influence),
+          THREE.MathUtils.lerp(colors.getY(i), paintColor.g, influence),
+          THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, influence)
+        );
+      }
+    }
+    colors.needsUpdate = true;
+  }
+
+  canvas.addEventListener('pointermove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    updateBrushCursor(e.clientX, e.clientY);
+
+    if (isPainting && currentModel) {
+      mouse.x = (x / canvas.clientWidth) * 2 - 1;
+      mouse.y = -(y / canvas.clientHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
+    }
+  });
+
+  canvas.addEventListener('pointerdown', () => { isPainting = true; });
+  canvas.addEventListener('pointerup', () => { isPainting = false; });
+  canvas.addEventListener('pointerleave', () => { isPainting = false; hideBrushCursor(); });
+
+  // Hide cursor when not over canvas
+  canvas.addEventListener('mouseenter', () => { if (currentModel) updateBrushCursor(event.clientX, event.clientY); });
+
+  // UI controls
+  document.getElementById('uploadModel').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) loadModel(URL.createObjectURL(file));
+  });
+
+  function applyTexture(url) {
+    if (!currentModel) return;
+    new THREE.TextureLoader().load(url, (tex) => {
+      tex.flipY = false;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material.map = tex.clone();
+          child.material.needsUpdate = true;
+        }
+      });
+    });
+  }
+
+  document.getElementById('presetTexture').addEventListener('change', (e) => { if (e.target.value) applyTexture(e.target.value); });
+  document.getElementById('uploadTexture').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) applyTexture(URL.createObjectURL(file));
+  });
+
+  document.getElementById('metallicSlider').addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('metallicVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => { if (child.isMesh) child.material.metalness = v; });
+  });
+
+  document.getElementById('roughnessSlider').addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('roughnessVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => { if (child.isMesh) child.material.roughness = v; });
+  });
+
+  document.getElementById('paintColor').addEventListener('input', (e) => {
+    paintColor.set(e.target.value);
+    brushCursor.style.borderColor = e.target.value + 'cc';
+    brushCursor.style.background = e.target.value + '26';
+  });
+
+  document.getElementById('brushSize').addEventListener('input', (e) => {
+    brushSize = parseFloat(e.target.value);
+    document.getElementById('brushSizeVal').textContent = brushSize;
+  });
+
+  document.getElementById('clearPaint').addEventListener('click', () => {
+    if (!paintedGeometry) return;
+    paintedGeometry.attributes.color.array.fill(1);
+    paintedGeometry.attributes.color.needsUpdate = true;
+  });
+
+  document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
+
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    if (!currentModel) return;
+    const exporter = new GLTFExporter();
+    exporter.parse(currentModel, (glb) => {
+      const blob = new Blob([glb], { type: 'application/octet-stream' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'retextured_model.glb';
+      link.click();
+    }, { binary: true });
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
 </script>
 
 </body>
