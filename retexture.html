@@ -163,8 +163,8 @@
       <input type="color" id="paintColor" value="#ff4444">
     </div>
     <div class="control-group">
-      <label for="brushSize">Brush Size <span id="brushSizeVal">10</span></label>
-      <input type="range" id="brushSize" min="1" max="50" value="10">
+      <label for="brushSize">Brush Size <span id="brushSizeVal">0.5</span></label>
+      <input type="range" id="brushSize" min="0.1" max="10" step="0.1" value="0.5">
     </div>
     <button id="paintToggle">Activate Paint Mode</button>
     <button id="clearPaint">Clear All Paint</button>
@@ -309,7 +309,7 @@
   let currentModel = null;
   let paintedGeometries = [];
   let paintColor = new THREE.Color('#ff4444');
-  let brushSize = 10;
+  let brushSize = 0.5;
   let paintModeActive = false;
 
   const brushCursor = document.getElementById('brushCursor');
@@ -358,7 +358,7 @@
     if (!paintModeActive) return;
     brushCursor.style.left = x + 'px';
     brushCursor.style.top = y + 'px';
-    const size = brushSize * 2;
+    const size = brushSize * 40; // Increased pixel size for visibility with smaller world units
     brushCursor.style.width = size + 'px';
     brushCursor.style.height = size + 'px';
     brushCursor.style.display = 'block';
@@ -474,7 +474,7 @@
 
   document.getElementById('brushSize').addEventListener('input', (e) => {
     brushSize = parseFloat(e.target.value);
-    document.getElementById('brushSizeVal').textContent = brushSize;
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(1);
   });
 
   document.getElementById('clearPaint').addEventListener('click', () => {
