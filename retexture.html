@@ -5,9 +5,10 @@
   <title>BowesProduct – Retexture 3D Model</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script type="module" src="https://unpkg.com/three@0.162.0/build/three.min.js"></script>
-  <script type="module" src="https://unpkg.com/three@0.162.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script type="module" src="https://unpkg.com/three@0.162.0/examples/js/controls/OrbitControls.js"></script>
+  <script type="module" src="https://unpkg.com/three@0.162.0/build/three.module.js"></script>
+  <script type="module" src="https://unpkg.com/three@0.162.0/examples/jsm/loaders/GLTFLoader.js"></script>
+  <script type="module" src="https://unpkg.com/three@0.162.0/examples/jsm/exporters/GLTFExporter.js"></script>
+  <script type="module" src="https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -28,7 +29,7 @@
     #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
     #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
     @media (max-width: 968px) { .main-content { grid-template-columns: 1fr; } }
 
     h1 { grid-column: 1 / -1; text-align: center; }
@@ -78,7 +79,7 @@
 
   <div class="controls">
     <div class="form-group">
-      <label>Upload Your GLB Model (purchased from BowesProduct)</label>
+      <label>Upload Your GLB Model</label>
       <input type="file" id="model-upload" accept=".glb">
     </div>
 
@@ -93,21 +94,21 @@
     </div>
 
     <div class="form-group">
-      <label>Roughness <span id="roughness-value">0.5</span></label>
-      <input type="range" id="roughness" min="0" max="1" step="0.01" value="0.5">
+      <label>Roughness <span id="roughness-value">0.4</span></label>
+      <input type="range" id="roughness" min="0" max="1" step="0.01" value="0.4">
     </div>
 
     <button id="apply-texture">Apply New Material</button>
     <button id="download-btn">Download Retextured Model</button>
 
     <p style="margin-top:2rem; font-size:0.9rem; color:#94a3b8;">
-      This client-side retexturing changes the material color/metallic/roughness.<br>
-      Works instantly in-browser – no server or API needed.
+      Instant client-side retexturing – change color, metallic & roughness.<br>
+      Works on any standard PBR GLB model.
     </p>
   </div>
 
   <div id="viewer-container">
-    <div id="status">Upload a model to begin</div>
+    <div id="status">Upload a GLB model to start</div>
   </div>
 </main>
 
@@ -125,7 +126,7 @@
   </div>
 </footer>
 
-<!-- Firebase Auth (same as before) -->
+<!-- Fixed Firebase Auth with new user XP creation -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -142,10 +143,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-document.getElementById("authBtn").onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+const authBtn = document.getElementById("authBtn");
+authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
 onAuthStateChanged(auth, async (user) => {
-  const authBtn = document.getElementById("authBtn");
   const profilePic = document.getElementById("profilePic");
   const levelInfo = document.getElementById("levelInfo");
   const levelText = document.getElementById("levelText");
@@ -162,10 +163,13 @@ onAuthStateChanged(auth, async (user) => {
   profilePic.src = user.photoURL || "";
   profilePic.style.display = "block";
 
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
-  if (!snap.exists()) await setDoc(ref, { xp: 10 });
-  snap = await getDoc(ref);
+  const userRef = doc(db, "users", user.uid);
+  let snap = await getDoc(userRef);
+
+  if (!snap.exists()) {
+    await setDoc(userRef, { xp: 10 }); // Fixed: New users now get 10 XP
+    snap = await getDoc(userRef);
+  }
 
   const xp = snap.data().xp || 0;
   const levels = [0, 200, 500, 1000, 2000];
@@ -174,30 +178,31 @@ onAuthStateChanged(auth, async (user) => {
   let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
 
   levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
+  xpBar.style.width = `${progress}%`;
   levelInfo.style.display = "block";
 });
 </script>
 
-<!-- Custom Retexture Engine (Three.js) -->
+<!-- Fixed Three.js Retexture Tool -->
 <script type="module">
-import { Scene, PerspectiveCamera, WebGLRenderer, AmbientLight, DirectionalLight, OrbitControls } from 'three';
+import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 
 let scene, camera, renderer, controls, currentModel;
-let originalMaterials = new Map();
 
 const container = document.getElementById('viewer-container');
 const status = document.getElementById('status');
 
 function initViewer() {
-  scene = new Scene();
+  scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020617);
 
-  camera = new PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
-  camera.position.set(0, 0, 3);
+  camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.01, 1000);
+  camera.position.set(2, 2, 5);
 
-  renderer = new WebGLRenderer({ antialias: true });
+  renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(renderer.domElement);
@@ -205,19 +210,22 @@ function initViewer() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
-  const ambient = new AmbientLight(0xffffff, 1);
+  const ambient = new THREE.AmbientLight(0xffffff, 1.5);
   scene.add(ambient);
-  const dir = new DirectionalLight(0xffffff, 1);
-  dir.position.set(5, 10, 7);
-  scene.add(dir);
 
-  window.addEventListener('resize', () => {
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
-  });
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  dirLight.position.set(5, 10, 7);
+  scene.add(dirLight);
+
+  window.addEventListener('resize', onWindowResize);
 
   animate();
+}
+
+function onWindowResize() {
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
 function animate() {
@@ -238,27 +246,28 @@ document.getElementById('model-upload').addEventListener('change', (e) => {
 
   loader.load(url, (gltf) => {
     if (currentModel) scene.remove(currentModel);
-    originalMaterials.clear();
 
     currentModel = gltf.scene;
     scene.add(currentModel);
 
-    // Store original materials
-    currentModel.traverse((child) => {
-      if (child.isMesh && child.material) {
-        originalMaterials.set(child, child.material.clone());
-      }
-    });
+    // Auto-center & scale model
+    const box = new THREE.Box3().setFromObject(currentModel);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = 2 / maxDim;
+    currentModel.scale.multiplyScalar(scale);
+    currentModel.position.sub(center.multiplyScalar(scale));
 
-    status.textContent = "Model loaded – adjust and apply new material";
+    status.textContent = "Model loaded – adjust material below";
     document.getElementById('download-btn').style.display = 'none';
   }, undefined, (err) => {
-    status.textContent = "Error loading model";
+    status.textContent = "Error loading model – check console";
     console.error(err);
   });
 });
 
-// Apply new material
+// Apply material
 document.getElementById('apply-texture').addEventListener('click', () => {
   if (!currentModel) return alert("Upload a model first");
 
@@ -267,21 +276,19 @@ document.getElementById('apply-texture').addEventListener('click', () => {
   const roughness = parseFloat(document.getElementById('roughness').value);
 
   currentModel.traverse((child) => {
-    if (child.isMesh && child.material) {
-      if (child.material.metalness !== undefined) {
-        child.material.color = baseColor;
-        child.material.metalness = metallic;
-        child.material.roughness = roughness;
-        child.material.needsUpdate = true;
-      }
+    if (child.isMesh && child.material && child.material.isMeshStandardMaterial) {
+      child.material.color = baseColor;
+      child.material.metalness = metallic;
+      child.material.roughness = roughness;
+      child.material.needsUpdate = true;
     }
   });
 
-  status.textContent = "New material applied!";
+  status.textContent = "Material applied!";
   document.getElementById('download-btn').style.display = 'block';
 });
 
-// Update sliders
+// Slider labels
 document.getElementById('metallic').addEventListener('input', (e) => {
   document.getElementById('metallic-value').textContent = e.target.value;
 });
@@ -289,29 +296,23 @@ document.getElementById('roughness').addEventListener('input', (e) => {
   document.getElementById('roughness-value').textContent = e.target.value;
 });
 
-// Download retextured model
+// Download
 document.getElementById('download-btn').addEventListener('click', () => {
   if (!currentModel) return;
 
-  const exporter = new THREE.GLTFExporter();
+  const exporter = new GLTFExporter();
   exporter.parse(currentModel, (result) => {
-    const output = JSON.stringify(result, null, 2);
-    const blob = new Blob([output], { type: 'application/octet-stream' });
+    const blob = new Blob([result], { type: 'application/octet-stream' });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement('a');
     a.href = url;
     a.download = 'retextured_model.glb';
     a.click();
+
     URL.revokeObjectURL(url);
   }, { binary: true });
 });
-</script>
-
-<!-- GLTF Exporter -->
-<script type="module">
-import { GLTFExporter } from 'https://unpkg.com/three@0.162.0/examples/js/exporters/GLTFExporter.js';
-window.THREE.GLTFExporter = GLTFExporter; // make available
 </script>
 
 </body>
