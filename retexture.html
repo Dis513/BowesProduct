@@ -250,6 +250,35 @@
         height: 48px;
       }
     }
+    /* Mobile fix: Export button hidden behind footer */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 140px; /* Adds empty space at bottom so footer doesn't cover button */
+    }
+
+    .site-footer {
+        position: relative !important; /* Stops any fixed/sticky overlap */
+        z-index: 1 !important;
+    }
+
+    #exportBtn {
+        position: relative;
+        z-index: 100 !important; /* Brings button to front */
+        margin-bottom: 40px !important; /* Extra space below the button */
+        padding: 16px !important; /* Bigger tap area on phone */
+        width: 90% !important;
+        max-width: 500px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 1.1rem !important;
+    }
+
+    /* If your controls are in a side/bottom panel */
+    .panel, .control-group {
+        padding-bottom: 60px !important;
+    }
+}
   </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -981,3 +1010,4 @@
 
 </body>
 </html>
+
