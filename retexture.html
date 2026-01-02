@@ -44,7 +44,6 @@
   #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
   #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
 
-  /* Desktop Panel */
   .panel {
   position: absolute;
   top: 90px;
@@ -62,9 +61,6 @@
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   }
   .panel.hidden { transform: translateX(420px); }
-  .panel::-webkit-scrollbar { width: 6px; }
-  .panel::-webkit-scrollbar-track { background: #0f172a; }
-  .panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
 
   #panelToggle {
   position: absolute;
@@ -91,7 +87,6 @@
   }
   #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
 
-  /* Mobile Bottom Sheet */
   @media (max-width: 900px) {
   .panel {
   position: absolute;
@@ -121,7 +116,6 @@
   #panelToggle { display: none; }
   }
 
-  /* Mobile Toggle */
   #mobilePanelToggle {
   position: fixed;
   bottom: 20px;
@@ -160,8 +154,7 @@
   opacity: 0.5;
   }
 
-  /* Quick Floating Controls */
-  #quickControls {
+  #floatingControls {
   position: fixed;
   bottom: 80px;
   left: 50%;
@@ -171,7 +164,7 @@
   z-index: 1200;
   pointer-events: none;
   }
-  #quickControls > div {
+  #floatingControls > div {
   pointer-events: auto;
   width: 56px;
   height: 56px;
@@ -188,22 +181,22 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   transition: all 0.2s;
   }
-  #quickControls > div:hover { transform: translateY(-4px); }
-  #quickControls > div.active {
+  #floatingControls > div:hover { transform: translateY(-4px); }
+  #floatingControls > div.active {
   background: rgba(34, 197, 94, 0.3);
   color: white;
   border-color: #22c55e;
   }
-  #quickColorWrapper {
+  #floaterColorWrapper {
   position: relative;
   }
-  #quickColor {
+  #floaterColor {
   opacity: 0;
   width: 100%;
   height: 100%;
   cursor: pointer;
   }
-  #quickColorDisplay {
+  #floaterColorDisplay {
   position: absolute;
   inset: 4px;
   border-radius: 50%;
@@ -238,15 +231,12 @@
   #eyedropperToggle.active { background: #7c3aed; border: 1px solid white; }
   #maskToggle.active { background: #ec4899; border: 1px solid white; }
 
-  .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
-
   #loader {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   color: #60a5fa; font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 0;
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   }
   </style>
-  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -260,11 +250,6 @@
   </nav>
   </div>
   <div class="header-right">
-  <img id="profilePic" alt="Profile">
-  <div id="levelInfo">
-  <div id="levelText"></div>
-  <div id="xpOuter"><div id="xpBar"></div></div>
-  </div>
   <button id="authBtn" class="login-btn">Login</button>
   </div>
   </div>
@@ -276,13 +261,12 @@
   <div id="brushCursor"></div>
   <div id="eyedropperCursor"></div>
 
-  <!-- Quick Floating Controls -->
-  <div id="quickControls">
-    <div id="quickPaint">🖌</div>
-    <div id="quickEye">🎨</div>
-    <div id="quickColorWrapper">
-      <input type="color" id="quickColor" value="#ff4444">
-      <div id="quickColorDisplay"></div>
+  <div id="floatingControls">
+    <div id="floaterPaint">🖌</div>
+    <div id="floaterEye">🎨</div>
+    <div id="floaterColorWrapper">
+      <input type="color" id="floaterColor" value="#ff4444">
+      <div id="floaterColorDisplay"></div>
     </div>
   </div>
 
@@ -293,7 +277,7 @@
     <strong style="color:#60a5fa">Controls:</strong><br>
     • Drag to rotate • Scroll to zoom<br>
     • <b>Paint Mode:</b> Paint directly on mesh<br>
-    • <b>Mask Mode:</b> Paint to hide parts (invisibility)<br>
+    • <b>Mask Mode:</b> Paint to hide parts<br>
     • PC: Hold Alt to Sample • Mobile: Use Eyedropper<br>
     • Ctrl+Z/Y Undo/Redo
     </div>
@@ -302,112 +286,28 @@
     <div class="control-group">
     <label for="uploadModel">Upload GLB/GLTF</label>
     <input type="file" id="uploadModel" accept=".glb,.gltf">
-    <div class="hint">Supports GLB/GLTF. Auto-centers model.</div>
-    </div>
-
-    <h2>Texture</h2>
-    <div class="control-group">
-    <label for="presetTexture">Preset Textures</label>
-    <select id="presetTexture">
-    <option value="">Original / None</option>
-    <option value="textures/wood_basecolor.jpg">Warm Wood</option>
-    <option value="textures/metal_basecolor.jpg">Brushed Metal</option>
-    <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
-    <option value="textures/fabric_basecolor.jpg">Fabric</option>
-    </select>
-    </div>
-    <div class="control-group">
-    <label for="uploadTexture">Custom Texture</label>
-    <input type="file" id="uploadTexture" accept="image/*">
-    </div>
-
-    <h2>Material</h2>
-    <div class="control-group">
-    <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
-    <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
-    </div>
-    <div class="control-group">
-    <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
-    <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
-    </div>
-
-    <h2>Layers</h2>
-    <ol id="layersList"></ol>
-    <button id="addLayerBtn">+ Add Layer</button>
-
-    <div class="control-group">
-    <label for="brushOpacity">Brush Opacity <span id="brushOpacityVal">100</span>%</label>
-    <input type="range" id="brushOpacity" min="1" max="100" value="100">
     </div>
 
     <h2>Painting Tools</h2>
     <div class="control-group">
-    <label for="paintColor">Brush Color (current layer)</label>
+    <label for="paintColor">Brush Color</label>
     <input type="color" id="paintColor" value="#ff4444">
     </div>
     <div class="control-group">
     <label for="brushSize">Brush Size <span id="brushSizeVal">0.10</span></label>
     <input type="range" id="brushSize" min="0.01" max="1.0" step="0.01" value="0.1">
     </div>
-    <div class="control-group">
-    <label for="brushShape">Brush Shape</label>
-    <select id="brushShape">
-    <option value="soft-circle">Soft Circle</option>
-    <option value="hard-circle">Hard Circle</option>
-    <option value="custom">Custom Brush (upload PNG)</option>
-    </select>
-    </div>
-    <div class="control-group" id="customBrushGroup" style="display:none;">
-    <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
-    <input type="file" id="uploadBrush" accept="image/png">
-    <canvas id="customBrushPreview" width="80" height="80"></canvas>
-    <div class="hint">White = full paint, black = no paint</div>
-    </div>
-
     <button id="paintToggle">Activate Paint Mode</button>
     <button id="eyedropperToggle">Eyedropper Tool</button>
     <button id="maskToggle">Mask Mode (Paint Invisibility)</button>
 
-    <div id="undoRedoGroup">
-    <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
-    <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
-    </div>
-
-    <button id="clearPaint" style="background:#ef4444;">Clear Current Layer</button>
-    <button id="clearMask" style="background:#64748b; display:none;">Reset Global Mask</button>
-
-    <h2>Lighting</h2>
-    <div class="control-group">
-    <label for="envPreset">Environment</label>
-    <select id="envPreset">
-    <option value="neutral">Neutral</option>
-    <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
-    <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
-    <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
-    </select>
-    </div>
-
     <h2>Export</h2>
     <button id="exportBtn">Export Modified GLB</button>
-    <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
+    <div id="exportStatus"></div>
   </div>
 </div>
 
 <div id="mobilePanelToggle"><span>▲ Controls</span></div>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-  <nav class="footer-nav">
-  <a href="about.html">About</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="terms.html">Terms</a>
-  <a href="license.html">License</a>
-  <a href="refund.html">Refund</a>
-  <a href="rewards.html">Rewards</a>
-  </nav>
-  <p>© 2026 BowesProduct</p>
-  </div>
-</footer>
 
 <script type="module">
   import * as THREE from 'three';
@@ -567,7 +467,7 @@
     panel.classList.toggle('visible', panelVisible);
     const span = mobilePanelToggle.querySelector('span');
     if(span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
-    updateQuickControls();
+    updateFloatingControls();
   }
 
   panelToggle.onclick = togglePanel;
@@ -586,7 +486,7 @@
       panel.classList.remove('hidden');
       panel.classList.add('visible');
     }
-    updateQuickControls();
+    updateFloatingControls();
   }
   updatePanelMode();
   window.addEventListener('resize', updatePanelMode);
@@ -602,423 +502,38 @@
     }
   });
 
-  function blendColor(base, overlay, mode, opacity) {
-    const o = overlay.clone();
-    switch (mode) {
-      case 'multiply':
-        return base.clone().multiplyScalar(1 - opacity).add(base.clone().multiply(o).multiplyScalar(opacity));
-      case 'screen':
-        return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r) * opacity);
-      case 'overlay':
-        const r = base.r < 0.5 ? 2 * base.r * o.r : 1 - 2 * (1 - base.r) * (1 - o.r);
-        const g = base.g < 0.5 ? 2 * base.g * o.g : 1 - 2 * (1 - base.g) * (1 - o.g);
-        const b = base.b < 0.5 ? 2 * base.b * o.b : 1 - 2 * (1 - base.b) * (1 - o.b);
-        return base.clone().multiplyScalar(1 - opacity).add(new THREE.Color(r, g, b).multiplyScalar(opacity));
-      case 'add':
-        return base.clone().add(o.multiplyScalar(opacity));
-      default:
-        return base.clone().lerp(o, opacity);
-    }
-  }
+  const floatingControls = document.getElementById('floatingControls');
+  const floaterPaint = document.getElementById('floaterPaint');
+  const floaterEye = document.getElementById('floaterEye');
+  const floaterColor = document.getElementById('floaterColor');
+  const floaterColorDisplay = document.getElementById('floaterColorDisplay');
 
-  function addLayer() {
-    saveState();
-    const layer = {
-      name: `Layer ${layers.length + 1}`,
-      color: new THREE.Color('#ff4444'),
-      opacity: 1.0;
-      visible: true,
-      blendMode: 'normal'
-    };
-    layers.push(layer);
-    paintedGeometries.forEach((pg, idx) => {
-      const geoKey = `geo_${idx}`;
-      if (!layerData[geoKey]) layerData[geoKey] = {};
-      const colors = new Float32Array(pg.geometry.attributes.position.count * 3).fill(1);
-      layerData[geoKey][layers.length - 1] = Array.from(colors);
-    });
-    updateLayersUI();
-    setActiveLayer(layers.length - 1);
-  }
-
-  function setActiveLayer(idx) {
-    currentLayerIndex = idx;
-    updateLayersUI();
-    paintColor.copy(layers[idx].color);
-    const displayColor = paintColor.clone();
-    document.getElementById('paintColor').value = '#' + displayColor.getHexString();
-    updateQuickColorDisplay();
-  }
-
-  function updateLayersUI() {
-    const list = document.getElementById('layersList');
-    list.innerHTML = '';
-    layers.slice().reverse().forEach((layer, reverseIdx) => {
-      const i = layers.length - 1 - reverseIdx;
-      const li = document.createElement('li');
-      li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
-      li.draggable = true;
-
-      const displayColor = layer.color.clone();
-
-      li.innerHTML = `
-        <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
-        <input type="color" class="layer-color" value="#${displayColor.getHexString()}">
-        <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
-        <select class="layer-blend">
-          <option value="normal">Normal</option>
-          <option value="multiply">Multiply</option>
-          <option value="screen">Screen</option>
-          <option value="overlay">Overlay</option>
-          <option value="add">Add</option>
-        </select>
-        <input class="layer-name" value="${layer.name}">
-        <span class="layer-delete">×</span>
-      `;
-
-      li.querySelector('.layer-name').addEventListener('click', (e) => setActiveLayer(i));
-      li.querySelector('.layer-visibility').onclick = (e) => {
-        e.stopPropagation();
-        layer.visible = !layer.visible;
-        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '🚫';
-        updateAllGeometries();
-      };
-
-      li.querySelector('.layer-color').oninput = (e) => {
-        e.stopPropagation();
-        layer.color.set(e.target.value);
-        if (i === currentLayerIndex) paintColor.copy(layer.color);
-        updateAllGeometries();
-        updateQuickColorDisplay();
-      };
-
-      li.querySelector('.layer-opacity').oninput = (e) => {
-        e.stopPropagation();
-        layer.opacity = e.target.value / 100;
-        updateAllGeometries();
-      };
-
-      li.querySelector('.layer-blend').onchange = (e) => {
-        e.stopPropagation();
-        layer.blendMode = e.target.value;
-        updateAllGeometries();
-      };
-
-      li.querySelector('.layer-delete').onclick = (e) => {
-        e.stopPropagation();
-        deleteLayer(i);
-      };
-
-      li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
-      li.addEventListener('dragover', (e) => e.preventDefault());
-      li.addEventListener('drop', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
-        const toIdx = i;
-        if (fromIdx !== toIdx && !isNaN(fromIdx)) moveLayer(fromIdx, toIdx);
-      });
-
-      list.appendChild(li);
-    });
-  }
-
-  function updateAllGeometries() {
-    paintedGeometries.forEach((pg, geoIdx) => {
-      const col = pg.geometry.attributes.color;
-      const geoKey = `geo_${geoIdx}`;
-      const maskArr = globalMaskData[geoKey] || new Float32Array(col.count).fill(1.0);
-
-      for (let i = 0; i < col.count; i++) {
-        col.setXYZ(i, 1, 1, 1);
-      }
-
-      layers.forEach((layer, layerIdx) => {
-        if (!layer.visible) return;
-        const geoLayerData = layerData[geoKey]?.[layerIdx];
-        if (!geoLayerData) return;
-
-        for (let i = 0; i < col.count; i++) {
-          const overlay = new THREE.Color(geoLayerData[i*3], geoLayerData[i*3+1], geoLayerData[i*3+2]);
-          if (overlay.r !== 1 || overlay.g !== 1 || overlay.b !== 1) {
-            const base = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
-            const result = blendColor(base, overlay, layer.blendMode, layer.opacity);
-            col.setXYZ(i, result.r, result.g, result.b);
-          }
-        }
-      });
-
-      for (let i = 0; i < col.count; i++) {
-        col.setXYZ(i, col.getX(i) * maskArr[i], col.getY(i) * maskArr[i], col.getZ(i) * maskArr[i]);
-      }
-
-      col.needsUpdate = true;
-    });
-  }
-
-  document.getElementById('addLayerBtn').onclick = addLayer;
-  addLayer();
-
-  maskToggle.onclick = () => {
-    maskMode = !maskMode;
-    maskToggle.classList.toggle('active', maskMode);
-    clearMaskBtn.style.display = maskMode ? 'block' : 'none';
-    if (maskMode) {
-      maskToggle.textContent = 'Exit Mask Mode';
-      if (paintModeActive) {
-        paintModeActive = false;
-        document.getElementById('paintToggle').classList.remove('active');
-        document.getElementById('paintToggle').textContent = 'Activate Paint Mode';
-      }
-    } else {
-      maskToggle.textContent = 'Mask Mode (Paint Invisibility)';
-    }
-    controls.enabled = !paintModeActive && !maskMode;
-    updateQuickControls();
-  };
-
-  clearMaskBtn.onclick = () => {
-    saveState();
-    Object.keys(globalMaskData).forEach(k => globalMaskData[k].fill(1.0));
-    updateAllGeometries();
-  };
-
-  document.getElementById('brushOpacity').oninput = (e) => {
-    document.getElementById('brushOpacityVal').textContent = e.target.value;
-  };
-
-  function sampleColor(x, y) {
-    renderer.render(scene, camera);
-    const rect = canvas.getBoundingClientRect();
-    const gl = renderer.getContext();
-    const pixel = new Uint8Array(4);
-    const pixelX = Math.floor((x - rect.left) * renderer.getPixelRatio());
-    const pixelY = Math.floor((rect.height - (y - rect.top)) * renderer.getPixelRatio());
-    gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-
-    const r = pixel[0] / 255;
-    const g = pixel[1] / 255;
-    const b = pixel[2] / 255;
-
-    paintColor.setRGB(r, g, b);
-
-    const displayColor = paintColor.clone();
-    document.getElementById('paintColor').value = '#' + displayColor.getHexString();
-    updateQuickColorDisplay();
-
-    if (!maskMode) {
-      layers[currentLayerIndex].color.copy(paintColor);
-      updateLayersUI();
-    }
-  }
-
-  function getWorldBrushRadius() {
-    const dist = camera.position.distanceTo(controls.target);
-    const fov = camera.fov * (Math.PI / 180);
-    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-    return brushSize * visibleHeight * 0.3;
-  }
-
-  function getBrushRadiusInPixels() {
-    const worldRadius = getWorldBrushRadius();
-    const dist = camera.position.distanceTo(controls.target);
-    const fov = camera.fov * (Math.PI / 180);
-    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-    const pixelRadius = (worldRadius / visibleHeight) * window.innerHeight;
-    return pixelRadius;
-  }
-
-  function updateBrushCursor(x, y) {
-    if (!paintModeActive && !maskMode) return;
-    brushCursor.style.display = 'block';
-
-    if (maskMode) {
-      brushCursor.style.borderColor = '#ec4899';
-      brushCursor.style.backgroundColor = 'rgba(236, 72, 153, 0.1)';
-    } else {
-      const srgbColor = paintColor.clone();
-      brushCursor.style.borderColor = srgbColor.getStyle();
-      brushCursor.style.backgroundColor = `rgba(${Math.round(srgbColor.r*255)}, ${Math.round(srgbColor.g*255)}, ${Math.round(srgbColor.b*255)}, 0.1)`;
-    }
-
-    brushCursor.style.left = x + 'px';
-    brushCursor.style.top = y + 'px';
-    const radiusPx = getBrushRadiusInPixels();
-    const diameter = Math.max(radiusPx * 2, 10);
-    brushCursor.style.width = diameter + 'px';
-    brushCursor.style.height = diameter + 'px';
-    if (brushShape === 'soft-circle') {
-      const shadowColor = maskMode ? '#ec4899' : paintColor.clone().getStyle();
-      brushCursor.style.boxShadow = `0 0 ${diameter/2}px ${diameter/4}px ${shadowColor}`;
-    } else {
-      brushCursor.style.boxShadow = 'none';
-    }
-  }
-
-  function hideCursors() {
-    brushCursor.style.display = 'none';
-    eyedropperCursor.style.display = 'none';
-  }
-
-  function paintAt(point) {
-    if ((!paintModeActive && !maskMode) || paintedGeometries.length === 0) return;
-
-    const brushOpacity = document.getElementById('brushOpacity').value / 100;
-    const radius = getWorldBrushRadius();
-    const radiusSq = radius * radius;
-    const vert = new THREE.Vector3();
-
-    paintedGeometries.forEach((pg, geoIdx) => {
-      const pos = pg.geometry.attributes.position;
-      const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
-      const local = point.clone().applyMatrix4(inv);
-      const geoKey = `geo_${geoIdx}`;
-      const maskArr = globalMaskData[geoKey] || new Float32Array(pos.count).fill(1.0);
-
-      if (maskMode) {
-        for (let i = 0; i < pos.count; i++) {
-          vert.fromBufferAttribute(pos, i);
-          const distSq = vert.distanceToSquared(local);
-          if (distSq > radiusSq) continue;
-          let falloff = 1 - Math.sqrt(distSq) / radius;
-          if (brushShape === 'hard-circle') falloff = 1;
-          if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff);
-          const alpha = brushOpacity * falloff;
-          maskArr[i] = Math.max(0, maskArr[i] - alpha);
-        }
-      } else {
-        if (!layerData[geoKey]) layerData[geoKey] = {};
-        if (!layerData[geoKey][currentLayerIndex]) {
-          const colors = new Float32Array(pos.count * 3).fill(1);
-          layerData[geoKey][currentLayerIndex] = Array.from(colors);
-        }
-        const geoLayerColors = layerData[geoKey][currentLayerIndex];
-
-        for (let i = 0; i < pos.count; i++) {
-          if (maskArr[i] < 0.01) continue;
-
-          vert.fromBufferAttribute(pos, i);
-          const distSq = vert.distanceToSquared(local);
-          if (distSq > radiusSq) continue;
-
-          let falloff = 1 - Math.sqrt(distSq) / radius;
-          if (brushShape === 'hard-circle') falloff = 1;
-          if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff);
-
-          const alpha = brushOpacity * falloff;
-          const paintRGB = layers[currentLayerIndex].color;
-
-          const current = new THREE.Color(geoLayerColors[i*3], geoLayerColors[i*3+1], geoLayerColors[i*3+2]);
-          const result = blendColor(current, paintRGB, layers[currentLayerIndex].blendMode, alpha);
-
-          geoLayerColors[i*3] = result.r;
-          geoLayerColors[i*3+1] = result.g;
-          geoLayerColors[i*3+2] = result.b;
-        }
-      }
-    });
-
-    updateAllGeometries();
-  }
-
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-  let isPointerDown = false;
-
-  canvas.addEventListener('pointermove', (e) => {
-    if (paintModeActive || maskMode) updateBrushCursor(e.clientX, e.clientY);
-    if (isPointerDown && (paintModeActive || maskMode) && currentModel && !eyedropperActive) {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(currentModel, true);
-      if (intersects.length > 0) paintAt(intersects[0].point);
-    }
-  });
-
-  canvas.addEventListener('pointerdown', (e) => {
-    isPointerDown = true;
-    if (eyedropperActive) {
-      sampleColor(e.clientX, e.clientY);
-      return;
-    }
-    if ((paintModeActive || maskMode) && currentModel) {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(currentModel, true);
-      if (intersects.length > 0) paintAt(intersects[0].point);
-    }
-  });
-
-  canvas.addEventListener('pointerup', () => {
-    if (isPointerDown) {
-      isPointerDown = false;
-      saveState();
-    }
-  });
-
-  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideCursors(); });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.altKey && (paintModeActive || maskMode) && !eyedropperActive) {
-      eyedropperActive = true;
-      hideCursors();
-      eyedropperCursor.style.display = 'block';
-    }
-  });
-
-  window.addEventListener('keyup', (e) => {
-    if (!e.altKey && eyedropperActive) {
-      eyedropperActive = false;
-      hideCursors();
-    }
-  });
-
-  const quickControls = document.getElementById('quickControls');
-  const quickPaint = document.getElementById('quickPaint');
-  const quickEye = document.getElementById('quickEye');
-  const quickColor = document.getElementById('quickColor');
-  const quickColorDisplay = document.getElementById('quickColorDisplay');
-
-  // Fixed quick buttons - now they trigger the main buttons correctly
-  quickPaint.onclick = (e) => {
-    e.stopPropagation();
+  floaterPaint.onclick = () => {
     document.getElementById('paintToggle').click();
   };
 
-  quickEye.onclick = (e) => {
-    e.stopPropagation();
+  floaterEye.onclick = () => {
     document.getElementById('eyedropperToggle').click();
   };
 
-  quickColor.oninput = (e) => {
+  floaterColor.oninput = (e) => {
     const newColor = e.target.value;
     paintColor.set(newColor);
     document.getElementById('paintColor').value = newColor;
     layers[currentLayerIndex].color.copy(paintColor);
-    updateQuickColorDisplay();
+    floaterColorDisplay.style.background = newColor;
     updateLayersUI();
   };
 
-  function updateQuickColorDisplay() {
-    const displayColor = paintColor.clone();
-    quickColorDisplay.style.background = displayColor.getStyle();
-    quickColor.value = '#' + displayColor.getHexString();
-  }
-
-  function updateQuickControls() {
+  function updateFloatingControls() {
     const isMobile = window.innerWidth <= 900;
-    quickControls.style.display = isMobile ? (panelVisible ? 'none' : 'flex') : 'flex';
+    floatingControls.style.display = isMobile ? (panelVisible ? 'none' : 'flex') : 'flex';
 
-    quickPaint.classList.toggle('active', paintModeActive);
-    quickEye.classList.toggle('active', eyedropperActive);
-    updateQuickColorDisplay();
+    floaterPaint.classList.toggle('active', paintModeActive);
+    floaterEye.classList.toggle('active', eyedropperActive);
+    floaterColorDisplay.style.background = paintColor.clone().getStyle();
   }
 
-  // Main toggle listeners (now also update quick buttons)
   document.getElementById('paintToggle').addEventListener('click', () => {
     paintModeActive = !paintModeActive;
     const btn = document.getElementById('paintToggle');
@@ -1034,8 +549,7 @@
     document.getElementById('eyedropperToggle').classList.remove('active');
     document.getElementById('eyedropperToggle').textContent = 'Eyedropper Tool';
     if (!paintModeActive) hideCursors();
-    else updateBrushCursor(window.innerWidth/2, window.innerHeight/2);
-    updateQuickControls();
+    updateFloatingControls();
   });
 
   document.getElementById('eyedropperToggle').addEventListener('click', () => {
@@ -1053,19 +567,17 @@
       document.getElementById('maskToggle').textContent = 'Mask Mode (Paint Invisibility)';
       hideCursors();
     }
-    updateQuickControls();
+    updateFloatingControls();
   });
 
-  // Fixed upload - listener attached correctly
-  const uploadModelInput = document.getElementById('uploadModel');
-  uploadModelInput.addEventListener('change', (e) => {
+  // Upload
+  document.getElementById('uploadModel').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
     loadModel(url);
   });
 
-  // Drag & drop upload
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => {
     e.preventDefault();
@@ -1107,17 +619,9 @@
             const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
-          const geoIdx = paintedGeometries.length;
           paintedGeometries.push({ geometry: child.geometry, mesh: child });
-          const geoKey = `geo_${geoIdx}`;
-          layerData[geoKey] = {};
-          globalMaskData[geoKey] = new Float32Array(child.geometry.attributes.position.count).fill(1.0);
-          layers.forEach((_, i) => {
-            layerData[geoKey][i] = Array.from(new Float32Array(child.geometry.attributes.position.count * 3).fill(1));
-          });
         }
       });
-
       updateAllGeometries();
       saveState();
       loader.style.display = 'none';
@@ -1127,113 +631,34 @@
     });
   }
 
-  function applyTexture(url) {
-    if (!currentModel) return;
-    new THREE.TextureLoader().load(url, (tex) => {
-      tex.flipY = false;
-      tex.colorSpace = THREE.SRGBColorSpace;
-      currentModel.traverse((child) => {
-        if (child.isMesh) {
-          child.material.map = tex.clone();
-          child.material.needsUpdate = true;
-        }
-      });
+  function updateAllGeometries() {
+    paintedGeometries.forEach((pg) => {
+      const col = pg.geometry.attributes.color;
+      for (let i = 0; i < col.count; i++) {
+        col.setXYZ(i, 1, 1, 1);
+      }
+      col.needsUpdate = true;
     });
   }
 
-  document.getElementById('presetTexture').addEventListener('change', (e) => {
-    if (e.target.value) applyTexture(e.target.value);
-  });
+  function updateBrushCursor(x, y) {
+    if (!paintModeActive && !maskMode) return;
+    brushCursor.style.display = 'block';
+    brushCursor.style.left = x + 'px';
+    brushCursor.style.top = y + 'px';
+    const radiusPx = 50;
+    const diameter = Math.max(radiusPx * 2, 10);
+    brushCursor.style.width = diameter + 'px';
+    brushCursor.style.height = diameter + 'px';
+  }
 
-  document.getElementById('uploadTexture').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) applyTexture(URL.createObjectURL(file));
-  });
+  function hideCursors() {
+    brushCursor.style.display = 'none';
+    eyedropperCursor.style.display = 'none';
+  }
 
-  document.getElementById('metallicSlider').addEventListener('input', (e) => {
-    const v = parseFloat(e.target.value);
-    document.getElementById('metallicVal').textContent = v.toFixed(2);
-    currentModel?.traverse((child) => {
-      if (child.isMesh) child.material.metalness = v;
-    });
-  });
-
-  document.getElementById('roughnessSlider').addEventListener('input', (e) => {
-    const v = parseFloat(e.target.value);
-    document.getElementById('roughnessVal').textContent = v.toFixed(2);
-    currentModel?.traverse((child) => {
-      if (child.isMesh) child.material.roughness = v;
-    });
-  });
-
-  document.getElementById('paintColor').addEventListener('input', (e) => {
-    paintColor.set(e.target.value);
-    layers[currentLayerIndex].color.copy(paintColor);
-    updateQuickColorDisplay();
-    updateLayersUI();
-  });
-
-  document.getElementById('brushSize').addEventListener('input', (e) => {
-    brushSize = parseFloat(e.target.value);
-    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
-  });
-
-  document.getElementById('brushShape').addEventListener('change', (e) => {
-    brushShape = e.target.value;
-    const customGroup = document.getElementById('customBrushGroup');
-    customGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
-  });
-
-  document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
-
-  document.getElementById('clearPaint').addEventListener('click', () => {
-    saveState();
-    paintedGeometries.forEach((pg, geoIdx) => {
-      const geoKey = `geo_${geoIdx}`;
-      if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
-        layerData[geoKey][currentLayerIndex].fill(1);
-      }
-    });
-    updateAllGeometries();
-  });
-
-  document.getElementById('exportBtn').addEventListener('click', () => {
-    if (!currentModel) {
-      exportStatus.textContent = 'No model loaded';
-      exportStatus.style.color = '#ef4444';
-      return;
-    }
-    exportStatus.textContent = 'Exporting...';
-    exportStatus.style.color = '#60a5fa';
-    const exporter = new GLTFExporter();
-    const clone = currentModel.clone();
-    clone.traverse((child) => {
-      if (child.isMesh) {
-        child.material = child.material.clone();
-        child.material.vertexColors = true;
-        child.material.needsUpdate = true;
-      }
-    });
-    exporter.parse(clone, (result) => {
-      const blob = new Blob([result], { type: 'application/octet-stream' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'retextured_model.glb';
-      link.click();
-      exportStatus.textContent = 'Exported!';
-      exportStatus.style.color = '#4ade80';
-    }, (err) => {
-      exportStatus.textContent = 'Export failed';
-      exportStatus.style.color = '#ef4444';
-      console.error(err);
-    }, { binary: true });
-  });
-
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    updatePanelMode();
+  canvas.addEventListener('pointermove', (e) => {
+    if (paintModeActive || maskMode) updateBrushCursor(e.clientX, e.clientY);
   });
 
   function animate() {
@@ -1243,8 +668,7 @@
   }
   animate();
 
-  // Initial quick controls update
-  updateQuickControls();
+  updateFloatingControls();
 </script>
 </body>
 </html>
