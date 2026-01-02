@@ -41,14 +41,14 @@
       #levelInfo { width: 100%; }
     }
 
-    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 120px; }
+    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
     .panel {
       position: absolute;
       top: 90px;
       right: 20px;
-      width: 360px;
+      width: 380px;
       max-height: calc(100vh - 180px);
       background: rgba(2, 6, 23, 0.95);
       border: 1px solid #1e293b;
@@ -59,7 +59,7 @@
       backdrop-filter: blur(10px);
       transition: transform 0.3s ease;
     }
-    .panel.hidden { transform: translateX(400px); }
+    .panel.hidden { transform: translateX(420px); }
 
     #panelToggle {
       position: absolute;
@@ -86,29 +86,39 @@
     }
     #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
 
-    #mobilePanelToggle {
-      position: absolute;
-      top: -70px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 240px;
-      height: 60px;
-      background: rgba(2, 6, 23, 0.98);
-      border: 1px solid #1e293b;
-      border-bottom: none;
-      border-radius: 24px 24px 0 0;
-      color: #60a5fa;
-      font-size: 1.3rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      z-index: 21;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 -6px 30px rgba(0,0,0,0.4);
+    /* Mobile Bottom Sheet Panel */
+    @media (max-width: 900px) {
+      .panel {
+        top: auto;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 80vh;
+        max-height: none;
+        border-radius: 20px 20px 0 0;
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        padding-top: 80px;
+      }
+      .panel.visible {
+        transform: translateY(0);
+      }
+      #panelToggle { display: none; }
+      #mobilePanelToggle {
+        display: block;
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 6px;
+        background: #60a5fa;
+        border-radius: 3px;
+      }
     }
+
+    #mobilePanelToggle { display: none; cursor: pointer; }
 
     .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
@@ -122,13 +132,16 @@
     /* Layers UI */
     #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
     .layer-item {
-      display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: grab;
     }
+    .layer-item:active { cursor: grabbing; }
     .layer-item.active { background: #1e293b; border: 1px solid #60a5fa; }
     .layer-visibility { font-size: 1.3rem; cursor: pointer; }
     .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; }
     .layer-opacity { width: 90px; }
-    .layer-name { flex: 1; font-size: 0.95rem; }
+    .layer-name { flex: 1; font-size: 0.95rem; cursor: text; }
+    .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; }
+    .layer-blend { width: 100px; font-size: 0.8rem; }
     #addLayerBtn { background: #10b981; }
 
     #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none; }
@@ -145,14 +158,6 @@
     #undoBtn, #redoBtn { flex: 1; background: #475569; margin-top: 0; }
     #undoBtn:hover, #redoBtn:hover { background: #64748b; }
 
-    @media (max-width: 900px) {
-      .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 80px; border-radius: 20px 20px 0 0; max-height: 75vh; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
-      .panel.visible { transform: translateY(0); }
-      #panelToggle { display: none; }
-      #mobilePanelToggle { display: flex; }
-      #eyedropperToggle { display: block; }
-    }
-
     .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
     .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
@@ -160,7 +165,7 @@
     .footer-nav a:hover { color: #60a5fa; }
 
     @media (max-width: 768px) {
-      #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 80px; position: relative; z-index: 30; }
+      #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 100px; position: relative; z-index: 30; }
     }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
@@ -195,13 +200,13 @@
 
   <div class="panel" id="panel">
     <button id="panelToggle">←</button>
-    <button id="mobilePanelToggle">Controls ↑</button>
+    <div id="mobilePanelToggle"></div>
 
     <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.5;">
       Drag to rotate • Pinch/scroll to zoom<br>
       Activate Paint → paint current layer<br>
       PC: Hold Alt • Mobile: Eyedropper button to sample<br>
-      Ctrl+Z/Y Undo/Redo
+      Ctrl+Z/Y Undo/Redo • Drag layers to reorder
     </div>
 
     <h2>Model</h2>
@@ -308,11 +313,11 @@
       <a href="refund.html">Refund</a>
       <a href="rewards.html">Rewards</a>
     </nav>
-    <p>© 2025 BowesProduct</p>
+    <p>© 2026 BowesProduct</p>
   </div>
 </footer>
 
-<!-- Firebase Auth – Working -->
+<!-- Firebase Auth -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -372,7 +377,7 @@
   });
 </script>
 
-<!-- Three.js + All Features Fully Working -->
+<!-- Three.js + Ultimate Features -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -504,22 +509,44 @@
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
     panel.classList.toggle('visible', panelVisible);
-    panelToggle.textContent = panelVisible ? '←' : '→';
-    mobilePanelToggle.textContent = panelVisible ? 'Controls ↑' : 'Controls ↓';
   }
-  panelToggle.onclick = mobilePanelToggle.onclick = togglePanel;
+  panelToggle.onclick = () => togglePanel();
+  mobilePanelToggle.onclick = () => togglePanel();
 
-  // Layers UI
+  // Close panel on canvas tap on mobile
+  canvas.addEventListener('touchstart', (e) => {
+    if (window.innerWidth <= 900 && panelVisible) {
+      e.preventDefault();
+      togglePanel();
+    }
+  });
+
+  // Layers UI with Reorder, Delete, Rename, Blend Modes
   function addLayer() {
     const layer = {
       name: `Layer ${layers.length + 1}`,
       color: new THREE.Color('#ff4444'),
       opacity: 1.0,
-      visible: true
+      visible: true,
+      blendMode: 'normal'
     };
     layers.push(layer);
     updateLayersUI();
     setActiveLayer(layers.length - 1);
+  }
+
+  function deleteLayer(idx) {
+    if (layers.length <= 1) return;
+    layers.splice(idx, 1);
+    if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
+    updateLayersUI();
+  }
+
+  function moveLayer(fromIdx, toIdx) {
+    const [layer] = layers.splice(fromIdx, 1);
+    layers.splice(toIdx, 0, layer);
+    if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
+    updateLayersUI();
   }
 
   function setActiveLayer(idx) {
@@ -532,14 +559,24 @@
   function updateLayersUI() {
     const list = document.getElementById('layersList');
     list.innerHTML = '';
-    layers.forEach((layer, i) => {
+    layers.slice().reverse().forEach((layer, reverseIdx) => {
+      const i = layers.length - 1 - reverseIdx;
       const li = document.createElement('li');
       li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
+      li.draggable = true;
       li.innerHTML = `
         <span class="layer-visibility">${layer.visible ? '👁' : '隠'}</span>
         <input type="color" class="layer-color" value="#${layer.color.getHexString()}">
         <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
-        <span class="layer-name">${layer.name}</span>
+        <select class="layer-blend">
+          <option value="normal">Normal</option>
+          <option value="multiply">Multiply</option>
+          <option value="screen">Screen</option>
+          <option value="overlay">Overlay</option>
+          <option value="add">Add</option>
+        </select>
+        <span class="layer-name" contenteditable="true">${layer.name}</span>
+        <span class="layer-delete">×</span>
       `;
       li.onclick = () => setActiveLayer(i);
       li.querySelector('.layer-visibility').onclick = (e) => {
@@ -549,18 +586,308 @@
       };
       li.querySelector('.layer-color').oninput = (e) => {
         layer.color.set(e.target.value);
-        if (i === currentLayerIndex) {
-          paintColor.copy(layer.color);
-          document.getElementById('paintColor').value = e.target.value;
-        }
+        if (i === currentLayerIndex) paintColor.copy(layer.color);
       };
       li.querySelector('.layer-opacity').oninput = (e) => layer.opacity = e.target.value / 100;
+      li.querySelector('.layer-blend').onchange = (e) => layer.blendMode = e.target.value;
+      li.querySelector('.layer-name').onblur = (e) => layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
+      li.querySelector('.layer-delete').onclick = (e) => {
+        e.stopPropagation();
+        deleteLayer(i);
+      };
+      li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
+      li.addEventListener('dragover', (e) => e.preventDefault();
+      li.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+        const toIdx = i;
+        if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
+      });
       list.appendChild(li);
     });
   }
 
   document.getElementById('addLayerBtn').onclick = addLayer;
-  addLayer(); // Start with one layer
+  addLayer();
+
+  // Painting with blend modes
+  function blendColor(base, overlay, mode, opacity) {
+    const o = overlay.clone().multiplyScalar(opacity);
+    switch (mode) {
+      case 'multiply': return base.clone().multiply(o);
+      case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.g) * (1 - o.g)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.b) * (1 - o.b));
+      case 'overlay': return base.clone().lerp(o.multiply(base.clone().multiplyScalar(2)), base.r + base.g + base.b > 1.5 ? 1 : 0);
+      case 'add': return base.clone().add(o);
+      default: return base.clone().lerp(o, opacity);
+    }
+  }
+
+  function paintAt(point) {
+    if (!paintModeActive || paintedGeometries.length === 0) return;
+    const brushOpacity = document.getElementById('brushOpacity').value / 100;
+
+    const radius = getWorldBrushRadius();
+    const radiusSq = radius * radius;
+    const vert = new THREE.Vector3();
+
+    paintedGeometries.forEach(({ geometry, mesh }) => {
+      const pos = geometry.attributes.position;
+      const col = geometry.attributes.color;
+      const inv = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
+      const local = point.clone().applyMatrix4(inv);
+
+      let changed = false;
+      for (let i = 0; i < pos.count; i++) {
+        vert.fromBufferAttribute(pos, i);
+        if (vert.distanceToSquared(local) > radiusSq) continue;
+
+        changed = true;
+        const alpha = brushOpacity * (1 - Math.sqrt(vert.distanceToSquared(local)) / radius);
+
+        let result = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
+        layers.forEach(layer => {
+          if (!layer.visible) return;
+          const layerColor = maskMode && layer === layers[currentLayerIndex] ? new THREE.Color(0,0,0) : layer.color;
+          result = blendColor(result, layerColor, layer.blendMode, alpha * layer.opacity);
+        });
+
+        col.setXYZ(i, result.r, result.g, result.b);
+      }
+      if (changed) col.needsUpdate = true;
+    });
+  }
+
+ <script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+  import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+
+  const canvas = document.getElementById('canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x020617);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  dirLight.position.set(5, 10, 7);
+  scene.add(dirLight);
+
+  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(3, 2, 5);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
+
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  pmremGenerator.compileEquirectangularShader();
+  let currentEnvMap = null;
+
+  function loadEnvironment(url) {
+    if (url === 'neutral') {
+      scene.environment = null;
+      if (currentEnvMap) currentEnvMap.dispose();
+      return;
+    }
+    new RGBELoader().load(url, (tex) => {
+      const envMap = pmremGenerator.fromEquirectangular(tex).texture;
+      scene.environment = envMap;
+      tex.dispose();
+      if (currentEnvMap) currentEnvMap.dispose();
+      currentEnvMap = envMap;
+    });
+  }
+  loadEnvironment('neutral');
+
+  let currentModel = null;
+  let modelSize = 1;
+  let paintedGeometries = [];
+  let paintColor = new THREE.Color('#ff4444');
+  let brushSize = 0.5;
+  let brushShape = 'soft-circle';
+  let customBrushData = null;
+  let paintModeActive = false;
+  let eyedropperActive = false;
+  let maskMode = false;
+
+  // Layers
+  const layers = [];
+  let currentLayerIndex = 0;
+
+  // Undo/Redo
+  const undoStack = [];
+  const redoStack = [];
+  const MAX_UNDO = 30;
+  const undoBtn = document.getElementById('undoBtn');
+  const redoBtn = document.getElementById('redoBtn');
+
+  function saveState() {
+    if (paintedGeometries.length === 0) return;
+    const state = paintedGeometries.map(g => g.geometry.attributes.color.array.slice());
+    undoStack.push(state);
+    if (undoStack.length > MAX_UNDO) undoStack.shift();
+    redoStack.length = 0;
+    undoBtn.disabled = false;
+    redoBtn.disabled = true;
+  }
+
+  function undo() {
+    if (undoStack.length === 0) return;
+    redoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
+    const state = undoStack.pop();
+    paintedGeometries.forEach((g, i) => {
+      g.geometry.attributes.color.array.set(state[i]);
+      g.geometry.attributes.color.needsUpdate = true;
+    });
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = false;
+  }
+
+  function redo() {
+    if (redoStack.length === 0) return;
+    undoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
+    const state = redoStack.pop();
+    paintedGeometries.forEach((g, i) => {
+      g.geometry.attributes.color.array.set(state[i]);
+      g.geometry.attributes.color.needsUpdate = true;
+    });
+    redoBtn.disabled = redoStack.length === 0;
+    undoBtn.disabled = false;
+  }
+
+  undoBtn.onclick = undo;
+  redoBtn.onclick = redo;
+  window.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+  });
+
+  // Cursors
+  const brushCursor = document.getElementById('brushCursor');
+  const eyedropperCursor = document.getElementById('eyedropperCursor');
+  const paintToggle = document.getElementById('paintToggle');
+  const eyedropperToggle = document.getElementById('eyedropperToggle');
+  const maskToggle = document.getElementById('maskToggle');
+  const exportStatus = document.getElementById('exportStatus');
+
+  // Panel toggle
+  const panel = document.getElementById('panel');
+  const panelToggle = document.getElementById('panelToggle');
+  const mobilePanelToggle = document.getElementById('mobilePanelToggle');
+  let panelVisible = true;
+
+  function togglePanel() {
+    panelVisible = !panelVisible;
+    panel.classList.toggle('hidden', !panelVisible);
+    panel.classList.toggle('visible', panelVisible);
+  }
+  panelToggle.onclick = togglePanel;
+  mobilePanelToggle.onclick = togglePanel;
+
+  // Close panel on canvas tap (mobile)
+  canvas.addEventListener('touchstart', (e) => {
+    if (window.innerWidth <= 900 && panelVisible) {
+      e.preventDefault();
+      togglePanel();
+    }
+  });
+
+  // Layers UI
+  function addLayer() {
+    const layer = {
+      name: `Layer ${layers.length + 1}`,
+      color: new THREE.Color('#ff4444'),
+      opacity: 1.0,
+      visible: true,
+      blendMode: 'normal'
+    };
+    layers.push(layer);
+    updateLayersUI();
+    setActiveLayer(layers.length - 1);
+  }
+
+  function deleteLayer(idx) {
+    if (layers.length <= 1) return;
+    layers.splice(idx, 1);
+    if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
+    updateLayersUI();
+  }
+
+  function moveLayer(fromIdx, toIdx) {
+    const [layer] = layers.splice(fromIdx, 1);
+    layers.splice(toIdx, 0, layer);
+    if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
+    updateLayersUI();
+  }
+
+  function setActiveLayer(idx) {
+    currentLayerIndex = idx;
+    updateLayersUI();
+    paintColor.copy(layers[idx].color);
+    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
+  }
+
+  function updateLayersUI() {
+    const list = document.getElementById('layersList');
+    list.innerHTML = '';
+    layers.slice().reverse().forEach((layer, reverseIdx) => {
+      const i = layers.length - 1 - reverseIdx;
+      const li = document.createElement('li');
+      li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
+      li.draggable = true;
+      li.innerHTML = `
+        <span class="layer-visibility">${layer.visible ? '👁' : '隠'}</span>
+        <input type="color" class="layer-color" value="#${layer.color.getHexString()}">
+        <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
+        <select class="layer-blend">
+          <option value="normal">Normal</option>
+          <option value="multiply">Multiply</option>
+          <option value="screen">Screen</option>
+          <option value="overlay">Overlay</option>
+          <option value="add">Add</option>
+        </select>
+        <span class="layer-name" contenteditable="true">${layer.name}</span>
+        <span class="layer-delete">×</span>
+      `;
+      li.onclick = () => setActiveLayer(i);
+      li.querySelector('.layer-visibility').onclick = (e) => {
+        e.stopPropagation();
+        layer.visible = !layer.visible;
+        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '隠';
+      };
+      li.querySelector('.layer-color').oninput = (e) => {
+        layer.color.set(e.target.value);
+        if (i === currentLayerIndex) paintColor.copy(layer.color);
+      };
+      li.querySelector('.layer-opacity').oninput = (e) => layer.opacity = e.target.value / 100;
+      li.querySelector('.layer-blend').onchange = (e) => layer.blendMode = e.target.value;
+      li.querySelector('.layer-name').onblur = (e) => layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
+      li.querySelector('.layer-delete').onclick = (e) => {
+        e.stopPropagation();
+        deleteLayer(i);
+      };
+      li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
+      li.addEventListener('dragover', (e) => e.preventDefault();
+      li.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+        const toIdx = i;
+        if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
+      });
+      list.appendChild(li);
+    });
+  }
+
+  document.getElementById('addLayerBtn').onclick = addLayer;
+  addLayer();
 
   maskToggle.onclick = () => {
     maskMode = !maskMode;
@@ -617,10 +944,8 @@
   }
 
   function paintAt(point) {
-    if (!paintModeActive || paintedGeometries.length === 0 || !layers[currentLayerIndex].visible) return;
-    const layer = layers[currentLayerIndex];
+    if (!paintModeActive || paintedGeometries.length === 0) return;
     const brushOpacity = document.getElementById('brushOpacity').value / 100;
-    const finalOpacity = brushOpacity * layer.opacity;
 
     const radius = getWorldBrushRadius();
     const radiusSq = radius * radius;
@@ -638,17 +963,31 @@
         if (vert.distanceToSquared(local) > radiusSq) continue;
 
         changed = true;
-        const alpha = finalOpacity * (1 - Math.sqrt(vert.distanceToSquared(local)) / radius);
-        const targetColor = maskMode ? new THREE.Color(0,0,0) : layer.color;
+        const alpha = brushOpacity * (1 - Math.sqrt(vert.distanceToSquared(local)) / radius);
 
-        col.setXYZ(i,
-          THREE.MathUtils.lerp(col.getX(i), targetColor.r, alpha),
-          THREE.MathUtils.lerp(col.getY(i), targetColor.g, alpha),
-          THREE.MathUtils.lerp(col.getZ(i), targetColor.b, alpha)
-        );
+        let result = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
+        layers.forEach(layer => {
+          if (!layer.visible) return;
+          const layerColor = maskMode && layer === layers[currentLayerIndex] ? new THREE.Color(0,0,0) : layer.color;
+          result = blendColor(result, layerColor, layer.blendMode, alpha * layer.opacity);
+        });
+
+        col.setXYZ(i, result.r, result.g, result.b);
       }
       if (changed) col.needsUpdate = true;
     });
+  }
+
+  // Blend function
+  function blendColor(base, overlay, mode, opacity) {
+    const o = overlay.clone().multiplyScalar(opacity);
+    switch (mode) {
+      case 'multiply': return base.clone().multiply(o);
+      case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.g) * (1 - o.g)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.b) * (1 - o.b));
+      case 'overlay': return base.clone().lerp(o.multiply(base.clone().multiplyScalar(2)), base.r + base.g + base.b > 1.5 ? 1 : 0);
+      case 'add': return base.clone().add(o);
+      default: return base.clone().lerp(o, opacity);
+    }
   }
 
   // Pointer events
@@ -763,7 +1102,7 @@
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
             child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
           }
-          child.material.color.set(0xffffff); // Bright colors fix
+          child.material.color.set(0xffffff); // Bright colors
           child.material.vertexColors = true;
           if (!child.geometry.attributes.color) {
             const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
@@ -783,7 +1122,122 @@
     });
   }
 
-  // Texture, material, lighting, export – all working
+  // Texture apply
+  function applyTexture(url) {
+    if (!currentModel) return;
+    new THREE.TextureLoader().load(url, (tex) => {
+      tex.flipY = false;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material.map = tex.clone();
+          child.material.needsUpdate = true;
+        }
+      });
+    });
+  }
+
+  document.getElementById('presetTexture').addEventListener('change', (e) => {
+    if (e.target.value) applyTexture(e.target.value);
+  });
+
+  document.getElementById('uploadTexture').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) applyTexture(URL.createObjectURL(file));
+  });
+
+  // Material sliders
+  document.getElementById('metallicSlider').addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('metallicVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => {
+      if (child.isMesh) child.material.metalness = v;
+    });
+  });
+
+  document.getElementById('roughnessSlider').addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('roughnessVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => {
+      if (child.isMesh) child.material.roughness = v;
+    });
+  });
+
+  // Brush size & color
+  document.getElementById('paintColor').addEventListener('input', (e) => {
+    paintColor.set(e.target.value);
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
+  });
+
+  document.getElementById('brushSize').addEventListener('input', (e) => {
+    brushSize = parseFloat(e.target.value);
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
+  });
+
+  // Clear current layer
+  document.getElementById('clearPaint').addEventListener('click', () => {
+    paintedGeometries.forEach(({ geometry }) => {
+      const count = geometry.attributes.position.count;
+      const colors = geometry.attributes.color.array;
+      for (let i = 0; i < count; i++) {
+        colors[i * 3] = 1;
+        colors[i * 3 + 1] = 1;
+        colors[i * 3 + 2] = 1;
+      }
+      geometry.attributes.color.needsUpdate = true;
+    });
+    saveState();
+  });
+
+  document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
+
+  // Export
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    if (!currentModel) {
+      exportStatus.textContent = 'No model loaded';
+      exportStatus.style.color = '#ef4444';
+      return;
+    }
+    exportStatus.textContent = 'Exporting...';
+    exportStatus.style.color = '#60a5fa';
+    const exporter = new GLTFExporter();
+    const clone = currentModel.clone();
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.material = child.material.clone();
+        child.material.vertexColors = true;
+        child.material.needsUpdate = true;
+      }
+    });
+    exporter.parse(clone, (result) => {
+      const blob = new Blob([result], { type: 'application/octet-stream' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'retextured_model.glb';
+      link.click();
+      exportStatus.textContent = 'Exported!';
+      exportStatus.style.color = '#4ade80';
+    }, (err) => {
+      exportStatus.textContent = 'Export failed';
+      exportStatus.style.color = '#ef4444';
+      console.error(err);
+    }, { binary: true });
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+</script>
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
