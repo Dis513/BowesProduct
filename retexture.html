@@ -162,16 +162,15 @@
   @media (min-width: 901px) { #mobilePanelToggle { display: none; } }
   @media (max-width: 900px) { #mobilePanelToggle { display: flex; } }
 
-  /* Floating Controls (Paint/Eyedropper/Color) - MOVED TO RIGHT */
+  /* Floating Controls (Paint/Eyedropper/Color) - STAY ON LEFT, CONTROLS ON RIGHT */
   #floatingControls {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  left: 20px;
   display: flex;
   gap: 10px;
   z-index: 1150;
   pointer-events: none;
-  flex-direction: column-reverse;
   }
   .floater {
   pointer-events: auto;
@@ -213,10 +212,6 @@
   @media (min-width: 901px) { 
     #floatingControls { 
       display: flex !important; 
-      bottom: 20px;
-      left: 20px;
-      right: auto;
-      flex-direction: row;
     } 
   }
   @media (max-width: 900px) {
@@ -798,6 +793,9 @@
   const displayColor = paintColor.clone();
   document.getElementById('paintColor').value = '#' + displayColor.getHexString();
   floaterColor.value = '#' + displayColor.getHexString();
+  
+  // Update paintColor variable to match the new layer's color
+  paintColor.set(layers[idx].color);
   }
 
   function updateLayersUI() {
@@ -959,6 +957,9 @@
   const displayColor = paintColor.clone();
   document.getElementById('paintColor').value = '#' + displayColor.getHexString();
   floaterColor.value = '#' + displayColor.getHexString();
+  
+  // Update paintColor variable
+  paintColor.setRGB(r, g, b);
   
   if(!maskMode) {
       layers[currentLayerIndex].color.copy(paintColor);
@@ -1173,6 +1174,10 @@
       layers[currentLayerIndex].color.copy(paintColor);
       document.getElementById('paintColor').value = e.target.value;
       updateLayersUI();
+      
+      // Also update the base color in the paint color picker
+      document.getElementById('paintColor').value = e.target.value;
+      paintColor.set(e.target.value);
   };
 
   document.getElementById('uploadModel').addEventListener('change', (e) => {
@@ -1276,6 +1281,8 @@
   document.getElementById('paintColor').addEventListener('input', (e) => {
   paintColor.set(e.target.value);
   layers[currentLayerIndex].color.copy(paintColor);
+  // Update floaterColor to match
+  floaterColor.value = e.target.value;
   updateLayersUI();
   });
 
