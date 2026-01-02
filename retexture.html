@@ -87,7 +87,7 @@
   }
   #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
 
-  /* Mobile Bottom Sheet Panel - Partial Hide */
+  /* Mobile Bottom Sheet - Partial Hide with Visible Handle */
   @media (max-width: 900px) {
   .panel {
   position: absolute;
@@ -99,7 +99,7 @@
   height: 85vh;
   max-height: none;
   border-radius: 20px 20px 0 0;
-  transform: translateY(calc(100% - 70px)); /* Show only top 70px when hidden */
+  transform: translateY(calc(85vh - 70px)); /* Hidden: only top 70px visible */
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   padding-top: 80px;
   padding-bottom: 20px;
@@ -156,7 +156,7 @@
   #addLayerBtn { background: #10b981; }
 
   #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none; }
-  #brushCursor { border: 3px solid transparent; border-radius: 50%; background: transparent; }
+  #brushCursor { border: 2px solid #ff4444; border-radius: 50%; opacity: 0.8; background: rgba(255,68,68,0.1); }
   #eyedropperCursor { width: 44px; height: 44px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/32px no-repeat; }
 
   #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
@@ -326,62 +326,60 @@
   </div>
 </footer>
 
-  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+<!-- Firebase Auth -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+    authDomain: "bowesproduct.firebaseapp.com",
+    projectId: "bowesproduct"
+  };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
 
-const authBtn = document.getElementById("authBtn");
-const profilePic = document.getElementById("profilePic");
-const levelInfo = document.getElementById("levelInfo");
-const levelText = document.getElementById("levelText");
-const xpBar = document.getElementById("xpBar");
+  const authBtn = document.getElementById("authBtn");
+  const profilePic = document.getElementById("profilePic");
+  const levelInfo = document.getElementById("levelInfo");
+  const levelText = document.getElementById("levelText");
+  const xpBar = document.getElementById("xpBar");
 
-authBtn.onclick = () =>
-  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+  authBtn.onclick = () =>
+    auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
-onAuthStateChanged(auth, async (user) => {
- if (!user) {
-  authBtn.textContent = "Login";
-  profilePic.style.display = "none";
-  levelInfo.style.display = "none";
-  return;
- }
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      authBtn.textContent = "Login";
+      profilePic.style.display = "none";
+      levelInfo.style.display = "none";
+      return;
+    }
+    authBtn.textContent = "Logout";
+    profilePic.src = user.photoURL || "";
+    profilePic.style.display = "block";
 
- authBtn.textContent = "Logout";
- profilePic.src = user.photoURL || "";
- profilePic.style.display = "block";
+    const ref = doc(db, "users", user.uid);
+    let snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, { xp: 10 });
+      snap = await getDoc(ref);
+    }
+    const xp = snap.data().xp || 0;
+    const levels = [0, 200, 500, 1000, 2000];
+    let level = levels.filter(v => xp >= v).length - 1;
+    let next = levels[level + 1] ?? levels[level];
+    let progress = next === levels[level] ? 100 :
+      ((xp - levels[level]) / (next - levels[level])) * 100;
 
- const ref = doc(db, "users", user.uid);
- let snap = await getDoc(ref);
-
- if (!snap.exists()) {
-  await setDoc(ref, { xp: 10 });  // ← New users start with 10 XP
-  snap = await getDoc(ref);
- }
-
- const xp = snap.data().xp || 0;
- const levels = [0, 200, 500, 1000, 2000];
- let level = levels.filter(v => xp >= v).length - 1;
- let next = levels[level + 1] ?? levels[level];
- let progress = next === levels[level] ? 100 :
-  ((xp - levels[level]) / (next - levels[level])) * 100;
-
- levelText.textContent = `Level ${level} • ${xp} XP`;
- xpBar.style.width = progress + "%";
- levelInfo.style.display = "block";
-});
+    levelText.textContent = `Level ${level} • ${xp} XP`;
+    xpBar.style.width = progress + "%";
+    levelInfo.style.display = "block";
+  });
 </script>
 
 <!-- Three.js + Features -->
@@ -760,7 +758,7 @@ onAuthStateChanged(auth, async (user) => {
   const dist = camera.position.distanceTo(controls.target);
   const fov = camera.fov * (Math.PI / 180);
   const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  return brushSize * visibleHeight * 0.25; // Increased for much fuller coverage
+  return brushSize * visibleHeight * 0.3; // Perfect match to cursor
   }
 
   function projectRadiusToScreen(worldRadius) {
@@ -780,7 +778,7 @@ onAuthStateChanged(auth, async (user) => {
   const size = Math.max(r * 2, 10);
   brushCursor.style.width = brushCursor.style.height = size + 'px';
   brushCursor.style.borderColor = paintColor.getStyle();
-  brushCursor.style.borderRadius = '50%';
+  brushCursor.style.background = `rgba(${paintColor.r*255}, ${paintColor.g*255}, ${paintColor.b*255}, 0.1)`;
   brushCursor.style.boxShadow = brushShape === 'soft-circle' ? `0 0 ${size/2}px ${size/4}px ${paintColor.getStyle()}` : 'none';
   }
 
@@ -814,8 +812,8 @@ onAuthStateChanged(auth, async (user) => {
   if (distSq > radiusSq) continue;
 
   let falloff = 1 - Math.sqrt(distSq) / radius;
-  if (brushShape === 'hard-circle') falloff = 1; // Hard edge
-  if (brushShape === 'soft-circle') falloff = falloff ** 3; // Softer falloff
+  if (brushShape === 'hard-circle') falloff = 1;
+  if (brushShape === 'soft-circle') falloff = falloff ** 3;
 
   const alpha = brushOpacity * falloff;
 
@@ -1026,12 +1024,7 @@ onAuthStateChanged(auth, async (user) => {
   paintedGeometries.forEach((pg, geoIdx) => {
   const geoKey = `geo_${geoIdx}`;
   if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
-  const count = pg.geometry.attributes.position.count;
-  for (let i = 0; i < count * 3; i += 3) {
-  layerData[geoKey][currentLayerIndex][i] = 1;
-  layerData[geoKey][currentLayerIndex][i+1] = 1;
-  layerData[geoKey][currentLayerIndex][i+2] = 1;
-  }
+  layerData[geoKey][currentLayerIndex].fill(1);
   }
   });
   updateAllGeometries();
@@ -1087,4 +1080,3 @@ onAuthStateChanged(auth, async (user) => {
 
 </body>
 </html>
-
