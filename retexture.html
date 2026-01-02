@@ -169,7 +169,8 @@
   left: 20px;
   display: none; /* Controlled by JS */
   gap: 10px;
-  z-index: 1150;
+  /* Super High Z-Index to guarantee it is ALWAYS on top */
+  z-index: 10001; 
   pointer-events: none; 
   }
   .floater {
@@ -177,7 +178,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border:1px solid #475569;
+  border: 1px solid #475569;
   background: rgba(30, 41, 59, 0.9);
   backdrop-filter: blur(8px);
   color: #94a3b8;
@@ -203,8 +204,7 @@
     border-radius: 50%;
   }
   #floaterColor::-webkit-color-swatch-wrapper { padding: 0; }
-  #floaterColor::-webkit-color-swatch { border: none; border-radius: 50%; }
-  
+  #floaterColor::-webkit-color-swatch { border: none; border-radius: 50%; }  
   #floaterPaint.active { color: #f87171; border-color: #f87171; }
   #floaterEye.active { color: #7c3aed; border-color: #7c3aed; }
   #floaterPaint.active-mask, #floaterEye.active-mask { color: #ec4899; border-color: #ec4899; }
@@ -233,7 +233,7 @@
   .layer-blend { width: 100px; font-size: 0.8rem; }
   #addLayerBtn { background: #10b981; }
 
-  #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none; }
+  #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9998; display: none; }
   #brushCursor { border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; opacity: 0.9; background: rgba(255,68,68,0.2); transition: width 0.1s, height 0.1s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
   #eyedropperCursor { width: 44px; height: 44px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/32px no-repeat; }
 
@@ -293,11 +293,11 @@
   <div id="brushCursor"></div>
   <div id="eyedropperCursor"></div>
 
-  <!-- Floating Controls -->
+  <!-- Floating Controls: Paint, Eyedropper, Color -->
   <div id="floatingControls">
-    <input type="color" id="floaterColor" title="Base Color">
     <div class="floater" id="floaterPaint" title="Paint Mode">🖌</div>
     <div class="floater" id="floaterEye" title="Eyedropper">🎨</div>
+    <input type="color" id="floaterColor" title="Base Color">
   </div>
 
   <div class="panel visible" id="panel">
@@ -306,9 +306,9 @@
   <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
   <strong style="color:#60a5fa">Controls:</strong><br>
   • Drag to rotate • Scroll to zoom<br>
-  • <b>Paint Mode:</b> Paint directly on mesh<br>
-  • <b>Mask Mode:</b> Paints global invisibility<br>
-  • PC: Hold Alt to Sample • Mobile: Use Eyedropper<br>
+  • <b>Paint Mode:</b> Paint directly on mesh (Camera Locked)<br>
+  • <b>Mask Mode:</b> Paints global invisibility (Camera Locked)<br>
+  • <b>Eyedropper:</b> Sample color from model (Camera Unlocked)<br>
   • Ctrl+Z/Y Undo/Redo
   </div>
 
@@ -492,16 +492,14 @@
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // FIX: LinearToneMapping ensures Hex Code = Visual Color (no darkening curve).
-  // Output SRGB ensures monitors display it correctly.
-  renderer.toneMapping = THREE.LinearToneMapping;
+  // FIX: NoToneMapping ensures what you pick is what you see.
+  renderer.toneMapping = THREE.NoToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020617);
-  // FIX: Stronger Ambient Light to prevent "darker than hex" look due to shadows.
-  // 2.5 intensity creates a flatter, painterly look.
+  // FIX: Stronger light (2.5) to reduce shadow darkening perception.
   scene.add(new THREE.AmbientLight(0xffffff, 2.5));
   const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
   dirLight.position.set(5, 10, 7);
@@ -600,7 +598,6 @@
   layers.length = 0;
   state.layers.forEach(ld => layers.push({ color: ld.color, opacity: ld.opacity, blendMode: ld.blendMode, visible: ld.visible, name: ld.name }));
   layerData = JSON.parse(JSON.stringify(state.layerData));
-  // CRITICAL: Re-instantiate Float32Arrays to ensure fill() works and rendering updates
   const newMaskData = {};
   if (state.globalMaskData) {
       Object.keys(state.globalMaskData).forEach(key => {
@@ -651,12 +648,11 @@
   updateFloaterVisibility();
   }
 
-  // Logic for Floating Visibility (More robust than CSS ~)
+  // Logic for Floating Visibility
   function updateFloaterVisibility() {
      const isMobile = window.innerWidth <= 900;
      const showFloaters = !isMobile || (isMobile && !panelVisible);
      
-     // Update display
      if(showFloaters) {
          floatingControls.style.display = 'flex';
      } else {
@@ -702,7 +698,7 @@
 
   // Hide panel on canvas tap (mobile only)
   canvas.addEventListener('touchstart', (e) => {
-  if (window.innerWidth <= 900 && panelVisible && !paintModeActive && e.touches.length === 1) {
+  if (window.innerWidth <= 900 && panelVisible && !paintModeActive && !maskMode && e.touches.length === 1) {
     const touch = e.touches[0];
     const target = document.elementFromPoint(touch.clientX, touch.clientY);
     if (target === canvas || target.id === 'container') {
@@ -795,7 +791,8 @@
   currentLayerIndex = idx;
   updateLayersUI();
   paintColor.copy(layers[idx].color);
-  const displayColor = paintColor.clone().convertLinearToSRGB();
+  // No conversion needed with NoToneMapping
+  const displayColor = paintColor.clone();
   document.getElementById('paintColor').value = '#' + displayColor.getHexString();
   floaterColor.value = '#' + displayColor.getHexString();
   }
@@ -808,8 +805,7 @@
   const li = document.createElement('li');
   li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
   li.draggable = true;
-  
-  const displayColor = layer.color.clone().convertLinearToSRGB();
+  const displayColor = layer.color.clone();
   
   li.innerHTML = `
   <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
@@ -836,7 +832,8 @@
 
   li.querySelector('.layer-color').oninput = (e) => {
   e.stopPropagation();
-  layer.color.set(e.target.value).convertSRGBToLinear(); 
+  // No conversion needed with NoToneMapping
+  layer.color.set(e.target.value); 
   if (i === currentLayerIndex) paintColor.copy(layer.color);
   updateAllGeometries();
   };
@@ -917,9 +914,15 @@
   maskMode = !maskMode;
   maskToggle.classList.toggle('active', maskMode);
   clearMaskBtn.style.display = maskMode ? 'block' : 'none';
-  // FIX: Enable controls in Mask Mode
-  controls.enabled = true; 
   
+  // FIX: Lock controls when masking to prevent accidental rotation while painting/masking.
+  if (maskMode) {
+    controls.enabled = false;
+  } else {
+    // When exiting mask, controls should be unlocked (unless painting is active, but we turn paint off below)
+    controls.enabled = true;
+  }
+
   if(maskMode) {
     maskToggle.textContent = 'Exit Mask Mode';
     if(paintModeActive) paintToggle.click();
@@ -949,13 +952,14 @@
   const pixelY = Math.floor((rect.height - (y - rect.top)) * renderer.getPixelRatio());
   gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
   
+  // With NoToneMapping, readPixels returns 0-1 Linear.
+  // We store Linear. We convert to SRGB for Hex.
   const r = pixel[0] / 255;
   const g = pixel[1] / 255;
   const b = pixel[2] / 255;
   
   paintColor.setRGB(r, g, b);
-  // LinearToneMapping renders Linear to buffer. readPixels returns Linear.
-  // Convert Linear -> SRGB for Hex/UI.
+  // Convert Linear -> SRGB for Hex string.
   const displayColor = paintColor.clone().convertLinearToSRGB();
   document.getElementById('paintColor').value = '#' + displayColor.getHexString();
   floaterColor.value = '#' + displayColor.getHexString();
@@ -1141,12 +1145,24 @@
       const btn = document.getElementById('paintToggle');
       btn.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
       btn.classList.toggle('active', paintModeActive);
-      controls.enabled = !paintModeActive;
       
-      if(maskMode) maskToggle.click();
-      eyedropperActive = false;
-      document.getElementById('eyedropperToggle').classList.remove('active');
-      document.getElementById('eyedropperToggle').textContent = 'Eyedropper Tool';
+      // IMPORTANT: Controls Logic
+      if (paintModeActive) {
+        // If Painting/Masking, lock controls
+        controls.enabled = false;
+        // If Masking, turn off Eyedropper
+        if(maskMode) {
+            maskToggle.click();
+        } else {
+            eyedropperActive = false;
+            document.getElementById('eyedropperToggle').classList.remove('active');
+            document.getElementById('eyedropperToggle').textContent = 'Eyedropper Tool';
+        }
+      } else {
+        // If NOT Painting, unlock controls
+        controls.enabled = true;
+      }
+
       if (!paintModeActive) hideCursors();
       else updateBrushCursor(window.innerWidth/2, window.innerHeight/2);
       updateFloaterVisibility();
@@ -1157,22 +1173,35 @@
       const btn = document.getElementById('eyedropperToggle');
       btn.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Tool';
       btn.classList.toggle('active', eyedropperActive);
-      controls.enabled = !eyedropperActive;
+      
+      // IMPORTANT: Controls Logic
+      if (eyedropperActive) {
+        // If Eyedropper, unlock camera (allow rotation)
+        controls.enabled = true;
+        // Force paint off
+        paintModeActive = false;
+        maskMode = false;
+        // Update UI buttons to reflect state
+        document.getElementById('paintToggle').classList.remove('active');
+        document.getElementById('paintToggle').textContent = 'Activate Paint Mode';
+        document.getElementById('maskToggle').classList.remove('active');
+        document.getElementById('maskToggle').textContent = 'Mask Mode (Paint Invisibility)';
+      }
+      
       if (!eyedropperActive) hideCursors();
       updateFloaterVisibility();
   }
 
   document.getElementById('eyedropperToggle').addEventListener('click', () => setEyedropperMode(!eyedropperActive));
-  floaterEye.onclick = () => setEyedropperMode(!eyedropperActive);
+  floaterEye.onclick = () => setEyedropperMode(!eyedropperActive));
 
   document.getElementById('paintToggle').addEventListener('click', () => setPaintMode(!paintModeActive));
   floaterPaint.onclick = () => setPaintMode(!paintModeActive);
 
-  // Base Color Handlers
+  // Color Pickers
   floaterColor.oninput = (e) => {
-      paintColor.set(e.target.value);
-      // Convert to Linear for storage/math
-      paintColor.convertSRGBToLinear();
+      // No conversion needed with NoToneMapping
+      paintColor.set(e.target.value); 
       layers[currentLayerIndex].color.copy(paintColor);
       document.getElementById('paintColor').value = e.target.value;
       updateLayersUI();
@@ -1278,7 +1307,6 @@
 
   document.getElementById('paintColor').addEventListener('input', (e) => {
   paintColor.set(e.target.value);
-  paintColor.convertSRGBToLinear();
   layers[currentLayerIndex].color.copy(paintColor);
   updateLayersUI();
   });
