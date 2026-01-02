@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Retexture Pro – BowesProduct</title>
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
   <script type="importmap">
@@ -15,7 +15,7 @@
   </script>
   <style>
   *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
 
   .site-header {
   position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
@@ -42,7 +42,7 @@
   }
 
   #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
-  #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
 
   /* Desktop Panel */
   .panel {
@@ -50,7 +50,8 @@
   top: 90px;
   right: 20px;
   width: 380px;
-  max-height: calc(100vh - 180px);
+  /* Increased bottom clearance for Export button visibility */
+  max-height: calc(100vh - 220px); 
   background: rgba(2, 6, 23, 0.95);
   border: 1px solid #1e293b;
   border-radius: 12px;
@@ -59,8 +60,13 @@
   z-index: 20;
   backdrop-filter: blur(10px);
   transition: transform 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   }
   .panel.hidden { transform: translateX(420px); }
+  /* Custom Scrollbar for panel */
+  .panel::-webkit-scrollbar { width: 6px; }
+  .panel::-webkit-scrollbar-track { background: #0f172a; }
+  .panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
 
   #panelToggle {
   position: absolute;
@@ -87,7 +93,7 @@
   }
   #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
 
-  /* Mobile Bottom Sheet - Partial Hide with Visible Handle */
+  /* Mobile Bottom Sheet */
   @media (max-width: 900px) {
   .panel {
   position: absolute;
@@ -99,71 +105,101 @@
   height: 85vh;
   max-height: none;
   border-radius: 20px 20px 0 0;
-  transform: translateY(calc(85vh - 70px)); /* Hidden: only top 70px visible */
+  transform: translateY(calc(100% - 60px)); /* Collapsed: only 60px visible */
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  padding-top: 80px;
+  padding-top: 80px; /* Space for content under handle */
   padding-bottom: 20px;
   z-index: 25;
   overflow-y: auto;
   background: rgba(2, 6, 23, 0.95);
   border: 1px solid #1e293b;
   border-bottom: none;
+  box-shadow: 0 -5px 25px rgba(0,0,0,0.5);
   }
   .panel.visible {
   transform: translateY(0);
   }
-
+  
+  /* Hide Desktop Toggle */
   #panelToggle { display: none; }
 
+  /* Mobile Toggle Handle - FIXED to screen bottom to prevent loss */
   #mobilePanelToggle {
-  position: absolute;
-  top: 16px;
+  position: fixed;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 60px;
-  height: 6px;
-  background: #60a5fa;
-  border-radius: 3px;
+  width: 140px;
+  height: 36px;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid #60a5fa;
+  border-radius: 20px;
+  color: #60a5fa;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex; /* Flex to center text */
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  z-index: 30;
+  z-index: 50; /* Above panel */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  transition: background 0.2s, transform 0.2s;
   }
-  #mobilePanelToggle:hover { background: #3b82f6; }
+  
+  #mobilePanelToggle:active { transform: translateX(-50%) scale(0.95); }
+  #mobilePanelToggle::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background: #94a3b8;
+  border-radius: 2px;
+  }
+  #mobilePanelToggle span {
+  margin-top: 8px; /* Push text below handle bar */
+  }
   }
 
-  #mobilePanelToggle { display: none; }
+  #mobilePanelToggle { display: none; } /* Hidden on Desktop by default */
 
-  .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
+  .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
   .control-group { margin-bottom: 1.2rem; }
   label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
   input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
-  input[type="range"] { padding: 0.3rem 0; }
+  input[type="range"] { padding: 0.3rem 0; accent-color: #60a5fa; }
   input[type="color"] { height: 44px; padding: 0.2rem; }
-  button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; position: relative; z-index: 30; }
+  button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; position: relative; z-index: 30; transition: background 0.2s; }
   button:hover { background: #3b82f6; }
 
   #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
   .layer-item {
-  display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: grab;
+  display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: grab; border: 1px solid transparent;
   }
   .layer-item:active { cursor: grabbing; }
-  .layer-item.active { background: #1e293b; border: 1px solid #60a5fa; }
-  .layer-visibility { font-size: 1.3rem; cursor: pointer; }
-  .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; }
+  .layer-item.active { background: #1e293b; border-color: #60a5fa; }
+  .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
+  .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; background: none; }
   .layer-opacity { width: 90px; }
-  .layer-name { flex: 1; font-size: 0.95rem; cursor: text; }
-  .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; }
+  .layer-name { flex: 1; font-size: 0.95rem; cursor: text; border: none; background: transparent; color: inherit; }
+  .layer-name:focus { border-bottom: 1px solid #60a5fa; outline: none; }
+  .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 24px; text-align: center; }
   .layer-blend { width: 100px; font-size: 0.8rem; }
   #addLayerBtn { background: #10b981; }
 
   #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none; }
-  #brushCursor { border: 2px solid #ff4444; border-radius: 50%; opacity: 0.8; background: rgba(255,68,68,0.1); }
+  #brushCursor { border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; opacity: 0.9; background: rgba(255,68,68,0.2); transition: width 0.1s, height 0.1s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
   #eyedropperCursor { width: 44px; height: 44px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/32px no-repeat; }
 
   #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
   #paintToggle.active { background: #f87171; }
   #eyedropperToggle { background: #a78bfa; }
+  #eyedropperToggle.active { background: #7c3aed; border: 1px solid white; }
   #maskToggle { background: #8b5cf6; }
-  #maskToggle.active { background: #ec4899; }
+  #maskToggle.active { background: #ec4899; border: 1px solid white; }
 
   #undoRedoGroup { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
   #undoBtn, #redoBtn { flex: 1; background: #475569; margin-top: 0; }
@@ -176,6 +212,13 @@
   .footer-nav a:hover { color: #60a5fa; }
 
   .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
+  
+  /* Loader */
+  #loader {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  color: #60a5fa; font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 0;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -203,26 +246,29 @@
 </header>
 
 <div id="container">
+  <div id="loader">Drop a GLB/GLTF model here or use Upload</div>
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
   <div id="eyedropperCursor"></div>
 
   <div class="panel visible" id="panel">
   <button id="panelToggle">←</button>
-  <div id="mobilePanelToggle"></div>
-
-  <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.5;">
-  Drag to rotate • Pinch/scroll to zoom<br><br>
-  Activate Paint → paint current layer<br><br>
-  PC: Hold Alt • Mobile: Eyedropper button to sample<br><br>
-  Ctrl+Z/Y Undo/Redo • Drag layers to reorder
+  
+  <!-- Helper Text -->
+  <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
+  <strong style="color:#60a5fa">Controls:</strong><br>
+  • Drag to rotate • Scroll to zoom<br>
+  • <b>Paint Mode:</b> Paint directly on mesh<br>
+  • <b>Mask Mode:</b> Paints global invisibility (Black)<br>
+  • PC: Hold Alt to Sample • Mobile: Use Eyedropper<br>
+  • Ctrl+Z/Y Undo/Redo
   </div>
 
   <h2>Model</h2>
   <div class="control-group">
   <label for="uploadModel">Upload GLB/GLTF</label>
   <input type="file" id="uploadModel" accept=".glb,.gltf">
-  <div class="hint">FBX must be converted first.</div>
+  <div class="hint">Supports GLB/GLTF. Auto-centers model.</div>
   </div>
 
   <h2>Texture</h2>
@@ -260,7 +306,7 @@
   <input type="range" id="brushOpacity" min="1" max="100" value="100">
   </div>
 
-  <h2>Vertex Color Painting</h2>
+  <h2>Painting Tools</h2>
   <div class="control-group">
   <label for="paintColor">Brush Color (current layer)</label>
   <input type="color" id="paintColor" value="#ff4444">
@@ -285,8 +331,8 @@
   </div>
 
   <button id="paintToggle">Activate Paint Mode</button>
-  <button id="eyedropperToggle">Eyedropper Mode (Mobile)</button>
-  <button id="maskToggle">Mask Mode (paint black to hide)</button>
+  <button id="eyedropperToggle">Eyedropper Tool</button>
+  <button id="maskToggle">Mask Mode (Paint Invisibility)</button>
 
   <div id="undoRedoGroup">
   <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
@@ -294,6 +340,7 @@
   </div>
 
   <button id="clearPaint" style="background:#ef4444;">Clear Current Layer</button>
+  <button id="clearMask" style="background:#64748b; display:none;">Reset Global Mask</button>
 
   <h2>Lighting</h2>
   <div class="control-group">
@@ -325,6 +372,9 @@
   <p>© 2026 BowesProduct</p>
   </div>
 </footer>
+
+<!-- Fixed Mobile Toggle Button (Outside Panel) -->
+<div id="mobilePanelToggle"><span>▲ Controls</span></div>
 
 <!-- Firebase Auth -->
 <script type="module">
@@ -392,7 +442,7 @@
 
   const canvas = document.getElementById('canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.2;
@@ -445,7 +495,10 @@
 
   const layers = [];
   let currentLayerIndex = 0;
-  let layerData = {};
+  let layerData = {}; // Stores color data per layer per geo
+  
+  // Global Mask Data: Map<geoKey, Float32Array> (Values 0.0 to 1.0)
+  let globalMaskData = {};
 
   const undoStack = [];
   const redoStack = [];
@@ -455,9 +508,11 @@
 
   function saveState() {
   if (paintedGeometries.length === 0) return;
+  // Deep copy relevant state
   const state = {
-  layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
-  layerData: JSON.parse(JSON.stringify(layerData))
+    layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
+    layerData: JSON.parse(JSON.stringify(layerData)),
+    globalMaskData: JSON.parse(JSON.stringify(globalMaskData)) // Save mask state
   };
   undoStack.push(state);
   if (undoStack.length > MAX_UNDO) undoStack.shift();
@@ -469,8 +524,9 @@
   function undo() {
   if (undoStack.length === 0) return;
   redoStack.push({
-  layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
-  layerData: JSON.parse(JSON.stringify(layerData))
+    layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
+    layerData: JSON.parse(JSON.stringify(layerData)),
+    globalMaskData: JSON.parse(JSON.stringify(globalMaskData))
   });
   const state = undoStack.pop();
   restoreState(state);
@@ -481,12 +537,13 @@
   function redo() {
   if (redoStack.length === 0) return;
   undoStack.push({
-  layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
-  layerData: JSON.parse(JSON.stringify(layerData))
+    layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
+    layerData: JSON.parse(JSON.stringify(layerData)),
+    globalMaskData: JSON.parse(JSON.stringify(globalMaskData))
   });
   const state = redoStack.pop();
   restoreState(state);
-  redoBtn.disabled = redoStack.length === 0;
+  redoStack.disabled = redoStack.length === 0;
   undoBtn.disabled = false;
   }
 
@@ -494,6 +551,7 @@
   layers.length = 0;
   state.layers.forEach(ld => layers.push({ color: ld.color, opacity: ld.opacity, blendMode: ld.blendMode, visible: ld.visible, name: ld.name }));
   layerData = JSON.parse(JSON.stringify(state.layerData));
+  globalMaskData = JSON.parse(JSON.stringify(state.globalMaskData));
   updateLayersUI();
   updateAllGeometries();
   }
@@ -509,8 +567,10 @@
   const eyedropperCursor = document.getElementById('eyedropperCursor');
   const exportStatus = document.getElementById('exportStatus');
   const maskToggle = document.getElementById('maskToggle');
+  const clearMaskBtn = document.getElementById('clearMask');
+  const loader = document.getElementById('loader');
 
-  // Panel toggle
+  // Panel toggle logic
   const panel = document.getElementById('panel');
   const panelToggle = document.getElementById('panelToggle');
   const mobilePanelToggle = document.getElementById('mobilePanelToggle');
@@ -521,14 +581,23 @@
   panel.classList.toggle('hidden', !panelVisible);
   panel.classList.toggle('visible', panelVisible);
   panelToggle.textContent = panelVisible ? '←' : '→';
+  
+  // Update mobile toggle text
+  if(window.innerWidth <= 900) {
+     const span = mobilePanelToggle.querySelector('span');
+     if(span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
+  }
   }
 
   panelToggle.onclick = togglePanel;
-  mobilePanelToggle.onclick = togglePanel;
+  mobilePanelToggle.onclick = (e) => {
+    e.stopPropagation();
+    togglePanel();
+  };
 
   function updatePanelMode() {
   if (window.innerWidth <= 900) {
-  mobilePanelToggle.style.display = 'block';
+  mobilePanelToggle.style.display = 'flex';
   panelToggle.style.display = 'none';
   } else {
   mobilePanelToggle.style.display = 'none';
@@ -538,10 +607,16 @@
   updatePanelMode();
   window.addEventListener('resize', updatePanelMode);
 
+  // Hide panel on canvas tap (mobile only)
   canvas.addEventListener('touchstart', (e) => {
-  if (window.innerWidth <= 900 && panelVisible && !paintModeActive) {
-  e.preventDefault();
-  togglePanel();
+  if (window.innerWidth <= 900 && panelVisible && !paintModeActive && e.touches.length === 1) {
+    // Only toggle if not interacting with UI
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (target === canvas || target.id === 'container') {
+      e.preventDefault(); // prevent rotation momentarily
+      togglePanel();
+    }
   }
   });
 
@@ -559,7 +634,7 @@
   return base.clone().multiplyScalar(1 - opacity).add(new THREE.Color(r, g, b).multiplyScalar(opacity));
   case 'add':
   return base.clone().add(o.multiplyScalar(opacity));
-  default:
+  default: // Normal
   return base.clone().lerp(o, opacity);
   }
   }
@@ -606,12 +681,23 @@
   const geoLayers = layerData[key];
   const data = geoLayers[fromIdx];
   delete geoLayers[fromIdx];
-  for (let i = Math.min(fromIdx, toIdx); i < Math.max(fromIdx, toIdx); i++) {
-  if (fromIdx < toIdx) geoLayers[i] = geoLayers[i + 1];
-  else geoLayers[i + 1] = geoLayers[i];
+  // Simple shift logic - strictly assumes adjacent moves or handled by UI
+  // This part is tricky with sparse arrays, simplifying for reliability:
+  // We should just rebuild the array for the target key
+  const keys = Object.keys(geoLayers).map(Number).sort((a,b)=>a-b);
+  const values = keys.map(k => geoLayers[k]);
+  
+  // Remove from values
+  values.splice(fromIdx, 1);
+  // Insert at toIdx
+  values.splice(toIdx, 0, data);
+  
+  // Reassign
+  for(let i=0; i<layers.length; i++) {
+     geoLayers[i] = values[i];
   }
-  geoLayers[toIdx] = data;
   });
+  
   if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
   else if (fromIdx < currentLayerIndex && toIdx >= currentLayerIndex) currentLayerIndex--;
   else if (fromIdx > currentLayerIndex && toIdx <= currentLayerIndex) currentLayerIndex++;
@@ -645,16 +731,13 @@
   <option value="overlay">Overlay</option>
   <option value="add">Add</option>
   </select>
-  <span class="layer-name" contenteditable="true">${layer.name}</span>
+  <input class="layer-name" value="${layer.name}">
   <span class="layer-delete">×</span>
   `;
 
-  li.onclick = (e) => {
-  if (!e.target.closest('.layer-visibility') && !e.target.closest('.layer-color') && !e.target.closest('.layer-opacity') && !e.target.closest('.layer-blend') && !e.target.closest('.layer-name') && !e.target.closest('.layer-delete')) {
-  setActiveLayer(i);
-  }
-  };
-
+  // Use pointerdown/click logic more carefully to avoid drag conflicts
+  li.querySelector('.layer-name').addEventListener('click', (e) => setActiveLayer(i));
+  
   li.querySelector('.layer-visibility').onclick = (e) => {
   e.stopPropagation();
   layer.visible = !layer.visible;
@@ -663,23 +746,22 @@
   };
 
   li.querySelector('.layer-color').oninput = (e) => {
+  e.stopPropagation();
   layer.color.set(e.target.value);
   if (i === currentLayerIndex) paintColor.copy(layer.color);
   updateAllGeometries();
   };
 
   li.querySelector('.layer-opacity').oninput = (e) => {
+  e.stopPropagation();
   layer.opacity = e.target.value / 100;
   updateAllGeometries();
   };
 
   li.querySelector('.layer-blend').onchange = (e) => {
+  e.stopPropagation();
   layer.blendMode = e.target.value;
   updateAllGeometries();
-  };
-
-  li.querySelector('.layer-name').onblur = (e) => {
-  layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
   };
 
   li.querySelector('.layer-delete').onclick = (e) => {
@@ -691,9 +773,10 @@
   li.addEventListener('dragover', (e) => e.preventDefault());
   li.addEventListener('drop', (e) => {
   e.preventDefault();
+  e.stopPropagation();
   const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
   const toIdx = i;
-  if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
+  if (fromIdx !== toIdx && !isNaN(fromIdx)) moveLayer(fromIdx, toIdx);
   });
 
   list.appendChild(li);
@@ -704,11 +787,14 @@
   paintedGeometries.forEach((pg, geoIdx) => {
   const col = pg.geometry.attributes.color;
   const geoKey = `geo_${geoIdx}`;
+  const maskArr = globalMaskData[geoKey]; // Float32Array
 
+  // Reset to base (White 1,1,1)
   for (let i = 0; i < col.count; i++) {
   col.setXYZ(i, 1, 1, 1);
   }
 
+  // Blend Layers
   layers.forEach((layer, layerIdx) => {
   if (!layer.visible) return;
   const geoLayerData = layerData[geoKey]?.[layerIdx];
@@ -717,12 +803,23 @@
   for (let i = 0; i < col.count; i++) {
   const base = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
   const overlay = new THREE.Color(geoLayerData[i*3], geoLayerData[i*3+1], geoLayerData[i*3+2]);
+  // Only blend if not white (optimization)
   if (overlay.r !== 1 || overlay.g !== 1 || overlay.b !== 1) {
   const result = blendColor(base, overlay, layer.blendMode, layer.opacity);
   col.setXYZ(i, result.r, result.g, result.b);
   }
   }
   });
+
+  // Apply Global Mask (Black = 0, White = 1)
+  if (maskArr) {
+    for (let i = 0; i < col.count; i++) {
+      const maskVal = maskArr[i];
+      if (maskVal < 0.99) {
+        col.setXYZ(i, col.getX(i) * maskVal, col.getY(i) * maskVal, col.getZ(i) * maskVal);
+      }
+    }
+  }
 
   col.needsUpdate = true;
   });
@@ -734,7 +831,25 @@
   maskToggle.onclick = () => {
   maskMode = !maskMode;
   maskToggle.classList.toggle('active', maskMode);
-  maskToggle.textContent = maskMode ? 'Normal Paint (exit mask)' : 'Mask Mode (paint black to hide)';
+  clearMaskBtn.style.display = maskMode ? 'block' : 'none';
+  
+  if(maskMode) {
+    maskToggle.textContent = 'Exit Mask Mode';
+    if(paintModeActive) {
+      paintToggle.click(); // Disable normal paint if entering mask
+    }
+  } else {
+    maskToggle.textContent = 'Mask Mode (Paint Invisibility)';
+  }
+  };
+  
+  clearMaskBtn.onclick = () => {
+      // Reset all masks to 1.0
+      Object.keys(globalMaskData).forEach(k => {
+          globalMaskData[k].fill(1.0);
+      });
+      updateAllGeometries();
+      saveState();
   };
 
   document.getElementById('brushOpacity').oninput = (e) => {
@@ -750,36 +865,65 @@
   gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
   paintColor.setRGB(pixel[0]/255, pixel[1]/255, pixel[2]/255);
   document.getElementById('paintColor').value = '#' + paintColor.getHexString();
-  layers[currentLayerIndex].color.copy(paintColor);
-  updateLayersUI();
+  if(!maskMode) {
+      layers[currentLayerIndex].color.copy(paintColor);
+      updateLayersUI();
+  }
   }
 
+  // --- BRUSH MATH FIXES ---
   function getWorldBrushRadius() {
   const dist = camera.position.distanceTo(controls.target);
   const fov = camera.fov * (Math.PI / 180);
   const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  return brushSize * visibleHeight * 0.3; // Perfect match to cursor
+  // Multiplier determines relative feel. 0.3 matches original intent.
+  return brushSize * visibleHeight * 0.3;
   }
 
-  function projectRadiusToScreen(worldRadius) {
+  function getBrushRadiusInPixels() {
+  const worldRadius = getWorldBrushRadius();
   const dist = camera.position.distanceTo(controls.target);
   const fov = camera.fov * (Math.PI / 180);
   const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  const pixelSize = (worldRadius / visibleHeight) * window.innerHeight;
-  return pixelSize * 2;
+  
+  // Convert World Radius to Pixels
+  // (WorldRadius / VisibleWorldHeight) * ScreenPixelHeight
+  const pixelRadius = (worldRadius / visibleHeight) * window.innerHeight;
+  return pixelRadius;
   }
 
   function updateBrushCursor(x, y) {
-  if (!paintModeActive || eyedropperActive) return;
-  brushCursor.style.display = 'block';
+  if (!paintModeActive && !maskMode) return;
+  
+  // Which cursor?
+  brushCursor.style.display = maskMode ? 'none' : 'block';
+  eyedropperCursor.style.display = 'none';
+
+  if (maskMode) {
+     // Show specialized cursor for mask
+     brushCursor.style.display = 'block';
+     brushCursor.style.borderColor = '#ec4899';
+     brushCursor.style.backgroundColor = 'rgba(236, 72, 153, 0.1)';
+  } else {
+     brushCursor.style.borderColor = paintColor.getStyle();
+     brushCursor.style.backgroundColor = `rgba(${paintColor.r*255}, ${paintColor.g*255}, ${paintColor.b*255}, 0.1)`;
+  }
+
   brushCursor.style.left = x + 'px';
   brushCursor.style.top = y + 'px';
-  const r = projectRadiusToScreen(getWorldBrushRadius());
-  const size = Math.max(r * 2, 10);
-  brushCursor.style.width = brushCursor.style.height = size + 'px';
-  brushCursor.style.borderColor = paintColor.getStyle();
-  brushCursor.style.background = `rgba(${paintColor.r*255}, ${paintColor.g*255}, ${paintColor.b*255}, 0.1)`;
-  brushCursor.style.boxShadow = brushShape === 'soft-circle' ? `0 0 ${size/2}px ${size/4}px ${paintColor.getStyle()}` : 'none';
+  
+  // Calculate diameter in pixels
+  const radiusPx = getBrushRadiusInPixels();
+  const diameter = Math.max(radiusPx * 2, 10);
+  
+  brushCursor.style.width = diameter + 'px';
+  brushCursor.style.height = diameter + 'px';
+  
+  if (brushShape === 'soft-circle') {
+     brushCursor.style.boxShadow = `0 0 ${diameter/2}px ${diameter/4}px ${maskMode ? '#ec4899' : paintColor.getStyle()}`;
+  } else {
+     brushCursor.style.boxShadow = 'none';
+  }
   }
 
   function hideCursors() {
@@ -788,12 +932,44 @@
   }
 
   function paintAt(point) {
-  if (!paintModeActive || paintedGeometries.length === 0) return;
+  if ((!paintModeActive && !maskMode) || paintedGeometries.length === 0) return;
+  
   const brushOpacity = document.getElementById('brushOpacity').value / 100;
   const radius = getWorldBrushRadius();
   const radiusSq = radius * radius;
   const vert = new THREE.Vector3();
 
+  // Global Mask Paint Logic
+  if (maskMode) {
+      paintedGeometries.forEach((pg, geoIdx) => {
+          const pos = pg.geometry.attributes.position;
+          const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
+          const local = point.clone().applyMatrix4(inv);
+          const geoKey = `geo_${geoIdx}`;
+          
+          if (!globalMaskData[geoKey]) return; // Should exist
+          const maskArr = globalMaskData[geoKey];
+
+          for (let i = 0; i < pos.count; i++) {
+              vert.fromBufferAttribute(pos, i);
+              const distSq = vert.distanceToSquared(local);
+              if (distSq > radiusSq) continue;
+
+              let falloff = 1 - Math.sqrt(distSq) / radius;
+              if (brushShape === 'hard-circle') falloff = 1;
+              if (brushShape === 'soft-circle') falloff = falloff ** 3;
+
+              const alpha = brushOpacity * falloff;
+              // Reduce mask value (fade to black/invisible)
+              // Current lerp: val = val * (1-alpha) + 0 * alpha
+              maskArr[i] = maskArr[i] * (1 - alpha);
+          }
+      });
+      updateAllGeometries();
+      return;
+  }
+
+  // Standard Layer Paint Logic
   paintedGeometries.forEach((pg, geoIdx) => {
   const pos = pg.geometry.attributes.position;
   const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
@@ -816,8 +992,7 @@
   if (brushShape === 'soft-circle') falloff = falloff ** 3;
 
   const alpha = brushOpacity * falloff;
-
-  const paintRGB = maskMode ? new THREE.Color(0, 0, 0) : layers[currentLayerIndex].color;
+  const paintRGB = layers[currentLayerIndex].color;
 
   const current = new THREE.Color(geoLayerColors[i*3], geoLayerColors[i*3+1], geoLayerColors[i*3+2]);
   const result = blendColor(current, paintRGB, layers[currentLayerIndex].blendMode, alpha);
@@ -836,8 +1011,10 @@
   let isPointerDown = false;
 
   canvas.addEventListener('pointermove', (e) => {
-  updateBrushCursor(e.clientX, e.clientY);
-  if (isPointerDown && paintModeActive && currentModel && !eyedropperActive) {
+  // Cursor update
+  if (paintModeActive || maskMode) updateBrushCursor(e.clientX, e.clientY);
+  
+  if (isPointerDown && (paintModeActive || maskMode) && currentModel && !eyedropperActive) {
   const rect = canvas.getBoundingClientRect();
   mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -853,7 +1030,7 @@
   sampleColor(e.clientX, e.clientY);
   return;
   }
-  if (paintModeActive && currentModel) {
+  if ((paintModeActive || maskMode) && currentModel) {
   const rect = canvas.getBoundingClientRect();
   mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -873,7 +1050,7 @@
   canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideCursors(); });
 
   window.addEventListener('keydown', (e) => {
-  if (e.altKey && paintModeActive && !eyedropperActive) {
+  if (e.altKey && (paintModeActive || maskMode) && !eyedropperActive) {
   eyedropperActive = true;
   hideCursors();
   eyedropperCursor.style.display = 'block';
@@ -889,8 +1066,9 @@
 
   document.getElementById('eyedropperToggle').addEventListener('click', () => {
   eyedropperActive = !eyedropperActive;
-  eyedropperToggle.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Mode (Mobile)';
-  eyedropperToggle.classList.toggle('active', eyedropperActive);
+  const btn = document.getElementById('eyedropperToggle');
+  btn.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Tool';
+  btn.classList.toggle('active', eyedropperActive);
   controls.enabled = !eyedropperActive;
   if (!eyedropperActive) hideCursors();
   });
@@ -900,10 +1078,15 @@
   paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
   paintToggle.classList.toggle('active', paintModeActive);
   controls.enabled = !paintModeActive;
+  
+  // Disable other modes
+  if(maskMode) maskToggle.click();
+  
   eyedropperActive = false;
-  eyedropperToggle.classList.remove('active');
-  eyedropperToggle.textContent = 'Eyedropper Mode (Mobile)';
+  document.getElementById('eyedropperToggle').classList.remove('active');
+  document.getElementById('eyedropperToggle').textContent = 'Eyedropper Tool';
   if (!paintModeActive) hideCursors();
+  else updateBrushCursor(window.innerWidth/2, window.innerHeight/2);
   });
 
   document.getElementById('uploadModel').addEventListener('change', (e) => {
@@ -914,8 +1097,8 @@
   });
 
   function loadModel(url) {
-  exportStatus.textContent = 'Loading model...';
-  exportStatus.style.color = '#60a5fa';
+  loader.style.display = 'block';
+  loader.textContent = "Loading...";
   new GLTFLoader().load(url, (gltf) => {
   if (currentModel) scene.remove(currentModel);
   currentModel = gltf.scene;
@@ -926,12 +1109,15 @@
   camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
   controls.target.copy(center);
   controls.update();
+  
   paintedGeometries = [];
   layerData = {};
+  globalMaskData = {};
   undoStack.length = 0;
   redoStack.length = 0;
   undoBtn.disabled = true;
   redoBtn.disabled = true;
+  
   currentModel.traverse((child) => {
   if (child.isMesh) {
   if (!(child.material instanceof THREE.MeshStandardMaterial)) {
@@ -944,20 +1130,23 @@
   }
   const geoIdx = paintedGeometries.length;
   paintedGeometries.push({ geometry: child.geometry, mesh: child });
-  layerData[`geo_${geoIdx}`] = {};
+  const geoKey = `geo_${geoIdx}`;
+  
+  layerData[geoKey] = {};
+  // Init Global Mask to all 1.0 (visible)
+  globalMaskData[geoKey] = new Float32Array(child.geometry.attributes.position.count).fill(1.0);
+  
   layers.forEach((_, layerIdx) => {
   const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
-  layerData[`geo_${geoIdx}`][layerIdx] = Array.from(colors);
+  layerData[geoKey][layerIdx] = Array.from(colors);
   });
   }
   });
   updateAllGeometries();
   saveState();
-  exportStatus.textContent = 'Model loaded!';
-  exportStatus.style.color = '#4ade80';
+  loader.style.display = 'none';
   }, undefined, (error) => {
-  exportStatus.textContent = 'Load failed';
-  exportStatus.style.color = '#ef4444';
+  loader.textContent = "Error loading model";
   console.error(error);
   });
   }
@@ -1076,6 +1265,18 @@
   renderer.render(scene, camera);
   }
   animate();
+  
+  // Drag and drop support
+  window.addEventListener('dragover', e => e.preventDefault());
+  window.addEventListener('drop', e => {
+      e.preventDefault();
+      if(e.dataTransfer.files && e.dataTransfer.files[0]) {
+          const file = e.dataTransfer.files[0];
+          if(file.name.toLowerCase().endsWith('.glb') || file.name.toLowerCase().endsWith('.gltf')) {
+              loadModel(URL.createObjectURL(file));
+          }
+      }
+  });
 </script>
 
 </body>
