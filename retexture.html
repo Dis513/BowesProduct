@@ -307,7 +307,7 @@
   <strong style="color:#60a5fa">Controls:</strong><br>
   • Drag to rotate • Scroll to zoom<br>
   • <b>Paint Mode:</b> Paint directly on mesh (Camera Locked)<br>
-  • <b>Mask Mode:</b> Paints global invisibility (Camera Locked)<br>
+  • <b>Mask Mode:</b> Erases paint globally (Camera Locked)<br>
   • <b>Eyedropper:</b> Sample color from model (Camera Unlocked)<br>
   • Ctrl+Z/Y Undo/Redo
   </div>
@@ -597,28 +597,27 @@
   function restoreState(state) {
   layers.length = 0;
   state.layers.forEach(ld => layers.push({ color: ld.color, opacity: ld.opacity, blendMode: ld.blendMode, visible: ld.visible, name: ld.name }));
+  layerData = JSON.parse(JSON.stringify(state.layerData));
   
-  // FIX: Rebuild data with strict Float32Arrays to ensure .fill() works
-  // This prevents the "deeply nested / layers at 50%" issue.
-  const newLayerData = {};
-  if (state.layerData) {
-    Object.keys(state.layerData).forEach(key => {
-        newLayerData[key] = {};
-        const geoLayers = state.layerData[key];
-        Object.keys(geoLayers).forEach(layerIdx => {
-             // CRITICAL: Cast to Float32Array so .fill() works
-            newLayerData[key][layerIdx] = new Float32Array(geoLayers[layerIdx]);
-        });
-    });
-  }
-  layerData = newLayerData;
-
-  // Rebuild globalMaskData with strict Float32Arrays
+  // CRITICAL FIX: Deep copy Global Mask Data to prevent ghosting/persistence errors.
+  // If we simply assign new Float32Array(oldData), changes to oldData affect state.
+  // We must copy the VALUES into a new TypedArray.
   const newMaskData = {};
   if (state.globalMaskData) {
       Object.keys(state.globalMaskData).forEach(key => {
-          // CRITICAL: Cast to Float32Array so .fill() works
-          newMaskData[key] = new Float32Array(state.globalMaskData[key]);
+          const oldMask = state.globalMaskData[key];
+          // oldMask is a Float32Array (or standard array if parsed from JSON).
+          // We must create a NEW Float32Array to break the reference.
+          let newMask;
+          if (Array.isArray(oldMask)) {
+             // If it came from JSON, it's a standard array. Convert to Float32Array.
+             newMask = new Float32Array(oldMask);
+          } else {
+             // If it's already Float32Array (in memory), perform deep copy.
+             newMask = new Float32Array(oldMask.length);
+             newMask.set(oldMask);
+          }
+          newMaskData[key] = newMask;
       });
   }
   globalMaskData = newMaskData;
@@ -822,7 +821,7 @@
   const li = document.createElement('li');
   li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
   li.draggable = true;
-  const displayColor = layer.color.clone(); 
+  const displayColor = layer.color.clone();
   
   li.innerHTML = `
   <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
@@ -849,8 +848,8 @@
 
   li.querySelector('.layer-color').oninput = (e) => {
   e.stopPropagation();
-  // FIX: Convert SRGB (Input) to Linear (Storage)
-  layer.color.set(e.target.value).convertSRGBToLinear(); 
+  // No conversion needed with NoToneMapping
+  layer.color.set(e.target.value); 
   if (i === currentLayerIndex) paintColor.copy(layer.color);
   updateAllGeometries();
   };
@@ -934,14 +933,20 @@
   
   // FIX: Lock controls when masking to prevent accidental rotation while painting/masking.
   if (maskMode) {
-    controls.enabled = false;
+    controls.enabled = false; 
+    // Ensure paint and eyedropper are off
+    if(paintModeActive) {
+        paintModeActive = false;
+        document.getElementById('paintToggle').classList.remove('active');
+        document.getElementById('paintToggle').textContent = 'Activate Paint Mode';
+        updateFloaterVisibility();
+    }
   } else {
     controls.enabled = true;
   }
 
   if(maskMode) {
     maskToggle.textContent = 'Exit Mask Mode';
-    if(paintModeActive) paintToggle.click();
   } else {
     maskToggle.textContent = 'Mask Mode (Paint Invisibility)';
   }
@@ -968,18 +973,14 @@
   const pixelY = Math.floor((rect.height - (y - rect.top)) * renderer.getPixelRatio());
   gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
   
-  // FIX: Color Math
-  // readPixels returns SRGB 0-1 (Screen values).
-  // With NoToneMapping, the renderer treats values exactly.
-  // We store Linear. We convert SRGB -> Linear using .convertSRGBToLinear().
+  // With NoToneMapping, readPixels returns 0-1 Linear.
+  // We store Linear. We convert to SRGB for Hex string.
   const r = pixel[0] / 255;
   const g = pixel[1] / 255;
   const b = pixel[2] / 255;
   
   paintColor.setRGB(r, g, b);
-  paintColor.convertSRGBToLinear();
-  
-  // Convert Linear -> SRGB for Hex string for UI.
+  // Convert Linear -> SRGB for Hex string.
   const displayColor = paintColor.clone().convertLinearToSRGB();
   document.getElementById('paintColor').value = '#' + displayColor.getHexString();
   floaterColor.value = '#' + displayColor.getHexString();
@@ -1060,6 +1061,8 @@
               if (brushShape === 'hard-circle') falloff = 1;
               if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff); 
               const alpha = brushOpacity * falloff;
+              // ERASE: Multiply by (1 - alpha).
+              // This makes the mask value smaller (closer to 0), which in turn makes the geometry invisible.
               maskArr[i] = maskArr[i] * (1 - alpha);
           }
       });
@@ -1220,20 +1223,23 @@
 
   // Color Pickers
   floaterColor.oninput = (e) => {
-      // FIX: Convert SRGB (Input) to Linear (Storage) to match colors visually
-      paintColor.set(e.target.value);
-      paintColor.convertSRGBToLinear();
+      // No conversion needed with NoToneMapping
+      paintColor.set(e.target.value); 
       layers[currentLayerIndex].color.copy(paintColor);
       document.getElementById('paintColor').value = e.target.value;
       updateLayersUI();
   };
 
-  document.getElementById('uploadModel').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  loadModel(url);
-  });
+  // Fixed Model Upload Listener (Must be attached to DOM element)
+  const uploadInput = document.getElementById('uploadModel');
+  if (uploadInput) {
+    uploadInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      loadModel(url);
+    });
+  }
 
   function loadModel(url) {
   loader.style.display = 'block';
@@ -1327,8 +1333,7 @@
   });
 
   document.getElementById('paintColor').addEventListener('input', (e) => {
-  // FIX: Convert SRGB (Input) to Linear (Storage)
-  paintColor.set(e.target.value).convertSRGBToLinear();
+  paintColor.set(e.target.value);
   layers[currentLayerIndex].color.copy(paintColor);
   updateLayersUI();
   });
@@ -1351,12 +1356,10 @@
   paintedGeometries.forEach((pg, geoIdx) => {
   const geoKey = `geo_${geoIdx}`;
   if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
-  // Ensure we are working with Float32Array to use .fill()
   const data = layerData[geoKey][currentLayerIndex];
   if (data instanceof Float32Array) {
       data.fill(1);
   } else {
-      // Fallback if somehow it became a standard array
       const temp = new Float32Array(data);
       temp.fill(1);
       layerData[geoKey][currentLayerIndex] = Array.from(temp);
