@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retexture Pro – BowesProduct</title>
-  <!-- es-module-shims + import map -->
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
   <script type="importmap">
   {
@@ -25,7 +24,7 @@
       overflow: hidden;
     }
 
-    /* ================= HEADER ================= */
+    /* HEADER */
     .site-header {
       position: sticky;
       top: 0;
@@ -42,97 +41,31 @@
       align-items: center;
       justify-content: space-between;
     }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1.6rem;
-    }
-    .logo a {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .main-nav {
-      display: flex;
-      gap: 1.4rem;
-    }
-    .main-nav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-    .main-nav a:hover,
-    .main-nav a.active { color: #60a5fa; }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      min-height: 44px;
-    }
-    #profilePic {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid #60a5fa;
-      object-fit: cover;
-      display: none;
-    }
-    .login-btn {
-      padding: 0.45rem 1.1rem;
-      border-radius: 999px;
-      border: 1.5px solid #60a5fa;
-      background: transparent;
-      color: #60a5fa;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-    #levelInfo {
-      display: none;
-      width: 140px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-    }
+    .header-left { display: flex; align-items: center; gap: 1.6rem; }
+    .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
+    .main-nav { display: flex; gap: 1.4rem; }
+    .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
+    .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
+    .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
+    #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+    .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+    #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
     #levelText { white-space: nowrap; }
-    #xpOuter {
-      width: 100%;
-      height: 5px;
-      background: #1e293b;
-      border-radius: 3px;
-      margin-top: 4px;
-    }
-    #xpBar {
-      height: 100%;
-      width: 0%;
-      background: #60a5fa;
-      border-radius: 3px;
-      transition: width 0.35s ease;
-    }
+    #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+    #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-    /* MOBILE HEADER */
     @media (max-width: 768px) {
-      .header-inner {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
+      .header-inner { flex-direction: column; align-items: stretch; gap: 8px; }
       .header-left { justify-content: space-between; }
       .header-right { justify-content: space-between; width: 100%; }
       #levelInfo { width: 100%; }
     }
 
-    /* ================= MAIN ================= */
-    #container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding-top: 70px;
-      padding-bottom: 80px;
-    }
+    /* MAIN */
+    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
-    /* ================= PANEL ================= */
+    /* PANEL */
     .panel {
       position: absolute;
       top: 90px;
@@ -150,20 +83,20 @@
     }
     .panel.hidden { transform: translateX(360px); }
 
-    /* Desktop Panel Toggle – MORE VISIBLE */
+    /* Desktop Toggle – VISIBLE & BEAUTIFUL */
     #panelToggle {
       position: absolute;
-      left: -56px;
+      left: -60px;
       top: 50%;
       transform: translateY(-50%);
-      width: 56px;
-      height: 100px;
+      width: 60px;
+      height: 110px;
       background: rgba(2, 6, 23, 0.98);
       border: 1px solid #1e293b;
       border-right: none;
-      border-radius: 16px 0 0 16px;
+      border-radius: 20px 0 0 20px;
       color: #60a5fa;
-      font-size: 2rem;
+      font-size: 2.4rem;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -171,77 +104,63 @@
       justify-content: center;
       z-index: 12;
       backdrop-filter: blur(12px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 6px 30px rgba(0,0,0,0.5);
       transition: all 0.3s ease;
     }
     #panelToggle:hover {
       background: rgba(30, 41, 59, 0.98);
-      color: #a5b4fc;
-      transform: translateY(-50%) scale(1.05);
+      color: white;
+      transform: translateY(-50%) translateX(-4px);
+      box-shadow: 0 8px 40px rgba(96,165,250,0.3);
     }
 
-    /* Mobile Panel Toggle */
+    /* Mobile Toggle */
     #mobilePanelToggle {
       position: absolute;
-      top: -64px;
+      top: -70px;
       left: 50%;
       transform: translateX(-50%);
-      width: 200px;
-      height: 56px;
+      width: 220px;
+      height: 60px;
       background: rgba(2, 6, 23, 0.98);
       border: 1px solid #1e293b;
       border-bottom: none;
-      border-radius: 20px 20px 0 0;
+      border-radius: 24px 24px 0 0;
       color: #60a5fa;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 600;
       cursor: pointer;
       display: none;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
       z-index: 12;
       backdrop-filter: blur(12px);
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 -6px 30px rgba(0,0,0,0.4);
     }
-    #mobilePanelToggle:hover {
-      background: rgba(30, 41, 59, 0.98);
+    #mobilePanelToggle::before {
+      content: '↑';
+      font-size: 1.8rem;
     }
 
     .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
     label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
-    input, select, button {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 0.375rem;
-      border: 1px solid #1f2937;
-      background: #020617;
-      color: #e5e7eb;
-      font: inherit;
-    }
+    input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
     input[type="range"] { padding: 0.3rem 0; }
     input[type="color"] { height: 44px; padding: 0.2rem; }
-    button {
-      background: #60a5fa;
-      border: none;
-      color: white;
-      cursor: pointer;
-      margin-top: 0.8rem;
-      font-weight: 600;
-    }
+    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
     button:hover { background: #3b82f6; }
     button:disabled { background: #334155; opacity: 0.7; cursor: not-allowed; }
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
 
-    /* Brush & Eyedropper Cursor */
+    /* Cursors */
     #brushCursor, #eyedropperCursor {
       position: fixed;
       pointer-events: none;
       transform: translate(-50%, -50%);
       z-index: 9999;
       display: none;
-      will-change: left, top, width, height;
     }
     #brushCursor {
       border: 3px solid transparent;
@@ -249,55 +168,43 @@
       background: transparent;
     }
     #eyedropperCursor {
-      width: 40px;
-      height: 40px;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/28px no-repeat;
+      width: 44px;
+      height: 44px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/32px no-repeat;
     }
 
-    #customBrushPreview {
-      width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem;
-      image-rendering: pixelated;
-    }
-    #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
+    #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
     #paintToggle.active { background: #f87171; }
-    #eyedropperToggle { background: #a78bfa; display: none; } /* Mobile only */
+    #eyedropperToggle { background: #a78bfa; display: none; }
 
-    /* Undo/Redo */
-    #undoRedoGroup {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.8rem;
-    }
-    #undoBtn, #redoBtn {
-      flex: 1;
-      background: #475569;
-      margin-top: 0;
-    }
+    #undoRedoGroup { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
+    #undoBtn, #redoBtn { flex: 1; background: #475569; margin-top: 0; }
     #undoBtn:hover, #redoBtn:hover { background: #64748b; }
 
-    /* Mobile Adjustments */
+    /* Mobile */
     @media (max-width: 900px) {
       .panel {
         width: 100%;
         right: 0; left: 0;
         top: auto;
         bottom: 80px;
-        border-radius: 16px 16px 0 0;
-        max-height: 65vh;
+        border-radius: 20px 20px 0 0;
+        max-height: 70vh;
         transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .panel.visible { transform: translateY(0); }
       #panelToggle { display: none; }
       #mobilePanelToggle { display: flex; }
-      #eyedropperToggle { display: block; }
+      #eyedropperToggle { display: block; margin-top: 0.5rem; }
     }
 
     @media (hover: none) and (pointer: coarse) {
-      button { padding: 0.75rem; }
-      input[type="range"] { height: 48px; }
+      button { padding: 0.8rem; font-size: 1rem; }
+      input[type="range"] { height: 50px; }
     }
 
-    /* ================= FOOTER ================= */
+    /* FOOTER */
     .site-footer {
       position: fixed;
       bottom: 0;
@@ -318,15 +225,8 @@
       gap: 1.5rem;
       font-size: 0.85rem;
     }
-    .footer-nav {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .footer-nav a {
-      color: #cbd5e1;
-      text-decoration: none;
-    }
+    .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
     .site-footer p { margin: 0; color: #94a3b8; }
 
@@ -334,10 +234,10 @@
       #exportBtn {
         width: 90%;
         max-width: 500px;
-        padding: 18px !important;
-        font-size: 1.2rem !important;
+        padding: 20px;
+        font-size: 1.3rem;
         display: block;
-        margin: 30px auto 60px !important;
+        margin: 40px auto 80px;
       }
     }
   </style>
@@ -345,7 +245,6 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
     <div class="header-left">
@@ -367,7 +266,6 @@
   </div>
 </header>
 
-<!-- MAIN 3D VIEWER -->
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
@@ -375,12 +273,12 @@
 
   <div class="panel" id="panel">
     <button id="panelToggle">←</button>
-    <button id="mobilePanelToggle">Controls ↓</button>
+    <button id="mobilePanelToggle">Controls</button>
 
-    <div id="helpText" style="font-size:0.85rem;color:#94a3b8;margin:-0.5rem 0 1.5rem;line-height:1.5;padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;">
+    <div style="font-size:0.85rem;color:#94a3b8;margin:-0.5rem 0 1.5rem;line-height:1.5;padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;">
       Drag to rotate • Pinch/scroll to zoom<br>
       Activate Paint → paint on model<br>
-      PC: Hold Alt to sample color • Mobile: Use Eyedropper button<br>
+      PC: Hold Alt • Mobile: Use Eyedropper button to sample<br>
       Ctrl+Z / Ctrl+Y to Undo/Redo
     </div>
 
@@ -388,7 +286,7 @@
     <div class="control-group">
       <label for="uploadModel">Upload GLB/GLTF</label>
       <input type="file" id="uploadModel" accept=".glb,.gltf">
-      <div class="hint">FBX must be converted to GLB/GLTF first.</div>
+      <div class="hint">FBX must be converted first.</div>
     </div>
 
     <h2>Texture</h2>
@@ -435,14 +333,14 @@
         <option value="square-hard">Square (hard)</option>
         <option value="diamond-soft">Diamond (soft)</option>
         <option value="diamond-hard">Diamond (hard)</option>
-        <option value="custom">Custom Brush (upload PNG)</option>
+        <option value="custom">Custom Brush (PNG)</option>
       </select>
     </div>
     <div class="control-group" id="customBrushGroup" style="display:none;">
       <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
       <input type="file" id="uploadBrush" accept="image/png">
       <canvas id="customBrushPreview" width="80" height="80"></canvas>
-      <div class="hint">White = full paint, black = no paint</div>
+      <div class="hint">White = full paint, black = none</div>
     </div>
 
     <button id="paintToggle">Activate Paint Mode</button>
@@ -472,7 +370,6 @@
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
@@ -493,12 +390,7 @@
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-    authDomain: "bowesproduct.firebaseapp.com",
-    projectId: "bowesproduct"
-  };
-
+  const firebaseConfig = { apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA", authDomain: "bowesproduct.firebaseapp.com", projectId: "bowesproduct" };
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -525,10 +417,7 @@
 
     const ref = doc(db, "users", user.uid);
     let snap = await getDoc(ref);
-    if (!snap.exists()) {
-      await setDoc(ref, { xp: 10 });
-      snap = await getDoc(ref);
-    }
+    if (!snap.exists()) { await setDoc(ref, { xp: 10 }); snap = await getDoc(ref); }
     const xp = snap.data().xp || 0;
     const levels = [0, 200, 500, 1000, 2000];
     let level = levels.filter(v => xp >= v).length - 1;
@@ -541,7 +430,7 @@
   });
 </script>
 
-<!-- Three.js + Painting + Accurate Eyedropper + Undo/Redo -->
+<!-- Three.js Logic – FULLY FIXED -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -574,14 +463,10 @@
 
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
-
   let currentEnvMap = null;
+
   function loadEnvironment(url) {
-    if (url === 'neutral') {
-      scene.environment = null;
-      if (currentEnvMap) currentEnvMap.dispose();
-      return;
-    }
+    if (url === 'neutral') { scene.environment = null; if (currentEnvMap) currentEnvMap.dispose(); return; }
     new RGBELoader().load(url, (tex) => {
       const envMap = pmremGenerator.fromEquirectangular(tex).texture;
       scene.environment = envMap;
@@ -593,7 +478,7 @@
   loadEnvironment('neutral');
 
   let currentModel = null;
-  let modelSize = null;
+  let modelSize = 1;
   let paintedGeometries = [];
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 0.5;
@@ -602,10 +487,7 @@
   let paintModeActive = false;
   let eyedropperActive = false;
 
-  // Undo/Redo
-  const undoStack = [];
-  const redoStack = [];
-  const MAX_UNDO = 30;
+  const undoStack = []; const redoStack = []; const MAX_UNDO = 30;
   const undoBtn = document.getElementById('undoBtn');
   const redoBtn = document.getElementById('redoBtn');
 
@@ -621,38 +503,28 @@
 
   function undo() {
     if (undoStack.length === 0) return;
-    const current = paintedGeometries.map(g => g.geometry.attributes.color.array.slice());
-    redoStack.push(current);
-    const prev = undoStack.pop();
-    paintedGeometries.forEach((g, i) => {
-      g.geometry.attributes.color.array.set(prev[i]);
-      g.geometry.attributes.color.needsUpdate = true;
-    });
+    redoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
+    const state = undoStack.pop();
+    paintedGeometries.forEach((g, i) => { g.geometry.attributes.color.array.set(state[i]); g.geometry.attributes.color.needsUpdate = true; });
     undoBtn.disabled = undoStack.length === 0;
     redoBtn.disabled = false;
   }
 
   function redo() {
     if (redoStack.length === 0) return;
-    const current = paintedGeometries.map(g => g.geometry.attributes.color.array.slice());
-    undoStack.push(current);
-    const next = redoStack.pop();
-    paintedGeometries.forEach((g, i) => {
-      g.geometry.attributes.color.array.set(next[i]);
-      g.geometry.attributes.color.needsUpdate = true;
-    });
+    undoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
+    const state = redoStack.pop();
+    paintedGeometries.forEach((g, i) => { g.geometry.attributes.color.array.set(state[i]); g.geometry.attributes.color.needsUpdate = true; });
     redoBtn.disabled = redoStack.length === 0;
     undoBtn.disabled = false;
   }
 
-  undoBtn.onclick = undo;
-  redoBtn.onclick = redo;
+  undoBtn.onclick = undo; redoBtn.onclick = redo;
   window.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
     if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
   });
 
-  // Cursors
   const brushCursor = document.getElementById('brushCursor');
   const eyedropperCursor = document.getElementById('eyedropperCursor');
   const paintToggle = document.getElementById('paintToggle');
@@ -661,30 +533,29 @@
 
   // Panel toggle
   const panel = document.getElementById('panel');
-  const panelToggle = document.getElementById('panelToggle');
-  const mobilePanelToggle = document.getElementById('mobilePanelToggle');
+  const panelToggleBtn = document.getElementById('panelToggle');
+  const mobilePanelToggleBtn = document.getElementById('mobilePanelToggle');
   let panelVisible = true;
 
   function togglePanel() {
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
     panel.classList.toggle('visible', panelVisible);
-    panelToggle.textContent = panelVisible ? '←' : '→';
-    mobilePanelToggle.textContent = panelVisible ? 'Controls ↓' : 'Controls ↑';
+    panelToggleBtn.textContent = panelVisible ? '←' : '→';
+    mobilePanelToggleBtn.innerHTML = panelVisible ? 'Controls ↑' : 'Controls ↓';
   }
-  panelToggle.onclick = mobilePanelToggle.onclick = togglePanel;
+  panelToggleBtn.onclick = mobilePanelToggleBtn.onclick = togglePanel;
 
-  // Brush helpers
+  // Accurate brush sizing
   function getWorldBrushRadius() {
-    if (!modelSize) return 0.5;
     return brushSize * (modelSize * 0.2);
   }
 
-  function projectRadiusToScreen(worldRadius) {
-    const dist = camera.position.distanceTo(controls.target);
-    const fov = camera.fov * Math.PI / 180;
-    const height = 2 * Math.tan(fov / 2) * dist;
-    return (worldRadius * window.innerHeight) / height;
+  function projectWorldToScreenRadius(worldRadius) {
+    const v = new THREE.Vector3(controls.target.x, controls.target.y, controls.target.z);
+    const dist = camera.position.distanceTo(v);
+    const height = 2 * Math.tan((camera.fov * Math.PI / 180) / 2) * dist;
+    return (worldRadius / height) * window.innerHeight;
   }
 
   function updateBrushCursor(x, y) {
@@ -692,10 +563,11 @@
     brushCursor.style.display = 'block';
     brushCursor.style.left = x + 'px';
     brushCursor.style.top = y + 'px';
-    const r = projectRadiusToScreen(getWorldBrushRadius());
-    brushCursor.style.width = brushCursor.style.height = (r * 2) + 'px';
+    const screenRadius = projectWorldToScreenRadius(getWorldBrushRadius());
+    const size = screenRadius * 2;
+    brushCursor.style.width = brushCursor.style.height = size + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-    brushCursor.style.borderRadius = brushShape.includes('circle') || brushShape.includes('diamond') ? '50%' : '0';
+    brushCursor.style.borderRadius = (brushShape.includes('circle') || brushShape.includes('diamond')) ? '50%' : '0';
   }
 
   function updateEyedropperCursor(x, y) {
@@ -709,48 +581,42 @@
     eyedropperCursor.style.display = 'none';
   }
 
-  // Accurate eyedropper using readRenderTargetPixels
+  // Accurate eyedropper
   function sampleColorAt(x, y) {
     const rect = canvas.getBoundingClientRect();
-    const pixelX = (x - rect.left) * renderer.getPixelRatio();
-    const pixelY = (y - rect.top) * renderer.getPixelRatio();
-
-    const renderTarget = new THREE.WebGLRenderTarget(1, 1);
-    renderer.setRenderTarget(renderTarget);
-    renderer.render(scene, camera);
+    const gl = renderer.getContext();
     const pixel = new Uint8Array(4);
-    renderer.readRenderTargetPixels(renderTarget, 0, 0, 1, 1, pixel);
-    renderer.setRenderTarget(null);
-    renderTarget.dispose();
-
-    const color = new THREE.Color(pixel[0]/255, pixel[1]/255, pixel[2]/255);
-    paintColor.copy(color);
-    document.getElementById('paintColor').value = color.getHexString();
+    gl.readPixels(
+      (x - rect.left) * renderer.getPixelRatio(),
+      (rect.height - (y - rect.top)) * renderer.getPixelRatio(),
+      1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel
+    );
+    paintColor.setRGB(pixel[0]/255, pixel[1]/255, pixel[2]/255);
+    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
   }
 
-  // Painting logic
-  function getBrushAlpha(localX, localY) {
-    const dist = Math.hypot(localX, localY);
+  function getBrushAlpha(dx, dy) {
+    const dist = Math.hypot(dx, dy);
     if (dist > 1) return 0;
     if (brushShape === 'custom' && customBrushData) {
-      const u = Math.floor((localX + 1) * 0.5 * customBrushData.width);
-      const v = Math.floor((1 - localY) * 0.5 * customBrushData.height);
+      const u = Math.floor((dx + 1) * 0.5 * customBrushData.width);
+      const v = Math.floor((1 - dy) * 0.5 * customBrushData.height);
       return customBrushData.data[(v * customBrushData.width + u) * 4 + 3] / 255;
     }
     if (brushShape.includes('hard')) return 1;
     if (brushShape.includes('square')) {
-      const m = Math.max(Math.abs(localX), Math.abs(localY));
+      const m = Math.max(Math.abs(dx), Math.abs(dy));
       return brushShape.includes('soft') ? 1 - m : 1;
     }
     if (brushShape.includes('diamond')) {
-      const m = Math.abs(localX) + Math.abs(localY);
+      const m = Math.abs(dx) + Math.abs(dy);
       return brushShape.includes('soft') ? 1 - m : 1;
     }
     return 1 - dist * dist;
   }
 
   function paintAt(point) {
-    if (!paintModeActive || eyedropperActive || !currentModel) return;
+    if (!paintModeActive || eyedropperActive) return;
     const radius = getWorldBrushRadius();
     const radiusSq = radius * radius;
     const vert = new THREE.Vector3();
@@ -759,19 +625,17 @@
       const pos = geometry.attributes.position;
       const col = geometry.attributes.color;
       const inv = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
-      const localPoint = point.clone().applyMatrix4(inv);
+      const local = point.clone().applyMatrix4(inv);
 
       let changed = false;
       for (let i = 0; i < pos.count; i++) {
         vert.fromBufferAttribute(pos, i);
-        const dSq = vert.distanceToSquared(localPoint);
+        const dSq = vert.distanceToSquared(local);
         if (dSq > radiusSq) continue;
-
         changed = true;
-        const localX = (vert.x - localPoint.x) / radius;
-        const localY = (vert.y - localPoint.y) / radius;
-        const alpha = getBrushAlpha(localX, localY);
-
+        const dx = (vert.x - local.x) / radius;
+        const dy = (vert.y - local.y) / radius;
+        const alpha = getBrushAlpha(dx, dy);
         if (alpha > 0) {
           col.setXYZ(i,
             THREE.MathUtils.lerp(col.getX(i), paintColor.r, alpha),
@@ -788,15 +652,10 @@
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
-  canvas.addEventListener('pointermove', (e) => {
-    const x = e.clientX;
-    const y = e.clientY;
-
-    if (eyedropperActive) {
-      updateEyedropperCursor(x, y);
-    } else if (paintModeActive) {
-      updateBrushCursor(x, y);
-    }
+  canvas.addEventListener('pointermove', e => {
+    const x = e.clientX, y = e.clientY;
+    if (eyedropperActive) updateEyedropperCursor(x, y);
+    else if (paintModeActive) updateBrushCursor(x, y);
 
     if (isPainting && paintModeActive && !eyedropperActive) {
       mouse.x = (x / canvas.clientWidth) * 2 - 1;
@@ -807,11 +666,8 @@
     }
   });
 
-  canvas.addEventListener('pointerdown', (e) => {
-    if (eyedropperActive) {
-      sampleColorAt(e.clientX, e.clientY);
-      return;
-    }
+  canvas.addEventListener('pointerdown', e => {
+    if (eyedropperActive) { sampleColorAt(e.clientX, e.clientY); return; }
     if (paintModeActive && !eyedropperActive) {
       isPainting = true;
       mouse.x = (e.clientX / canvas.clientWidth) * 2 - 1;
@@ -823,29 +679,14 @@
   });
 
   canvas.addEventListener('pointerup', () => {
-    if (isPainting) {
-      isPainting = false;
-      saveState();
-    }
+    if (isPainting) { isPainting = false; saveState(); }
   });
 
   canvas.addEventListener('pointerleave', hideCursors);
 
-  // Alt key for eyedropper on desktop
-  window.addEventListener('keydown', (e) => {
-    if (e.altKey && !eyedropperActive && paintModeActive) {
-      eyedropperActive = true;
-      hideCursors();
-      updateEyedropperCursor(e.clientX || 0, e.clientY || 0);
-    }
-  });
-
-  window.addEventListener('keyup', (e) => {
-    if (!e.altKey && eyedropperActive) {
-      eyedropperActive = false;
-      hideCursors();
-    }
-  });
+  // Desktop Alt key eyedropper
+  window.addEventListener('keydown', e => { if (e.altKey && paintModeActive) { eyedropperActive = true; hideCursors(); } });
+  window.addEventListener('keyup', e => { if (!e.altKey && eyedropperActive) { eyedropperActive = false; hideCursors(); } });
 
   // Mobile eyedropper button
   eyedropperToggle.addEventListener('click', () => {
@@ -862,22 +703,41 @@
     paintToggle.classList.toggle('active', paintModeActive);
     controls.enabled = !paintModeActive;
     eyedropperActive = false;
-    eyedropperToggle.textContent = 'Eyedropper Mode (Mobile)';
-    eyedropperToggle.style.background = '#a78bfa';
     hideCursors();
   });
 
-  // Load model
-  document.getElementById('uploadModel').addEventListener('change', (e) => {
+  document.getElementById('brushShape').addEventListener('change', e => {
+    brushShape = e.target.value;
+    document.getElementById('customBrushGroup').style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
+
+  document.getElementById('uploadBrush').addEventListener('change', e => {
     const file = e.target.files[0];
     if (!file) return;
-    new GLTFLoader().load(URL.createObjectURL(file), (gltf) => {
+    const img = new Image();
+    img.onload = () => {
+      const size = 64;
+      const ctx = document.getElementById('customBrushPreview').getContext('2d');
+      ctx.canvas.width = size; ctx.canvas.height = size;
+      ctx.drawImage(img, 0, 0, size, size);
+      const temp = document.createElement('canvas');
+      temp.width = size; temp.height = size;
+      temp.getContext('2d').drawImage(img, 0, 0, size, size);
+      customBrushData = temp.getContext('2d').getImageData(0, 0, size, size);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+
+  document.getElementById('uploadModel').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    new GLTFLoader().load(URL.createObjectURL(file), gltf => {
       if (currentModel) scene.remove(currentModel);
       currentModel = gltf.scene;
       scene.add(currentModel);
 
       const box = new THREE.Box3().setFromObject(currentModel);
-      modelSize = box.getSize(new THREE.Vector3()).length();
+      modelSize = box.getSize(new THREE.Vector3()).length() || 1;
       const center = box.getCenter(new THREE.Vector3());
       camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
       controls.target.copy(center);
@@ -887,7 +747,7 @@
       undoStack.length = 0; redoStack.length = 0;
       undoBtn.disabled = true; redoBtn.disabled = true;
 
-      currentModel.traverse((child) => {
+      currentModel.traverse(child => {
         if (child.isMesh) {
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
             child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
@@ -907,132 +767,66 @@
       exportStatus.style.color = '#4ade80';
     });
   });
-  // === OTHER CONTROLS (Texture, Material, Brush, Clear, Env, Export) ===
 
   function applyTexture(url) {
     if (!currentModel) return;
-    new THREE.TextureLoader().load(url, (tex) => {
+    new THREE.TextureLoader().load(url, tex => {
       tex.flipY = false;
       tex.colorSpace = THREE.SRGBColorSpace;
-      currentModel.traverse((child) => {
-        if (child.isMesh) {
-          child.material.map = tex.clone();
-          child.material.needsUpdate = true;
-        }
+      currentModel.traverse(child => {
+        if (child.isMesh) { child.material.map = tex.clone(); child.material.needsUpdate = true; }
       });
     });
   }
 
-  document.getElementById('presetTexture').addEventListener('change', (e) => {
-    if (e.target.value) applyTexture(e.target.value);
-  });
-
-  document.getElementById('uploadTexture').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) applyTexture(URL.createObjectURL(file));
-  });
-
-  document.getElementById('metallicSlider').addEventListener('input', (e) => {
+  document.getElementById('presetTexture').addEventListener('change', e => { if (e.target.value) applyTexture(e.target.value); });
+  document.getElementById('uploadTexture').addEventListener('change', e => { const f = e.target.files[0]; if (f) applyTexture(URL.createObjectURL(f)); });
+  document.getElementById('metallicSlider').addEventListener('input', e => {
     const v = parseFloat(e.target.value);
     document.getElementById('metallicVal').textContent = v.toFixed(2);
-    currentModel?.traverse((c) => {
-      if (c.isMesh) c.material.metalness = v;
-    });
+    currentModel?.traverse(c => { if (c.isMesh) c.material.metalness = v; });
   });
-
-  document.getElementById('roughnessSlider').addEventListener('input', (e) => {
+  document.getElementById('roughnessSlider').addEventListener('input', e => {
     const v = parseFloat(e.target.value);
     document.getElementById('roughnessVal').textContent = v.toFixed(2);
-    currentModel?.traverse((c) => {
-      if (c.isMesh) c.material.roughness = v;
-    });
+    currentModel?.traverse(c => { if (c.isMesh) c.material.roughness = v; });
   });
-
-  document.getElementById('paintColor').addEventListener('input', (e) => {
-    paintColor.set(e.target.value);
-  });
-
-  document.getElementById('brushSize').addEventListener('input', (e) => {
+  document.getElementById('paintColor').addEventListener('input', e => paintColor.set(e.target.value));
+  document.getElementById('brushSize').addEventListener('input', e => {
     brushSize = parseFloat(e.target.value);
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
   });
-
-  document.getElementById('brushShape').addEventListener('change', (e) => {
-    brushShape = e.target.value;
-    document.getElementById('customBrushGroup').style.display =
-      brushShape === 'custom' ? 'block' : 'none';
-  });
-
-  document.getElementById('uploadBrush').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const img = new Image();
-    img.onload = () => {
-      const size = 64;
-      const previewCtx = document.getElementById('customBrushPreview').getContext('2d');
-      previewCtx.canvas.width = size;
-      previewCtx.canvas.height = size;
-      previewCtx.drawImage(img, 0, 0, size, size);
-
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = size;
-      tempCanvas.height = size;
-      const ctx = tempCanvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, size, size);
-      customBrushData = ctx.getImageData(0, 0, size, size);
-    };
-    img.src = URL.createObjectURL(file);
-  });
-
   document.getElementById('clearPaint').addEventListener('click', () => {
-    paintedGeometries.forEach(({ geometry }) => {
-      geometry.attributes.color.array.fill(1.0);
-      geometry.attributes.color.needsUpdate = true;
-    });
+    paintedGeometries.forEach(g => { g.geometry.attributes.color.array.fill(1); g.geometry.attributes.color.needsUpdate = true; });
     saveState();
   });
+  document.getElementById('envPreset').addEventListener('change', e => loadEnvironment(e.target.value));
 
-  document.getElementById('envPreset').addEventListener('change', (e) => {
-    loadEnvironment(e.target.value);
-  });
-
-  document.getElementById('exportBtn').addEventListener('click', async () => {
-    if (!currentModel) {
-      exportStatus.textContent = 'No model loaded!';
-      exportStatus.style.color = '#ef4444';
-      return;
-    }
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    if (!currentModel) return;
     exportStatus.textContent = 'Exporting...';
-    exportStatus.style.color = '#60a5fa';
-
     const exporter = new GLTFExporter();
     const clone = currentModel.clone();
-    clone.traverse((child) => {
+    clone.traverse(child => {
       if (child.isMesh) {
         child.material = child.material.clone();
         child.material.vertexColors = true;
         child.material.needsUpdate = true;
       }
     });
-
-    exporter.parse(
-      clone,
-      (result) => {
-        const blob = new Blob([result], { type: 'application/octet-stream' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'retextured_model.glb';
-        link.click();
-        exportStatus.textContent = 'Exported successfully!';
-        exportStatus.style.color = '#4ade80';
-      },
-      (err) => {
-        console.error(err);
-        exportStatus.textContent = 'Export failed';
-        exportStatus.style.color = '#ef4444';
-      },
-      { binary: true }
-    );
+    exporter.parse(clone, result => {
+      const blob = new Blob([result], { type: 'application/octet-stream' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'retextured_model.glb';
+      a.click();
+      exportStatus.textContent = 'Exported!';
+      exportStatus.style.color = '#4ade80';
+    }, err => {
+      console.error(err);
+      exportStatus.textContent = 'Export failed';
+      exportStatus.style.color = '#ef4444';
+    }, { binary: true });
   });
 
   window.addEventListener('resize', () => {
