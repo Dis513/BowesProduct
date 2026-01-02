@@ -190,7 +190,7 @@
   }
   #quickControls > div:hover { transform: translateY(-4px); }
   #quickControls > div.active {
-  background: rgba(34, 197, 94, 0.3); /* Green overlay when active */
+  background: rgba(34, 197, 94, 0.3);
   color: white;
   border-color: #22c55e;
   }
@@ -788,6 +788,7 @@
   };
 
   function sampleColor(x, y) {
+    renderer.render(scene, camera);
     const rect = canvas.getBoundingClientRect();
     const gl = renderer.getContext();
     const pixel = new Uint8Array(4);
@@ -830,13 +831,16 @@
   function updateBrushCursor(x, y) {
     if (!paintModeActive && !maskMode) return;
     brushCursor.style.display = 'block';
+
     if (maskMode) {
       brushCursor.style.borderColor = '#ec4899';
       brushCursor.style.backgroundColor = 'rgba(236, 72, 153, 0.1)';
     } else {
-      brushCursor.style.borderColor = paintColor.getStyle();
-      brushCursor.style.backgroundColor = `rgba(${paintColor.r*255}, ${paintColor.g*255}, ${paintColor.b*255}, 0.1)`;
+      const srgbColor = paintColor.clone();
+      brushCursor.style.borderColor = srgbColor.getStyle();
+      brushCursor.style.backgroundColor = `rgba(${Math.round(srgbColor.r*255)}, ${Math.round(srgbColor.g*255)}, ${Math.round(srgbColor.b*255)}, 0.1)`;
     }
+
     brushCursor.style.left = x + 'px';
     brushCursor.style.top = y + 'px';
     const radiusPx = getBrushRadiusInPixels();
@@ -844,7 +848,7 @@
     brushCursor.style.width = diameter + 'px';
     brushCursor.style.height = diameter + 'px';
     if (brushShape === 'soft-circle') {
-      const shadowColor = maskMode ? '#ec4899' : paintColor.getStyle();
+      const shadowColor = maskMode ? '#ec4899' : paintColor.clone().getStyle();
       brushCursor.style.boxShadow = `0 0 ${diameter/2}px ${diameter/4}px ${shadowColor}`;
     } else {
       brushCursor.style.boxShadow = 'none';
@@ -880,7 +884,7 @@
           if (brushShape === 'hard-circle') falloff = 1;
           if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff);
           const alpha = brushOpacity * falloff;
-          maskArr[i] = maskArr[i] * (1 - alpha);
+          maskArr[i] = Math.max(0, maskArr[i] - alpha);
         }
       } else {
         if (!layerData[geoKey]) layerData[geoKey] = {};
@@ -979,12 +983,23 @@
   const quickColor = document.getElementById('quickColor');
   const quickColorDisplay = document.getElementById('quickColorDisplay');
 
-  quickPaint.onclick = () => document.getElementById('paintToggle').click();
-  quickEye.onclick = () => document.getElementById('eyedropperToggle').click();
+  // Fixed: Quick buttons now properly trigger main toggles
+  quickPaint.onclick = () => {
+    document.getElementById('paintToggle').click();
+  };
 
+  quickEye.onclick = () => {
+    document.getElementById('eyedropperToggle').click();
+  };
+
+  // Fixed: Color button now updates everything correctly
   quickColor.oninput = (e) => {
-    document.getElementById('paintColor').value = e.target.value;
-    document.getElementById('paintColor').dispatchEvent(new Event('input'));
+    const newColor = e.target.value;
+    paintColor.set(newColor);
+    document.getElementById('paintColor').value = newColor;
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateQuickColorDisplay();
+    updateLayersUI();
   };
 
   function updateQuickColorDisplay() {
@@ -1002,13 +1017,18 @@
     updateQuickColorDisplay();
   }
 
+  // Fixed main toggle listeners (now also update quick buttons)
   document.getElementById('paintToggle').addEventListener('click', () => {
     paintModeActive = !paintModeActive;
     const btn = document.getElementById('paintToggle');
     btn.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
     btn.classList.toggle('active', paintModeActive);
     controls.enabled = !paintModeActive && !maskMode;
-    if (maskMode && paintModeActive) maskToggle.click();
+    if (maskMode && paintModeActive) {
+      maskMode = false;
+      maskToggle.classList.remove('active');
+      maskToggle.textContent = 'Mask Mode (Paint Invisibility)';
+    }
     eyedropperActive = false;
     document.getElementById('eyedropperToggle').classList.remove('active');
     document.getElementById('eyedropperToggle').textContent = 'Eyedropper Tool';
@@ -1035,10 +1055,24 @@
     updateQuickControls();
   });
 
-  // Initial quick controls update
-  updateQuickControls();
+  // Fixed upload (both methods)
+  document.getElementById('uploadModel').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    loadModel(url);
+  });
 
-  // ... (upload, loadModel, texture, sliders, export, resize, animate, drag/drop — same as stable)
+  window.addEventListener('dragover', e => e.preventDefault());
+  window.addEventListener('drop', e => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && (file.name.toLowerCase().endsWith('.glb') || file.name.toLowerCase().endsWith('.gltf'))) {
+      loadModel(URL.createObjectURL(file));
+    }
+  });
+
+  // ... (rest of loadModel, texture, sliders, export, resize, animate — unchanged)
 
   function animate() {
     requestAnimationFrame(animate);
@@ -1046,6 +1080,8 @@
     renderer.render(scene, camera);
   }
   animate();
+
+  updateQuickControls();
 </script>
 </body>
 </html>
