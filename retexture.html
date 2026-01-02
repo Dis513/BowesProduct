@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retexture Pro – BowesProduct</title>
-
   <!-- es-module-shims + import map -->
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
   <script type="importmap">
@@ -15,18 +14,25 @@
     }
   }
   </script>
-
   <style>
     *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #020617;
+      color: white;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
 
-    /* HEADER */
+    /* ================= HEADER ================= */
     .site-header {
       position: sticky;
       top: 0;
       z-index: 1000;
       background: rgba(2,6,23,0.95);
       border-bottom: 1px solid #1e293b;
+      backdrop-filter: blur(10px);
     }
     .header-inner {
       max-width: 1200px;
@@ -36,24 +42,97 @@
       align-items: center;
       justify-content: space-between;
     }
-    .header-left { display: flex; align-items: center; gap: 1.6rem; }
-    .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
-    .main-nav { display: flex; gap: 1.4rem; }
-    .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
-    .main-nav a.active, .main-nav a:hover { color: #60a5fa; }
-    .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
-    #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
-    .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
-    #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+    }
+    .logo a {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .main-nav {
+      display: flex;
+      gap: 1.4rem;
+    }
+    .main-nav a {
+      color: #e5e7eb;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .main-nav a:hover,
+    .main-nav a.active { color: #60a5fa; }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-height: 44px;
+    }
+    #profilePic {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #60a5fa;
+      object-fit: cover;
+      display: none;
+    }
+    .login-btn {
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      border: 1.5px solid #60a5fa;
+      background: transparent;
+      color: #60a5fa;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    #levelInfo {
+      display: none;
+      width: 140px;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
     #levelText { white-space: nowrap; }
-    #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
-    #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
+    #xpOuter {
+      width: 100%;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 3px;
+      margin-top: 4px;
+    }
+    #xpBar {
+      height: 100%;
+      width: 0%;
+      background: #60a5fa;
+      border-radius: 3px;
+      transition: width 0.35s ease;
+    }
 
-    /* MAIN */
-    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 60px; }
+    /* MOBILE HEADER */
+    @media (max-width: 768px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .header-left { justify-content: space-between; }
+      .header-right { justify-content: space-between; width: 100%; }
+      #levelInfo { width: 100%; }
+    }
+
+    /* ================= MAIN ================= */
+    #container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding-top: 70px;
+      padding-bottom: 80px; /* Space for fixed footer */
+    }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
-    /* PANEL */
+    /* ================= PANEL ================= */
     .panel {
       position: absolute;
       top: 90px;
@@ -67,64 +146,33 @@
       overflow-y: auto;
       z-index: 10;
       backdrop-filter: blur(10px);
-      transition: transform 0.3s ease;
     }
-    .panel.hidden { transform: translateX(340px); }
-    .panel h2 { color: #60a5fa; margin: 0 0 1rem; font-size: 1.1rem; }
+    .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
-    label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; cursor: pointer; }
-    input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
+    label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
+    input, select, button {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+      font: inherit;
+    }
     input[type="range"] { padding: 0.3rem 0; }
     input[type="color"] { height: 44px; padding: 0.2rem; }
-    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
+    button {
+      background: #60a5fa;
+      border: none;
+      color: white;
+      cursor: pointer;
+      margin-top: 0.8rem;
+      font-weight: 600;
+    }
     button:hover { background: #3b82f6; }
     .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
-    #status { position: absolute; bottom: 80px; left: 20px; font-size: 0.9rem; color: #94a3b8; z-index: 11; }
 
-    /* Panel Toggle Button (Desktop) */
-    #panelToggle {
-      position: absolute;
-      left: -40px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 36px;
-      height: 72px;
-      background: rgba(2, 6, 23, 0.95);
-      border: 1px solid #1e293b;
-      border-right: none;
-      border-radius: 12px 0 0 12px;
-      color: #60a5fa;
-      font-size: 1.4rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 12;
-      backdrop-filter: blur(10px);
-    }
-
-    /* Panel Toggle (Mobile) */
-    #mobilePanelToggle {
-      position: absolute;
-      top: -50px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 40px;
-      background: rgba(2, 6, 23, 0.95);
-      border: 1px solid #1e293b;
-      border-bottom: none;
-      border-radius: 12px 12px 0 0;
-      color: #60a5fa;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 12;
-    }
-
-    /* Cursors */
+    /* Brush cursor */
     #brushCursor {
       position: fixed;
       pointer-events: none;
@@ -133,40 +181,35 @@
       display: none;
       border: 3px solid transparent;
       border-radius: 50%;
-      box-sizing: border-box;
       background: transparent;
-      will-change: transform;
+      will-change: left, top, width, height, border-color, border-radius;
     }
-    #eyedropperCursor {
-      position: fixed;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-      display: none;
-      width: 32px;
-      height: 32px;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/contain no-repeat;
+    #customBrushPreview {
+      width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem;
+      image-rendering: pixelated;
     }
-
-    /* Buttons */
-    #paintToggle, #eyedropperToggle { background: #60a5fa; margin-top: 0.5rem; }
+    #paintToggle { background: #60a5fa; margin-top: 0.5rem; }
     #paintToggle.active { background: #f87171; }
-    #eyedropperToggle.active { background: #a78bfa; }
-    #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
 
-    /* Hide mobile/desktop specific elements */
-    @media (pointer: fine) {
-      #eyedropperToggle, #mobilePanelToggle { display: none; }
-    }
-    @media (pointer: coarse) or (hover: none) {
-      #panelToggle { display: none; }
-      #mobilePanelToggle { display: flex; }
-      .panel { width: 100%; right: 0; left: 0; top: auto; bottom: 70px; border-radius: 12px 12px 0 0; max-height: 50vh; }
-      .panel.hidden { transform: translateY(100%); }
-      #status { bottom: 70px; left: 10px; right: 10px; font-size: 0.8rem; }
+    /* Mobile Panel */
+    @media (max-width: 900px) {
+      .panel {
+        width: 100%;
+        right: 0; left: 0;
+        top: auto;
+        bottom: 80px;
+        border-radius: 16px 16px 0 0;
+        max-height: 60vh;
+      }
     }
 
-    /* FOOTER */
+    /* Touch-friendly */
+    @media (hover: none) and (pointer: coarse) {
+      button { padding: 0.75rem; }
+      input[type="range"] { height: 48px; }
+    }
+
+    /* ================= FOOTER ================= */
     .site-footer {
       position: fixed;
       bottom: 0;
@@ -178,18 +221,40 @@
       z-index: 1000;
       backdrop-filter: blur(10px);
     }
-    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; }
-    .footer-nav a { color: #cbd5e1; text-decoration: none; }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+    }
+    .footer-nav {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .footer-nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+    }
     .footer-nav a:hover { color: #60a5fa; }
+    .site-footer p { margin: 0; color: #94a3b8; }
 
-    /* Mobile Export Button Fix */
+    /* Mobile footer/export fix */
     @media (max-width: 768px) {
-      body { padding-bottom: 140px; }
-      .site-footer { position: relative !important; z-index: 1 !important; }
-      #exportBtn { position: relative; z-index: 100 !important; margin: 20px auto 60px; padding: 16px !important; width: 90% !important; max-width: 500px; display: block; font-size: 1.1rem !important; }
+      #exportBtn {
+        width: 90%;
+        max-width: 500px;
+        padding: 18px !important;
+        font-size: 1.2rem !important;
+        display: block;
+        margin: 30px auto 60px !important;
+      }
     }
   </style>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
@@ -219,13 +284,8 @@
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
-  <div id="eyedropperCursor"></div>
-  <div id="status">Upload a model → Drag to rotate • Activate Paint Mode • Hold Alt (or tap Eyedropper) to sample color</div>
 
-  <div class="panel" id="panel">
-    <button id="panelToggle">→</button>
-    <button id="mobilePanelToggle">↑</button>
-
+  <div class="panel">
     <h2>Model</h2>
     <div class="control-group">
       <label for="uploadModel">Upload GLB/GLTF</label>
@@ -288,8 +348,7 @@
     </div>
 
     <button id="paintToggle">Activate Paint Mode</button>
-    <button id="eyedropperToggle">Eyedropper Mode</button>
-    <button id="clearPaint">Clear All Paint</button>
+    <button id="clearPaint" style="background:#ef4444;">Clear All Paint</button>
 
     <h2>Lighting</h2>
     <div class="control-group">
@@ -304,7 +363,7 @@
 
     <h2>Export</h2>
     <button id="exportBtn">Export Modified GLB</button>
-    <div id="exportStatus" style="margin-top: 0.5rem; font-size: 0.8rem; color: #94a3b8;"></div>
+    <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
   </div>
 </div>
 
@@ -323,7 +382,7 @@
   </div>
 </footer>
 
-<!-- FIREBASE AUTH + XP -->
+<!-- Firebase Auth -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -377,7 +436,7 @@
   });
 </script>
 
-<!-- THREE.JS + EYEDROPPER + PANEL TOGGLE -->
+<!-- Three.js Retexture Logic -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -413,7 +472,11 @@
   let currentEnvMap = null;
 
   function loadEnvironment(url) {
-    if (url === 'neutral') { scene.environment = null; if (currentEnvMap) currentEnvMap.dispose(); return; }
+    if (url === 'neutral') {
+      scene.environment = null;
+      if (currentEnvMap) currentEnvMap.dispose();
+      return;
+    }
     new RGBELoader().load(url, (tex) => {
       const envMap = pmremGenerator.fromEquirectangular(tex).texture;
       scene.environment = envMap;
@@ -424,249 +487,280 @@
   }
   loadEnvironment('neutral');
 
-  let currentModel = null, modelSize = null, paintedGeometries = [];
+  let currentModel = null;
+  let modelSize = null;
+  let paintedGeometries = [];
   let paintColor = new THREE.Color('#ff4444');
-  let brushSize = 0.5, brushShape = 'soft-circle';
-  let paintModeActive = false, eyedropperActive = false;
-  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  let brushSize = 0.5;
+  let brushShape = 'soft-circle';
+  let customBrushData = null;
+  let paintModeActive = false;
 
   const brushCursor = document.getElementById('brushCursor');
-  const eyedropperCursor = document.getElementById('eyedropperCursor');
   const paintToggle = document.getElementById('paintToggle');
-  const eyedropperToggle = document.getElementById('eyedropperToggle');
-  const paintColorInput = document.getElementById('paintColor');
-  const status = document.getElementById('status');
   const exportStatus = document.getElementById('exportStatus');
-  const panel = document.getElementById('panel');
-  const panelToggle = document.getElementById('panelToggle');
-  const mobilePanelToggle = document.getElementById('mobilePanelToggle');
+
+  // Brush sizing & cursor
+  function getWorldBrushRadius() {
+    if (!modelSize) return 0.5;
+    return brushSize * (modelSize * 0.2);
+  }
+
+  function projectRadiusToScreen(worldRadius) {
+    const distance = camera.position.distanceTo(controls.target);
+    const fov = camera.fov * (Math.PI / 180);
+    const screenHeightAtDistance = 2 * Math.tan(fov / 2) * distance;
+    const pixelsPerUnit = window.innerHeight / screenHeightAtDistance;
+    return worldRadius * pixelsPerUnit;
+  }
+
+  function updateBrushCursor(clientX, clientY) {
+    if (!paintModeActive) return;
+    brushCursor.style.left = clientX + 'px';
+    brushCursor.style.top = clientY + 'px';
+    const screenRadius = projectRadiusToScreen(getWorldBrushRadius());
+    const pixelSize = screenRadius * 2;
+    brushCursor.style.width = brushCursor.style.height = pixelSize + 'px';
+    brushCursor.style.borderColor = paintColor.getStyle();
+
+    if (brushShape.includes('circle') || brushShape.includes('diamond')) {
+      brushCursor.style.borderRadius = '50%';
+    } else if (brushShape.includes('square')) {
+      brushCursor.style.borderRadius = '0';
+    }
+    brushCursor.style.display = 'block';
+  }
+
+  function hideBrushCursor() { brushCursor.style.display = 'none'; }
+
+  function getBrushAlpha(localX, localY) {
+    const dist = Math.sqrt(localX * localX + localY * localY);
+    if (dist > 1) return 0;
+    if (brushShape === 'custom' && customBrushData) {
+      const u = Math.floor((localX * 0.5 + 0.5) * customBrushData.width);
+      const v = Math.floor((localY * 0.5 + 0.5) * customBrushData.height);
+      const idx = (v * customBrushData.width + u) * 4 + 3;
+      return customBrushData.data[idx] / 255;
+    }
+    if (brushShape.includes('hard')) return 1;
+    if (brushShape.includes('square')) {
+      const maxDist = Math.max(Math.abs(localX), Math.abs(localY));
+      return brushShape.includes('soft') ? (1 - maxDist) : 1;
+    }
+    if (brushShape.includes('diamond')) {
+      const manhattan = Math.abs(localX) + Math.abs(localY);
+      return brushShape.includes('soft') ? (1 - manhattan) : 1;
+    }
+    return 1 - Math.pow(dist, 2);
+  }
+
+  function paintAt(point) {
+    if (!paintModeActive || paintedGeometries.length === 0) return;
+    const brushRadius = getWorldBrushRadius();
+    const brushRadiusSquared = brushRadius * brushRadius;
+    const vert = new THREE.Vector3();
+
+    paintedGeometries.forEach(({ geometry, matrixWorld, mesh }) => {
+      const positions = geometry.attributes.position;
+      const colors = geometry.attributes.color;
+      const inverseMatrix = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
+      const localPoint = point.clone().applyMatrix4(inverseMatrix);
+
+      for (let i = 0; i < positions.count; i++) {
+        vert.fromBufferAttribute(positions, i);
+        const offset = vert.sub(localPoint);
+        const distanceSquared = offset.lengthSq();
+        if (distanceSquared > brushRadiusSquared) continue;
+
+        const normalizedDist = Math.sqrt(distanceSquared) / brushRadius;
+        const localX = offset.x / brushRadius;
+        const localY = offset.y / brushRadius;
+        const alpha = getBrushAlpha(localX, localY);
+        if (alpha > 0) {
+          const r = THREE.MathUtils.lerp(colors.getX(i), paintColor.r, alpha);
+          const g = THREE.MathUtils.lerp(colors.getY(i), paintColor.g, alpha);
+          const b = THREE.MathUtils.lerp(colors.getZ(i), paintColor.b, alpha);
+          colors.setXYZ(i, r, g, b);
+        }
+      }
+      colors.needsUpdate = true;
+    });
+  }
 
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
+  let isPointerDown = false;
 
-  // Panel Toggle Logic
-  let panelVisible = true;
-  function togglePanel() {
-    panelVisible = !panelVisible;
-    panel.classList.toggle('hidden', !panelVisible);
-    panelToggle.textContent = panelVisible ? '→' : '←';
-    mobilePanelToggle.textContent = panelVisible ? '↑' : '↓';
-  }
-  panelToggle.onclick = mobilePanelToggle.onclick = togglePanel;
-
-  function loadModel(url) {
-    exportStatus.textContent = 'Loading...'; exportStatus.style.color = '#60a5fa';
-    new GLTFLoader().load(url, (gltf) => {
-      if (currentModel) scene.remove(currentModel);
-      currentModel = gltf.scene;
-      scene.add(currentModel);
-
-      const box = new THREE.Box3().setFromObject(currentModel);
-      modelSize = box.getSize(new THREE.Vector3()).length();
-      const center = box.getCenter(new THREE.Vector3());
-      camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
-      controls.target.copy(center);
-      controls.update();
-
-      paintedGeometries = [];
-      currentModel.traverse((child) => {
-        if (child.isMesh) {
-          if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-            child.material = new THREE.MeshStandardMaterial({ map: child.material.map, color: 0xffffff });
-          } else {
-            child.material.color.set(0xffffff);
-          }
-          child.material.vertexColors = true;
-          if (!child.geometry.attributes.color) {
-            const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
-            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-          }
-          paintedGeometries.push({ geometry: child.geometry, mesh: child });
-        }
-      });
-
-      exportStatus.textContent = 'Model loaded!'; exportStatus.style.color = '#4ade80';
-    });
-  }
-
-  function getWorldBrushRadius() { return modelSize ? brushSize * (modelSize * 0.2) : 0.5; }
-
-  function updateCursor(x, y) {
-    if (!paintModeActive) return;
-    if (eyedropperActive) {
-      eyedropperCursor.style.left = x + 'px'; eyedropperCursor.style.top = y + 'px'; eyedropperCursor.style.display = 'block';
-      brushCursor.style.display = 'none';
-    } else {
-      const r = getWorldBrushRadius();
-      const screenR = projectRadiusToScreen(r);
-      brushCursor.style.width = brushCursor.style.height = (screenR * 2) + 'px';
-      brushCursor.style.left = x + 'px'; brushCursor.style.top = y + 'px';
-      brushCursor.style.borderColor = paintColor.getStyle();
-      brushCursor.style.borderRadius = brushShape.includes('circle') || brushShape.includes('diamond') ? '50%' : '0';
-      brushCursor.style.display = 'block';
-      eyedropperCursor.style.display = 'none';
-    }
-  }
-
-  function projectRadiusToScreen(r) {
-    const dist = camera.position.distanceTo(controls.target);
-    const h = 2 * Math.tan(camera.fov * Math.PI / 360) * dist;
-    return r * (window.innerHeight / h);
-  }
-
-  function hideCursors() { brushCursor.style.display = eyedropperCursor.style.display = 'none'; }
-
-  function paintAt(point) {
-    const r = getWorldBrushRadius();
-    paintedGeometries.forEach(({ geometry, mesh }) => {
-      const inv = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
-      const local = point.clone().applyMatrix4(inv);
-      const pos = geometry.attributes.position;
-      const col = geometry.attributes.color;
-      for (let i = 0; i < pos.count; i++) {
-        const v = new THREE.Vector3().fromBufferAttribute(pos, i);
-        const d = v.distanceTo(local);
-        if (d > r) continue;
-        const alpha = 1 - (d / r);
-        col.setXYZ(i,
-          THREE.MathUtils.lerp(col.getX(i), paintColor.r, alpha),
-          THREE.MathUtils.lerp(col.getY(i), paintColor.g, alpha),
-          THREE.MathUtils.lerp(col.getZ(i), paintColor.b, alpha)
-        );
-      }
-      col.needsUpdate = true;
-    });
-  }
-
-  function sampleColorAt(point) {
-    let closest = Infinity;
-    let color = new THREE.Color(1,1,1);
-    paintedGeometries.forEach(({ geometry, mesh }) => {
-      const inv = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
-      const local = point.clone().applyMatrix4(inv);
-      const pos = geometry.attributes.position;
-      const col = geometry.attributes.color;
-      for (let i = 0; i < pos.count; i++) {
-        const v = new THREE.Vector3().fromBufferAttribute(pos, i);
-        const d = v.distanceTo(local);
-        if (d < closest) {
-          closest = d;
-          color.setRGB(col.getX(i), col.getY(i), col.getZ(i));
-        }
-      }
-    });
-    if (closest < Infinity) {
-      paintColor.copy(color);
-      paintColorInput.value = '#' + color.getHexString();
-      status.textContent = `Sampled: ${paintColorInput.value.toUpperCase()}`;
-      setTimeout(() => status.textContent = 'Painting • Hold Alt / use Eyedropper to sample', 2000);
-    }
-  }
-
-  canvas.addEventListener('pointermove', e => updateCursor(e.clientX, e.clientY));
-  canvas.addEventListener('pointerdown', e => {
-    if (!paintModeActive || !currentModel) return;
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    raycaster.setFromCamera(mouse, camera);
-    const hits = raycaster.intersectObject(currentModel, true);
-    if (hits.length > 0) {
-      if (eyedropperActive || (!isTouch && e.altKey)) sampleColorAt(hits[0].point);
-      else paintAt(hits[0].point);
+  canvas.addEventListener('pointermove', (e) => {
+    updateBrushCursor(e.clientX, e.clientY);
+    if (isPointerDown && paintModeActive && currentModel) {
+      mouse.x = (e.clientX / canvas.clientWidth) * 2 - 1;
+      mouse.y = -(e.clientY / canvas.clientHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
     }
   });
-  canvas.addEventListener('pointerleave', hideCursors);
 
-  paintToggle.onclick = () => {
+  canvas.addEventListener('pointerdown', (e) => {
+    isPointerDown = true;
+    if (paintModeActive && currentModel) {
+      mouse.x = (e.clientX / canvas.clientWidth) * 2 - 1;
+      mouse.y = -(e.clientY / canvas.clientHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
+    }
+  });
+
+  canvas.addEventListener('pointerup', () => isPointerDown = false);
+  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideBrushCursor(); });
+  canvas.addEventListener('mouseenter', (e) => { if (paintModeActive) updateBrushCursor(e.clientX, e.clientY); });
+
+  paintToggle.addEventListener('click', () => {
     paintModeActive = !paintModeActive;
     paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
     paintToggle.classList.toggle('active', paintModeActive);
     controls.enabled = !paintModeActive;
-    eyedropperActive = false;
-    eyedropperToggle?.classList.remove('active');
-    hideCursors();
-    status.textContent = paintModeActive ? 'Painting • Hold Alt or use Eyedropper to sample' : 'Drag to rotate • Activate Paint Mode';
-  };
+    if (!paintModeActive) hideBrushCursor();
+  });
 
-  eyedropperToggle.onclick = () => {
-    if (!paintModeActive) return;
-    eyedropperActive = !eyedropperActive;
-    eyedropperToggle.classList.toggle('active', eyedropperActive);
-    status.textContent = eyedropperActive ? 'Eyedropper active – tap to sample' : 'Painting active';
-  };
+  document.getElementById('brushShape').addEventListener('change', (e) => {
+    brushShape = e.target.value;
+    document.getElementById('customBrushGroup').style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
 
-  document.getElementById('uploadModel').onchange = e => e.target.files[0] && loadModel(URL.createObjectURL(e.target.files[0]));
-  document.getElementById('presetTexture').onchange = e => e.target.value && applyTexture(e.target.value);
-  document.getElementById('uploadTexture').onchange = e => e.target.files[0] && applyTexture(URL.createObjectURL(e.target.files[0]));
+  document.getElementById('uploadBrush').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const size = 64;
+      const ctx = document.getElementById('customBrushPreview').getContext('2d');
+      ctx.canvas.width = size; ctx.canvas.height = size;
+      ctx.drawImage(img, 0, 0, size, size);
+      const temp = document.createElement('canvas');
+      temp.width = size; temp.height = size;
+      temp.getContext('2d').drawImage(img, 0, 0, size, size);
+      customBrushData = temp.getContext('2d').getImageData(0, 0, size, size);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+
+  document.getElementById('uploadModel').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) new GLTFLoader().load(URL.createObjectURL(file), loadModelCallback);
+  });
+
+  function loadModelCallback(gltf) {
+    if (currentModel) scene.remove(currentModel);
+    currentModel = gltf.scene;
+    scene.add(currentModel);
+
+    const box = new THREE.Box3().setFromObject(currentModel);
+    modelSize = box.getSize(new THREE.Vector3()).length();
+    const center = box.getCenter(new THREE.Vector3());
+    camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
+    controls.target.copy(center);
+    controls.update();
+
+    paintedGeometries = [];
+    currentModel.traverse((child) => {
+      if (child.isMesh) {
+        if (!(child.material instanceof THREE.MeshStandardMaterial)) {
+          child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
+        }
+        child.material.vertexColors = true;
+        if (!child.geometry.attributes.color) {
+          const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
+          child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        }
+        paintedGeometries.push({ geometry: child.geometry, mesh: child });
+      }
+    });
+
+    exportStatus.textContent = 'Model loaded!';
+    exportStatus.style.color = '#4ade80';
+  }
 
   function applyTexture(url) {
-    new THREE.TextureLoader().load(url, tex => {
-      tex.flipY = false; tex.colorSpace = THREE.SRGBColorSpace;
-      currentModel.traverse(child => {
+    if (!currentModel) return;
+    new THREE.TextureLoader().load(url, (tex) => {
+      tex.flipY = false;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      currentModel.traverse((child) => {
         if (child.isMesh) {
           child.material.map = tex.clone();
-          child.material.color.set(0xffffff);
           child.material.needsUpdate = true;
         }
       });
     });
   }
 
-  document.getElementById('metallicSlider').oninput = e => {
+  document.getElementById('presetTexture').addEventListener('change', (e) => e.target.value && applyTexture(e.target.value));
+  document.getElementById('uploadTexture').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) applyTexture(URL.createObjectURL(file));
+  });
+
+  document.getElementById('metallicSlider').addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
     document.getElementById('metallicVal').textContent = v.toFixed(2);
-    currentModel?.traverse(c => c.isMesh && (c.material.metalness = v));
-  };
-  document.getElementById('roughnessSlider').oninput = e => {
+    currentModel?.traverse((c) => { if (c.isMesh) c.material.metalness = v; });
+  });
+
+  document.getElementById('roughnessSlider').addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
     document.getElementById('roughnessVal').textContent = v.toFixed(2);
-    currentModel?.traverse(c => c.isMesh && (c.material.roughness = v));
-  };
-  document.getElementById('paintColor').oninput = e => paintColor.set(e.target.value);
-  document.getElementById('brushSize').oninput = e => {
+    currentModel?.traverse((c) => { if (c.isMesh) c.material.roughness = v; });
+  });
+
+  document.getElementById('paintColor').addEventListener('input', (e) => paintColor.set(e.target.value));
+  document.getElementById('brushSize').addEventListener('input', (e) => {
     brushSize = parseFloat(e.target.value);
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
-  };
-  document.getElementById('brushShape').onchange = e => {
-    brushShape = e.target.value;
-    document.getElementById('customBrushGroup').style.display = brushShape === 'custom' ? 'block' : 'none';
-  };
-  document.getElementById('clearPaint').onclick = () => {
-    paintedGeometries.forEach(g => g.geometry.attributes.color.array.fill(1) && (g.geometry.attributes.color.needsUpdate = true));
-  };
-  document.getElementById('envPreset').onchange = e => loadEnvironment(e.target.value);
+  });
 
-  document.getElementById('exportBtn').onclick = () => {
+  document.getElementById('clearPaint').addEventListener('click', () => {
+    paintedGeometries.forEach(({ geometry }) => {
+      geometry.attributes.color.array.fill(1);
+      geometry.attributes.color.needsUpdate = true;
+    });
+  });
+
+  document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
+
+  document.getElementById('exportBtn').addEventListener('click', async () => {
     if (!currentModel) return;
     exportStatus.textContent = 'Exporting...';
     const exporter = new GLTFExporter();
     const clone = currentModel.clone();
-    clone.traverse(c => {
-      if (c.isMesh) {
-        c.material = c.material.clone();
-        c.material.vertexColors = true;
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.material.vertexColors = true;
+        child.material = child.material.clone();
+        child.material.needsUpdate = true;
       }
     });
-    exporter.parse(clone, result => {
+    exporter.parse(clone, (result) => {
       const blob = new Blob([result], { type: 'application/octet-stream' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'retextured_model.glb';
-      a.click();
-      exportStatus.textContent = 'Exported!';
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'retextured_model.glb';
+      link.click();
+      exportStatus.textContent = 'Exported successfully!';
       exportStatus.style.color = '#4ade80';
-    }, err => {
+    }, (err) => {
       exportStatus.textContent = 'Export failed';
       exportStatus.style.color = '#ef4444';
     }, { binary: true });
-  };
+  });
 
-  window.onresize = () => {
+  window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-  };
+  });
 
   function animate() {
     requestAnimationFrame(animate);
