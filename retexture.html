@@ -113,12 +113,24 @@
         transform: translateX(-50%);
         width: 60px;
         height: 6px;
-        background: #60a5fa;
+        background: #94a3b8;
         border-radius: 3px;
+        cursor: pointer;
+        z-index: 22;
+      }
+      #exportBtn {
+        width: 90%;
+        max-width: 500px;
+        padding: 20px;
+        font-size: 1.3rem;
+        display: block;
+        margin: 40px auto 100px;
+        position: relative;
+        z-index: 30;
       }
     }
 
-    #mobilePanelToggle { display: none; cursor: pointer; }
+    #mobilePanelToggle { display: none; }
 
     .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
@@ -163,12 +175,7 @@
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
     .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
-
-    @media (max-width: 768px) {
-      #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 100px; position: relative; z-index: 30; }
-    }
   </style>
-  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
@@ -377,7 +384,7 @@
   });
 </script>
 
-<!-- Three.js + Ultimate Features -->
+<!-- Three.js + All Features -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -439,11 +446,9 @@
   let eyedropperActive = false;
   let maskMode = false;
 
-  // Layers
   const layers = [];
   let currentLayerIndex = 0;
 
-  // Undo/Redo
   const undoStack = [];
   const redoStack = [];
   const MAX_UNDO = 30;
@@ -491,7 +496,6 @@
     if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
   });
 
-  // Cursors
   const brushCursor = document.getElementById('brushCursor');
   const eyedropperCursor = document.getElementById('eyedropperCursor');
   const paintToggle = document.getElementById('paintToggle');
@@ -499,286 +503,6 @@
   const maskToggle = document.getElementById('maskToggle');
   const exportStatus = document.getElementById('exportStatus');
 
-  // Panel toggle
-  const panel = document.getElementById('panel');
-  const panelToggle = document.getElementById('panelToggle');
-  const mobilePanelToggle = document.getElementById('mobilePanelToggle');
-  let panelVisible = true;
-
-  function togglePanel() {
-    panelVisible = !panelVisible;
-    panel.classList.toggle('hidden', !panelVisible);
-    panel.classList.toggle('visible', panelVisible);
-  }
-  panelToggle.onclick = () => togglePanel();
-  mobilePanelToggle.onclick = () => togglePanel();
-
-  // Close panel on canvas tap on mobile
-  canvas.addEventListener('touchstart', (e) => {
-    if (window.innerWidth <= 900 && panelVisible) {
-      e.preventDefault();
-      togglePanel();
-    }
-  });
-
-  // Layers UI with Reorder, Delete, Rename, Blend Modes
-  function addLayer() {
-    const layer = {
-      name: `Layer ${layers.length + 1}`,
-      color: new THREE.Color('#ff4444'),
-      opacity: 1.0,
-      visible: true,
-      blendMode: 'normal'
-    };
-    layers.push(layer);
-    updateLayersUI();
-    setActiveLayer(layers.length - 1);
-  }
-
-  function deleteLayer(idx) {
-    if (layers.length <= 1) return;
-    layers.splice(idx, 1);
-    if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
-    updateLayersUI();
-  }
-
-  function moveLayer(fromIdx, toIdx) {
-    const [layer] = layers.splice(fromIdx, 1);
-    layers.splice(toIdx, 0, layer);
-    if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
-    updateLayersUI();
-  }
-
-  function setActiveLayer(idx) {
-    currentLayerIndex = idx;
-    updateLayersUI();
-    paintColor.copy(layers[idx].color);
-    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
-  }
-
-  function updateLayersUI() {
-    const list = document.getElementById('layersList');
-    list.innerHTML = '';
-    layers.slice().reverse().forEach((layer, reverseIdx) => {
-      const i = layers.length - 1 - reverseIdx;
-      const li = document.createElement('li');
-      li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
-      li.draggable = true;
-      li.innerHTML = `
-        <span class="layer-visibility">${layer.visible ? '👁' : '隠'}</span>
-        <input type="color" class="layer-color" value="#${layer.color.getHexString()}">
-        <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
-        <select class="layer-blend">
-          <option value="normal">Normal</option>
-          <option value="multiply">Multiply</option>
-          <option value="screen">Screen</option>
-          <option value="overlay">Overlay</option>
-          <option value="add">Add</option>
-        </select>
-        <span class="layer-name" contenteditable="true">${layer.name}</span>
-        <span class="layer-delete">×</span>
-      `;
-      li.onclick = () => setActiveLayer(i);
-      li.querySelector('.layer-visibility').onclick = (e) => {
-        e.stopPropagation();
-        layer.visible = !layer.visible;
-        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '隠';
-      };
-      li.querySelector('.layer-color').oninput = (e) => {
-        layer.color.set(e.target.value);
-        if (i === currentLayerIndex) paintColor.copy(layer.color);
-      };
-      li.querySelector('.layer-opacity').oninput = (e) => layer.opacity = e.target.value / 100;
-      li.querySelector('.layer-blend').onchange = (e) => layer.blendMode = e.target.value;
-      li.querySelector('.layer-name').onblur = (e) => layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
-      li.querySelector('.layer-delete').onclick = (e) => {
-        e.stopPropagation();
-        deleteLayer(i);
-      };
-      li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
-      li.addEventListener('dragover', (e) => e.preventDefault();
-      li.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
-        const toIdx = i;
-        if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
-      });
-      list.appendChild(li);
-    });
-  }
-
-  document.getElementById('addLayerBtn').onclick = addLayer;
-  addLayer();
-
-  // Painting with blend modes
-  function blendColor(base, overlay, mode, opacity) {
-    const o = overlay.clone().multiplyScalar(opacity);
-    switch (mode) {
-      case 'multiply': return base.clone().multiply(o);
-      case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.g) * (1 - o.g)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.b) * (1 - o.b));
-      case 'overlay': return base.clone().lerp(o.multiply(base.clone().multiplyScalar(2)), base.r + base.g + base.b > 1.5 ? 1 : 0);
-      case 'add': return base.clone().add(o);
-      default: return base.clone().lerp(o, opacity);
-    }
-  }
-
-  function paintAt(point) {
-    if (!paintModeActive || paintedGeometries.length === 0) return;
-    const brushOpacity = document.getElementById('brushOpacity').value / 100;
-
-    const radius = getWorldBrushRadius();
-    const radiusSq = radius * radius;
-    const vert = new THREE.Vector3();
-
-    paintedGeometries.forEach(({ geometry, mesh }) => {
-      const pos = geometry.attributes.position;
-      const col = geometry.attributes.color;
-      const inv = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
-      const local = point.clone().applyMatrix4(inv);
-
-      let changed = false;
-      for (let i = 0; i < pos.count; i++) {
-        vert.fromBufferAttribute(pos, i);
-        if (vert.distanceToSquared(local) > radiusSq) continue;
-
-        changed = true;
-        const alpha = brushOpacity * (1 - Math.sqrt(vert.distanceToSquared(local)) / radius);
-
-        let result = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
-        layers.forEach(layer => {
-          if (!layer.visible) return;
-          const layerColor = maskMode && layer === layers[currentLayerIndex] ? new THREE.Color(0,0,0) : layer.color;
-          result = blendColor(result, layerColor, layer.blendMode, alpha * layer.opacity);
-        });
-
-        col.setXYZ(i, result.r, result.g, result.b);
-      }
-      if (changed) col.needsUpdate = true;
-    });
-  }
-
- <script type="module">
-  import * as THREE from 'three';
-  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-  import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
-
-  const canvas = document.getElementById('canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x020617);
-  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-  dirLight.position.set(5, 10, 7);
-  scene.add(dirLight);
-
-  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(3, 2, 5);
-
-  const controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
-
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
-  pmremGenerator.compileEquirectangularShader();
-  let currentEnvMap = null;
-
-  function loadEnvironment(url) {
-    if (url === 'neutral') {
-      scene.environment = null;
-      if (currentEnvMap) currentEnvMap.dispose();
-      return;
-    }
-    new RGBELoader().load(url, (tex) => {
-      const envMap = pmremGenerator.fromEquirectangular(tex).texture;
-      scene.environment = envMap;
-      tex.dispose();
-      if (currentEnvMap) currentEnvMap.dispose();
-      currentEnvMap = envMap;
-    });
-  }
-  loadEnvironment('neutral');
-
-  let currentModel = null;
-  let modelSize = 1;
-  let paintedGeometries = [];
-  let paintColor = new THREE.Color('#ff4444');
-  let brushSize = 0.5;
-  let brushShape = 'soft-circle';
-  let customBrushData = null;
-  let paintModeActive = false;
-  let eyedropperActive = false;
-  let maskMode = false;
-
-  // Layers
-  const layers = [];
-  let currentLayerIndex = 0;
-
-  // Undo/Redo
-  const undoStack = [];
-  const redoStack = [];
-  const MAX_UNDO = 30;
-  const undoBtn = document.getElementById('undoBtn');
-  const redoBtn = document.getElementById('redoBtn');
-
-  function saveState() {
-    if (paintedGeometries.length === 0) return;
-    const state = paintedGeometries.map(g => g.geometry.attributes.color.array.slice());
-    undoStack.push(state);
-    if (undoStack.length > MAX_UNDO) undoStack.shift();
-    redoStack.length = 0;
-    undoBtn.disabled = false;
-    redoBtn.disabled = true;
-  }
-
-  function undo() {
-    if (undoStack.length === 0) return;
-    redoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
-    const state = undoStack.pop();
-    paintedGeometries.forEach((g, i) => {
-      g.geometry.attributes.color.array.set(state[i]);
-      g.geometry.attributes.color.needsUpdate = true;
-    });
-    undoBtn.disabled = undoStack.length === 0;
-    redoBtn.disabled = false;
-  }
-
-  function redo() {
-    if (redoStack.length === 0) return;
-    undoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
-    const state = redoStack.pop();
-    paintedGeometries.forEach((g, i) => {
-      g.geometry.attributes.color.array.set(state[i]);
-      g.geometry.attributes.color.needsUpdate = true;
-    });
-    redoBtn.disabled = redoStack.length === 0;
-    undoBtn.disabled = false;
-  }
-
-  undoBtn.onclick = undo;
-  redoBtn.onclick = redo;
-  window.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
-  });
-
-  // Cursors
-  const brushCursor = document.getElementById('brushCursor');
-  const eyedropperCursor = document.getElementById('eyedropperCursor');
-  const paintToggle = document.getElementById('paintToggle');
-  const eyedropperToggle = document.getElementById('eyedropperToggle');
-  const maskToggle = document.getElementById('maskToggle');
-  const exportStatus = document.getElementById('exportStatus');
-
-  // Panel toggle
   const panel = document.getElementById('panel');
   const panelToggle = document.getElementById('panelToggle');
   const mobilePanelToggle = document.getElementById('mobilePanelToggle');
@@ -792,7 +516,6 @@
   panelToggle.onclick = togglePanel;
   mobilePanelToggle.onclick = togglePanel;
 
-  // Close panel on canvas tap (mobile)
   canvas.addEventListener('touchstart', (e) => {
     if (window.innerWidth <= 900 && panelVisible) {
       e.preventDefault();
@@ -800,7 +523,6 @@
     }
   });
 
-  // Layers UI
   function addLayer() {
     const layer = {
       name: `Layer ${layers.length + 1}`,
@@ -899,23 +621,6 @@
     document.getElementById('brushOpacityVal').textContent = e.target.value;
   };
 
-  // Eyedropper
-  function sampleColor(x, y) {
-    const rect = canvas.getBoundingClientRect();
-    const gl = renderer.getContext();
-    const pixel = new Uint8Array(4);
-    gl.readPixels(
-      (x - rect.left) * renderer.getPixelRatio(),
-      (rect.height - (y - rect.top)) * renderer.getPixelRatio(),
-      1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel
-    );
-    paintColor.setRGB(pixel[0]/255, pixel[1]/255, pixel[2]/255);
-    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
-    layers[currentLayerIndex].color.copy(paintColor);
-    updateLayersUI();
-  }
-
-  // Brush & Painting
   function getWorldBrushRadius() {
     return brushSize * modelSize * 0.15;
   }
@@ -943,10 +648,20 @@
     eyedropperCursor.style.display = 'none';
   }
 
+  function blendColor(base, overlay, mode, opacity) {
+    const o = overlay.clone().multiplyScalar(opacity);
+    switch (mode) {
+      case 'multiply': return base.clone().multiply(o);
+      case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.g) * (1 - o.g)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.b) * (1 - o.b));
+      case 'overlay': return base.clone().lerp(o.multiply(base.clone().multiplyScalar(2)), base.r + base.g + base.b > 1.5 ? 1 : 0);
+      case 'add': return base.clone().add(o);
+      default: return base.clone().lerp(o, opacity);
+    }
+  }
+
   function paintAt(point) {
     if (!paintModeActive || paintedGeometries.length === 0) return;
     const brushOpacity = document.getElementById('brushOpacity').value / 100;
-
     const radius = getWorldBrushRadius();
     const radiusSq = radius * radius;
     const vert = new THREE.Vector3();
@@ -978,19 +693,6 @@
     });
   }
 
-  // Blend function
-  function blendColor(base, overlay, mode, opacity) {
-    const o = overlay.clone().multiplyScalar(opacity);
-    switch (mode) {
-      case 'multiply': return base.clone().multiply(o);
-      case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.g) * (1 - o.g)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.b) * (1 - o.b));
-      case 'overlay': return base.clone().lerp(o.multiply(base.clone().multiplyScalar(2)), base.r + base.g + base.b > 1.5 ? 1 : 0);
-      case 'add': return base.clone().add(o);
-      default: return base.clone().lerp(o, opacity);
-    }
-  }
-
-  // Pointer events
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   let isPointerDown = false;
@@ -1032,7 +734,22 @@
 
   canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideCursors(); });
 
-  // Desktop Alt key eyedropper
+  // Eyedropper
+  function sampleColor(x, y) {
+    const rect = canvas.getBoundingClientRect();
+    const gl = renderer.getContext();
+    const pixel = new Uint8Array(4);
+    gl.readPixels(
+      (x - rect.left) * renderer.getPixelRatio(),
+      (rect.height - (y - rect.top)) * renderer.getPixelRatio(),
+      1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel
+    );
+    paintColor.setRGB(pixel[0]/255, pixel[1]/255, pixel[2]/255);
+    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
+  }
+
   window.addEventListener('keydown', (e) => {
     if (e.altKey && paintModeActive && !eyedropperActive) {
       eyedropperActive = true;
@@ -1048,7 +765,6 @@
     }
   });
 
-  // Mobile eyedropper button
   eyedropperToggle.addEventListener('click', () => {
     eyedropperActive = !eyedropperActive;
     eyedropperToggle.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Mode (Mobile)';
@@ -1068,7 +784,17 @@
     if (!paintModeActive) hideCursors();
   });
 
-  // Model upload
+  document.getElementById('brushSize').addEventListener('input', (e) => {
+    brushSize = parseFloat(e.target.value);
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
+  });
+
+  document.getElementById('paintColor').addEventListener('input', (e) => {
+    paintColor.set(e.target.value);
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
+  });
+
   document.getElementById('uploadModel').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -1102,7 +828,7 @@
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
             child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
           }
-          child.material.color.set(0xffffff); // Bright colors
+          child.material.color.set(0xffffff);
           child.material.vertexColors = true;
           if (!child.geometry.attributes.color) {
             const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
@@ -1122,7 +848,6 @@
     });
   }
 
-  // Texture apply
   function applyTexture(url) {
     if (!currentModel) return;
     new THREE.TextureLoader().load(url, (tex) => {
@@ -1146,7 +871,6 @@
     if (file) applyTexture(URL.createObjectURL(file));
   });
 
-  // Material sliders
   document.getElementById('metallicSlider').addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
     document.getElementById('metallicVal').textContent = v.toFixed(2);
@@ -1163,19 +887,6 @@
     });
   });
 
-  // Brush size & color
-  document.getElementById('paintColor').addEventListener('input', (e) => {
-    paintColor.set(e.target.value);
-    layers[currentLayerIndex].color.copy(paintColor);
-    updateLayersUI();
-  });
-
-  document.getElementById('brushSize').addEventListener('input', (e) => {
-    brushSize = parseFloat(e.target.value);
-    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
-  });
-
-  // Clear current layer
   document.getElementById('clearPaint').addEventListener('click', () => {
     paintedGeometries.forEach(({ geometry }) => {
       const count = geometry.attributes.position.count;
@@ -1192,7 +903,6 @@
 
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
-  // Export
   document.getElementById('exportBtn').addEventListener('click', () => {
     if (!currentModel) {
       exportStatus.textContent = 'No model loaded';
@@ -1224,20 +934,6 @@
       console.error(err);
     }, { binary: true });
   });
-
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-  }
-  animate();
-</script>
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
