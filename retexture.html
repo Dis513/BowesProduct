@@ -160,62 +160,6 @@
   opacity: 0.5;
   }
 
-  /* Quick Floating Controls */
-  #quickControls {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 16px;
-  z-index: 1200;
-  pointer-events: none;
-  }
-  #quickControls button, #quickControls input {
-  pointer-events: auto;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: 2px solid #60a5fa;
-  background: rgba(2, 6, 23, 0.9);
-  backdrop-filter: blur(12px);
-  color: #60a5fa;
-  font-size: 1.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-  transition: all 0.2s;
-  }
-  #quickControls button:hover { transform: translateY(-4px); }
-  #quickControls button.active {
-  background: rgba(34, 197, 94, 0.3); /* Green overlay */
-  color: white;
-  border-color: #22c55e;
-  }
-  #quickControls input[type="color"] {
-  padding: 0;
-  opacity: 0;
-  cursor: pointer;
-  }
-  #quickControls .color-wrapper {
-  position: relative;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: 2px solid #60a5fa;
-  background: rgba(2, 6, 23, 0.9);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-  }
-  #quickControls .color-display {
-  position: absolute;
-  inset: 4px;
-  border-radius: 50%;
-  background: #ff4444;
-  pointer-events: none;
-  }
-
   .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
   .control-group { margin-bottom: 1.2rem; }
   label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
@@ -280,16 +224,6 @@
   <div id="brushCursor"></div>
   <div id="eyedropperCursor"></div>
 
-  <!-- Quick Floating Controls -->
-  <div id="quickControls">
-    <button id="quickPaint" title="Activate/Deactivate Paint Mode">🖌</button>
-    <button id="quickEye" title="Eyedropper Tool">🎨</button>
-    <div class="color-wrapper">
-      <input type="color" id="quickColor" value="#ff4444">
-      <div class="color-display"></div>
-    </div>
-  </div>
-
   <div class="panel visible" id="panel">
     <button id="panelToggle">←</button>
 
@@ -302,35 +236,118 @@
     • Ctrl+Z/Y Undo/Redo
     </div>
 
-    <!-- Your full panel controls here (Model, Texture, etc.) — unchanged -->
-    <!-- ... (same as your stable version) ... -->
+    <h2>Model</h2>
+    <div class="control-group">
+    <label for="uploadModel">Upload GLB/GLTF</label>
+    <input type="file" id="uploadModel" accept=".glb,.gltf">
+    <div class="hint">Supports GLB/GLTF. Auto-centers model.</div>
+    </div>
+
+    <h2>Texture</h2>
+    <div class="control-group">
+    <label for="presetTexture">Preset Textures</label>
+    <select id="presetTexture">
+    <option value="">Original / None</option>
+    <option value="textures/wood_basecolor.jpg">Warm Wood</option>
+    <option value="textures/metal_basecolor.jpg">Brushed Metal</option>
+    <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
+    <option value="textures/fabric_basecolor.jpg">Fabric</option>
+    </select>
+    </div>
+    <div class="control-group">
+    <label for="uploadTexture">Custom Texture</label>
+    <input type="file" id="uploadTexture" accept="image/*">
+    </div>
+
+    <h2>Material</h2>
+    <div class="control-group">
+    <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
+    <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
+    </div>
+    <div class="control-group">
+    <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
+    <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
+    </div>
+
+    <h2>Layers</h2>
+    <ol id="layersList"></ol>
+    <button id="addLayerBtn">+ Add Layer</button>
+
+    <div class="control-group">
+    <label for="brushOpacity">Brush Opacity <span id="brushOpacityVal">100</span>%</label>
+    <input type="range" id="brushOpacity" min="1" max="100" value="100">
+    </div>
+
+    <h2>Painting Tools</h2>
+    <div class="control-group">
+    <label for="paintColor">Brush Color (current layer)</label>
+    <input type="color" id="paintColor" value="#ff4444">
+    </div>
+    <div class="control-group">
+    <label for="brushSize">Brush Size <span id="brushSizeVal">0.10</span></label>
+    <input type="range" id="brushSize" min="0.01" max="1.0" step="0.01" value="0.1">
+    </div>
+    <div class="control-group">
+    <label for="brushShape">Brush Shape</label>
+    <select id="brushShape">
+    <option value="soft-circle">Soft Circle</option>
+    <option value="hard-circle">Hard Circle</option>
+    <option value="custom">Custom Brush (upload PNG)</option>
+    </select>
+    </div>
+    <div class="control-group" id="customBrushGroup" style="display:none;">
+    <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
+    <input type="file" id="uploadBrush" accept="image/png">
+    <canvas id="customBrushPreview" width="80" height="80"></canvas>
+    <div class="hint">White = full paint, black = no paint</div>
+    </div>
+
+    <button id="paintToggle">Activate Paint Mode</button>
+    <button id="eyedropperToggle">Eyedropper Tool</button>
+    <button id="maskToggle">Mask Mode (Paint Invisibility)</button>
+
+    <div id="undoRedoGroup">
+    <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
+    <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
+    </div>
+
+    <button id="clearPaint" style="background:#ef4444;">Clear Current Layer</button>
+    <button id="clearMask" style="background:#64748b; display:none;">Reset Global Mask</button>
+
+    <h2>Lighting</h2>
+    <div class="control-group">
+    <label for="envPreset">Environment</label>
+    <select id="envPreset">
+    <option value="neutral">Neutral</option>
+    <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
+    <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
+    <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
+    </select>
+    </div>
+
+    <h2>Export</h2>
+    <button id="exportBtn">Export Modified GLB</button>
+    <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
   </div>
 </div>
 
 <div id="mobilePanelToggle"><span>▲ Controls</span></div>
 
 <footer class="site-footer">
-  <!-- ... -->
+  <div class="footer-inner">
+  <nav class="footer-nav">
+  <a href="about.html">About</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms</a>
+  <a href="license.html">License</a>
+  <a href="refund.html">Refund</a>
+  <a href="rewards.html">Rewards</a>
+  </nav>
+  <p>© 2026 BowesProduct</p>
+  </div>
 </footer>
 
 <script type="module">
-  // ... (your full Three.js script from stable version)
-
-  // === FIX: Soft brush cursor now uses sRGB color ===
-  function updateBrushCursor(x, y) {
-    if (!paintModeActive && !maskMode) return;
-    brushCursor.style.display = 'block';
-
-    if (maskMode) {
-      brushCursor.style.borderColor = '#ec4899';
-      brushCursor.style.backgroundColor = 'rgba(236, 72, 153, 0.1)';
-    } else {
-      const srgbColor = paintColor.clone().convertLinearToSRGB();
-      brushCursor.style.borderColor = srgbColor.getStyle();
-      brushCursor.style.backgroundColor = `rgba(${srgbColor.r*255}, ${srgbColor.g*255}, ${srgbColor.b*255}, 0.1)`;
-    }
-
-   <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -465,21 +482,19 @@
   const clearMaskBtn = document.getElementById('clearMask');
   const loader = document.getElementById('loader');
 
-  // Panel toggle logic
   const panel = document.getElementById('panel');
   const panelToggle = document.getElementById('panelToggle');
   const mobilePanelToggle = document.getElementById('mobilePanelToggle');
   let panelVisible = true;
 
   function togglePanel() {
+    if (window.innerWidth > 900) return; // Prevent hiding on desktop
+
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
     panel.classList.toggle('visible', panelVisible);
-    panelToggle.textContent = panelVisible ? '←' : '→';
-    if(window.innerWidth <= 900) {
-      const span = mobilePanelToggle.querySelector('span');
-      if(span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
-    }
+    const span = mobilePanelToggle.querySelector('span');
+    if(span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
   }
 
   panelToggle.onclick = togglePanel;
@@ -495,12 +510,14 @@
     } else {
       mobilePanelToggle.style.display = 'none';
       panelToggle.style.display = 'flex';
+      // Force visible on desktop
+      panel.classList.remove('hidden');
+      panel.classList.add('visible');
     }
   }
   updatePanelMode();
   window.addEventListener('resize', updatePanelMode);
 
-  // Hide panel on canvas tap (mobile only)
   canvas.addEventListener('touchstart', (e) => {
     if (window.innerWidth <= 900 && panelVisible && !paintModeActive && e.touches.length === 1) {
       const touch = e.touches[0];
@@ -737,7 +754,6 @@
   };
 
   function sampleColor(x, y) {
-    renderer.render(scene, camera);
     const rect = canvas.getBoundingClientRect();
     const gl = renderer.getContext();
     const pixel = new Uint8Array(4);
@@ -749,7 +765,7 @@
     const g = pixel[1] / 255;
     const b = pixel[2] / 255;
 
-    paintColor.setRGB(r, g, b).convertSRGBToLinear();
+    paintColor.setRGB(r, g, b);
 
     const displayColor = paintColor.clone().convertLinearToSRGB();
     document.getElementById('paintColor').value = '#' + displayColor.getHexString();
@@ -785,7 +801,7 @@
     } else {
       const srgbColor = paintColor.clone().convertLinearToSRGB();
       brushCursor.style.borderColor = srgbColor.getStyle();
-      brushCursor.style.backgroundColor = `rgba(${srgbColor.r*255}, ${srgbColor.g*255}, ${srgbColor.b*255}, 0.1)`;
+      brushCursor.style.backgroundColor = `rgba(${Math.round(srgbColor.r*255)}, ${Math.round(srgbColor.g*255)}, ${Math.round(srgbColor.b*255)}, 0.1)`;
     }
     brushCursor.style.left = x + 'px';
     brushCursor.style.top = y + 'px';
@@ -820,11 +836,8 @@
         const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
         const local = point.clone().applyMatrix4(inv);
         const geoKey = `geo_${geoIdx}`;
-        let maskArr = globalMaskData[geoKey];
-        if (!maskArr) {
-          maskArr = new Float32Array(pos.count).fill(1.0);
-          globalMaskData[geoKey] = maskArr;
-        }
+        if (!globalMaskData[geoKey]) return;
+        const maskArr = globalMaskData[geoKey];
         for (let i = 0; i < pos.count; i++) {
           vert.fromBufferAttribute(pos, i);
           const distSq = vert.distanceToSquared(local);
@@ -833,7 +846,7 @@
           if (brushShape === 'hard-circle') falloff = 1;
           if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff);
           const alpha = brushOpacity * falloff;
-          maskArr[i] = Math.max(0, maskArr[i] - alpha);
+          maskArr[i] = maskArr[i] * (1 - alpha);
         }
       });
       updateAllGeometries();
@@ -851,22 +864,28 @@
         layerData[geoKey][currentLayerIndex] = Array.from(colors);
       }
       const geoLayerColors = layerData[geoKey][currentLayerIndex];
+
       for (let i = 0; i < pos.count; i++) {
         vert.fromBufferAttribute(pos, i);
         const distSq = vert.distanceToSquared(local);
         if (distSq > radiusSq) continue;
+
         let falloff = 1 - Math.sqrt(distSq) / radius;
         if (brushShape === 'hard-circle') falloff = 1;
         if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff);
+
         const alpha = brushOpacity * falloff;
         const paintRGB = layers[currentLayerIndex].color;
+
         const current = new THREE.Color(geoLayerColors[i*3], geoLayerColors[i*3+1], geoLayerColors[i*3+2]);
         const result = blendColor(current, paintRGB, layers[currentLayerIndex].blendMode, alpha);
+
         geoLayerColors[i*3] = result.r;
         geoLayerColors[i*3+1] = result.g;
         geoLayerColors[i*3+2] = result.b;
       }
     });
+
     updateAllGeometries();
   }
 
@@ -1124,6 +1143,7 @@
   }
   animate();
 
+  // Drag and drop support
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => {
     e.preventDefault();
@@ -1134,68 +1154,6 @@
       }
     }
   });
-</script>
-  }
-
-  // === Quick Controls Logic ===
-  const quickControls = document.getElementById('quickControls');
-  const quickPaint = document.getElementById('quickPaint');
-  const quickEye = document.getElementById('quickEye');
-  const quickColor = document.getElementById('quickColor');
-  const colorDisplay = document.querySelector('.color-display');
-
-  quickPaint.onclick = () => document.getElementById('paintToggle').click();
-  quickEye.onclick = () => document.getElementById('eyedropperToggle').click();
-
-  quickColor.oninput = (e) => {
-    document.getElementById('paintColor').value = e.target.value;
-    document.getElementById('paintColor').dispatchEvent(new Event('input'));
-  };
-
-  // Sync color display
-  function updateQuickColor() {
-    const srgb = paintColor.clone().convertLinearToSRGB();
-    colorDisplay.style.background = srgb.getStyle();
-    quickColor.value = '#' + srgb.getHexString();
-  }
-
-  // Update visibility and state
-  function updateQuickControls() {
-    const isMobile = window.innerWidth <= 900;
-    quickControls.style.display = isMobile ? (panelVisible ? 'none' : 'flex') : 'flex';
-
-    quickPaint.classList.toggle('active', paintModeActive);
-    quickEye.classList.toggle('active', eyedropperActive);
-    updateQuickColor();
-  }
-
-  // Hook into existing toggle logic
-  const originalPaintClick = document.getElementById('paintToggle').onclick;
-  document.getElementById('paintToggle').onclick = () => {
-    originalPaintClick();
-    updateQuickControls();
-  };
-
-  const originalEyeClick = document.getElementById('eyedropperToggle').onclick;
-  document.getElementById('eyedropperToggle').onclick = () => {
-    originalEyeClick();
-    updateQuickControls();
-  };
-
-  // Also update on panel toggle and resize
-  const originalToggle = togglePanel;
-  togglePanel = () => {
-    originalToggle();
-    updateQuickControls();
-  };
-
-  window.addEventListener('resize', () => {
-    updatePanelMode();
-    updateQuickControls();
-  });
-
-  // Call once on load
-  updateQuickControls();
 </script>
 </body>
 </html>
