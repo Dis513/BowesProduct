@@ -1,459 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Retexture Pro – BowesProduct</title>
+<meta charset="UTF-8">
+<title>About – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- es-module-shims + import map -->
-  <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.182.0/build/three.module.js",
-      "three/addons/": "https://unpkg.com/three@0.182.0/examples/jsm/"
-    }
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.95);
+  border-bottom: 1px solid #1e293b;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.logo a {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.main-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.main-nav a:hover { color:#60a5fa; }
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 44px;
+}
+
+/* PROFILE */
+#profilePic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  display: none;
+}
+
+/* LOGIN */
+.login-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* XP */
+#levelInfo {
+  display: none;
+  width: 140px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+#levelText {
+  white-space: nowrap;
+}
+#xpOuter {
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+#xpBar {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
   }
-  </script>
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo {
+    width: 100%;
+  }
+}
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      height: 100%;
-      background: #020617;
-      color: white;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      overflow: hidden;
-    }
-
-    /* ================= HEADER ================= */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(2,6,23,0.95);
-      border-bottom: 1px solid #1e293b;
-    }
-
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1.6rem;
-    }
-    .logo a {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .main-nav {
-      display: flex;
-      gap: 1.4rem;
-    }
-    .main-nav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-    .main-nav a:hover {
-      color: #60a5fa;
-    }
-    .main-nav a.active {
-      color: #60a5fa;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      min-height: 44px;
-    }
-
-    #profilePic {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid #60a5fa;
-      object-fit: cover;
-      display: none;
-    }
-
-    .login-btn {
-      padding: 0.45rem 1.1rem;
-      border-radius: 999px;
-      border: 1.5px solid #60a5fa;
-      background: transparent;
-      color: #60a5fa;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    #levelInfo {
-      display: none;
-      width: 140px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-    }
-    #levelText {
-      white-space: nowrap;
-    }
-    #xpOuter {
-      width: 100%;
-      height: 5px;
-      background: #1e293b;
-      border-radius: 3px;
-      margin-top: 4px;
-    }
-    #xpBar {
-      height: 100%;
-      width: 0%;
-      background: #60a5fa;
-      border-radius: 3px;
-      transition: width 0.35s ease;
-    }
-
-    /* MOBILE HEADER */
-    @media (max-width: 768px) {
-      .header-inner {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-      .header-left {
-        justify-content: space-between;
-      }
-      .header-right {
-        justify-content: space-between;
-        width: 100%;
-      }
-      #levelInfo {
-        width: 100%;
-      }
-    }
-
-    /* ================= MAIN ================= */
-    #container { 
-      position: relative; 
-      width: 100%; 
-      height: 100%; 
-      padding-top: 70px; 
-      padding-bottom: 120px; /* Ensures export button visible */
-    }
-    #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-
-    /* ================= PANEL ================= */
-    .panel {
-      position: absolute;
-      top: 90px;
-      right: 20px;
-      width: 320px;
-      max-height: calc(100vh - 180px);
-      background: rgba(2, 6, 23, 0.95);
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 1.5rem;
-      overflow-y: auto;
-      z-index: 10;
-      backdrop-filter: blur(10px);
-      transition: transform 0.3s ease;
-    }
-    .panel.hidden { transform: translateX(360px); }
-
-    .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
-    .control-group { margin-bottom: 1.2rem; }
-    label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; cursor: pointer; }
-    input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
-    input[type="range"] { padding: 0.3rem 0; }
-    input[type="color"] { height: 44px; padding: 0.2rem; }
-    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
-    button:hover { background: #3b82f6; }
-    button:disabled { background: #334155; cursor: not-allowed; opacity: 0.7; }
-    .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 0.3rem; }
-
-    #helpText {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      margin: -0.5rem 0 1.5rem;
-      line-height: 1.5;
-      padding: 0.8rem;
-      background: rgba(30,41,59,0.4);
-      border-radius: 8px;
-    }
-
-    /* Panel Toggle - Desktop (Clean & Subtle) */
-    #panelToggle {
-      position: absolute;
-      left: -40px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 40px;
-      height: 80px;
-      background: rgba(2, 6, 23, 0.95);
-      border: 1px solid #1e293b;
-      border-right: none;
-      border-radius: 12px 0 0 12px;
-      color: #60a5fa;
-      font-size: 1.6rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 12;
-      backdrop-filter: blur(10px);
-    }
-
-    /* Mobile Panel Toggle - Clear & Easy to Tap */
-    #mobilePanelToggle {
-      position: absolute;
-      top: -56px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 160px;
-      height: 48px;
-      background: rgba(2, 6, 23, 0.95);
-      border: 1px solid #1e293b;
-      border-bottom: none;
-      border-radius: 16px 16px 0 0;
-      color: #60a5fa;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      z-index: 12;
-      backdrop-filter: blur(10px);
-    }
-
-    /* Undo/Redo */
-    #undoRedoGroup {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    #undoBtn, #redoBtn {
-      flex: 1;
-      margin-top: 0;
-      background: #475569;
-      font-size: 0.9rem;
-    }
-    #undoBtn:hover, #redoBtn:hover { background: #64748b; }
-
-    /* Cursors */
-    #brushCursor, #eyedropperCursor {
-      position: fixed;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-      display: none;
-    }
-    #brushCursor {
-      border: 3px solid transparent;
-      border-radius: 50%;
-      box-sizing: border-box;
-      background: transparent;
-    }
-    #eyedropperCursor {
-      width: 32px;
-      height: 32px;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/contain no-repeat;
-    }
-
-    #paintToggle, #eyedropperToggle { background: #60a5fa; margin-top: 0.5rem; }
-    #paintToggle.active { background: #f87171; }
-    #eyedropperToggle.active { background: #a78bfa; }
-
-    #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
-
-    /* Mobile */
-    @media (max-width: 900px) {
-      .panel { 
-        width: 100%; 
-        right: 0; 
-        left: 0; 
-        top: auto; 
-        bottom: 70px; 
-        border-radius: 16px 16px 0 0; 
-        max-height: 60vh; 
-      }
-      .panel.hidden { transform: translateY(100%); }
-      #panelToggle { display: none; }
-      #mobilePanelToggle { display: flex; }
-    }
-
-    /* Footer */
-    .site-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(2,6,23,0.95);
-      border-top: 1px solid #1e293b;
-      padding: 1rem;
-      z-index: 1000;
-      backdrop-filter: blur(10px);
-    }
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-      font-size: 0.85rem;
-    }
-    .footer-nav a { color: #cbd5e1; text-decoration: none; }
-    .footer-nav a:hover { color: #60a5fa; }
-
-    @media (max-width: 768px) {
-      .site-footer { position: relative !important; }
-      #exportBtn { margin: 30px auto 80px; padding: 18px; font-size: 1.2rem; display: block; width: 90%; max-width: 500px; }
-    }
-  </style>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+/* ================= CONTENT ================= */
+.content {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 0 1.5rem;
+}
+h1, h2 { color:#60a5fa; }
+p, li {
+  color:#cbd5e1;
+  line-height:1.8;
+}
+ /* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+.footer-nav a:hover {
+  color: #60a5fa;
+}
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
+}
+</style>
 </head>
+
 <body>
 
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
+
     <div class="header-left">
       <div class="logo"><a href="index.html">BowesProduct</a></div>
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
-        <a href="retexture.html" class="active">Retexture</a>
+         <a href="retexture.html">Retexture</a>
       </nav>
     </div>
+
     <div class="header-right">
       <img id="profilePic" alt="Profile">
+
       <div id="levelInfo">
         <div id="levelText"></div>
         <div id="xpOuter"><div id="xpBar"></div></div>
       </div>
+
       <button id="authBtn" class="login-btn">Login</button>
     </div>
+
   </div>
 </header>
 
-<!-- MAIN 3D VIEWER -->
-<div id="container">
-  <canvas id="canvas"></canvas>
-  <div id="brushCursor"></div>
-  <div id="eyedropperCursor"></div>
+<!-- CONTENT -->
+<div class="content">
+  <h1>About BowesProduct</h1>
 
-  <div class="panel" id="panel">
-    <button id="panelToggle">→</button>
-    <button id="mobilePanelToggle">Controls ↑</button>
+  <p>
+    BowesProduct is an independent 3D asset studio focused on creating
+    high-quality, production-ready 3D models for developers, artists,
+    and studios.
+  </p>
 
-    <div id="helpText">
-      Drag to rotate • Pinch/scroll to zoom<br>
-      Activate Paint Mode to paint<br>
-      Hold Alt (or tap Eyedropper) to sample color<br>
-      Ctrl+Z / Ctrl+Y to Undo/Redo
-    </div>
+  <p>
+    All assets are designed with clean topology, optimized performance,
+    and compatibility across modern pipelines including Blender,
+    Unity, Unreal Engine, and Godot.
+  </p>
 
-    <h2>Model</h2>
-    <div class="control-group">
-      <label for="uploadModel">Upload GLB/GLTF</label>
-      <input type="file" id="uploadModel" accept=".glb,.gltf">
-      <div class="hint">FBX must be converted to GLB/GLTF first.</div>
-    </div>
+  <h2>What You Get</h2>
+  <ul>
+    <li>One-time purchase, no subscriptions</li>
+    <li>Unlimited commercial use license</li>
+    <li>Game-ready and real-time optimized assets</li>
+    <li>Clear legal terms — no fine print tricks</li>
+  </ul>
 
-    <h2>Texture</h2>
-    <div class="control-group">
-      <label for="presetTexture">Preset Textures</label>
-      <select id="presetTexture">
-        <option value="">Original / None</option>
-        <option value="textures/wood_basecolor.jpg">Warm Wood</option>
-        <option value="textures/metal_basecolor.jpg">Brushed Metal</option>
-        <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
-        <option value="textures/fabric_basecolor.jpg">Fabric</option>
-      </select>
-    </div>
-    <div class="control-group">
-      <label for="uploadTexture">Custom Texture</label>
-      <input type="file" id="uploadTexture" accept="image/*">
-    </div>
+  <h2>Philosophy</h2>
+  <p>
+    The goal is simple: provide assets that save you time without
+    restricting how you use them. No royalties. No seat limits.
+    No artificial barriers.
+  </p>
 
-    <h2>Material</h2>
-    <div class="control-group">
-      <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
-      <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
-    </div>
-    <div class="control-group">
-      <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
-      <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
-    </div>
-
-    <h2>Vertex Color Painting</h2>
-    <div class="control-group">
-      <label for="paintColor">Brush Color</label>
-      <input type="color" id="paintColor" value="#ff4444">
-    </div>
-    <div class="control-group">
-      <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
-      <input type="range" id="brushSize" min="0.05" max="5" step="0.05" value="0.5">
-    </div>
-    <div class="control-group">
-      <label for="brushShape">Brush Shape</label>
-      <select id="brushShape">
-        <option value="soft-circle">Soft Circle</option>
-        <option value="hard-circle">Hard Circle</option>
-        <option value="square-soft">Square (soft)</option>
-        <option value="square-hard">Square (hard)</option>
-        <option value="diamond-soft">Diamond (soft)</option>
-        <option value="diamond-hard">Diamond (hard)</option>
-        <option value="custom">Custom Brush (upload PNG)</option>
-      </select>
-    </div>
-    <div class="control-group" id="customBrushGroup" style="display:none;">
-      <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
-      <input type="file" id="uploadBrush" accept="image/png">
-      <canvas id="customBrushPreview" width="80" height="80"></canvas>
-      <div class="hint">White = full paint, black = no paint</div>
-    </div>
-
-    <button id="paintToggle">Activate Paint Mode</button>
-    <button id="eyedropperToggle">Eyedropper Mode</button>
-
-    <div id="undoRedoGroup">
-      <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
-      <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
-    </div>
-
-    <button id="clearPaint" style="margin-top: 1.5rem; background: #ef4444;">Clear All Paint</button>
-
-    <h2>Lighting</h2>
-    <div class="control-group">
-      <label for="envPreset">Environment</label>
-      <select id="envPreset">
-        <option value="neutral">Neutral</option>
-        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
-        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
-        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
-      </select>
-    </div>
-
-    <h2>Export</h2>
-    <button id="exportBtn">Export Modified GLB</button>
-    <div id="exportStatus" style="margin-top: 0.5rem; font-size: 0.8rem; color: #94a3b8;"></div>
-  </div>
+  <h2>Contact</h2>
+  <p>
+    Questions or support requests?<br><br>
+    Email: <a href="mailto:support@bowesproduct.com">support@bowesproduct.com</a>
+  </p>
 </div>
 
-<!-- FOOTER -->
+  <!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
@@ -468,246 +256,71 @@
   </div>
 </footer>
 
-<!-- Firebase Auth (exact from your About page) -->
+<!-- ================= FIREBASE ================= -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-    authDomain: "bowesproduct.firebaseapp.com",
-    projectId: "bowesproduct"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-  const authBtn = document.getElementById("authBtn");
-  const profilePic = document.getElementById("profilePic");
-  const levelInfo = document.getElementById("levelInfo");
-  const levelText = document.getElementById("levelText");
-  const xpBar = document.getElementById("xpBar");
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
 
-  authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+authBtn.onclick = () =>
+  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      authBtn.textContent = "Login";
-      profilePic.style.display = "none";
-      levelInfo.style.display = "none";
-      return;
-    }
+onAuthStateChanged(auth, async (user) => {
+ if (!user) {
+  authBtn.textContent = "Login";
+  profilePic.style.display = "none";
+  levelInfo.style.display = "none";
+  return;
+ }
 
-    authBtn.textContent = "Logout";
-    profilePic.src = user.photoURL || "";
-    profilePic.style.display = "block";
+ authBtn.textContent = "Logout";
+ profilePic.src = user.photoURL || "";
+ profilePic.style.display = "block";
 
-    const ref = doc(db, "users", user.uid);
-    let snap = await getDoc(ref);
+ const ref = doc(db, "users", user.uid);
+ let snap = await getDoc(ref);
 
-    if (!snap.exists()) {
-      await setDoc(ref, { xp: 10 });
-      snap = await getDoc(ref);
-    }
+ if (!snap.exists()) {
+  await setDoc(ref, { xp: 10 });  // ← New users start with 10 XP
+  snap = await getDoc(ref);
+ }
 
-    const xp = snap.data().xp || 0;
-    const levels = [0, 200, 500, 1000, 2000];
-    let level = levels.filter(v => xp >= v).length - 1;
-    let next = levels[level + 1] ?? levels[level];
-    let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
+ const xp = snap.data().xp || 0;
+ const levels = [0, 200, 500, 1000, 2000];
+ let level = levels.filter(v => xp >= v).length - 1;
+ let next = levels[level + 1] ?? levels[level];
+ let progress = next === levels[level] ? 100 :
+  ((xp - levels[level]) / (next - levels[level])) * 100;
 
-    levelText.textContent = `Level ${level} • ${xp} XP`;
-    xpBar.style.width = progress + "%";
-    levelInfo.style.display = "block";
-  });
-</script>
-
-<!-- THREE.JS + UNDO/REDO + CLEAN TOGGLES -->
-<script type="module">
-  import * as THREE from 'three';
-  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-  import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
-
-  const canvas = document.getElementById('canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x020617);
-  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-  dirLight.position.set(5, 10, 7);
-  scene.add(dirLight);
-
-  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(3, 2, 5);
-
-  const controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
-
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
-  pmremGenerator.compileEquirectangularShader();
-  let currentEnvMap = null;
-
-  function loadEnvironment(url) {
-    if (url === 'neutral') { scene.environment = null; if (currentEnvMap) currentEnvMap.dispose(); return; }
-    new RGBELoader().load(url, (tex) => {
-      const envMap = pmremGenerator.fromEquirectangular(tex).texture;
-      scene.environment = envMap;
-      tex.dispose();
-      if (currentEnvMap) currentEnvMap.dispose();
-      currentEnvMap = envMap;
-    });
-  }
-  loadEnvironment('neutral');
-
-  let currentModel = null, modelSize = null, paintedGeometries = [];
-  let paintColor = new THREE.Color('#ff4444');
-  let brushSize = 0.5, brushShape = 'soft-circle';
-  let paintModeActive = false, eyedropperActive = false;
-  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-  const undoStack = [];
-  const redoStack = [];
-  const MAX_UNDO = 20;
-
-  const brushCursor = document.getElementById('brushCursor');
-  const eyedropperCursor = document.getElementById('eyedropperCursor');
-  const paintToggle = document.getElementById('paintToggle');
-  const eyedropperToggle = document.getElementById('eyedropperToggle');
-  const paintColorInput = document.getElementById('paintColor');
-  const exportStatus = document.getElementById('exportStatus');
-  const panel = document.getElementById('panel');
-  const panelToggle = document.getElementById('panelToggle');
-  const mobilePanelToggle = document.getElementById('mobilePanelToggle');
-  const undoBtn = document.getElementById('undoBtn');
-  const redoBtn = document.getElementById('redoBtn');
-
-  let panelVisible = true;
-  function togglePanel() {
-    panelVisible = !panelVisible;
-    panel.classList.toggle('hidden', !panelVisible);
-    panelToggle.textContent = panelVisible ? '→' : '←';
-    mobilePanelToggle.innerHTML = panelVisible ? 'Controls ↑' : 'Controls ↓';
-  }
-  panelToggle.onclick = mobilePanelToggle.onclick = togglePanel;
-
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-
-  function saveState() {
-    if (!currentModel || paintedGeometries.length === 0) return;
-    const state = paintedGeometries.map(g => g.geometry.attributes.color.array.slice());
-    undoStack.push(state);
-    if (undoStack.length > MAX_UNDO) undoStack.shift();
-    redoStack.length = 0;
-    undoBtn.disabled = false;
-    redoBtn.disabled = true;
-  }
-
-  function undo() {
-    if (undoStack.length === 0) return;
-    const state = undoStack.pop();
-    redoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
-    paintedGeometries.forEach((g, i) => {
-      g.geometry.attributes.color.array.set(state[i]);
-      g.geometry.attributes.color.needsUpdate = true;
-    });
-    undoBtn.disabled = undoStack.length === 0;
-    redoBtn.disabled = false;
-  }
-
-  function redo() {
-    if (redoStack.length === 0) return;
-    const state = redoStack.pop();
-    undoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
-    paintedGeometries.forEach((g, i) => {
-      g.geometry.attributes.color.array.set(state[i]);
-      g.geometry.attributes.color.needsUpdate = true;
-    });
-    redoBtn.disabled = redoStack.length === 0;
-    undoBtn.disabled = false;
-  }
-
-  undoBtn.onclick = undo;
-  redoBtn.onclick = redo;
-
-  window.addEventListener('keydown', e => {
-    if (!paintModeActive) return;
-    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-      e.preventDefault();
-      undo();
-    }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
-      e.preventDefault();
-      redo();
-    }
-  });
-
-  function loadModel(url) {
-    exportStatus.textContent = 'Loading...';
-    new GLTFLoader().load(url, (gltf) => {
-      if (currentModel) scene.remove(currentModel);
-      currentModel = gltf.scene;
-      scene.add(currentModel);
-
-      const box = new THREE.Box3().setFromObject(currentModel);
-      modelSize = box.getSize(new THREE.Vector3()).length();
-      const center = box.getCenter(new THREE.Vector3());
-      camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
-      controls.target.copy(center);
-      controls.update();
-
-      paintedGeometries = [];
-      currentModel.traverse((child) => {
-        if (child.isMesh) {
-          if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-            child.material = new THREE.MeshStandardMaterial({ map: child.material.map, color: 0xffffff });
-          } else {
-            child.material.color.set(0xffffff);
-          }
-          child.material.vertexColors = true;
-          if (!child.geometry.attributes.color) {
-            const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
-            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-          }
-          paintedGeometries.push({ geometry: child.geometry, mesh: child });
-        }
-      });
-
-      undoStack.length = 0;
-      redoStack.length = 0;
-      saveState(); // Initial state
-      exportStatus.textContent = 'Model loaded!';
-      exportStatus.style.color = '#4ade80';
-    });
-  }
-
-  // Rest of Three.js logic (painting, eyedropper, texture, export, etc.) remains the same as previous working version
-  // (omitted here for brevity — it's identical to the last working one with undo/redo added above)
-
-  // ... [All painting, eyedropper, texture apply, export, resize, animate functions here] ...
-
-  // Example placeholder for paintAt — full code would include the full painting logic with saveState() called on pointerup
-
-  function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-  }
-  animate();
+ levelText.textContent = `Level ${level} • ${xp} XP`;
+ xpBar.style.width = progress + "%";
+ levelInfo.style.display = "block";
+});
 </script>
 
 </body>
 </html>
+
+
+
+
+
+
+
