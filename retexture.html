@@ -44,6 +44,7 @@
     #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
+    /* Desktop Panel */
     .panel {
       position: absolute;
       top: 90px;
@@ -63,76 +64,96 @@
 
     #panelToggle {
       position: absolute;
-      left: -50px;
+      left: -70px;
       top: 50%;
       transform: translateY(-50%);
-      width: 50px;
-      height: 50px;
-      background: rgba(2, 6, 23, 0.98);
-      border: 1px solid #1e293b;
+      width: 70px;
+      height: 140px;
+      background: #60a5fa;
+      border: 2px solid #60a5fa;
       border-right: none;
-      border-radius: 10px 0 0 10px;
-      color: #60a5fa;
-      font-size: 1.8rem;
+      border-radius: 20px 0 0 20px;
+      color: white;
+      font-size: 3rem;
       font-weight: bold;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 21;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 6px 30px rgba(0,0,0,0.5);
+      z-index: 30;
+      box-shadow: 0 8px 30px rgba(96, 165, 250, 0.6);
       transition: all 0.3s ease;
     }
-    #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; }
+    #panelToggle:hover {
+      background: #3b82f6;
+      transform: translateY(-50%) translateX(-8px);
+      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.8);
+    }
 
-    /* Mobile Bottom Sheet Panel */
+    /* Mobile Panel - Bottom Sheet */
     @media (max-width: 900px) {
       .panel {
+        position: fixed;
         top: auto;
-        right: 0;
         left: 0;
+        right: 0;
         bottom: 0;
         width: 100%;
-        height: 75vh;
-        max-height: none;
+        height: 80vh;
+        max-height: 90vh;
+        background: rgba(2, 6, 23, 0.98);
         border-radius: 20px 20px 0 0;
+        padding: 80px 1.5rem 1.5rem;
+        overflow-y: auto;
+        z-index: 50;
         transform: translateY(100%);
         transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-        padding-top: 70px;
       }
-      .panel.visible { transform: translateY(0); }
-      #panelToggle { display: none !important; }
-      
+      .panel.visible {
+        transform: translateY(0);
+      }
+
+      #panelToggle { display: none; }
+
       #mobilePanelToggle {
-        display: flex !important;
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 50px;
-        height: 50px;
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
         background: #60a5fa;
         border-radius: 50%;
+        display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-        z-index: 30;
-        box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
-        transition: all 0.3s ease;
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: bold;
         color: white;
+        cursor: pointer;
+        z-index: 60;
+        box-shadow: 0 8px 25px rgba(96, 165, 250, 0.5);
+        transition: all 0.3s ease;
       }
       #mobilePanelToggle:hover {
         background: #3b82f6;
         transform: scale(1.1);
       }
-      #mobilePanelToggle.close-btn {
+      #mobilePanelToggle.close {
         background: #ef4444;
-        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
       }
-      #mobilePanelToggle.close-btn:hover {
+      #mobilePanelToggle.close:hover {
         background: #dc2626;
+      }
+
+      #exportBtn {
+        width: 90%;
+        max-width: 500px;
+        padding: 20px;
+        font-size: 1.3rem;
+        margin: 40px auto 120px;
+        display: block;
+        position: relative;
+        z-index: 30;
       }
     }
 
@@ -147,49 +168,25 @@
     button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; position: relative; z-index: 30; }
     button:hover { background: #3b82f6; }
 
-    /* Layers UI */
-    #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
-    .layer-item {
-      display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: grab;
-    }
-    .layer-item:active { cursor: grabbing; }
-    .layer-item.active { background: #1e293b; border: 1px solid #60a5fa; }
-    .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
-    .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
-    .layer-opacity { width: 90px; }
-    .layer-name { flex: 1; font-size: 0.95rem; cursor: text; }
-    .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 20px; text-align: center; }
-    .layer-blend { width: 100px; font-size: 0.8rem; }
-    #addLayerBtn { background: #10b981; }
-
     #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none; }
     #brushCursor { border: 3px solid transparent; border-radius: 50%; background: transparent; }
-    #eyedropperCursor { width: 44px; height: 44px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/32px no-repeat; }
 
-    #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
-    #paintToggle.active { background: #f87171; }
-    #eyedropperToggle { background: #a78bfa; display: none; }
-    #eyedropperToggle.active { background: #8b5cf6; }
-    #maskToggle { background: #8b5cf6; }
-    #maskToggle.active { background: #ec4899; }
-
-    #undoRedoGroup { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
-    #undoBtn, #redoBtn { flex: 1; background: #475569; margin-top: 0; }
-    #undoBtn:hover, #redoBtn:hover { background: #64748b; }
-
-    .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
+    .site-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(2,6,23,0.95);
+      border-top: 1px solid #1e293b;
+      padding: 1rem;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
     .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
     .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
-
-    @media (max-width: 768px) {
-      #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 100px; position: relative; z-index: 30; }
-    }
-    
-    .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
   </style>
-  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
@@ -217,24 +214,22 @@
 <div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
-  <div id="eyedropperCursor"></div>
 
   <div class="panel" id="panel">
     <button id="panelToggle">←</button>
-    <div id="mobilePanelToggle">☰</div>
+    <button id="mobilePanelToggle">☰</button>
 
     <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.5;">
       Drag to rotate • Pinch/scroll to zoom<br>
       Activate Paint → paint current layer<br>
       PC: Hold Alt • Mobile: Eyedropper button to sample<br>
-      Ctrl+Z/Y Undo/Redo • Drag layers to reorder
+      Ctrl+Z/Y Undo/Redo
     </div>
 
     <h2>Model</h2>
     <div class="control-group">
       <label for="uploadModel">Upload GLB/GLTF</label>
       <input type="file" id="uploadModel" accept=".glb,.gltf">
-      <div class="hint">FBX must be converted first.</div>
     </div>
 
     <h2>Texture</h2>
@@ -263,49 +258,19 @@
       <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
     </div>
 
-    <h2>Layers</h2>
-    <ol id="layersList"></ol>
-    <button id="addLayerBtn">+ Add Layer</button>
-
-    <div class="control-group">
-      <label for="brushOpacity">Brush Opacity <span id="brushOpacityVal">100</span>%</label>
-      <input type="range" id="brushOpacity" min="1" max="100" value="100">
-    </div>
-
     <h2>Vertex Color Painting</h2>
     <div class="control-group">
-      <label for="paintColor">Brush Color (current layer)</label>
+      <label for="paintColor">Brush Color</label>
       <input type="color" id="paintColor" value="#ff4444">
     </div>
     <div class="control-group">
       <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
-      <input type="range" id="brushSize" min="0.01" max="5" step="0.01" value="0.5">
-    </div>
-    <div class="control-group">
-      <label for="brushShape">Brush Shape</label>
-      <select id="brushShape">
-        <option value="soft-circle">Soft Circle</option>
-        <option value="hard-circle">Hard Circle</option>
-        <option value="custom">Custom Brush (upload PNG)</option>
-      </select>
-    </div>
-    <div class="control-group" id="customBrushGroup" style="display:none;">
-      <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
-      <input type="file" id="uploadBrush" accept="image/png">
-      <canvas id="customBrushPreview" width="80" height="80"></canvas>
-      <div class="hint">White = full paint, black = no paint</div>
+      <input type="range" id="brushSize" min="0.05" max="5" step="0.05" value="0.5">
     </div>
 
     <button id="paintToggle">Activate Paint Mode</button>
-    <button id="eyedropperToggle">Eyedropper Mode (Mobile)</button>
-    <button id="maskToggle">Mask Mode (paint black to hide)</button>
 
-    <div id="undoRedoGroup">
-      <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
-      <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
-    </div>
-
-    <button id="clearPaint" style="background:#ef4444;">Clear Current Layer</button>
+    <button id="clearPaint" style="background:#ef4444;">Clear All Paint</button>
 
     <h2>Lighting</h2>
     <div class="control-group">
@@ -338,6 +303,36 @@
   </div>
 </footer>
 
+<!-- Mobile Panel Toggle Script -->
+<script>
+  const panel = document.getElementById('panel');
+  const mobileToggle = document.getElementById('mobilePanelToggle');
+  let isOpen = false;
+
+  function toggleMobilePanel() {
+    isOpen = !isOpen;
+    if (isOpen) {
+      panel.classList.add('visible');
+      mobileToggle.textContent = '×';
+      mobileToggle.classList.add('close');
+    } else {
+      panel.classList.remove('visible');
+      mobileToggle.textContent = '☰';
+      mobileToggle.classList.remove('close');
+    }
+  }
+
+  mobileToggle.addEventListener('click', toggleMobilePanel);
+
+  // Start closed on mobile
+  if (window.innerWidth <= 900) {
+    panel.classList.remove('visible');
+    mobileToggle.textContent = '☰';
+  }
+</script>
+
+<!-- Your full Three.js + Firebase script from the last working version goes here -->
+<!-- (Copy your working Three.js code below this line) -->
 <!-- Firebase Auth -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -1237,3 +1232,4 @@
 
 </body>
 </html>
+
