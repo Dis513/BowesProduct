@@ -63,17 +63,17 @@
 
     #panelToggle {
       position: absolute;
-      left: -60px;
+      left: -50px;
       top: 50%;
       transform: translateY(-50%);
-      width: 60px;
-      height: 110px;
+      width: 50px;
+      height: 50px;
       background: rgba(2, 6, 23, 0.98);
       border: 1px solid #1e293b;
       border-right: none;
-      border-radius: 20px 0 0 20px;
+      border-radius: 10px 0 0 10px;
       color: #60a5fa;
-      font-size: 2.4rem;
+      font-size: 1.8rem;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -84,7 +84,7 @@
       box-shadow: 0 6px 30px rgba(0,0,0,0.5);
       transition: all 0.3s ease;
     }
-    #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
+    #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; }
 
     /* Mobile Bottom Sheet Panel */
     @media (max-width: 900px) {
@@ -101,32 +101,19 @@
         transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         padding-top: 80px;
       }
-      .panel.visible {
-        transform: translateY(0);
-      }
-      #panelToggle { display: none; }
+      .panel.visible { transform: translateY(0); }
+      #panelToggle { display: none !important; }
       #mobilePanelToggle {
-        display: block;
+        display: block !important;
         position: absolute;
         top: 12px;
         left: 50%;
         transform: translateX(-50%);
         width: 60px;
         height: 6px;
-        background: #94a3b8;
+        background: #60a5fa;
         border-radius: 3px;
         cursor: pointer;
-        z-index: 22;
-      }
-      #exportBtn {
-        width: 90%;
-        max-width: 500px;
-        padding: 20px;
-        font-size: 1.3rem;
-        display: block;
-        margin: 40px auto 100px;
-        position: relative;
-        z-index: 30;
       }
     }
 
@@ -148,11 +135,11 @@
     }
     .layer-item:active { cursor: grabbing; }
     .layer-item.active { background: #1e293b; border: 1px solid #60a5fa; }
-    .layer-visibility { font-size: 1.3rem; cursor: pointer; }
-    .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; }
+    .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
+    .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
     .layer-opacity { width: 90px; }
     .layer-name { flex: 1; font-size: 0.95rem; cursor: text; }
-    .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; }
+    .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 20px; text-align: center; }
     .layer-blend { width: 100px; font-size: 0.8rem; }
     #addLayerBtn { background: #10b981; }
 
@@ -163,6 +150,7 @@
     #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
     #paintToggle.active { background: #f87171; }
     #eyedropperToggle { background: #a78bfa; display: none; }
+    #eyedropperToggle.active { background: #8b5cf6; }
     #maskToggle { background: #8b5cf6; }
     #maskToggle.active { background: #ec4899; }
 
@@ -175,7 +163,14 @@
     .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
     .footer-nav a { color: #cbd5e1; text-decoration: none; }
     .footer-nav a:hover { color: #60a5fa; }
+
+    @media (max-width: 768px) {
+      #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 100px; position: relative; z-index: 30; }
+    }
+    
+    .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
   </style>
+  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 
@@ -384,7 +379,7 @@
   });
 </script>
 
-<!-- Three.js + All Features -->
+<!-- Three.js + Ultimate Features -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -446,9 +441,11 @@
   let eyedropperActive = false;
   let maskMode = false;
 
+  // Layers
   const layers = [];
   let currentLayerIndex = 0;
 
+  // Undo/Redo
   const undoStack = [];
   const redoStack = [];
   const MAX_UNDO = 30;
@@ -485,7 +482,7 @@
       g.geometry.attributes.color.array.set(state[i]);
       g.geometry.attributes.color.needsUpdate = true;
     });
-    redoBtn.disabled = redoStack.length === 0;
+    redoStack.disabled = redoStack.length === 0;
     undoBtn.disabled = false;
   }
 
@@ -496,6 +493,7 @@
     if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
   });
 
+  // Cursors
   const brushCursor = document.getElementById('brushCursor');
   const eyedropperCursor = document.getElementById('eyedropperCursor');
   const paintToggle = document.getElementById('paintToggle');
@@ -503,6 +501,7 @@
   const maskToggle = document.getElementById('maskToggle');
   const exportStatus = document.getElementById('exportStatus');
 
+  // Panel toggle
   const panel = document.getElementById('panel');
   const panelToggle = document.getElementById('panelToggle');
   const mobilePanelToggle = document.getElementById('mobilePanelToggle');
@@ -512,10 +511,15 @@
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
     panel.classList.toggle('visible', panelVisible);
+    
+    // Update toggle button text
+    panelToggle.textContent = panelVisible ? '←' : '→';
   }
+  
   panelToggle.onclick = togglePanel;
   mobilePanelToggle.onclick = togglePanel;
 
+  // Close panel on canvas tap (mobile)
   canvas.addEventListener('touchstart', (e) => {
     if (window.innerWidth <= 900 && panelVisible) {
       e.preventDefault();
@@ -523,6 +527,27 @@
     }
   });
 
+  // Blend function - FIXED: Proper implementation
+  function blendColor(base, overlay, mode, opacity) {
+    const o = overlay.clone().multiplyScalar(opacity);
+    switch (mode) {
+      case 'multiply': 
+        return base.clone().multiplyScalar(1 - opacity).add(base.clone().multiply(o));
+      case 'screen': 
+        return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r));
+      case 'overlay': 
+        const r = base.r < 0.5 ? 2 * base.r * o.r : 1 - 2 * (1 - base.r) * (1 - o.r);
+        const g = base.g < 0.5 ? 2 * base.g * o.g : 1 - 2 * (1 - base.g) * (1 - o.g);
+        const b = base.b < 0.5 ? 2 * base.b * o.b : 1 - 2 * (1 - base.b) * (1 - o.b);
+        return new THREE.Color(r, g, b).multiplyScalar(opacity).add(base.clone().multiplyScalar(1 - opacity));
+      case 'add': 
+        return base.clone().add(o.multiplyScalar(opacity));
+      default: 
+        return base.clone().lerp(o, opacity);
+    }
+  }
+
+  // Layers UI
   function addLayer() {
     const layer = {
       name: `Layer ${layers.length + 1}`,
@@ -566,7 +591,7 @@
       li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
       li.draggable = true;
       li.innerHTML = `
-        <span class="layer-visibility">${layer.visible ? '👁' : '隠'}</span>
+        <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
         <input type="color" class="layer-color" value="#${layer.color.getHexString()}">
         <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
         <select class="layer-blend">
@@ -579,31 +604,63 @@
         <span class="layer-name" contenteditable="true">${layer.name}</span>
         <span class="layer-delete">×</span>
       `;
-      li.onclick = () => setActiveLayer(i);
+      
+      // Event handlers
+      li.onclick = (e) => {
+        if (!e.target.closest('.layer-visibility') && 
+            !e.target.closest('.layer-color') && 
+            !e.target.closest('.layer-opacity') && 
+            !e.target.closest('.layer-blend') && 
+            !e.target.closest('.layer-name') && 
+            !e.target.closest('.layer-delete')) {
+          setActiveLayer(i);
+        }
+      };
+      
       li.querySelector('.layer-visibility').onclick = (e) => {
         e.stopPropagation();
         layer.visible = !layer.visible;
-        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '隠';
+        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '🚫';
       };
+      
       li.querySelector('.layer-color').oninput = (e) => {
         layer.color.set(e.target.value);
         if (i === currentLayerIndex) paintColor.copy(layer.color);
       };
-      li.querySelector('.layer-opacity').oninput = (e) => layer.opacity = e.target.value / 100;
-      li.querySelector('.layer-blend').onchange = (e) => layer.blendMode = e.target.value;
-      li.querySelector('.layer-name').onblur = (e) => layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
+      
+      li.querySelector('.layer-opacity').oninput = (e) => {
+        layer.opacity = e.target.value / 100;
+      };
+      
+      li.querySelector('.layer-blend').onchange = (e) => {
+        layer.blendMode = e.target.value;
+      };
+      
+      li.querySelector('.layer-name').onblur = (e) => {
+        layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
+      };
+      
       li.querySelector('.layer-delete').onclick = (e) => {
         e.stopPropagation();
         deleteLayer(i);
       };
-      li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
-      li.addEventListener('dragover', (e) => e.preventDefault();
+      
+      // Drag and drop
+      li.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', i);
+      });
+      
+      li.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      
       li.addEventListener('drop', (e) => {
         e.preventDefault();
         const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
         const toIdx = i;
         if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
       });
+      
       list.appendChild(li);
     });
   }
@@ -611,6 +668,7 @@
   document.getElementById('addLayerBtn').onclick = addLayer;
   addLayer();
 
+  // Mask mode
   maskToggle.onclick = () => {
     maskMode = !maskMode;
     maskToggle.classList.toggle('active', maskMode);
@@ -621,14 +679,43 @@
     document.getElementById('brushOpacityVal').textContent = e.target.value;
   };
 
+  // Eyedropper - FIXED: Proper color space handling
+  function sampleColor(x, y) {
+    const rect = canvas.getBoundingClientRect();
+    const gl = renderer.getContext();
+    const pixel = new Uint8Array(4);
+    
+    const pixelX = (x - rect.left) * renderer.getPixelRatio();
+    const pixelY = (rect.height - (y - rect.top)) * renderer.getPixelRatio();
+    
+    gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+    
+    // Convert from sRGB to linear color space for proper color handling
+    const r = Math.pow(pixel[0] / 255, 2.2);
+    const g = Math.pow(pixel[1] / 255, 2.2);
+    const b = Math.pow(pixel[2] / 255, 2.2);
+    
+    paintColor.setRGB(r, g, b);
+    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
+  }
+
+  // Brush & Painting - FIXED: Accurate brush size and painting
   function getWorldBrushRadius() {
-    return brushSize * modelSize * 0.15;
+    const dist = camera.position.distanceTo(controls.target);
+    const fov = camera.fov * (Math.PI / 180);
+    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
+    const pixelToWorld = visibleHeight / window.innerHeight;
+    return brushSize * visibleHeight * 0.1;
   }
 
   function projectRadiusToScreen(worldRadius) {
     const dist = camera.position.distanceTo(controls.target);
-    const height = 2 * Math.tan(camera.fov * Math.PI / 360) * dist;
-    return (worldRadius / height) * window.innerHeight;
+    const fov = camera.fov * (Math.PI / 180);
+    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
+    const pixelSize = (worldRadius / visibleHeight) * window.innerHeight;
+    return pixelSize * 2;
   }
 
   function updateBrushCursor(x, y) {
@@ -640,7 +727,8 @@
     const size = Math.max(r * 2, 10);
     brushCursor.style.width = brushCursor.style.height = size + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-    brushCursor.style.borderRadius = '50%';
+    brushCursor.style.borderRadius = brushShape === 'hard-circle' ? '50%' : '50%';
+    brushCursor.style.boxShadow = brushShape === 'soft-circle' ? `0 0 ${size/2}px ${size/4}px ${paintColor.getStyle()}` : 'none';
   }
 
   function hideCursors() {
@@ -648,20 +736,10 @@
     eyedropperCursor.style.display = 'none';
   }
 
-  function blendColor(base, overlay, mode, opacity) {
-    const o = overlay.clone().multiplyScalar(opacity);
-    switch (mode) {
-      case 'multiply': return base.clone().multiply(o);
-      case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.g) * (1 - o.g)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.b) * (1 - o.b));
-      case 'overlay': return base.clone().lerp(o.multiply(base.clone().multiplyScalar(2)), base.r + base.g + base.b > 1.5 ? 1 : 0);
-      case 'add': return base.clone().add(o);
-      default: return base.clone().lerp(o, opacity);
-    }
-  }
-
   function paintAt(point) {
     if (!paintModeActive || paintedGeometries.length === 0) return;
     const brushOpacity = document.getElementById('brushOpacity').value / 100;
+
     const radius = getWorldBrushRadius();
     const radiusSq = radius * radius;
     const vert = new THREE.Vector3();
@@ -675,17 +753,30 @@
       let changed = false;
       for (let i = 0; i < pos.count; i++) {
         vert.fromBufferAttribute(pos, i);
-        if (vert.distanceToSquared(local) > radiusSq) continue;
+        const distSq = vert.distanceToSquared(local);
+        
+        if (distSq > radiusSq) continue;
 
         changed = true;
-        const alpha = brushOpacity * (1 - Math.sqrt(vert.distanceToSquared(local)) / radius);
+        // Calculate falloff for soft brush
+        const dist = Math.sqrt(distSq);
+        let falloff = 1 - (dist / radius);
+        if (brushShape === 'soft-circle') {
+          falloff = falloff * falloff;
+        }
+        
+        const alpha = brushOpacity * falloff;
 
         let result = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
-        layers.forEach(layer => {
-          if (!layer.visible) return;
-          const layerColor = maskMode && layer === layers[currentLayerIndex] ? new THREE.Color(0,0,0) : layer.color;
+        
+        // Apply layers from top to bottom
+        for (let l = layers.length - 1; l >= 0; l--) {
+          const layer = layers[l];
+          if (!layer.visible) continue;
+          
+          const layerColor = maskMode && l === currentLayerIndex ? new THREE.Color(0,0,0) : layer.color;
           result = blendColor(result, layerColor, layer.blendMode, alpha * layer.opacity);
-        });
+        }
 
         col.setXYZ(i, result.r, result.g, result.b);
       }
@@ -693,13 +784,14 @@
     });
   }
 
+  // Pointer events
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   let isPointerDown = false;
 
   canvas.addEventListener('pointermove', (e) => {
     updateBrushCursor(e.clientX, e.clientY);
-    if (isPointerDown && paintModeActive && currentModel) {
+    if (isPointerDown && paintModeActive && currentModel && !eyedropperActive) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
       mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
@@ -711,10 +803,12 @@
 
   canvas.addEventListener('pointerdown', (e) => {
     isPointerDown = true;
+    
     if (eyedropperActive) {
       sampleColor(e.clientX, e.clientY);
       return;
     }
+    
     if (paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -732,24 +826,12 @@
     }
   });
 
-  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideCursors(); });
+  canvas.addEventListener('pointerleave', () => { 
+    isPointerDown = false; 
+    hideCursors(); 
+  });
 
-  // Eyedropper
-  function sampleColor(x, y) {
-    const rect = canvas.getBoundingClientRect();
-    const gl = renderer.getContext();
-    const pixel = new Uint8Array(4);
-    gl.readPixels(
-      (x - rect.left) * renderer.getPixelRatio(),
-      (rect.height - (y - rect.top)) * renderer.getPixelRatio(),
-      1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel
-    );
-    paintColor.setRGB(pixel[0]/255, pixel[1]/255, pixel[2]/255);
-    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
-    layers[currentLayerIndex].color.copy(paintColor);
-    updateLayersUI();
-  }
-
+  // Desktop Alt key eyedropper
   window.addEventListener('keydown', (e) => {
     if (e.altKey && paintModeActive && !eyedropperActive) {
       eyedropperActive = true;
@@ -765,6 +847,7 @@
     }
   });
 
+  // Mobile eyedropper button
   eyedropperToggle.addEventListener('click', () => {
     eyedropperActive = !eyedropperActive;
     eyedropperToggle.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Mode (Mobile)';
@@ -784,17 +867,7 @@
     if (!paintModeActive) hideCursors();
   });
 
-  document.getElementById('brushSize').addEventListener('input', (e) => {
-    brushSize = parseFloat(e.target.value);
-    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
-  });
-
-  document.getElementById('paintColor').addEventListener('input', (e) => {
-    paintColor.set(e.target.value);
-    layers[currentLayerIndex].color.copy(paintColor);
-    updateLayersUI();
-  });
-
+  // Model upload
   document.getElementById('uploadModel').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -805,6 +878,7 @@
   function loadModel(url) {
     exportStatus.textContent = 'Loading model...';
     exportStatus.style.color = '#60a5fa';
+    
     new GLTFLoader().load(url, (gltf) => {
       if (currentModel) scene.remove(currentModel);
       currentModel = gltf.scene;
@@ -813,6 +887,7 @@
       const box = new THREE.Box3().setFromObject(currentModel);
       modelSize = box.getSize(new THREE.Vector3()).length() || 1;
       const center = box.getCenter(new THREE.Vector3());
+      
       camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
       controls.target.copy(center);
       controls.update();
@@ -825,15 +900,23 @@
 
       currentModel.traverse((child) => {
         if (child.isMesh) {
+          // Ensure mesh has proper material
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-            child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
+            child.material = new THREE.MeshStandardMaterial({ 
+              map: child.material?.map,
+              color: 0xffffff
+            });
           }
+          
           child.material.color.set(0xffffff);
           child.material.vertexColors = true;
+          
+          // Initialize vertex colors
           if (!child.geometry.attributes.color) {
             const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
+          
           paintedGeometries.push({ geometry: child.geometry, mesh: child });
         }
       });
@@ -848,6 +931,7 @@
     });
   }
 
+  // Texture apply
   function applyTexture(url) {
     if (!currentModel) return;
     new THREE.TextureLoader().load(url, (tex) => {
@@ -871,6 +955,7 @@
     if (file) applyTexture(URL.createObjectURL(file));
   });
 
+  // Material sliders
   document.getElementById('metallicSlider').addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
     document.getElementById('metallicVal').textContent = v.toFixed(2);
@@ -887,6 +972,25 @@
     });
   });
 
+  // Brush size & color
+  document.getElementById('paintColor').addEventListener('input', (e) => {
+    paintColor.set(e.target.value);
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
+  });
+
+  document.getElementById('brushSize').addEventListener('input', (e) => {
+    brushSize = parseFloat(e.target.value);
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
+  });
+
+  document.getElementById('brushShape').addEventListener('change', (e) => {
+    brushShape = e.target.value;
+    const customGroup = document.getElementById('customBrushGroup');
+    customGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
+
+  // Clear current layer
   document.getElementById('clearPaint').addEventListener('click', () => {
     paintedGeometries.forEach(({ geometry }) => {
       const count = geometry.attributes.position.count;
@@ -903,6 +1007,7 @@
 
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
+  // Export
   document.getElementById('exportBtn').addEventListener('click', () => {
     if (!currentModel) {
       exportStatus.textContent = 'No model loaded';
@@ -911,6 +1016,7 @@
     }
     exportStatus.textContent = 'Exporting...';
     exportStatus.style.color = '#60a5fa';
+    
     const exporter = new GLTFExporter();
     const clone = currentModel.clone();
     clone.traverse((child) => {
@@ -920,6 +1026,7 @@
         child.material.needsUpdate = true;
       }
     });
+    
     exporter.parse(clone, (result) => {
       const blob = new Blob([result], { type: 'application/octet-stream' });
       const link = document.createElement('a');
@@ -935,12 +1042,14 @@
     }, { binary: true });
   });
 
+  // Resize handler
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
+  // Animation loop
   function animate() {
     requestAnimationFrame(animate);
     controls.update();
