@@ -14,183 +14,180 @@
   }
   </script>
   <style>
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 
-  .site-header {
-  position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
-  }
-  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-  .header-left { display: flex; align-items: center; gap: 1.6rem; }
-  .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
-  .main-nav { display: flex; gap: 1.4rem; }
-  .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
-  .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
-  .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
-  #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
-  .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
-  #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
-  #levelText { white-space: nowrap; }
-  #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
-  #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
+    .site-header {
+      position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
+    }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .header-left { display: flex; align-items: center; gap: 1.6rem; }
+    .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
+    .main-nav { display: flex; gap: 1.4rem; }
+    .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
+    .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
+    .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
+    #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+    .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+    #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
+    #levelText { white-space: nowrap; }
+    #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+    #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-  @media (max-width: 768px) {
-  .header-inner { flex-direction: column; align-items: stretch; gap: 8px; }
-  .header-left { justify-content: space-between; }
-  .header-right { justify-content: space-between; width: 100%; }
-  #levelInfo { width: 100%; }
-  }
+    @media (max-width: 768px) {
+      .header-inner { flex-direction: column; align-items: stretch; gap: 8px; }
+      .header-left { justify-content: space-between; }
+      .header-right { justify-content: space-between; width: 100%; }
+      #levelInfo { width: 100%; }
+    }
 
-  #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
-  #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
+    #canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
-  /* Desktop Panel */
-  .panel {
-  position: absolute;
-  top: 90px;
-  right: 20px;
-  width: 380px;
-  max-height: calc(100vh - 180px);
-  background: rgba(2, 6, 23, 0.95);
-  border: 1px solid #1e293b;
-  border-radius: 12px;
-  padding: 1.5rem;
-  overflow-y: auto;
-  z-index: 20;
-  backdrop-filter: blur(10px);
-  transition: transform 0.3s ease;
-  }
-  .panel.hidden { transform: translateX(420px); }
+    .panel {
+      position: absolute;
+      top: 90px;
+      right: 20px;
+      width: 380px;
+      max-height: calc(100vh - 180px);
+      background: rgba(2, 6, 23, 0.95);
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-y: auto;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease;
+    }
+    .panel.hidden { transform: translateX(420px); }
 
-  #panelToggle {
-  position: absolute;
-  left: -50px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  background: rgba(2, 6, 23, 0.98);
-  border: 1px solid #1e293b;
-  border-right: none;
-  border-radius: 10px 0 0 10px;
-  color: #60a5fa;
-  font-size: 1.8rem;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 21;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 6px 30px rgba(0,0,0,0.5);
-  transition: all 0.3s ease;
-  }
-  #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; }
+    #panelToggle {
+      position: absolute;
+      left: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      background: rgba(2, 6, 23, 0.98);
+      border: 1px solid #1e293b;
+      border-right: none;
+      border-radius: 10px 0 0 10px;
+      color: #60a5fa;
+      font-size: 1.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 21;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 6px 30px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+    }
+    #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; }
 
-  /* Mobile Bottom Sheet */
-  @media (max-width: 900px) {
-  .panel {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 80px; /* above footer */
-  top: 70px; /* below header */
-  width: 100%;
-  max-height: none;
-  border-radius: 20px 20px 0 0;
-  padding-top: 60px;
-  padding-bottom: 2rem;
-  background: rgba(2, 6, 23, 0.95);
-  border: 1px solid #1e293b;
-  border-bottom: none;
-  transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow-y: auto;
-  z-index: 20;
-  backdrop-filter: blur(10px);
-  }
-  .panel.visible {
-  transform: translateY(0);
-  }
+    /* Mobile Bottom Sheet Panel */
+    @media (max-width: 900px) {
+      .panel {
+        top: auto;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 75vh;
+        max-height: none;
+        border-radius: 20px 20px 0 0;
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        padding-top: 70px;
+      }
+      .panel.visible { transform: translateY(0); }
+      #panelToggle { display: none !important; }
+      
+      #mobilePanelToggle {
+        display: flex !important;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        background: #60a5fa;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 30;
+        box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
+        transition: all 0.3s ease;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+      }
+      #mobilePanelToggle:hover {
+        background: #3b82f6;
+        transform: scale(1.1);
+      }
+      #mobilePanelToggle.close-btn {
+        background: #ef4444;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+      }
+      #mobilePanelToggle.close-btn:hover {
+        background: #dc2626;
+      }
+    }
 
-  #panelToggle { display: none; }
+    #mobilePanelToggle { display: none; }
 
-  #mobilePanelToggle {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 48px;
-  height: 6px;
-  background: #64748b;
-  border-radius: 3px;
-  cursor: pointer;
-  z-index: 30;
-  }
-  #mobilePanelToggle:hover {
-  background: #94a3b8;
-  }
+    .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
+    .control-group { margin-bottom: 1.2rem; }
+    label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
+    input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
+    input[type="range"] { padding: 0.3rem 0; }
+    input[type="color"] { height: 44px; padding: 0.2rem; }
+    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; position: relative; z-index: 30; }
+    button:hover { background: #3b82f6; }
 
-  #exportBtn {
-  position: sticky;
-  bottom: 20px;
-  width: calc(100% - 40px);
-  max-width: 500px;
-  margin: 40px auto 20px auto;
-  padding: 20px;
-  font-size: 1.3rem;
-  z-index: 30;
-  background: #60a5fa;
-  }
-  }
+    /* Layers UI */
+    #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
+    .layer-item {
+      display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: grab;
+    }
+    .layer-item:active { cursor: grabbing; }
+    .layer-item.active { background: #1e293b; border: 1px solid #60a5fa; }
+    .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
+    .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+    .layer-opacity { width: 90px; }
+    .layer-name { flex: 1; font-size: 0.95rem; cursor: text; }
+    .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 20px; text-align: center; }
+    .layer-blend { width: 100px; font-size: 0.8rem; }
+    #addLayerBtn { background: #10b981; }
 
-  #mobilePanelToggle { display: none; }
+    #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none; }
+    #brushCursor { border: 3px solid transparent; border-radius: 50%; background: transparent; }
+    #eyedropperCursor { width: 44px; height: 44px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/32px no-repeat; }
 
-  .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
-  .control-group { margin-bottom: 1.2rem; }
-  label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
-  input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
-  input[type="range"] { padding: 0.3rem 0; }
-  input[type="color"] { height: 44px; padding: 0.2rem; }
-  button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; position: relative; z-index: 30; }
-  button:hover { background: #3b82f6; }
+    #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
+    #paintToggle.active { background: #f87171; }
+    #eyedropperToggle { background: #a78bfa; display: none; }
+    #eyedropperToggle.active { background: #8b5cf6; }
+    #maskToggle { background: #8b5cf6; }
+    #maskToggle.active { background: #ec4899; }
 
-  #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
-  .layer-item {
-  display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: grab;
-  }
-  .layer-item:active { cursor: grabbing; }
-  .layer-item.active { background: #1e293b; border: 1px solid #60a5fa; }
-  .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
-  .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
-  .layer-opacity { width: 90px; }
-  .layer-name { flex: 1; font-size: 0.95rem; cursor: text; }
-  .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 20px; text-align: center; }
-  .layer-blend { width: 100px; font-size: 0.8rem; }
-  #addLayerBtn { background: #10b981; }
+    #undoRedoGroup { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
+    #undoBtn, #redoBtn { flex: 1; background: #475569; margin-top: 0; }
+    #undoBtn:hover, #redoBtn:hover { background: #64748b; }
 
-  #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none; }
-  #brushCursor { border: 3px solid transparent; border-radius: 50%; background: transparent; }
-  #eyedropperCursor { width: 44px; height: 44px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/32px no-repeat; }
+    .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
+    .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .footer-nav a { color: #cbd5e1; text-decoration: none; }
+    .footer-nav a:hover { color: #60a5fa; }
 
-  #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
-  #paintToggle.active { background: #f87171; }
-  #eyedropperToggle { background: #a78bfa; }
-  #eyedropperToggle.active { background: #8b5cf6; }
-  #maskToggle { background: #8b5cf6; }
-  #maskToggle.active { background: #ec4899; }
-
-  #undoRedoGroup { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
-  #undoBtn, #redoBtn { flex: 1; background: #475569; margin-top: 0; }
-  #undoBtn:hover, #redoBtn:hover { background: #64748b; }
-
-  .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
-  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
-  .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-  .footer-nav a { color: #cbd5e1; text-decoration: none; }
-  .footer-nav a:hover { color: #60a5fa; }
-
-  .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
+    @media (max-width: 768px) {
+      #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 100px; position: relative; z-index: 30; }
+    }
+    
+    .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -198,22 +195,22 @@
 
 <header class="site-header">
   <div class="header-inner">
-  <div class="header-left">
-  <div class="logo"><a href="index.html">BowesProduct</a></div>
-  <nav class="main-nav">
-  <a href="index.html">Home</a>
-  <a href="models.html">Models</a>
-  <a href="retexture.html" class="active">Retexture</a>
-  </nav>
-  </div>
-  <div class="header-right">
-  <img id="profilePic" alt="Profile">
-  <div id="levelInfo">
-  <div id="levelText"></div>
-  <div id="xpOuter"><div id="xpBar"></div></div>
-  </div>
-  <button id="authBtn" class="login-btn">Login</button>
-  </div>
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="models.html">Models</a>
+        <a href="retexture.html" class="active">Retexture</a>
+      </nav>
+    </div>
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+      <button id="authBtn" class="login-btn">Login</button>
+    </div>
   </div>
 </header>
 
@@ -222,122 +219,122 @@
   <div id="brushCursor"></div>
   <div id="eyedropperCursor"></div>
 
-  <div class="panel visible" id="panel">
-  <button id="panelToggle">←</button>
-  <div id="mobilePanelToggle"></div>
+  <div class="panel" id="panel">
+    <button id="panelToggle">←</button>
+    <div id="mobilePanelToggle">☰</div>
 
-  <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.5;">
-  Drag to rotate • Pinch/scroll to zoom<br><br>
-  Activate Paint → paint current layer<br><br>
-  PC: Hold Alt • Mobile: Eyedropper button to sample<br><br>
-  Ctrl+Z/Y Undo/Redo • Drag layers to reorder
-  </div>
+    <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.5;">
+      Drag to rotate • Pinch/scroll to zoom<br>
+      Activate Paint → paint current layer<br>
+      PC: Hold Alt • Mobile: Eyedropper button to sample<br>
+      Ctrl+Z/Y Undo/Redo • Drag layers to reorder
+    </div>
 
-  <h2>Model</h2>
-  <div class="control-group">
-  <label for="uploadModel">Upload GLB/GLTF</label>
-  <input type="file" id="uploadModel" accept=".glb,.gltf">
-  <div class="hint">FBX must be converted first.</div>
-  </div>
+    <h2>Model</h2>
+    <div class="control-group">
+      <label for="uploadModel">Upload GLB/GLTF</label>
+      <input type="file" id="uploadModel" accept=".glb,.gltf">
+      <div class="hint">FBX must be converted first.</div>
+    </div>
 
-  <h2>Texture</h2>
-  <div class="control-group">
-  <label for="presetTexture">Preset Textures</label>
-  <select id="presetTexture">
-  <option value="">Original / None</option>
-  <option value="textures/wood_basecolor.jpg">Warm Wood</option>
-  <option value="textures/metal_basecolor.jpg">Brushed Metal</option>
-  <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
-  <option value="textures/fabric_basecolor.jpg">Fabric</option>
-  </select>
-  </div>
-  <div class="control-group">
-  <label for="uploadTexture">Custom Texture</label>
-  <input type="file" id="uploadTexture" accept="image/*">
-  </div>
+    <h2>Texture</h2>
+    <div class="control-group">
+      <label for="presetTexture">Preset Textures</label>
+      <select id="presetTexture">
+        <option value="">Original / None</option>
+        <option value="textures/wood_basecolor.jpg">Warm Wood</option>
+        <option value="textures/metal_basecolor.jpg">Brushed Metal</option>
+        <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
+        <option value="textures/fabric_basecolor.jpg">Fabric</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label for="uploadTexture">Custom Texture</label>
+      <input type="file" id="uploadTexture" accept="image/*">
+    </div>
 
-  <h2>Material</h2>
-  <div class="control-group">
-  <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
-  <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
-  </div>
-  <div class="control-group">
-  <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
-  <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
-  </div>
+    <h2>Material</h2>
+    <div class="control-group">
+      <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
+      <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
+    </div>
+    <div class="control-group">
+      <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
+      <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
+    </div>
 
-  <h2>Layers</h2>
-  <ol id="layersList"></ol>
-  <button id="addLayerBtn">+ Add Layer</button>
+    <h2>Layers</h2>
+    <ol id="layersList"></ol>
+    <button id="addLayerBtn">+ Add Layer</button>
 
-  <div class="control-group">
-  <label for="brushOpacity">Brush Opacity <span id="brushOpacityVal">100</span>%</label>
-  <input type="range" id="brushOpacity" min="1" max="100" value="100">
-  </div>
+    <div class="control-group">
+      <label for="brushOpacity">Brush Opacity <span id="brushOpacityVal">100</span>%</label>
+      <input type="range" id="brushOpacity" min="1" max="100" value="100">
+    </div>
 
-  <h2>Vertex Color Painting</h2>
-  <div class="control-group">
-  <label for="paintColor">Brush Color (current layer)</label>
-  <input type="color" id="paintColor" value="#ff4444">
-  </div>
-  <div class="control-group">
-  <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
-  <input type="range" id="brushSize" min="0.01" max="5" step="0.01" value="0.5">
-  </div>
-  <div class="control-group">
-  <label for="brushShape">Brush Shape</label>
-  <select id="brushShape">
-  <option value="soft-circle">Soft Circle</option>
-  <option value="hard-circle">Hard Circle</option>
-  <option value="custom">Custom Brush (upload PNG)</option>
-  </select>
-  </div>
-  <div class="control-group" id="customBrushGroup" style="display:none;">
-  <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
-  <input type="file" id="uploadBrush" accept="image/png">
-  <canvas id="customBrushPreview" width="80" height="80"></canvas>
-  <div class="hint">White = full paint, black = no paint</div>
-  </div>
+    <h2>Vertex Color Painting</h2>
+    <div class="control-group">
+      <label for="paintColor">Brush Color (current layer)</label>
+      <input type="color" id="paintColor" value="#ff4444">
+    </div>
+    <div class="control-group">
+      <label for="brushSize">Brush Size <span id="brushSizeVal">0.50</span></label>
+      <input type="range" id="brushSize" min="0.01" max="5" step="0.01" value="0.5">
+    </div>
+    <div class="control-group">
+      <label for="brushShape">Brush Shape</label>
+      <select id="brushShape">
+        <option value="soft-circle">Soft Circle</option>
+        <option value="hard-circle">Hard Circle</option>
+        <option value="custom">Custom Brush (upload PNG)</option>
+      </select>
+    </div>
+    <div class="control-group" id="customBrushGroup" style="display:none;">
+      <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
+      <input type="file" id="uploadBrush" accept="image/png">
+      <canvas id="customBrushPreview" width="80" height="80"></canvas>
+      <div class="hint">White = full paint, black = no paint</div>
+    </div>
 
-  <button id="paintToggle">Activate Paint Mode</button>
-  <button id="eyedropperToggle">Eyedropper Mode (Mobile)</button>
-  <button id="maskToggle">Mask Mode (paint black to hide)</button>
+    <button id="paintToggle">Activate Paint Mode</button>
+    <button id="eyedropperToggle">Eyedropper Mode (Mobile)</button>
+    <button id="maskToggle">Mask Mode (paint black to hide)</button>
 
-  <div id="undoRedoGroup">
-  <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
-  <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
-  </div>
+    <div id="undoRedoGroup">
+      <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
+      <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
+    </div>
 
-  <button id="clearPaint" style="background:#ef4444;">Clear Current Layer</button>
+    <button id="clearPaint" style="background:#ef4444;">Clear Current Layer</button>
 
-  <h2>Lighting</h2>
-  <div class="control-group">
-  <label for="envPreset">Environment</label>
-  <select id="envPreset">
-  <option value="neutral">Neutral</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
-  </select>
-  </div>
+    <h2>Lighting</h2>
+    <div class="control-group">
+      <label for="envPreset">Environment</label>
+      <select id="envPreset">
+        <option value="neutral">Neutral</option>
+        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
+        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
+        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
+      </select>
+    </div>
 
-  <h2>Export</h2>
-  <button id="exportBtn">Export Modified GLB</button>
-  <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
+    <h2>Export</h2>
+    <button id="exportBtn">Export Modified GLB</button>
+    <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
   </div>
 </div>
 
 <footer class="site-footer">
   <div class="footer-inner">
-  <nav class="footer-nav">
-  <a href="about.html">About</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="terms.html">Terms</a>
-  <a href="license.html">License</a>
-  <a href="refund.html">Refund</a>
-  <a href="rewards.html">Rewards</a>
-  </nav>
-  <p>© 2026 BowesProduct</p>
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <p>© 2026 BowesProduct</p>
   </div>
 </footer>
 
@@ -348,9 +345,9 @@
   import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
   const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct"
+    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+    authDomain: "bowesproduct.firebaseapp.com",
+    projectId: "bowesproduct"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -365,43 +362,43 @@
   const xpBar = document.getElementById("xpBar");
 
   authBtn.onclick = () => {
-  if (auth.currentUser) {
-  signOut(auth);
-  } else {
-  signInWithPopup(auth, provider);
-  }
+    if (auth.currentUser) {
+      signOut(auth);
+    } else {
+      signInWithPopup(auth, provider);
+    }
   };
 
   onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-  authBtn.textContent = "Login";
-  profilePic.style.display = "none";
-  levelInfo.style.display = "none";
-  return;
-  }
-  authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL || "";
-  profilePic.style.display = "block";
+    if (!user) {
+      authBtn.textContent = "Login";
+      profilePic.style.display = "none";
+      levelInfo.style.display = "none";
+      return;
+    }
+    authBtn.textContent = "Logout";
+    profilePic.src = user.photoURL || "";
+    profilePic.style.display = "block";
 
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
-  if (!snap.exists()) {
-  await setDoc(ref, { xp: 10 });
-  snap = await getDoc(ref);
-  }
-  const xp = snap.data().xp || 0;
-  const levels = [0, 200, 500, 1000, 2000];
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
-  let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
+    const ref = doc(db, "users", user.uid);
+    let snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, { xp: 10 });
+      snap = await getDoc(ref);
+    }
+    const xp = snap.data().xp || 0;
+    const levels = [0, 200, 500, 1000, 2000];
+    let level = levels.filter(v => xp >= v).length - 1;
+    let next = levels[level + 1] ?? levels[level];
+    let progress = next === layers[level] ? 100 : ((xp - levels[level]) / (next - layers[level])) * 100;
 
-  levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
-  levelInfo.style.display = "block";
+    levelText.textContent = `Level ${level} • ${xp} XP`;
+    xpBar.style.width = progress + "%";
+    levelInfo.style.display = "block";
   });
 </script>
 
-<!-- Three.js + Features -->
+<!-- Three.js + Ultimate Features -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -437,18 +434,18 @@
   let currentEnvMap = null;
 
   function loadEnvironment(url) {
-  if (url === 'neutral') {
-  scene.environment = null;
-  if (currentEnvMap) currentEnvMap.dispose();
-  return;
-  }
-  new RGBELoader().load(url, (tex) => {
-  const envMap = pmremGenerator.fromEquirectangular(tex).texture;
-  scene.environment = envMap;
-  tex.dispose();
-  if (currentEnvMap) currentEnvMap.dispose();
-  currentEnvMap = envMap;
-  });
+    if (url === 'neutral') {
+      scene.environment = null;
+      if (currentEnvMap) currentEnvMap.dispose();
+      return;
+    }
+    new RGBELoader().load(url, (tex) => {
+      const envMap = pmremGenerator.fromEquirectangular(tex).texture;
+      scene.environment = envMap;
+      tex.dispose();
+      if (currentEnvMap) currentEnvMap.dispose();
+      currentEnvMap = envMap;
+    });
   }
   loadEnvironment('neutral');
 
@@ -458,14 +455,17 @@
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 0.5;
   let brushShape = 'soft-circle';
+  let customBrushData = null;
   let paintModeActive = false;
   let eyedropperActive = false;
   let maskMode = false;
 
+  // Layers - Store layer data per geometry
   const layers = [];
   let currentLayerIndex = 0;
-  let layerData = {};
+  let layerData = {}; // Store painted data per layer per geometry
 
+  // Undo/Redo
   const undoStack = [];
   const redoStack = [];
   const MAX_UNDO = 30;
@@ -473,53 +473,89 @@
   const redoBtn = document.getElementById('redoBtn');
 
   function saveState() {
-  if (paintedGeometries.length === 0) return;
-  const state = {
-  layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
-  layerData: JSON.parse(JSON.stringify(layerData))
-  };
-  undoStack.push(state);
-  if (undoStack.length > MAX_UNDO) undoStack.shift();
-  redoStack.length = 0;
-  undoBtn.disabled = false;
-  redoBtn.disabled = true;
+    if (paintedGeometries.length === 0) return;
+    const state = {
+      layers: layers.map(layer => ({
+        color: layer.color.clone(),
+        opacity: layer.opacity,
+        blendMode: layer.blendMode,
+        visible: layer.visible,
+        name: layer.name
+      })),
+      layerData: JSON.parse(JSON.stringify(layerData))
+    };
+    undoStack.push(state);
+    if (undoStack.length > MAX_UNDO) undoStack.shift();
+    redoStack.length = 0;
+    undoBtn.disabled = false;
+    redoBtn.disabled = true;
   }
 
   function undo() {
-  if (undoStack.length === 0) return;
-  redoStack.push({ layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })), layerData: JSON.parse(JSON.stringify(layerData)) });
-  const state = undoStack.pop();
-  restoreState(state);
-  undoBtn.disabled = undoStack.length === 0;
-  redoBtn.disabled = false;
+    if (undoStack.length === 0) return;
+    redoStack.push({
+      layers: layers.map(layer => ({
+        color: layer.color.clone(),
+        opacity: layer.opacity,
+        blendMode: layer.blendMode,
+        visible: layer.visible,
+        name: layer.name
+      })),
+      layerData: JSON.parse(JSON.stringify(layerData))
+    });
+    const state = undoStack.pop();
+    restoreState(state);
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = false;
   }
 
   function redo() {
-  if (redoStack.length === 0) return;
-  undoStack.push({ layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })), layerData: JSON.parse(JSON.stringify(layerData)) });
-  const state = redoStack.pop();
-  restoreState(state);
-  redoBtn.disabled = redoStack.length === 0;
-  undoBtn.disabled = false;
+    if (redoStack.length === 0) return;
+    undoStack.push({
+      layers: layers.map(layer => ({
+        color: layer.color.clone(),
+        opacity: layer.opacity,
+        blendMode: layer.blendMode,
+        visible: layer.visible,
+        name: layer.name
+      })),
+      layerData: JSON.parse(JSON.stringify(layerData))
+    });
+    const state = redoStack.pop();
+    restoreState(state);
+    redoStack.disabled = redoStack.length === 0;
+    undoBtn.disabled = false;
   }
 
   function restoreState(state) {
-  layers.length = 0;
-  state.layers.forEach(ld => layers.push({ color: ld.color, opacity: ld.opacity, blendMode: ld.blendMode, visible: ld.visible, name: ld.name }));
-  layerData = JSON.parse(JSON.stringify(state.layerData));
-  updateLayersUI();
-  updateAllGeometries();
+    layers.length = 0;
+    state.layers.forEach(layerData => {
+      layers.push({
+        color: layerData.color,
+        opacity: layerData.opacity,
+        blendMode: layerData.blendMode,
+        visible: layerData.visible,
+        name: layerData.name
+      });
+    });
+    layerData = JSON.parse(JSON.stringify(state.layerData));
+    updateLayersUI();
+    updateAllGeometries();
   }
 
   undoBtn.onclick = undo;
   redoBtn.onclick = redo;
   window.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
-  if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
   });
 
+  // Cursors
   const brushCursor = document.getElementById('brushCursor');
   const eyedropperCursor = document.getElementById('eyedropperCursor');
+  const paintToggle = document.getElementById('paintToggle');
+  const eyedropperToggle = document.getElementById('eyedropperToggle');
+  const maskToggle = document.getElementById('maskToggle');
   const exportStatus = document.getElementById('exportStatus');
 
   // Panel toggle
@@ -529,465 +565,672 @@
   let panelVisible = true;
 
   function togglePanel() {
-  panelVisible = !panelVisible;
-  panel.classList.toggle('hidden', !panelVisible);
-  panel.classList.toggle('visible', panelVisible);
-  panelToggle.textContent = panelVisible ? '←' : '→';
+    panelVisible = !panelVisible;
+    panel.classList.toggle('hidden', !panelVisible);
+    panel.classList.toggle('visible', panelVisible);
+    
+    // Update toggle button text
+    panelToggle.textContent = panelVisible ? '←' : '→';
+    
+    // Update mobile toggle
+    if (window.innerWidth <= 900) {
+      if (panelVisible) {
+        mobilePanelToggle.innerHTML = '×';
+        mobilePanelToggle.classList.add('close-btn');
+      } else {
+        mobilePanelToggle.innerHTML = '☰';
+        mobilePanelToggle.classList.remove('close-btn');
+      }
+    }
   }
-
+  
   panelToggle.onclick = togglePanel;
   mobilePanelToggle.onclick = togglePanel;
 
-  function updatePanelMode() {
-  if (window.innerWidth <= 900) {
-  mobilePanelToggle.style.display = 'block';
-  panelToggle.style.display = 'none';
-  } else {
-  mobilePanelToggle.style.display = 'none';
-  panelToggle.style.display = 'flex';
-  }
-  }
-  updatePanelMode();
-  window.addEventListener('resize', updatePanelMode);
-
+  // Close panel on canvas tap (mobile)
   canvas.addEventListener('touchstart', (e) => {
-  if (window.innerWidth <= 900 && panelVisible && !paintModeActive) {
-  e.preventDefault();
-  togglePanel();
-  }
+    if (window.innerWidth <= 900 && panelVisible && !paintModeActive) {
+      e.preventDefault();
+      togglePanel();
+    }
   });
 
+  // Blend function - FIXED: Proper implementation without gamma issues
   function blendColor(base, overlay, mode, opacity) {
-  const o = overlay.clone();
-  switch (mode) {
-  case 'multiply': return base.clone().multiplyScalar(1 - opacity).add(base.clone().multiply(o).multiplyScalar(opacity));
-  case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r)*(1 - o.r)*opacity);
-  case 'overlay': {
-  const r = base.r < 0.5 ? 2*base.r*o.r : 1-2*(1-base.r)*(1-o.r);
-  const g = base.g < 0.5 ? 2*base.g*o.g : 1-2*(1-base.g)*(1-o.g);
-  const b = base.b < 0.5 ? 2*base.b*o.b : 1-2*(1-base.b)*(1-o.b);
-  return base.clone().multiplyScalar(1-opacity).add(new THREE.Color(r,g,b).multiplyScalar(opacity));
-  }
-  case 'add': return base.clone().add(o.multiplyScalar(opacity));
-  default: return base.clone().lerp(o, opacity);
-  }
+    const o = overlay.clone();
+    switch (mode) {
+      case 'multiply': 
+        return base.clone().multiplyScalar(1 - opacity).add(base.clone().multiply(o).multiplyScalar(opacity));
+      case 'screen': 
+        return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r) * opacity);
+      case 'overlay': 
+        const r = base.r < 0.5 ? 2 * base.r * o.r : 1 - 2 * (1 - base.r) * (1 - o.r);
+        const g = base.g < 0.5 ? 2 * base.g * o.g : 1 - 2 * (1 - base.g) * (1 - o.g);
+        const b = base.b < 0.5 ? 2 * base.b * o.b : 1 - 2 * (1 - base.b) * (1 - o.b);
+        return base.clone().multiplyScalar(1 - opacity).add(new THREE.Color(r, g, b).multiplyScalar(opacity));
+      case 'add': 
+        return base.clone().add(o.multiplyScalar(opacity));
+      default: 
+        return base.clone().lerp(o, opacity);
+    }
   }
 
+  // Layers UI
   function addLayer() {
-  const layer = { name: `Layer ${layers.length + 1}`, color: new THREE.Color('#ff4444'), opacity: 1.0, visible: true, blendMode: 'normal' };
-  layers.push(layer);
-  paintedGeometries.forEach((pg, idx) => {
-  const key = `geo_${idx}`;
-  if (!layerData[key]) layerData[key] = {};
-  const colors = new Float32Array(pg.geometry.attributes.position.count * 3).fill(1);
-  layerData[key][layers.length-1] = Array.from(colors);
-  });
-  updateLayersUI();
-  setActiveLayer(layers.length - 1);
+    const layer = {
+      name: `Layer ${layers.length + 1}`,
+      color: new THREE.Color('#ff4444'),
+      opacity: 1.0,
+      visible: true,
+      blendMode: 'normal'
+    };
+    layers.push(layer);
+    // Initialize layer data for all geometries
+    paintedGeometries.forEach((pg, idx) => {
+      const geoKey = `geo_${idx}`;
+      if (!layerData[geoKey]) layerData[geoKey] = {};
+      if (!layerData[geoKey][layers.length - 1]) {
+        const colors = new Float32Array(pg.geometry.attributes.position.count * 3).fill(1);
+        layerData[geoKey][layers.length - 1] = Array.from(colors);
+      }
+    });
+    updateLayersUI();
+    setActiveLayer(layers.length - 1);
+  }
+
+  function deleteLayer(idx) {
+    if (layers.length <= 1) return;
+    
+    // Remove layer data
+    Object.keys(layerData).forEach(key => {
+      const geoLayers = layerData[key];
+      delete geoLayers[idx];
+      // Shift remaining layer data
+      for (let i = idx; i < layers.length - 1; i++) {
+        geoLayers[i] = geoLayers[i + 1];
+      }
+      delete geoLayers[layers.length - 1];
+    });
+    
+    layers.splice(idx, 1);
+    if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
+    updateLayersUI();
+    updateAllGeometries();
+  }
+
+  function moveLayer(fromIdx, toIdx) {
+    const [layer] = layers.splice(fromIdx, 1);
+    layers.splice(toIdx, 0, layer);
+    
+    // Move layer data
+    Object.keys(layerData).forEach(key => {
+      const geoLayers = layerData[key];
+      const data = geoLayers[fromIdx];
+      delete geoLayers[fromIdx];
+      // Insert at new position
+      for (let i = Math.min(fromIdx, toIdx); i < Math.max(fromIdx, toIdx); i++) {
+        if (fromIdx < toIdx) {
+          geoLayers[i] = geoLayers[i + 1];
+        } else {
+          geoLayers[i + 1] = geoLayers[i];
+        }
+      }
+      geoLayers[toIdx] = data;
+    });
+    
+    if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
+    else if (fromIdx < currentLayerIndex && toIdx >= currentLayerIndex) currentLayerIndex--;
+    else if (fromIdx > currentLayerIndex && toIdx <= currentLayerIndex) currentLayerIndex++;
+    
+    updateLayersUI();
+    updateAllGeometries();
+  }
+
+  function setActiveLayer(idx) {
+    currentLayerIndex = idx;
+    updateLayersUI();
+    paintColor.copy(layers[idx].color);
+    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
   }
 
   function updateLayersUI() {
-  const list = document.getElementById('layersList');
-  list.innerHTML = '';
-  layers.slice().reverse().forEach((layer, rIdx) => {
-  const i = layers.length - 1 - rIdx;
-  const li = document.createElement('li');
-  li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
-  li.draggable = true;
-  li.innerHTML = `<span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span><input type="color" class="layer-color" value="#${layer.color.getHexString()}"><input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity*100}"><select class="layer-blend"><option value="normal">Normal</option><option value="multiply">Multiply</option><option value="screen">Screen</option><option value="overlay">Overlay</option><option value="add">Add</option></select><span class="layer-name" contenteditable="true">${layer.name}</span><span class="layer-delete">×</span>`;
-  // ... (event listeners same as original)
-  // (omitted for brevity – copy from your original code)
-  list.appendChild(li);
-  });
+    const list = document.getElementById('layersList');
+    list.innerHTML = '';
+    layers.slice().reverse().forEach((layer, reverseIdx) => {
+      const i = layers.length - 1 - reverseIdx;
+      const li = document.createElement('li');
+      li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
+      li.draggable = true;
+      li.innerHTML = `
+        <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
+        <input type="color" class="layer-color" value="#${layer.color.getHexString()}">
+        <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
+        <select class="layer-blend">
+          <option value="normal">Normal</option>
+          <option value="multiply">Multiply</option>
+          <option value="screen">Screen</option>
+          <option value="overlay">Overlay</option>
+          <option value="add">Add</option>
+        </select>
+        <span class="layer-name" contenteditable="true">${layer.name}</span>
+        <span class="layer-delete">×</span>
+      `;
+      
+      // Event handlers
+      li.onclick = (e) => {
+        if (!e.target.closest('.layer-visibility') && 
+            !e.target.closest('.layer-color') && 
+            !e.target.closest('.layer-opacity') && 
+            !e.target.closest('.layer-blend') && 
+            !e.target.closest('.layer-name') && 
+            !e.target.closest('.layer-delete')) {
+          setActiveLayer(i);
+        }
+      };
+      
+      li.querySelector('.layer-visibility').onclick = (e) => {
+        e.stopPropagation();
+        layer.visible = !layer.visible;
+        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '🚫';
+        updateAllGeometries();
+      };
+      
+      li.querySelector('.layer-color').oninput = (e) => {
+        layer.color.set(e.target.value);
+        if (i === currentLayerIndex) paintColor.copy(layer.color);
+        updateAllGeometries();
+      };
+      
+      li.querySelector('.layer-opacity').oninput = (e) => {
+        layer.opacity = e.target.value / 100;
+        updateAllGeometries();
+      };
+      
+      li.querySelector('.layer-blend').onchange = (e) => {
+        layer.blendMode = e.target.value;
+        updateAllGeometries();
+      };
+      
+      li.querySelector('.layer-name').onblur = (e) => {
+        layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
+      };
+      
+      li.querySelector('.layer-delete').onclick = (e) => {
+        e.stopPropagation();
+        deleteLayer(i);
+      };
+      
+      // Drag and drop
+      li.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', i);
+      });
+      
+      li.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      
+      li.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+        const toIdx = i;
+        if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
+      });
+      
+      list.appendChild(li);
+    });
   }
 
   function updateAllGeometries() {
-  // ... (same as original)
-  }
-
-// All other functions (deleteLayer, moveLayer, setActiveLayer, updateLayersUI, updateAllGeometries, etc.)
-
-function deleteLayer(idx) {
-  if (layers.length <= 1) return;
-
-  Object.keys(layerData).forEach(key => {
-    const geoLayers = layerData[key];
-    delete geoLayers[idx];
-    for (let i = idx; i < layers.length - 1; i++) {
-      geoLayers[i] = geoLayers[i + 1];
-    }
-    delete geoLayers[layers.length - 1];
-  });
-
-  layers.splice(idx, 1);
-  if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
-  updateLayersUI();
-  updateAllGeometries();
-}
-
-function moveLayer(fromIdx, toIdx) {
-  const [layer] = layers.splice(fromIdx, 1);
-  layers.splice(toIdx, 0, layer);
-
-  Object.keys(layerData).forEach(key => {
-    const geoLayers = layerData[key];
-    const data = geoLayers[fromIdx];
-    delete geoLayers[fromIdx];
-    for (let i = Math.min(fromIdx, toIdx); i < Math.max(fromIdx, toIdx); i++) {
-      if (fromIdx < toIdx) {
-        geoLayers[i] = geoLayers[i + 1];
-      } else {
-        geoLayers[i + 1] = geoLayers[i];
-      }
-    }
-    geoLayers[toIdx] = data;
-  });
-
-  if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
-  else if (fromIdx < currentLayerIndex && toIdx >= currentLayerIndex) currentLayerIndex--;
-  else if (fromIdx > currentLayerIndex && toIdx <= currentLayerIndex) currentLayerIndex++;
-
-  updateLayersUI();
-  updateAllGeometries();
-}
-
-function setActiveLayer(idx) {
-  currentLayerIndex = idx;
-  updateLayersUI();
-  paintColor.copy(layers[idx].color);
-  document.getElementById('paintColor').value = '#' + paintColor.getHexString();
-}
-
-function updateLayersUI() {
-  const list = document.getElementById('layersList');
-  list.innerHTML = '';
-  layers.slice().reverse().forEach((layer, reverseIdx) => {
-    const i = layers.length - 1 - reverseIdx;
-    const li = document.createElement('li');
-    li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
-    li.draggable = true;
-    li.innerHTML = `
-      <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
-      <input type="color" class="layer-color" value="#${layer.color.getHexString()}">
-      <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
-      <select class="layer-blend">
-        <option value="normal">Normal</option>
-        <option value="multiply">Multiply</option>
-        <option value="screen">Screen</option>
-        <option value="overlay">Overlay</option>
-        <option value="add">Add</option>
-      </select>
-      <span class="layer-name" contenteditable="true">${layer.name}</span>
-      <span class="layer-delete">×</span>
-    `;
-
-    li.onclick = (e) => {
-      if (!e.target.closest('.layer-visibility') &&
-          !e.target.closest('.layer-color') &&
-          !e.target.closest('.layer-opacity') &&
-          !e.target.closest('.layer-blend') &&
-          !e.target.closest('.layer-name') &&
-          !e.target.closest('.layer-delete')) {
-        setActiveLayer(i);
-      }
-    };
-
-    li.querySelector('.layer-visibility').onclick = (e) => {
-      e.stopPropagation();
-      layer.visible = !layer.visible;
-      li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '🚫';
-      updateAllGeometries();
-    };
-
-    li.querySelector('.layer-color').oninput = (e) => {
-      layer.color.set(e.target.value);
-      if (i === currentLayerIndex) paintColor.copy(layer.color);
-      updateAllGeometries();
-    };
-
-    li.querySelector('.layer-opacity').oninput = (e) => {
-      layer.opacity = e.target.value / 100;
-      updateAllGeometries();
-    };
-
-    li.querySelector('.layer-blend').onchange = (e) => {
-      layer.blendMode = e.target.value;
-      updateAllGeometries();
-    };
-
-    li.querySelector('.layer-name').onblur = (e) => {
-      layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
-    };
-
-    li.querySelector('.layer-delete').onclick = (e) => {
-      e.stopPropagation();
-      deleteLayer(i);
-    };
-
-    li.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', i);
-    });
-
-    li.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-
-    li.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
-      const toIdx = i;
-      if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
-    });
-
-    list.appendChild(li);
-  });
-}
-
-function updateAllGeometries() {
-  paintedGeometries.forEach((pg, geoIdx) => {
-    const col = pg.geometry.attributes.color;
-    const geoKey = `geo_${geoIdx}`;
-
-    for (let i = 0; i < col.count; i++) {
-      col.setXYZ(i, 1, 1, 1);
-    }
-
-    layers.forEach((layer, layerIdx) => {
-      if (!layer.visible) return;
-
-      const geoLayerData = layerData[geoKey]?.[layerIdx];
-      if (!geoLayerData) return;
-
+    paintedGeometries.forEach((pg, geoIdx) => {
+      const col = pg.geometry.attributes.color;
+      const geoKey = `geo_${geoIdx}`;
+      
+      // Start with white base
       for (let i = 0; i < col.count; i++) {
-        const base = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
-        const overlay = new THREE.Color(
-          geoLayerData[i * 3],
-          geoLayerData[i * 3 + 1],
-          geoLayerData[i * 3 + 2]
-        );
-
-        if (overlay.r !== 1 || overlay.g !== 1 || overlay.b !== 1) {
-          const result = blendColor(base, overlay, layer.blendMode, layer.opacity);
-          col.setXYZ(i, result.r, result.g, result.b);
+        col.setXYZ(i, 1, 1, 1);
+      }
+      
+      // Apply layers from bottom to top
+      layers.forEach((layer, layerIdx) => {
+        if (!layer.visible) return;
+        
+        const geoLayerData = layerData[geoKey]?.[layerIdx];
+        if (!geoLayerData) return;
+        
+        for (let i = 0; i < col.count; i++) {
+          const base = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
+          const overlay = new THREE.Color(
+            geoLayerData[i * 3],
+            geoLayerData[i * 3 + 1],
+            geoLayerData[i * 3 + 2]
+          );
+          
+          // Only blend if the layer has non-white paint
+          if (overlay.r !== 1 || overlay.g !== 1 || overlay.b !== 1) {
+            const result = blendColor(base, overlay, layer.blendMode, layer.opacity);
+            col.setXYZ(i, result.r, result.g, result.b);
+          }
         }
-      }
+      });
+      
+      col.needsUpdate = true;
     });
-
-    col.needsUpdate = true;
-  });
-}
-
-// Mask mode toggle
-document.getElementById('maskToggle').onclick = () => {
-  maskMode = !maskMode;
-  maskToggle.classList.toggle('active', maskMode);
-  maskToggle.textContent = maskMode ? 'Paint Mode (exit mask)' : 'Mask Mode (paint black to hide)';
-};
-
-document.getElementById('brushOpacity').oninput = (e) => {
-  document.getElementById('brushOpacityVal').textContent = e.target.value;
-};
-
-// Eyedropper
-function sampleColor(x, y) {
-  const rect = canvas.getBoundingClientRect();
-  const gl = renderer.getContext();
-  const pixel = new Uint8Array(4);
-
-  const pixelX = (x - rect.left) * renderer.getPixelRatio();
-  const pixelY = (rect.height - (y - rect.top)) * renderer.getPixelRatio();
-
-  gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-
-  paintColor.setRGB(pixel[0] / 255, pixel[1] / 255, pixel[2] / 255);
-  document.getElementById('paintColor').value = '#' + paintColor.getHexString();
-  layers[currentLayerIndex].color.copy(paintColor);
-  updateLayersUI();
-}
-
-// Brush cursor
-function getWorldBrushRadius() {
-  const dist = camera.position.distanceTo(controls.target);
-  const fov = camera.fov * (Math.PI / 180);
-  const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  return brushSize * visibleHeight * 0.1;
-}
-
-function projectRadiusToScreen(worldRadius) {
-  const dist = camera.position.distanceTo(controls.target);
-  const fov = camera.fov * (Math.PI / 180);
-  const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  const pixelSize = (worldRadius / visibleHeight) * window.innerHeight;
-  return pixelSize * 2;
-}
-
-function updateBrushCursor(x, y) {
-  if (!paintModeActive || eyedropperActive) return;
-  brushCursor.style.display = 'block';
-  brushCursor.style.left = x + 'px';
-  brushCursor.style.top = y + 'px';
-  const r = projectRadiusToScreen(getWorldBrushRadius());
-  const size = Math.max(r * 2, 10);
-  brushCursor.style.width = brushCursor.style.height = size + 'px';
-  brushCursor.style.borderColor = paintColor.getStyle();
-  brushCursor.style.borderRadius = brushShape === 'hard-circle' ? '50%' : '50%';
-  brushCursor.style.boxShadow = brushShape === 'soft-circle' ? `0 0 ${size/2}px ${size/4}px ${paintColor.getStyle()}` : 'none';
-}
-
-function hideCursors() {
-  brushCursor.style.display = 'none';
-  eyedropperCursor.style.display = 'none';
-}
-
-// Painting
-function paintAt(point) {
-  if (!paintModeActive || paintedGeometries.length === 0) return;
-  const brushOpacity = document.getElementById('brushOpacity').value / 100;
-
-  const radius = getWorldBrushRadius();
-  const radiusSq = radius * radius;
-  const vert = new THREE.Vector3();
-
-  paintedGeometries.forEach((pg, geoIdx) => {
-    const pos = pg.geometry.attributes.position;
-    const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
-    const local = point.clone().applyMatrix4(inv);
-
-    const geoKey = `geo_${geoIdx}`;
-    if (!layerData[geoKey]) layerData[geoKey] = {};
-    if (!layerData[geoKey][currentLayerIndex]) {
-      const colors = new Float32Array(pos.count * 3).fill(1);
-      layerData[geoKey][currentLayerIndex] = Array.from(colors);
-    }
-
-    const geoLayerColors = layerData[geoKey][currentLayerIndex];
-
-    for (let i = 0; i < pos.count; i++) {
-      vert.fromBufferAttribute(pos, i);
-      const distSq = vert.distanceToSquared(local);
-
-      if (distSq > radiusSq) continue;
-
-      const dist = Math.sqrt(distSq);
-      let falloff = 1 - (dist / radius);
-      if (brushShape === 'soft-circle') {
-        falloff = falloff * falloff;
-      }
-
-      const alpha = brushOpacity * falloff;
-
-      let paintRGB = maskMode ? new THREE.Color(0,0,0) : layers[currentLayerIndex].color;
-
-      const current = new THREE.Color(geoLayerColors[i*3], geoLayerColors[i*3+1], geoLayerColors[i*3+2]);
-      const result = blendColor(current, paintRGB, layers[currentLayerIndex].blendMode, alpha);
-
-      geoLayerColors[i*3] = result.r;
-      geoLayerColors[i*3+1] = result.g;
-      geoLayerColors[i*3+2] = result.b;
-    }
-  });
-
-  updateAllGeometries();
-}
-
-// Pointer events
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-let isPointerDown = false;
-
-canvas.addEventListener('pointermove', (e) => {
-  updateBrushCursor(e.clientX, e.clientY);
-  if (isPointerDown && paintModeActive && currentModel && !eyedropperActive) {
-    mouse.x = ((e.clientX - canvas.getBoundingClientRect().left) / canvas.clientWidth) * 2 - 1;
-    mouse.y = -((e.clientY - canvas.getBoundingClientRect().top) / canvas.clientHeight) * 2 + 1;
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObject(currentModel, true);
-    if (intersects.length > 0) paintAt(intersects[0].point);
   }
-});
-
-canvas.addEventListener('pointerdown', (e) => {
-  isPointerDown = true;
-
-  if (eyedropperActive) {
-    sampleColor(e.clientX, e.clientY);
-    return;
-  }
-
-  if (paintModeActive && currentModel) {
-    mouse.x = ((e.clientX - canvas.getBoundingClientRect().left) / canvas.clientWidth) * 2 - 1;
-    mouse.y = -((e.clientY - canvas.getBoundingClientRect().top) / canvas.clientHeight) * 2 + 1;
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObject(currentModel, true);
-    if (intersects.length > 0) paintAt(intersects[0].point);
-  }
-});
-
-canvas.addEventListener('pointerup', () => {
-  if (isPointerDown) {
-    isPointerDown = false;
-    saveState();
-  }
-});
-
-canvas.addEventListener('pointerleave', () => {
-  isPointerDown = false;
-  hideCursors();
-});
-
-// Desktop Alt eyedropper
-window.addEventListener('keydown', (e) => {
-  if (e.altKey && paintModeActive && !eyedropperActive) {
-    eyedropperActive = true;
-    hideCursors();
-    eyedropperCursor.style.display = 'block';
-  }
-});
-
-window.addEventListener('keyup', (e) => {
-  if (!e.altKey && eyedropperActive) {
-    eyedropperActive = false;
-    hideCursors();
-  }
-});
-
-// Mobile eyedropper
-document.getElementById('eyedropperToggle').addEventListener('click', () => {
-  eyedropperActive = !eyedropperActive;
-  eyedropperToggle.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Mode (Mobile)';
-  eyedropperToggle.classList.toggle('active', eyedropperActive);
-  controls.enabled = !eyedropperActive;
-  if (!eyedropperActive) hideCursors();
-});
-
-// Paint mode toggle
-document.getElementById('paintToggle').addEventListener('click', () => {
-  paintModeActive = !paintModeActive;
-  paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
-  paintToggle.classList.toggle('active', paintModeActive);
-  controls.enabled = !paintModeActive;
-  eyedropperActive = false;
-  eyedropperToggle.classList.remove('active');
-  eyedropperToggle.textContent = 'Eyedropper Mode (Mobile)';
-  if (!paintModeActive) hideCursors();
-});
-
-// Model load, texture, material, export, etc. (the rest of your original code)
 
   document.getElementById('addLayerBtn').onclick = addLayer;
   addLayer();
 
-  window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  updatePanelMode();
+  // Mask mode
+  maskToggle.onclick = () => {
+    maskMode = !maskMode;
+    maskToggle.classList.toggle('active', maskMode);
+    maskToggle.textContent = maskMode ? 'Paint Mode (exit mask)' : 'Mask Mode (paint black to hide)';
+  };
+
+  document.getElementById('brushOpacity').oninput = (e) => {
+    document.getElementById('brushOpacityVal').textContent = e.target.value;
+  };
+
+  // Eyedropper - FIXED: No gamma conversion, read as-is
+  function sampleColor(x, y) {
+    const rect = canvas.getBoundingClientRect();
+    const gl = renderer.getContext();
+    const pixel = new Uint8Array(4);
+    
+    const pixelX = (x - rect.left) * renderer.getPixelRatio();
+    const pixelY = (rect.height - (y - rect.top)) * renderer.getPixelRatio();
+    
+    gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+    
+    // Read colors directly without gamma conversion
+    paintColor.setRGB(pixel[0] / 255, pixel[1] / 255, pixel[2] / 255);
+    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
+  }
+
+  // Brush & Painting - FIXED: Store per-layer data
+  function getWorldBrushRadius() {
+    const dist = camera.position.distanceTo(controls.target);
+    const fov = camera.fov * (Math.PI / 180);
+    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
+    const pixelToWorld = visibleHeight / window.innerHeight;
+    return brushSize * visibleHeight * 0.1;
+  }
+
+  function projectRadiusToScreen(worldRadius) {
+    const dist = camera.position.distanceTo(controls.target);
+    const fov = camera.fov * (Math.PI / 180);
+    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
+    const pixelSize = (worldRadius / visibleHeight) * window.innerHeight;
+    return pixelSize * 2;
+  }
+
+  function updateBrushCursor(x, y) {
+    if (!paintModeActive || eyedropperActive) return;
+    brushCursor.style.display = 'block';
+    brushCursor.style.left = x + 'px';
+    brushCursor.style.top = y + 'px';
+    const r = projectRadiusToScreen(getWorldBrushRadius());
+    const size = Math.max(r * 2, 10);
+    brushCursor.style.width = brushCursor.style.height = size + 'px';
+    brushCursor.style.borderColor = paintColor.getStyle();
+    brushCursor.style.borderRadius = brushShape === 'hard-circle' ? '50%' : '50%';
+    brushCursor.style.boxShadow = brushShape === 'soft-circle' ? `0 0 ${size/2}px ${size/4}px ${paintColor.getStyle()}` : 'none';
+  }
+
+  function hideCursors() {
+    brushCursor.style.display = 'none';
+    eyedropperCursor.style.display = 'none';
+  }
+
+  function paintAt(point) {
+    if (!paintModeActive || paintedGeometries.length === 0) return;
+    const brushOpacity = document.getElementById('brushOpacity').value / 100;
+
+    const radius = getWorldBrushRadius();
+    const radiusSq = radius * radius;
+    const vert = new THREE.Vector3();
+
+    paintedGeometries.forEach((pg, geoIdx) => {
+      const pos = pg.geometry.attributes.position;
+      const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
+      const local = point.clone().applyMatrix4(inv);
+      
+      const geoKey = `geo_${geoIdx}`;
+      if (!layerData[geoKey]) layerData[geoKey] = {};
+      if (!layerData[geoKey][currentLayerIndex]) {
+        const colors = new Float32Array(pos.count * 3).fill(1);
+        layerData[geoKey][currentLayerIndex] = Array.from(colors);
+      }
+      
+      const geoLayerColors = layerData[geoKey][currentLayerIndex];
+
+      for (let i = 0; i < pos.count; i++) {
+        vert.fromBufferAttribute(pos, i);
+        const distSq = vert.distanceToSquared(local);
+        
+        if (distSq > radiusSq) continue;
+
+        // Calculate falloff for soft brush
+        const dist = Math.sqrt(distSq);
+        let falloff = 1 - (dist / radius);
+        if (brushShape === 'soft-circle') {
+          falloff = falloff * falloff;
+        }
+        
+        const alpha = brushOpacity * falloff;
+        
+        // Get current layer color (black if in mask mode)
+        let paintRGB;
+        if (maskMode) {
+          paintRGB = { r: 0, g: 0, b: 0 };
+        } else {
+          paintRGB = layers[currentLayerIndex].color;
+        }
+
+        // Blend into layer data
+        const currentR = geoLayerColors[i * 3];
+        const currentG = geoLayerColors[i * 3 + 1];
+        const currentB = geoLayerColors[i * 3 + 2];
+        
+        const result = blendColor(
+          new THREE.Color(currentR, currentG, currentB),
+          paintRGB,
+          layers[currentLayerIndex].blendMode,
+          alpha
+        );
+        
+        geoLayerColors[i * 3] = result.r;
+        geoLayerColors[i * 3 + 1] = result.g;
+        geoLayerColors[i * 3 + 2] = result.b;
+      }
+    });
+    
+    // Update geometry after painting
+    updateAllGeometries();
+  }
+
+  // Pointer events
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let isPointerDown = false;
+
+  canvas.addEventListener('pointermove', (e) => {
+    updateBrushCursor(e.clientX, e.clientY);
+    if (isPointerDown && paintModeActive && currentModel && !eyedropperActive) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
+    }
   });
 
+  canvas.addEventListener('pointerdown', (e) => {
+    isPointerDown = true;
+    
+    if (eyedropperActive) {
+      sampleColor(e.clientX, e.clientY);
+      return;
+    }
+    
+    if (paintModeActive && currentModel) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
+    }
+  });
+
+  canvas.addEventListener('pointerup', () => {
+    if (isPointerDown) {
+      isPointerDown = false;
+      saveState();
+    }
+  });
+
+  canvas.addEventListener('pointerleave', () => { 
+    isPointerDown = false; 
+    hideCursors(); 
+  });
+
+  // Desktop Alt key eyedropper
+  window.addEventListener('keydown', (e) => {
+    if (e.altKey && paintModeActive && !eyedropperActive) {
+      eyedropperActive = true;
+      hideCursors();
+      eyedropperCursor.style.display = 'block';
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (!e.altKey && eyedropperActive) {
+      eyedropperActive = false;
+      hideCursors();
+    }
+  });
+
+  // Mobile eyedropper button
+  eyedropperToggle.addEventListener('click', () => {
+    eyedropperActive = !eyedropperActive;
+    eyedropperToggle.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Mode (Mobile)';
+    eyedropperToggle.classList.toggle('active', eyedropperActive);
+    controls.enabled = !eyedropperActive;
+    if (!eyedropperActive) hideCursors();
+  });
+
+  paintToggle.addEventListener('click', () => {
+    paintModeActive = !paintModeActive;
+    paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
+    paintToggle.classList.toggle('active', paintModeActive);
+    controls.enabled = !paintModeActive;
+    eyedropperActive = false;
+    eyedropperToggle.textContent = 'Eyedropper Mode (Mobile)';
+    eyedropperToggle.classList.remove('active');
+    if (!paintModeActive) hideCursors();
+  });
+
+  // Model upload
+  document.getElementById('uploadModel').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    loadModel(url);
+  });
+
+  function loadModel(url) {
+    exportStatus.textContent = 'Loading model...';
+    exportStatus.style.color = '#60a5fa';
+    
+    new GLTFLoader().load(url, (gltf) => {
+      if (currentModel) scene.remove(currentModel);
+      currentModel = gltf.scene;
+      scene.add(currentModel);
+
+      const box = new THREE.Box3().setFromObject(currentModel);
+      modelSize = box.getSize(new THREE.Vector3()).length() || 1;
+      const center = box.getCenter(new THREE.Vector3());
+      
+      camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
+      controls.target.copy(center);
+      controls.update();
+
+      paintedGeometries = [];
+      layerData = {};
+      undoStack.length = 0;
+      redoStack.length = 0;
+      undoBtn.disabled = true;
+      redoBtn.disabled = true;
+
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          if (!(child.material instanceof THREE.MeshStandardMaterial)) {
+            child.material = new THREE.MeshStandardMaterial({ 
+              map: child.material?.map,
+              color: 0xffffff
+            });
+          }
+          
+          child.material.color.set(0xffffff);
+          child.material.vertexColors = true;
+          
+          if (!child.geometry.attributes.color) {
+            const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
+            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          }
+          
+          const geoIdx = paintedGeometries.length;
+          paintedGeometries.push({ geometry: child.geometry, mesh: child });
+          
+          // Initialize layer data for this geometry
+          layerData[`geo_${geoIdx}`] = {};
+          layers.forEach((_, layerIdx) => {
+            const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
+            layerData[`geo_${geoIdx}`][layerIdx] = Array.from(colors);
+          });
+        }
+      });
+
+      updateAllGeometries();
+      saveState();
+      exportStatus.textContent = 'Model loaded!';
+      exportStatus.style.color = '#4ade80';
+    }, undefined, (error) => {
+      exportStatus.textContent = 'Load failed';
+      exportStatus.style.color = '#ef4444';
+      console.error(error);
+    });
+  }
+
+  // Clear current layer - FIXED: Only clear selected layer
+  document.getElementById('clearPaint').addEventListener('click', () => {
+    paintedGeometries.forEach((pg, geoIdx) => {
+      const geoKey = `geo_${geoIdx}`;
+      if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
+        const count = pg.geometry.attributes.position.count;
+        for (let i = 0; i < count; i++) {
+          layerData[geoKey][currentLayerIndex][i * 3] = 1;
+          layerData[geoKey][currentLayerIndex][i * 3 + 1] = 1;
+          layerData[geoKey][currentLayerIndex][i * 3 + 2] = 1;
+        }
+      }
+    });
+    updateAllGeometries();
+    saveState();
+  });
+
+  // Texture apply
+  function applyTexture(url) {
+    if (!currentModel) return;
+    new THREE.TextureLoader().load(url, (tex) => {
+      tex.flipY = false;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material.map = tex.clone();
+          child.material.needsUpdate = true;
+        }
+      });
+    });
+  }
+
+  document.getElementById('presetTexture').addEventListener('change', (e) => {
+    if (e.target.value) applyTexture(e.target.value);
+  });
+
+  document.getElementById('uploadTexture').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) applyTexture(URL.createObjectURL(file));
+  });
+
+  // Material sliders
+  document.getElementById('metallicSlider').addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('metallicVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => {
+      if (child.isMesh) child.material.metalness = v;
+    });
+  });
+
+  document.getElementById('roughnessSlider').addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('roughnessVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => {
+      if (child.isMesh) child.material.roughness = v;
+    });
+  });
+
+  // Brush size & color
+  document.getElementById('paintColor').addEventListener('input', (e) => {
+    paintColor.set(e.target.value);
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
+  });
+
+  document.getElementById('brushSize').addEventListener('input', (e) => {
+    brushSize = parseFloat(e.target.value);
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
+  });
+
+  document.getElementById('brushShape').addEventListener('change', (e) => {
+    brushShape = e.target.value;
+    const customGroup = document.getElementById('customBrushGroup');
+    customGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
+
+  document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
+
+  // Export
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    if (!currentModel) {
+      exportStatus.textContent = 'No model loaded';
+      exportStatus.style.color = '#ef4444';
+      return;
+    }
+    exportStatus.textContent = 'Exporting...';
+    exportStatus.style.color = '#60a5fa';
+    
+    const exporter = new GLTFExporter();
+    const clone = currentModel.clone();
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.material = child.material.clone();
+        child.material.vertexColors = true;
+        child.material.needsUpdate = true;
+      }
+    });
+    
+    exporter.parse(clone, (result) => {
+      const blob = new Blob([result], { type: 'application/octet-stream' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'retextured_model.glb';
+      link.click();
+      exportStatus.textContent = 'Exported!';
+      exportStatus.style.color = '#4ade80';
+    }, (err) => {
+      exportStatus.textContent = 'Export failed';
+      exportStatus.style.color = '#ef4444';
+      console.error(err);
+    }, { binary: true });
+  });
+
+  // Resize handler
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // Animation loop
   function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
   }
   animate();
 </script>
