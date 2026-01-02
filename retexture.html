@@ -87,7 +87,7 @@
   }
   #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
 
-  /* Mobile Bottom Sheet Panel */
+  /* Mobile Bottom Sheet Panel - Partial Hide */
   @media (max-width: 900px) {
   .panel {
   position: absolute;
@@ -99,7 +99,7 @@
   height: 85vh;
   max-height: none;
   border-radius: 20px 20px 0 0;
-  transform: translateY(100%);
+  transform: translateY(calc(100% - 70px)); /* Show only top 70px when hidden */
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   padding-top: 80px;
   padding-bottom: 20px;
@@ -118,24 +118,16 @@
   #mobilePanelToggle {
   position: absolute;
   top: 16px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 6px;
   background: #60a5fa;
-  border-radius: 50%;
-  color: white;
-  font-size: 1.8rem;
-  font-weight: bold;
+  border-radius: 3px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(96,165,250,0.5);
-  transition: all 0.3s ease;
   z-index: 30;
   }
-  #mobilePanelToggle:hover { background: #3b82f6; transform: scale(1.1); }
-  #mobilePanelToggle.close { background: #ef4444; box-shadow: 0 4px 20px rgba(239,68,68,0.5); }
+  #mobilePanelToggle:hover { background: #3b82f6; }
   }
 
   #mobilePanelToggle { display: none; }
@@ -217,7 +209,7 @@
 
   <div class="panel visible" id="panel">
   <button id="panelToggle">←</button>
-  <button id="mobilePanelToggle">☰</button>
+  <div id="mobilePanelToggle"></div>
 
   <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.5;">
   Drag to rotate • Pinch/scroll to zoom<br><br>
@@ -473,11 +465,6 @@
   panel.classList.toggle('hidden', !panelVisible);
   panel.classList.toggle('visible', panelVisible);
   panelToggle.textContent = panelVisible ? '←' : '→';
-
-  if (window.innerWidth <= 900) {
-  mobilePanelToggle.textContent = panelVisible ? '×' : '☰';
-  mobilePanelToggle.classList.toggle('close', panelVisible);
-  }
   }
 
   panelToggle.onclick = togglePanel;
@@ -485,7 +472,7 @@
 
   function updatePanelMode() {
   if (window.innerWidth <= 900) {
-  mobilePanelToggle.style.display = 'flex';
+  mobilePanelToggle.style.display = 'block';
   panelToggle.style.display = 'none';
   } else {
   mobilePanelToggle.style.display = 'none';
@@ -688,7 +675,6 @@
   document.getElementById('addLayerBtn').onclick = addLayer;
   addLayer();
 
-  // Fixed Mask Mode
   maskToggle.onclick = () => {
   maskMode = !maskMode;
   maskToggle.classList.toggle('active', maskMode);
@@ -716,7 +702,7 @@
   const dist = camera.position.distanceTo(controls.target);
   const fov = camera.fov * (Math.PI / 180);
   const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  return brushSize * visibleHeight * 0.15;
+  return brushSize * visibleHeight * 0.25; // Increased for much fuller coverage
   }
 
   function projectRadiusToScreen(worldRadius) {
@@ -770,7 +756,9 @@
   if (distSq > radiusSq) continue;
 
   let falloff = 1 - Math.sqrt(distSq) / radius;
-  if (brushShape === 'soft-circle') falloff = falloff * falloff * falloff;
+  if (brushShape === 'hard-circle') falloff = 1; // Hard edge
+  if (brushShape === 'soft-circle') falloff = falloff ** 3; // Softer falloff
+
   const alpha = brushOpacity * falloff;
 
   const paintRGB = maskMode ? new THREE.Color(0, 0, 0) : layers[currentLayerIndex].color;
@@ -981,8 +969,10 @@
   const geoKey = `geo_${geoIdx}`;
   if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
   const count = pg.geometry.attributes.position.count;
-  for (let i = 0; i < count * 3; i++) {
+  for (let i = 0; i < count * 3; i += 3) {
   layerData[geoKey][currentLayerIndex][i] = 1;
+  layerData[geoKey][currentLayerIndex][i+1] = 1;
+  layerData[geoKey][currentLayerIndex][i+2] = 1;
   }
   }
   });
