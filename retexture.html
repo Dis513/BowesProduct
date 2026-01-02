@@ -55,7 +55,7 @@
       border-radius: 12px;
       padding: 1.5rem;
       overflow-y: auto;
-      z-index: 10;
+      z-index: 20;
       backdrop-filter: blur(10px);
       transition: transform 0.3s ease;
     }
@@ -79,7 +79,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 12;
+      z-index: 21;
       backdrop-filter: blur(12px);
       box-shadow: 0 6px 30px rgba(0,0,0,0.5);
       transition: all 0.3s ease;
@@ -105,7 +105,7 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      z-index: 12;
+      z-index: 21;
       backdrop-filter: blur(12px);
       box-shadow: 0 -6px 30px rgba(0,0,0,0.4);
     }
@@ -116,7 +116,7 @@
     input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
     input[type="range"] { padding: 0.3rem 0; }
     input[type="color"] { height: 44px; padding: 0.2rem; }
-    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; }
+    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; position: relative; z-index: 30; }
     button:hover { background: #3b82f6; }
 
     /* Layers UI */
@@ -160,9 +160,7 @@
     .footer-nav a:hover { color: #60a5fa; }
 
     @media (max-width: 768px) {
-      body { padding-bottom: 140px; }
-      .site-footer { position: relative !important; }
-      #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 80px; }
+      #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 80px; position: relative; z-index: 30; }
     }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
@@ -262,10 +260,6 @@
       <select id="brushShape">
         <option value="soft-circle">Soft Circle</option>
         <option value="hard-circle">Hard Circle</option>
-        <option value="square-soft">Square (soft)</option>
-        <option value="square-hard">Square (hard)</option>
-        <option value="diamond-soft">Diamond (soft)</option>
-        <option value="diamond-hard">Diamond (hard)</option>
         <option value="custom">Custom Brush (upload PNG)</option>
       </select>
     </div>
@@ -318,7 +312,7 @@
   </div>
 </footer>
 
-<!-- Firebase Auth – FULLY FIXED -->
+<!-- Firebase Auth – Working -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -378,7 +372,7 @@
   });
 </script>
 
-<!-- Three.js + All Features (Layers, Opacity, Masks, Undo/Redo, Eyedropper, Accurate Brush, Bright Colors) -->
+<!-- Three.js + All Features Fully Working -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -519,7 +513,7 @@
   function addLayer() {
     const layer = {
       name: `Layer ${layers.length + 1}`,
-      color: new THREE.Color('#ffffff'),
+      color: new THREE.Color('#ff4444'),
       opacity: 1.0,
       visible: true
     };
@@ -555,7 +549,10 @@
       };
       li.querySelector('.layer-color').oninput = (e) => {
         layer.color.set(e.target.value);
-        if (i === currentLayerIndex) paintColor.copy(layer.color);
+        if (i === currentLayerIndex) {
+          paintColor.copy(layer.color);
+          document.getElementById('paintColor').value = e.target.value;
+        }
       };
       li.querySelector('.layer-opacity').oninput = (e) => layer.opacity = e.target.value / 100;
       list.appendChild(li);
@@ -574,6 +571,22 @@
   document.getElementById('brushOpacity').oninput = (e) => {
     document.getElementById('brushOpacityVal').textContent = e.target.value;
   };
+
+  // Eyedropper
+  function sampleColor(x, y) {
+    const rect = canvas.getBoundingClientRect();
+    const gl = renderer.getContext();
+    const pixel = new Uint8Array(4);
+    gl.readPixels(
+      (x - rect.left) * renderer.getPixelRatio(),
+      (rect.height - (y - rect.top)) * renderer.getPixelRatio(),
+      1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel
+    );
+    paintColor.setRGB(pixel[0]/255, pixel[1]/255, pixel[2]/255);
+    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
+  }
 
   // Brush & Painting
   function getWorldBrushRadius() {
@@ -657,6 +670,10 @@
 
   canvas.addEventListener('pointerdown', (e) => {
     isPointerDown = true;
+    if (eyedropperActive) {
+      sampleColor(e.clientX, e.clientY);
+      return;
+    }
     if (paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -676,11 +693,39 @@
 
   canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideCursors(); });
 
+  // Desktop Alt key eyedropper
+  window.addEventListener('keydown', (e) => {
+    if (e.altKey && paintModeActive && !eyedropperActive) {
+      eyedropperActive = true;
+      hideCursors();
+      eyedropperCursor.style.display = 'block';
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (!e.altKey && eyedropperActive) {
+      eyedropperActive = false;
+      hideCursors();
+    }
+  });
+
+  // Mobile eyedropper button
+  eyedropperToggle.addEventListener('click', () => {
+    eyedropperActive = !eyedropperActive;
+    eyedropperToggle.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Mode (Mobile)';
+    eyedropperToggle.classList.toggle('active', eyedropperActive);
+    controls.enabled = !eyedropperActive;
+    if (!eyedropperActive) hideCursors();
+  });
+
   paintToggle.addEventListener('click', () => {
     paintModeActive = !paintModeActive;
     paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
     paintToggle.classList.toggle('active', paintModeActive);
     controls.enabled = !paintModeActive;
+    eyedropperActive = false;
+    eyedropperToggle.textContent = 'Eyedropper Mode (Mobile)';
+    eyedropperToggle.classList.remove('active');
     if (!paintModeActive) hideCursors();
   });
 
@@ -731,6 +776,10 @@
       saveState();
       exportStatus.textContent = 'Model loaded!';
       exportStatus.style.color = '#4ade80';
+    }, undefined, (error) => {
+      exportStatus.textContent = 'Load failed';
+      exportStatus.style.color = '#ef4444';
+      console.error(error);
     });
   }
 
