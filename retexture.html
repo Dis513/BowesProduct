@@ -626,7 +626,7 @@
     const layer = {
       name: `Layer ${layers.length + 1}`,
       color: new THREE.Color('#ff4444'),
-      opacity: 1.0,
+      opacity: 1.0;
       visible: true,
       blendMode: 'normal'
     };
@@ -895,7 +895,7 @@
         const geoLayerColors = layerData[geoKey][currentLayerIndex];
 
         for (let i = 0; i < pos.count; i++) {
-          if (maskArr[i] < 0.01) continue; // Block painting on masked areas
+          if (maskArr[i] < 0.01) continue;
 
           vert.fromBufferAttribute(pos, i);
           const distSq = vert.distanceToSquared(local);
@@ -983,16 +983,17 @@
   const quickColor = document.getElementById('quickColor');
   const quickColorDisplay = document.getElementById('quickColorDisplay');
 
-  // Fixed: Quick buttons now properly trigger main toggles
-  quickPaint.onclick = () => {
+  // Fixed quick buttons - now they trigger the main buttons correctly
+  quickPaint.onclick = (e) => {
+    e.stopPropagation();
     document.getElementById('paintToggle').click();
   };
 
-  quickEye.onclick = () => {
+  quickEye.onclick = (e) => {
+    e.stopPropagation();
     document.getElementById('eyedropperToggle').click();
   };
 
-  // Fixed: Color button now updates everything correctly
   quickColor.oninput = (e) => {
     const newColor = e.target.value;
     paintColor.set(newColor);
@@ -1017,7 +1018,7 @@
     updateQuickColorDisplay();
   }
 
-  // Fixed main toggle listeners (now also update quick buttons)
+  // Main toggle listeners (now also update quick buttons)
   document.getElementById('paintToggle').addEventListener('click', () => {
     paintModeActive = !paintModeActive;
     const btn = document.getElementById('paintToggle');
@@ -1055,14 +1056,16 @@
     updateQuickControls();
   });
 
-  // Fixed upload (both methods)
-  document.getElementById('uploadModel').addEventListener('change', (e) => {
+  // Fixed upload - listener attached correctly
+  const uploadModelInput = document.getElementById('uploadModel');
+  uploadModelInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
     loadModel(url);
   });
 
+  // Drag & drop upload
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => {
     e.preventDefault();
@@ -1072,7 +1075,166 @@
     }
   });
 
-  // ... (rest of loadModel, texture, sliders, export, resize, animate — unchanged)
+  function loadModel(url) {
+    loader.style.display = 'block';
+    loader.textContent = "Loading...";
+    new GLTFLoader().load(url, (gltf) => {
+      if (currentModel) scene.remove(currentModel);
+      currentModel = gltf.scene;
+      scene.add(currentModel);
+      const box = new THREE.Box3().setFromObject(currentModel);
+      modelSize = box.getSize(new THREE.Vector3()).length() || 1;
+      const center = box.getCenter(new THREE.Vector3());
+      camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
+      controls.target.copy(center);
+      controls.update();
+
+      paintedGeometries = [];
+      layerData = {};
+      globalMaskData = {};
+      undoStack.length = 0;
+      redoStack.length = 0;
+      undoBtn.disabled = true;
+      redoBtn.disabled = true;
+
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          if (!(child.material instanceof THREE.MeshStandardMaterial)) {
+            child.material = new THREE.MeshStandardMaterial({ map: child.material?.map });
+          }
+          child.material.vertexColors = true;
+          if (!child.geometry.attributes.color) {
+            const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
+            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          }
+          const geoIdx = paintedGeometries.length;
+          paintedGeometries.push({ geometry: child.geometry, mesh: child });
+          const geoKey = `geo_${geoIdx}`;
+          layerData[geoKey] = {};
+          globalMaskData[geoKey] = new Float32Array(child.geometry.attributes.position.count).fill(1.0);
+          layers.forEach((_, i) => {
+            layerData[geoKey][i] = Array.from(new Float32Array(child.geometry.attributes.position.count * 3).fill(1));
+          });
+        }
+      });
+
+      updateAllGeometries();
+      saveState();
+      loader.style.display = 'none';
+    }, undefined, (err) => {
+      loader.textContent = "Error loading model";
+      console.error(err);
+    });
+  }
+
+  function applyTexture(url) {
+    if (!currentModel) return;
+    new THREE.TextureLoader().load(url, (tex) => {
+      tex.flipY = false;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material.map = tex.clone();
+          child.material.needsUpdate = true;
+        }
+      });
+    });
+  }
+
+  document.getElementById('presetTexture').addEventListener('change', (e) => {
+    if (e.target.value) applyTexture(e.target.value);
+  });
+
+  document.getElementById('uploadTexture').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) applyTexture(URL.createObjectURL(file));
+  });
+
+  document.getElementById('metallicSlider').addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('metallicVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => {
+      if (child.isMesh) child.material.metalness = v;
+    });
+  });
+
+  document.getElementById('roughnessSlider').addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('roughnessVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => {
+      if (child.isMesh) child.material.roughness = v;
+    });
+  });
+
+  document.getElementById('paintColor').addEventListener('input', (e) => {
+    paintColor.set(e.target.value);
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateQuickColorDisplay();
+    updateLayersUI();
+  });
+
+  document.getElementById('brushSize').addEventListener('input', (e) => {
+    brushSize = parseFloat(e.target.value);
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
+  });
+
+  document.getElementById('brushShape').addEventListener('change', (e) => {
+    brushShape = e.target.value;
+    const customGroup = document.getElementById('customBrushGroup');
+    customGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+  });
+
+  document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
+
+  document.getElementById('clearPaint').addEventListener('click', () => {
+    saveState();
+    paintedGeometries.forEach((pg, geoIdx) => {
+      const geoKey = `geo_${geoIdx}`;
+      if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
+        layerData[geoKey][currentLayerIndex].fill(1);
+      }
+    });
+    updateAllGeometries();
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    if (!currentModel) {
+      exportStatus.textContent = 'No model loaded';
+      exportStatus.style.color = '#ef4444';
+      return;
+    }
+    exportStatus.textContent = 'Exporting...';
+    exportStatus.style.color = '#60a5fa';
+    const exporter = new GLTFExporter();
+    const clone = currentModel.clone();
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.material = child.material.clone();
+        child.material.vertexColors = true;
+        child.material.needsUpdate = true;
+      }
+    });
+    exporter.parse(clone, (result) => {
+      const blob = new Blob([result], { type: 'application/octet-stream' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'retextured_model.glb';
+      link.click();
+      exportStatus.textContent = 'Exported!';
+      exportStatus.style.color = '#4ade80';
+    }, (err) => {
+      exportStatus.textContent = 'Export failed';
+      exportStatus.style.color = '#ef4444';
+      console.error(err);
+    }, { binary: true });
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    updatePanelMode();
+  });
 
   function animate() {
     requestAnimationFrame(animate);
@@ -1081,6 +1243,7 @@
   }
   animate();
 
+  // Initial quick controls update
   updateQuickControls();
 </script>
 </body>
