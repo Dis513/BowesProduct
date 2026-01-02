@@ -121,7 +121,7 @@
   #panelToggle { display: none; }
   }
 
-  /* Mobile Floating Toggle (Controls) */
+  /* Mobile Toggle (Controls) */
   #mobilePanelToggle {
   position: fixed;
   bottom: 20px;
@@ -135,7 +135,7 @@
   color: #60a5fa;
   font-size: 0.9rem;
   font-weight: 700;
-  display: flex; 
+  display: none; 
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -159,25 +159,25 @@
   border-radius: 2px;
   opacity: 0.5;
   }
-  @media (min-width: 901px) { #mobilePanelToggle { display: none; } }
   @media (max-width: 900px) { #mobilePanelToggle { display: flex; } }
+  @media (min-width: 901px) { #mobilePanelToggle { display: none; } }
 
   /* Floating Controls (Paint/Eyedropper/Color) */
   #floatingControls {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  display: flex;
+  display: none; /* Controlled by JS */
   gap: 10px;
   z-index: 1150;
-  pointer-events: none; /* Let clicks pass through empty space */
+  pointer-events: none; 
   }
   .floater {
   pointer-events: auto;
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid #475569;
+  border:1px solid #475569;
   background: rgba(30, 41, 59, 0.9);
   backdrop-filter: blur(8px);
   color: #94a3b8;
@@ -189,33 +189,25 @@
   transition: all 0.2s;
   font-size: 1.2rem;
   position: relative;
+  user-select: none;
   }
   .floater:hover { background: rgba(51, 65, 85, 1); color: white; transform: translateY(-2px); }
-  .floater.active { color: #60a5fa; border-color: #60a5fa; background: rgba(30, 41, 59, 1); }
-  .floater.active-mask { color: #ec4899; border-color: #ec4899; }
   
-  /* Specific Floater Styles */
+  /* Specific Floaters */
   #floaterColor {
     padding: 0;
     border: none;
     overflow: hidden;
     width: 44px;
     height: 44px;
+    border-radius: 50%;
   }
   #floaterColor::-webkit-color-swatch-wrapper { padding: 0; }
   #floaterColor::-webkit-color-swatch { border: none; border-radius: 50%; }
   
   #floaterPaint.active { color: #f87171; border-color: #f87171; }
   #floaterEye.active { color: #7c3aed; border-color: #7c3aed; }
-
-  /* Logic for showing/hiding floaters */
-  /* Desktop: Always show */
-  @media (min-width: 901px) { #floatingControls { display: flex; } }
-  /* Mobile: Only show when panel hidden */
-  @media (max-width: 900px) {
-    .panel.visible ~ #floatingControls { display: none !important; }
-    .panel.hidden ~ #floatingControls { display: flex !important; }
-  }
+  #floaterPaint.active-mask, #floaterEye.active-mask { color: #ec4899; border-color: #ec4899; }
 
   .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
   .control-group { margin-bottom: 1.2rem; }
@@ -301,7 +293,7 @@
   <div id="brushCursor"></div>
   <div id="eyedropperCursor"></div>
 
-  <!-- Floating Controls: Visible on Desktop ALWAYS, on Mobile ONLY when panel is hidden -->
+  <!-- Floating Controls -->
   <div id="floatingControls">
     <input type="color" id="floaterColor" title="Base Color">
     <div class="floater" id="floaterPaint" title="Paint Mode">🖌</div>
@@ -429,7 +421,7 @@
   </div>
 </footer>
 
-<!-- Fixed Mobile Toggle Button (Outside Panel) -->
+<!-- Mobile Toggle Button -->
 <div id="mobilePanelToggle"><span>▲ Controls</span></div>
 
 <!-- Firebase Auth -->
@@ -500,15 +492,17 @@
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // FIX: Changed ToneMapping to Linear for accurate color representation
-  // ACESFilmic was causing colors to appear darker/desaturated compared to Hex values.
+  // FIX: LinearToneMapping ensures Hex Code = Visual Color (no darkening curve).
+  // Output SRGB ensures monitors display it correctly.
   renderer.toneMapping = THREE.LinearToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020617);
-  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  // FIX: Stronger Ambient Light to prevent "darker than hex" look due to shadows.
+  // 2.5 intensity creates a flatter, painterly look.
+  scene.add(new THREE.AmbientLight(0xffffff, 2.5));
   const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
   dirLight.position.set(5, 10, 7);
   scene.add(dirLight);
@@ -564,8 +558,6 @@
 
   function saveState() {
   if (paintedGeometries.length === 0) return;
-  // We must clone the Float32Arrays, not just JSON stringify (which turns them into arrays)
-  // but for performance and structure integrity in simple JS objects:
   const state = {
     layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
     layerData: JSON.parse(JSON.stringify(layerData)),
@@ -608,8 +600,7 @@
   layers.length = 0;
   state.layers.forEach(ld => layers.push({ color: ld.color, opacity: ld.opacity, blendMode: ld.blendMode, visible: ld.visible, name: ld.name }));
   layerData = JSON.parse(JSON.stringify(state.layerData));
-  // FIX: Ensure globalMaskData keys are re-converted to Float32Array
-  // otherwise they remain standard Arrays and fill() won't work
+  // CRITICAL: Re-instantiate Float32Arrays to ensure fill() works and rendering updates
   const newMaskData = {};
   if (state.globalMaskData) {
       Object.keys(state.globalMaskData).forEach(key => {
@@ -637,6 +628,7 @@
   const loader = document.getElementById('loader');
   
   // Floating Buttons References
+  const floatingControls = document.getElementById('floatingControls');
   const floaterPaint = document.getElementById('floaterPaint');
   const floaterEye = document.getElementById('floaterEye');
   const floaterColor = document.getElementById('floaterColor');
@@ -659,13 +651,19 @@
   updateFloaterVisibility();
   }
 
+  // Logic for Floating Visibility (More robust than CSS ~)
   function updateFloaterVisibility() {
-     // Logic: Always show on Desktop. Only show on Mobile if Panel Hidden.
-     // CSS handles this via sibling selector, but we update active classes here
      const isMobile = window.innerWidth <= 900;
      const showFloaters = !isMobile || (isMobile && !panelVisible);
      
-     // Sync Active States
+     // Update display
+     if(showFloaters) {
+         floatingControls.style.display = 'flex';
+     } else {
+         floatingControls.style.display = 'none';
+     }
+
+     // Sync Active States visually
      if(paintModeActive) {
          floaterPaint.classList.add('active');
      } else {
@@ -797,7 +795,6 @@
   currentLayerIndex = idx;
   updateLayersUI();
   paintColor.copy(layers[idx].color);
-  // Update UI pickers to match (Linear -> SRGB)
   const displayColor = paintColor.clone().convertLinearToSRGB();
   document.getElementById('paintColor').value = '#' + displayColor.getHexString();
   floaterColor.value = '#' + displayColor.getHexString();
@@ -920,6 +917,9 @@
   maskMode = !maskMode;
   maskToggle.classList.toggle('active', maskMode);
   clearMaskBtn.style.display = maskMode ? 'block' : 'none';
+  // FIX: Enable controls in Mask Mode
+  controls.enabled = true; 
+  
   if(maskMode) {
     maskToggle.textContent = 'Exit Mask Mode';
     if(paintModeActive) paintToggle.click();
@@ -949,16 +949,13 @@
   const pixelY = Math.floor((rect.height - (y - rect.top)) * renderer.getPixelRatio());
   gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
   
-  // With LinearToneMapping, readPixels returns Linear 0-1.
-  // We store Linear. We convert to SRGB for Hex.
   const r = pixel[0] / 255;
   const g = pixel[1] / 255;
   const b = pixel[2] / 255;
   
   paintColor.setRGB(r, g, b);
-  // Since readPixels is now Linear, we DO NOT convert to Linear. 
-  // We only convert to SRGB for the Hex string.
-  
+  // LinearToneMapping renders Linear to buffer. readPixels returns Linear.
+  // Convert Linear -> SRGB for Hex/UI.
   const displayColor = paintColor.clone().convertLinearToSRGB();
   document.getElementById('paintColor').value = '#' + displayColor.getHexString();
   floaterColor.value = '#' + displayColor.getHexString();
@@ -1138,7 +1135,7 @@
   }
   });
 
-  // Toggle Functions linking Panel Buttons to Floating Buttons
+  // Unified Toggle Handlers
   const setPaintMode = (isActive) => {
       paintModeActive = isActive;
       const btn = document.getElementById('paintToggle');
@@ -1171,10 +1168,10 @@
   document.getElementById('paintToggle').addEventListener('click', () => setPaintMode(!paintModeActive));
   floaterPaint.onclick = () => setPaintMode(!paintModeActive);
 
-  // Color Pickers
+  // Base Color Handlers
   floaterColor.oninput = (e) => {
       paintColor.set(e.target.value);
-      // Assuming Linear Tone Mapping, we treat inputs as SRGB and convert to Linear for storage
+      // Convert to Linear for storage/math
       paintColor.convertSRGBToLinear();
       layers[currentLayerIndex].color.copy(paintColor);
       document.getElementById('paintColor').value = e.target.value;
