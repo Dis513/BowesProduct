@@ -121,19 +121,19 @@
   #panelToggle { display: none; }
   }
 
-  /* Mobile Floating Toggle (Controls) */
+  /* Mobile Floating Toggle (Controls) - MOVED TO RIGHT */
   #mobilePanelToggle {
   position: fixed;
   bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 160px;
+  right: 20px;
+  transform: translateX(0);
+  width: 140px;
   height: 44px;
   background: rgba(2, 6, 23, 0.9);
   border: 1px solid #60a5fa;
   border-radius: 22px;
   color: #60a5fa;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   display: flex; 
   align-items: center;
@@ -146,7 +146,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   }
-  #mobilePanelToggle:active { transform: translateX(-50%) scale(0.96); }
+  #mobilePanelToggle:active { transform: scale(0.96); }
   #mobilePanelToggle::before {
   content: '';
   position: absolute;
@@ -162,15 +162,16 @@
   @media (min-width: 901px) { #mobilePanelToggle { display: none; } }
   @media (max-width: 900px) { #mobilePanelToggle { display: flex; } }
 
-  /* Floating Controls (Paint/Eyedropper/Color) */
+  /* Floating Controls (Paint/Eyedropper/Color) - MOVED TO RIGHT */
   #floatingControls {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px;
   display: flex;
   gap: 10px;
   z-index: 1150;
   pointer-events: none;
+  flex-direction: column-reverse;
   }
   .floater {
   pointer-events: auto;
@@ -209,7 +210,15 @@
   #floaterEye.active { color: #10b981; border-color: #10b981; }
 
   /* Logic for showing/hiding floaters */
-  @media (min-width: 901px) { #floatingControls { display: flex; } }
+  @media (min-width: 901px) { 
+    #floatingControls { 
+      display: flex !important; 
+      bottom: 20px;
+      left: 20px;
+      right: auto;
+      flex-direction: row;
+    } 
+  }
   @media (max-width: 900px) {
     .panel.visible ~ #floatingControls { display: none !important; }
     .panel.hidden ~ #floatingControls { display: flex !important; }
@@ -908,9 +917,13 @@
   maskMode = !maskMode;
   maskToggle.classList.toggle('active', maskMode);
   clearMaskBtn.style.display = maskMode ? 'block' : 'none';
+  // FIX: Disable orbit controls when mask mode is active
+  controls.enabled = !maskMode && !paintModeActive && !eyedropperActive;
+  
   if(maskMode) {
     maskToggle.textContent = 'Exit Mask Mode';
     if(paintModeActive) setPaintMode(false);
+    if(eyedropperActive) setEyedropperMode(false);
   } else {
     maskToggle.textContent = 'Mask Mode (Paint Invisibility)';
   }
@@ -1128,7 +1141,8 @@
       const btn = document.getElementById('paintToggle');
       btn.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
       btn.classList.toggle('active', paintModeActive);
-      controls.enabled = !paintModeActive && !eyedropperActive;
+      // FIX: Disable orbit controls when paint mode is active
+      controls.enabled = !paintModeActive && !maskMode && !eyedropperActive;
       
       if(maskMode) maskToggle.click();
       if(eyedropperActive) setEyedropperMode(false);
@@ -1142,7 +1156,8 @@
       const btn = document.getElementById('eyedropperToggle');
       btn.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Tool';
       btn.classList.toggle('active', eyedropperActive);
-      controls.enabled = !eyedropperActive && !paintModeActive;
+      // FIX: Disable orbit controls when eyedropper is active
+      controls.enabled = !eyedropperActive && !paintModeActive && !maskMode;
       if (!eyedropperActive) hideCursors();
       updateFloaterVisibility();
   }
@@ -1312,7 +1327,7 @@
   link.download = 'retextured_model.glb';
   link.click();
   exportStatus.textContent = 'Exported!';
-  exportStatus.color = '#4ade80';
+  exportStatus.style.color = '#4ade80';
   }, (err) => {
   exportStatus.textContent = 'Export failed';
   exportStatus.color = '#ef4444';
