@@ -152,7 +152,25 @@ if (panel && togglePanelBtn) {
         }
     });
 }
+  // Overlay Paint Mode Toggle Button
+const overlayPaintBtn = document.getElementById('overlayPaintToggle');
+const paintToggle = document.getElementById('paintToggle'); // Your existing paint button in panel
+
+if (overlayPaintBtn && paintToggle) {
+    overlayPaintBtn.addEventListener('click', () => {
+        paintToggle.click(); // Triggers your existing paint mode logic
+    });
+}
+
+// Overlay Hide Panel Button (uses the same toggle as above)
+const overlayHideBtn = document.getElementById('overlayHidePanel');
+if (overlayHideBtn && togglePanelBtn) {
+    overlayHideBtn.addEventListener('click', () => {
+        togglePanelBtn.click();
+    });
+}
   </div>
 </model-viewer>
+
 
 
