@@ -279,37 +279,6 @@
         padding-bottom: 60px !important;
     }
 }
-    /* Overlay buttons on the 3D viewer */
-#overlayPaintToggle,
-#overlayHidePanel {
-  position: absolute;
-  width: 56px;
-  height: 56px;
-  background: rgba(96, 165, 250, 0.9);
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 1.8rem;
-  cursor: pointer;
-  z-index: 50;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  backdrop-filter: blur(4px);
-}
-
-#overlayPaintToggle {
-  bottom: 100px;
-  right: 30px;
-}
-
-#overlayHidePanel {
-  bottom: 170px;
-  right: 30px;
-}
-
-@media (max-width: 900px) {
-  #overlayPaintToggle { bottom: 140px; }
-  #overlayHidePanel { bottom: 210px; }
-}
   </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -338,16 +307,12 @@
 </header>
 
 <!-- MAIN 3D VIEWER -->
-<="container">
+<div id="container">
   <canvas id="canvas"></canvas>
   <div id="brushCursor"></div>
   <div id="status">Upload a model → Drag to rotate • Activate Paint Mode to paint precisely • Pinch/scroll to zoom</div>
-<button id="overlayPaintToggle" title="Toggle Paint Mode">🎨</button>
-    <button id="overlayHidePanel" title="Hide/Show Controls Panel">🙈</button>
+
   <div class="panel">
-    <button id="togglePanelBtn" style="position: absolute; top: 8px; right: 8px; width: 36px; height: 36px; background: rgba(0,0,0,0.5); border: none; border-radius: 50%; color: white; font-size: 1.2rem; cursor: pointer; z-index: 20;">
-  ✕
-</button>
     <h2>Model</h2>
     <div class="control-group">
       <label for="uploadModel">Upload GLB/GLTF</label>
@@ -987,7 +952,7 @@
             // Trigger download
             link.click();
             
-            // Clean upF
+            // Clean up
             setTimeout(() => {
               document.body.removeChild(link);
               URL.revokeObjectURL(link.href);
@@ -1045,6 +1010,4 @@
 
 </body>
 </html>
-
-
 
