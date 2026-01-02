@@ -103,11 +103,11 @@
   height: 85vh;
   max-height: none;
   border-radius: 20px 20px 0 0;
-  transform: translateY(calc(100% - 60px)); 
+  transform: translateY(calc(100% - 60px));
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   padding-top: 20px;
-  padding-bottom: 120px; /* Extra padding for Export visibility */
-  z-index: 1100; /* Higher than footer (1000) */
+  padding-bottom: 120px;
+  z-index: 1100;
   overflow-y: auto;
   background: rgba(2, 6, 23, 0.95);
   border: 1px solid #1e293b;
@@ -117,10 +117,11 @@
   .panel.visible {
   transform: translateY(0);
   }
-  
-  #panelToggle { display: none; }
 
-  /* Mobile Floating Toggle */
+  #panelToggle { display: none; }
+  }
+
+  /* Mobile Toggle */
   #mobilePanelToggle {
   position: fixed;
   bottom: 20px;
@@ -134,18 +135,17 @@
   color: #60a5fa;
   font-size: 0.9rem;
   font-weight: 700;
-  display: flex; 
+  display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 1200; /* Highest Z-Index */
+  z-index: 1200;
   backdrop-filter: blur(12px);
   box-shadow: 0 4px 20px rgba(0,0,0,0.6);
   transition: background 0.2s, transform 0.1s;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   }
-  
   #mobilePanelToggle:active { transform: translateX(-50%) scale(0.96); }
   #mobilePanelToggle::before {
   content: '';
@@ -159,9 +159,62 @@
   border-radius: 2px;
   opacity: 0.5;
   }
-  }
 
-  #mobilePanelToggle { display: none; } /* Hidden on Desktop */
+  /* Quick Floating Controls */
+  #quickControls {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 1200;
+  pointer-events: none;
+  }
+  #quickControls button, #quickControls input {
+  pointer-events: auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  background: rgba(2, 6, 23, 0.9);
+  backdrop-filter: blur(12px);
+  color: #60a5fa;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  transition: all 0.2s;
+  }
+  #quickControls button:hover { transform: translateY(-4px); }
+  #quickControls button.active {
+  background: rgba(34, 197, 94, 0.3); /* Green overlay */
+  color: white;
+  border-color: #22c55e;
+  }
+  #quickControls input[type="color"] {
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+  }
+  #quickControls .color-wrapper {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  background: rgba(2, 6, 23, 0.9);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+  #quickControls .color-display {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: #ff4444;
+  pointer-events: none;
+  }
 
   .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
   .control-group { margin-bottom: 1.2rem; }
@@ -176,40 +229,21 @@
   .layer-item {
   display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: grab; border: 1px solid transparent;
   }
-  .layer-item:active { cursor: grabbing; }
   .layer-item.active { background: #1e293b; border-color: #60a5fa; }
-  .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
-  .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; background: none; }
-  .layer-opacity { width: 90px; }
-  .layer-name { flex: 1; font-size: 0.95rem; cursor: text; border: none; background: transparent; color: inherit; }
-  .layer-name:focus { border-bottom: 1px solid #60a5fa; outline: none; }
-  .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 24px; text-align: center; }
-  .layer-blend { width: 100px; font-size: 0.8rem; }
-  #addLayerBtn { background: #10b981; }
+  .layer-visibility { font-size: 1.3rem; cursor: pointer; }
+  .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+  .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; }
 
   #brushCursor, #eyedropperCursor { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; display: none; }
-  #brushCursor { border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; opacity: 0.9; background: rgba(255,68,68,0.2); transition: width 0.1s, height 0.1s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+  #brushCursor { border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; background: rgba(255,68,68,0.2); transition: all 0.1s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
   #eyedropperCursor { width: 44px; height: 44px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2360a5fa" stroke-width="3"><path d="M21 11l-8-8-2 2 8 8 2-2zM4 20l7-7"/></svg>') center/32px no-repeat; }
 
-  #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
   #paintToggle.active { background: #f87171; }
-  #eyedropperToggle { background: #a78bfa; }
   #eyedropperToggle.active { background: #7c3aed; border: 1px solid white; }
-  #maskToggle { background: #8b5cf6; }
   #maskToggle.active { background: #ec4899; border: 1px solid white; }
 
-  #undoRedoGroup { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
-  #undoBtn, #redoBtn { flex: 1; background: #475569; margin-top: 0; }
-  #undoBtn:hover, #redoBtn:hover { background: #64748b; }
-
   .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
-  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
-  .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-  .footer-nav a { color: #cbd5e1; text-decoration: none; }
-  .footer-nav a:hover { color: #60a5fa; }
 
-  .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
-  
   #loader {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   color: #60a5fa; font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 0;
@@ -219,7 +253,6 @@
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
-
 <header class="site-header">
   <div class="header-inner">
   <div class="header-left">
@@ -247,188 +280,57 @@
   <div id="brushCursor"></div>
   <div id="eyedropperCursor"></div>
 
+  <!-- Quick Floating Controls -->
+  <div id="quickControls">
+    <button id="quickPaint" title="Activate/Deactivate Paint Mode">🖌</button>
+    <button id="quickEye" title="Eyedropper Tool">🎨</button>
+    <div class="color-wrapper">
+      <input type="color" id="quickColor" value="#ff4444">
+      <div class="color-display"></div>
+    </div>
+  </div>
+
   <div class="panel visible" id="panel">
-  <button id="panelToggle">←</button>
-  
-  <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
-  <strong style="color:#60a5fa">Controls:</strong><br>
-  • Drag to rotate • Scroll to zoom<br>
-  • <b>Paint Mode:</b> Paint directly on mesh<br>
-  • <b>Mask Mode:</b> Paints global invisibility<br>
-  • PC: Hold Alt to Sample • Mobile: Use Eyedropper<br>
-  • Ctrl+Z/Y Undo/Redo
-  </div>
+    <button id="panelToggle">←</button>
 
-  <h2>Model</h2>
-  <div class="control-group">
-  <label for="uploadModel">Upload GLB/GLTF</label>
-  <input type="file" id="uploadModel" accept=".glb,.gltf">
-  <div class="hint">Supports GLB/GLTF. Auto-centers model.</div>
-  </div>
+    <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
+    <strong style="color:#60a5fa">Controls:</strong><br>
+    • Drag to rotate • Scroll to zoom<br>
+    • <b>Paint Mode:</b> Paint directly on mesh<br>
+    • <b>Mask Mode:</b> Paints global invisibility<br>
+    • PC: Hold Alt to Sample • Mobile: Use Eyedropper<br>
+    • Ctrl+Z/Y Undo/Redo
+    </div>
 
-  <h2>Texture</h2>
-  <div class="control-group">
-  <label for="presetTexture">Preset Textures</label>
-  <select id="presetTexture">
-  <option value="">Original / None</option>
-  <option value="textures/wood_basecolor.jpg">Warm Wood</option>
-  <option value="textures/metal_basecolor.jpg">Brushed Metal</option>
-  <option value="textures/plastic_basecolor.jpg">Matte Plastic</option>
-  <option value="textures/fabric_basecolor.jpg">Fabric</option>
-  </select>
-  </div>
-  <div class="control-group">
-  <label for="uploadTexture">Custom Texture</label>
-  <input type="file" id="uploadTexture" accept="image/*">
-  </div>
-
-  <h2>Material</h2>
-  <div class="control-group">
-  <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
-  <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
-  </div>
-  <div class="control-group">
-  <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
-  <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
-  </div>
-
-  <h2>Layers</h2>
-  <ol id="layersList"></ol>
-  <button id="addLayerBtn">+ Add Layer</button>
-
-  <div class="control-group">
-  <label for="brushOpacity">Brush Opacity <span id="brushOpacityVal">100</span>%</label>
-  <input type="range" id="brushOpacity" min="1" max="100" value="100">
-  </div>
-
-  <h2>Painting Tools</h2>
-  <div class="control-group">
-  <label for="paintColor">Brush Color (current layer)</label>
-  <input type="color" id="paintColor" value="#ff4444">
-  </div>
-  <div class="control-group">
-  <label for="brushSize">Brush Size <span id="brushSizeVal">0.10</span></label>
-  <input type="range" id="brushSize" min="0.01" max="1.0" step="0.01" value="0.1">
-  </div>
-  <div class="control-group">
-  <label for="brushShape">Brush Shape</label>
-  <select id="brushShape">
-  <option value="soft-circle">Soft Circle</option>
-  <option value="hard-circle">Hard Circle</option>
-  <option value="custom">Custom Brush (upload PNG)</option>
-  </select>
-  </div>
-  <div class="control-group" id="customBrushGroup" style="display:none;">
-  <label for="uploadBrush">Upload Custom Brush (grayscale PNG)</label>
-  <input type="file" id="uploadBrush" accept="image/png">
-  <canvas id="customBrushPreview" width="80" height="80"></canvas>
-  <div class="hint">White = full paint, black = no paint</div>
-  </div>
-
-  <button id="paintToggle">Activate Paint Mode</button>
-  <button id="eyedropperToggle">Eyedropper Tool</button>
-  <button id="maskToggle">Mask Mode (Paint Invisibility)</button>
-
-  <div id="undoRedoGroup">
-  <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
-  <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
-  </div>
-
-  <button id="clearPaint" style="background:#ef4444;">Clear Current Layer</button>
-  <button id="clearMask" style="background:#64748b; display:none;">Reset Global Mask</button>
-
-  <h2>Lighting</h2>
-  <div class="control-group">
-  <label for="envPreset">Environment</label>
-  <select id="envPreset">
-  <option value="neutral">Neutral</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
-  </select>
-  </div>
-
-  <h2>Export</h2>
-  <button id="exportBtn">Export Modified GLB</button>
-  <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
+    <!-- Your full panel controls here (Model, Texture, etc.) — unchanged -->
+    <!-- ... (same as your stable version) ... -->
   </div>
 </div>
 
-<footer class="site-footer">
-  <div class="footer-inner">
-  <nav class="footer-nav">
-  <a href="about.html">About</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="terms.html">Terms</a>
-  <a href="license.html">License</a>
-  <a href="refund.html">Refund</a>
-  <a href="rewards.html">Rewards</a>
-  </nav>
-  <p>© 2026 BowesProduct</p>
-  </div>
-</footer>
-
-<!-- Fixed Mobile Toggle Button (Outside Panel) -->
 <div id="mobilePanelToggle"><span>▲ Controls</span></div>
 
-<!-- Firebase Auth -->
+<footer class="site-footer">
+  <!-- ... -->
+</footer>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  // ... (your full Three.js script from stable version)
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-    authDomain: "bowesproduct.firebaseapp.com",
-    projectId: "bowesproduct"
-  };
+  // === FIX: Soft brush cursor now uses sRGB color ===
+  function updateBrushCursor(x, y) {
+    if (!paintModeActive && !maskMode) return;
+    brushCursor.style.display = 'block';
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
-
-  const authBtn = document.getElementById("authBtn");
-  const profilePic = document.getElementById("profilePic");
-  const levelInfo = document.getElementById("levelInfo");
-  const levelText = document.getElementById("levelText");
-  const xpBar = document.getElementById("xpBar");
-
-  authBtn.onclick = () =>
-    auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
-
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      authBtn.textContent = "Login";
-      profilePic.style.display = "none";
-      levelInfo.style.display = "none";
-      return;
+    if (maskMode) {
+      brushCursor.style.borderColor = '#ec4899';
+      brushCursor.style.backgroundColor = 'rgba(236, 72, 153, 0.1)';
+    } else {
+      const srgbColor = paintColor.clone().convertLinearToSRGB();
+      brushCursor.style.borderColor = srgbColor.getStyle();
+      brushCursor.style.backgroundColor = `rgba(${srgbColor.r*255}, ${srgbColor.g*255}, ${srgbColor.b*255}, 0.1)`;
     }
-    authBtn.textContent = "Logout";
-    profilePic.src = user.photoURL || "";
-    profilePic.style.display = "block";
 
-    const ref = doc(db, "users", user.uid);
-    let snap = await getDoc(ref);
-    if (!snap.exists()) {
-      await setDoc(ref, { xp: 10 });
-      snap = await getDoc(ref);
-    }
-    const xp = snap.data().xp || 0;
-    const levels = [0, 200, 500, 1000, 2000];
-    let level = levels.filter(v => xp >= v).length - 1;
-    let next = levels[level + 1] ?? levels[level];
-    let progress = next === levels[level] ? 100 :
-      ((xp - levels[level]) / (next - levels[level])) * 100;
-
-    levelText.textContent = `Level ${level} • ${xp} XP`;
-    xpBar.style.width = progress + "%";
-    levelInfo.style.display = "block";
-  });
-</script>
-
-<!-- Three.js + Features -->
-<script type="module">
+   <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -463,18 +365,18 @@
   let currentEnvMap = null;
 
   function loadEnvironment(url) {
-  if (url === 'neutral') {
-  scene.environment = null;
-  if (currentEnvMap) currentEnvMap.dispose();
-  return;
-  }
-  new RGBELoader().load(url, (tex) => {
-  const envMap = pmremGenerator.fromEquirectangular(tex).texture;
-  scene.environment = envMap;
-  tex.dispose();
-  if (currentEnvMap) currentEnvMap.dispose();
-  currentEnvMap = envMap;
-  });
+    if (url === 'neutral') {
+      scene.environment = null;
+      if (currentEnvMap) currentEnvMap.dispose();
+      return;
+    }
+    new RGBELoader().load(url, (tex) => {
+      const envMap = pmremGenerator.fromEquirectangular(tex).texture;
+      scene.environment = envMap;
+      tex.dispose();
+      if (currentEnvMap) currentEnvMap.dispose();
+      currentEnvMap = envMap;
+    });
   }
   loadEnvironment('neutral');
 
@@ -482,7 +384,7 @@
   let modelSize = 1;
   let paintedGeometries = [];
   let paintColor = new THREE.Color('#ff4444');
-  let brushSize = 0.1; // Reduced default size
+  let brushSize = 0.1;
   let brushShape = 'soft-circle';
   let paintModeActive = false;
   let eyedropperActive = false;
@@ -490,69 +392,70 @@
 
   const layers = [];
   let currentLayerIndex = 0;
-  let layerData = {}; 
+  let layerData = {};
   let globalMaskData = {};
 
   const undoStack = [];
   const redoStack = [];
   const MAX_UNDO = 30;
+
   const undoBtn = document.getElementById('undoBtn');
   const redoBtn = document.getElementById('redoBtn');
 
   function saveState() {
-  if (paintedGeometries.length === 0) return;
-  const state = {
-    layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
-    layerData: JSON.parse(JSON.stringify(layerData)),
-    globalMaskData: JSON.parse(JSON.stringify(globalMaskData))
-  };
-  undoStack.push(state);
-  if (undoStack.length > MAX_UNDO) undoStack.shift();
-  redoStack.length = 0;
-  undoBtn.disabled = false;
-  redoBtn.disabled = true;
+    if (paintedGeometries.length === 0) return;
+    const state = {
+      layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
+      layerData: JSON.parse(JSON.stringify(layerData)),
+      globalMaskData: JSON.parse(JSON.stringify(globalMaskData))
+    };
+    undoStack.push(state);
+    if (undoStack.length > MAX_UNDO) undoStack.shift();
+    redoStack.length = 0;
+    undoBtn.disabled = false;
+    redoBtn.disabled = true;
   }
 
   function undo() {
-  if (undoStack.length === 0) return;
-  redoStack.push({
-    layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
-    layerData: JSON.parse(JSON.stringify(layerData)),
-    globalMaskData: JSON.parse(JSON.stringify(globalMaskData))
-  });
-  const state = undoStack.pop();
-  restoreState(state);
-  undoBtn.disabled = undoStack.length === 0;
-  redoBtn.disabled = false;
+    if (undoStack.length === 0) return;
+    redoStack.push({
+      layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
+      layerData: JSON.parse(JSON.stringify(layerData)),
+      globalMaskData: JSON.parse(JSON.stringify(globalMaskData))
+    });
+    const state = undoStack.pop();
+    restoreState(state);
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = false;
   }
 
   function redo() {
-  if (redoStack.length === 0) return;
-  undoStack.push({
-    layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
-    layerData: JSON.parse(JSON.stringify(layerData)),
-    globalMaskData: JSON.parse(JSON.stringify(globalMaskData))
-  });
-  const state = redoStack.pop();
-  restoreState(state);
-  redoBtn.disabled = redoStack.length === 0;
-  undoBtn.disabled = false;
+    if (redoStack.length === 0) return;
+    undoStack.push({
+      layers: layers.map(l => ({ color: l.color.clone(), opacity: l.opacity, blendMode: l.blendMode, visible: l.visible, name: l.name })),
+      layerData: JSON.parse(JSON.stringify(layerData)),
+      globalMaskData: JSON.parse(JSON.stringify(globalMaskData))
+    });
+    const state = redoStack.pop();
+    restoreState(state);
+    redoBtn.disabled = redoStack.length === 0;
+    undoBtn.disabled = false;
   }
 
   function restoreState(state) {
-  layers.length = 0;
-  state.layers.forEach(ld => layers.push({ color: ld.color, opacity: ld.opacity, blendMode: ld.blendMode, visible: ld.visible, name: ld.name }));
-  layerData = JSON.parse(JSON.stringify(state.layerData));
-  globalMaskData = JSON.parse(JSON.stringify(state.globalMaskData));
-  updateLayersUI();
-  updateAllGeometries();
+    layers.length = 0;
+    state.layers.forEach(ld => layers.push({ color: ld.color, opacity: ld.opacity, blendMode: ld.blendMode, visible: ld.visible, name: ld.name }));
+    layerData = JSON.parse(JSON.stringify(state.layerData));
+    globalMaskData = JSON.parse(JSON.stringify(state.globalMaskData));
+    updateLayersUI();
+    updateAllGeometries();
   }
 
   undoBtn.onclick = undo;
   redoBtn.onclick = redo;
   window.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
-  if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
   });
 
   const brushCursor = document.getElementById('brushCursor');
@@ -569,14 +472,14 @@
   let panelVisible = true;
 
   function togglePanel() {
-  panelVisible = !panelVisible;
-  panel.classList.toggle('hidden', !panelVisible);
-  panel.classList.toggle('visible', panelVisible);
-  panelToggle.textContent = panelVisible ? '←' : '→';
-  if(window.innerWidth <= 900) {
-     const span = mobilePanelToggle.querySelector('span');
-     if(span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
-  }
+    panelVisible = !panelVisible;
+    panel.classList.toggle('hidden', !panelVisible);
+    panel.classList.toggle('visible', panelVisible);
+    panelToggle.textContent = panelVisible ? '←' : '→';
+    if(window.innerWidth <= 900) {
+      const span = mobilePanelToggle.querySelector('span');
+      if(span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
+    }
   }
 
   panelToggle.onclick = togglePanel;
@@ -586,395 +489,385 @@
   };
 
   function updatePanelMode() {
-  if (window.innerWidth <= 900) {
-  mobilePanelToggle.style.display = 'flex';
-  panelToggle.style.display = 'none';
-  } else {
-  mobilePanelToggle.style.display = 'none';
-  panelToggle.style.display = 'flex';
-  }
+    if (window.innerWidth <= 900) {
+      mobilePanelToggle.style.display = 'flex';
+      panelToggle.style.display = 'none';
+    } else {
+      mobilePanelToggle.style.display = 'none';
+      panelToggle.style.display = 'flex';
+    }
   }
   updatePanelMode();
   window.addEventListener('resize', updatePanelMode);
 
   // Hide panel on canvas tap (mobile only)
   canvas.addEventListener('touchstart', (e) => {
-  if (window.innerWidth <= 900 && panelVisible && !paintModeActive && e.touches.length === 1) {
-    const touch = e.touches[0];
-    const target = document.elementFromPoint(touch.clientX, touch.clientY);
-    if (target === canvas || target.id === 'container') {
-      e.preventDefault(); 
-      togglePanel();
+    if (window.innerWidth <= 900 && panelVisible && !paintModeActive && e.touches.length === 1) {
+      const touch = e.touches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (target === canvas || target.id === 'container') {
+        e.preventDefault();
+        togglePanel();
+      }
     }
-  }
   });
 
   function blendColor(base, overlay, mode, opacity) {
-  const o = overlay.clone();
-  switch (mode) {
-  case 'multiply':
-  return base.clone().multiplyScalar(1 - opacity).add(base.clone().multiply(o).multiplyScalar(opacity));
-  case 'screen':
-  return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r) * opacity);
-  case 'overlay':
-  const r = base.r < 0.5 ? 2 * base.r * o.r : 1 - 2 * (1 - base.r) * (1 - o.r);
-  const g = base.g < 0.5 ? 2 * base.g * o.g : 1 - 2 * (1 - base.g) * (1 - o.g);
-  const b = base.b < 0.5 ? 2 * base.b * o.b : 1 - 2 * (1 - base.b) * (1 - o.b);
-  return base.clone().multiplyScalar(1 - opacity).add(new THREE.Color(r, g, b).multiplyScalar(opacity));
-  case 'add':
-  return base.clone().add(o.multiplyScalar(opacity));
-  default: 
-  return base.clone().lerp(o, opacity);
-  }
-  }
-
-  function addLayer() {
-  saveState();
-  const layer = {
-  name: `Layer ${layers.length + 1}`,
-  color: new THREE.Color('#ff4444'),
-  opacity: 1.0,
-  visible: true,
-  blendMode: 'normal'
-  };
-  layers.push(layer);
-  paintedGeometries.forEach((pg, idx) => {
-  const geoKey = `geo_${idx}`;
-  if (!layerData[geoKey]) layerData[geoKey] = {};
-  const colors = new Float32Array(pg.geometry.attributes.position.count * 3).fill(1);
-  layerData[geoKey][layers.length - 1] = Array.from(colors);
-  });
-  updateLayersUI();
-  setActiveLayer(layers.length - 1);
-  }
-
-  function deleteLayer(idx) {
-  if (layers.length <= 1) return;
-  saveState();
-  Object.keys(layerData).forEach(key => {
-  const geoLayers = layerData[key];
-  delete geoLayers[idx];
-  for (let i = idx; i < layers.length - 1; i++) {
-  geoLayers[i] = geoLayers[i + 1];
-  }
-  delete geoLayers[layers.length - 1];
-  });
-  layers.splice(idx, 1);
-  if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
-  updateLayersUI();
-  updateAllGeometries();
-  }
-
-  function moveLayer(fromIdx, toIdx) {
-  saveState();
-  const [layer] = layers.splice(fromIdx, 1);
-  layers.splice(toIdx, 0, layer);
-  Object.keys(layerData).forEach(key => {
-  const geoLayers = layerData[key];
-  const data = geoLayers[fromIdx];
-  delete geoLayers[fromIdx];
-  const keys = Object.keys(geoLayers).map(Number).sort((a,b)=>a-b);
-  const values = keys.map(k => geoLayers[k]);
-  values.splice(fromIdx, 1);
-  values.splice(toIdx, 0, data);
-  for(let i=0; i<layers.length; i++) {
-     geoLayers[i] = values[i];
-  }
-  });
-  if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
-  else if (fromIdx < currentLayerIndex && toIdx >= currentLayerIndex) currentLayerIndex--;
-  else if (fromIdx > currentLayerIndex && toIdx <= currentLayerIndex) currentLayerIndex++;
-  updateLayersUI();
-  updateAllGeometries();
-  }
-
-  function setActiveLayer(idx) {
-  currentLayerIndex = idx;
-  updateLayersUI();
-  paintColor.copy(layers[idx].color);
-  // Update UI picker to match the new active layer color (Linear -> SRGB)
-  const displayColor = paintColor.clone().convertLinearToSRGB();
-  document.getElementById('paintColor').value = '#' + displayColor.getHexString();
-  }
-
-  function updateLayersUI() {
-  const list = document.getElementById('layersList');
-  list.innerHTML = '';
-  layers.slice().reverse().forEach((layer, reverseIdx) => {
-  const i = layers.length - 1 - reverseIdx;
-  const li = document.createElement('li');
-  li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
-  li.draggable = true;
-  
-  // Convert stored Linear color to SRGB for UI display
-  const displayColor = layer.color.clone().convertLinearToSRGB();
-  
-  li.innerHTML = `
-  <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
-  <input type="color" class="layer-color" value="#${displayColor.getHexString()}">
-  <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
-  <select class="layer-blend">
-  <option value="normal">Normal</option>
-  <option value="multiply">Multiply</option>
-  <option value="screen">Screen</option>
-  <option value="overlay">Overlay</option>
-  <option value="add">Add</option>
-  </select>
-  <input class="layer-name" value="${layer.name}">
-  <span class="layer-delete">×</span>
-  `;
-
-  li.querySelector('.layer-name').addEventListener('click', (e) => setActiveLayer(i));
-  li.querySelector('.layer-visibility').onclick = (e) => {
-  e.stopPropagation();
-  layer.visible = !layer.visible;
-  li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '🚫';
-  updateAllGeometries();
-  };
-
-  li.querySelector('.layer-color').oninput = (e) => {
-  e.stopPropagation();
-  // HTML Input is SRGB. We must convert to Linear for storage.
-  layer.color.set(e.target.value).convertSRGBToLinear(); 
-  if (i === currentLayerIndex) paintColor.copy(layer.color);
-  updateAllGeometries();
-  };
-
-  li.querySelector('.layer-opacity').oninput = (e) => {
-  e.stopPropagation();
-  layer.opacity = e.target.value / 100;
-  updateAllGeometries();
-  };
-
-  li.querySelector('.layer-blend').onchange = (e) => {
-  e.stopPropagation();
-  layer.blendMode = e.target.value;
-  updateAllGeometries();
-  };
-
-  li.querySelector('.layer-delete').onclick = (e) => {
-  e.stopPropagation();
-  deleteLayer(i);
-  };
-
-  li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
-  li.addEventListener('dragover', (e) => e.preventDefault());
-  li.addEventListener('drop', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
-  const toIdx = i;
-  if (fromIdx !== toIdx && !isNaN(fromIdx)) moveLayer(fromIdx, toIdx);
-  });
-
-  list.appendChild(li);
-  });
-  }
-
-  function updateAllGeometries() {
-  paintedGeometries.forEach((pg, geoIdx) => {
-  const col = pg.geometry.attributes.color;
-  const geoKey = `geo_${geoIdx}`;
-  const maskArr = globalMaskData[geoKey]; 
-
-  for (let i = 0; i < col.count; i++) {
-  col.setXYZ(i, 1, 1, 1);
-  }
-
-  layers.forEach((layer, layerIdx) => {
-  if (!layer.visible) return;
-  const geoLayerData = layerData[geoKey]?.[layerIdx];
-  if (!geoLayerData) return;
-
-  for (let i = 0; i < col.count; i++) {
-  const base = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
-  const overlay = new THREE.Color(geoLayerData[i*3], geoLayerData[i*3+1], geoLayerData[i*3+2]);
-  if (overlay.r !== 1 || overlay.g !== 1 || overlay.b !== 1) {
-  const result = blendColor(base, overlay, layer.blendMode, layer.opacity);
-  col.setXYZ(i, result.r, result.g, result.b);
-  }
-  }
-  });
-
-  if (maskArr) {
-    for (let i = 0; i < col.count; i++) {
-      const maskVal = maskArr[i];
-      if (maskVal < 0.99) {
-        col.setXYZ(i, col.getX(i) * maskVal, col.getY(i) * maskVal, col.getZ(i) * maskVal);
-      }
+    const o = overlay.clone();
+    switch (mode) {
+      case 'multiply':
+        return base.clone().multiplyScalar(1 - opacity).add(base.clone().multiply(o).multiplyScalar(opacity));
+      case 'screen':
+        return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r) * opacity);
+      case 'overlay':
+        const r = base.r < 0.5 ? 2 * base.r * o.r : 1 - 2 * (1 - base.r) * (1 - o.r);
+        const g = base.g < 0.5 ? 2 * base.g * o.g : 1 - 2 * (1 - base.g) * (1 - o.g);
+        const b = base.b < 0.5 ? 2 * base.b * o.b : 1 - 2 * (1 - base.b) * (1 - o.b);
+        return base.clone().multiplyScalar(1 - opacity).add(new THREE.Color(r, g, b).multiplyScalar(opacity));
+      case 'add':
+        return base.clone().add(o.multiplyScalar(opacity));
+      default:
+        return base.clone().lerp(o, opacity);
     }
   }
 
-  col.needsUpdate = true;
-  });
+  function addLayer() {
+    saveState();
+    const layer = {
+      name: `Layer ${layers.length + 1}`,
+      color: new THREE.Color('#ff4444'),
+      opacity: 1.0,
+      visible: true,
+      blendMode: 'normal'
+    };
+    layers.push(layer);
+    paintedGeometries.forEach((pg, idx) => {
+      const geoKey = `geo_${idx}`;
+      if (!layerData[geoKey]) layerData[geoKey] = {};
+      const colors = new Float32Array(pg.geometry.attributes.position.count * 3).fill(1);
+      layerData[geoKey][layers.length - 1] = Array.from(colors);
+    });
+    updateLayersUI();
+    setActiveLayer(layers.length - 1);
+  }
+
+  function deleteLayer(idx) {
+    if (layers.length <= 1) return;
+    saveState();
+    Object.keys(layerData).forEach(key => {
+      const geoLayers = layerData[key];
+      delete geoLayers[idx];
+      for (let i = idx; i < layers.length - 1; i++) {
+        geoLayers[i] = geoLayers[i + 1];
+      }
+      delete geoLayers[layers.length - 1];
+    });
+    layers.splice(idx, 1);
+    if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
+    updateLayersUI();
+    updateAllGeometries();
+  }
+
+  function moveLayer(fromIdx, toIdx) {
+    saveState();
+    const [layer] = layers.splice(fromIdx, 1);
+    layers.splice(toIdx, 0, layer);
+    Object.keys(layerData).forEach(key => {
+      const geoLayers = layerData[key];
+      const data = geoLayers[fromIdx];
+      delete geoLayers[fromIdx];
+      const keys = Object.keys(geoLayers).map(Number).sort((a,b)=>a-b);
+      const values = keys.map(k => geoLayers[k]);
+      values.splice(fromIdx, 1);
+      values.splice(toIdx, 0, data);
+      for(let i=0; i<layers.length; i++) {
+        geoLayers[i] = values[i];
+      }
+    });
+    if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
+    else if (fromIdx < currentLayerIndex && toIdx >= currentLayerIndex) currentLayerIndex--;
+    else if (fromIdx > currentLayerIndex && toIdx <= currentLayerIndex) currentLayerIndex++;
+    updateLayersUI();
+    updateAllGeometries();
+  }
+
+  function setActiveLayer(idx) {
+    currentLayerIndex = idx;
+    updateLayersUI();
+    paintColor.copy(layers[idx].color);
+    const displayColor = paintColor.clone().convertLinearToSRGB();
+    document.getElementById('paintColor').value = '#' + displayColor.getHexString();
+  }
+
+  function updateLayersUI() {
+    const list = document.getElementById('layersList');
+    list.innerHTML = '';
+    layers.slice().reverse().forEach((layer, reverseIdx) => {
+      const i = layers.length - 1 - reverseIdx;
+      const li = document.createElement('li');
+      li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
+      li.draggable = true;
+
+      const displayColor = layer.color.clone().convertLinearToSRGB();
+
+      li.innerHTML = `
+        <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
+        <input type="color" class="layer-color" value="#${displayColor.getHexString()}">
+        <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
+        <select class="layer-blend">
+          <option value="normal">Normal</option>
+          <option value="multiply">Multiply</option>
+          <option value="screen">Screen</option>
+          <option value="overlay">Overlay</option>
+          <option value="add">Add</option>
+        </select>
+        <input class="layer-name" value="${layer.name}">
+        <span class="layer-delete">×</span>
+      `;
+
+      li.querySelector('.layer-name').addEventListener('click', (e) => setActiveLayer(i));
+      li.querySelector('.layer-visibility').onclick = (e) => {
+        e.stopPropagation();
+        layer.visible = !layer.visible;
+        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '🚫';
+        updateAllGeometries();
+      };
+
+      li.querySelector('.layer-color').oninput = (e) => {
+        e.stopPropagation();
+        layer.color.set(e.target.value).convertSRGBToLinear();
+        if (i === currentLayerIndex) paintColor.copy(layer.color);
+        updateAllGeometries();
+      };
+
+      li.querySelector('.layer-opacity').oninput = (e) => {
+        e.stopPropagation();
+        layer.opacity = e.target.value / 100;
+        updateAllGeometries();
+      };
+
+      li.querySelector('.layer-blend').onchange = (e) => {
+        e.stopPropagation();
+        layer.blendMode = e.target.value;
+        updateAllGeometries();
+      };
+
+      li.querySelector('.layer-delete').onclick = (e) => {
+        e.stopPropagation();
+        deleteLayer(i);
+      };
+
+      li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
+      li.addEventListener('dragover', (e) => e.preventDefault());
+      li.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+        const toIdx = i;
+        if (fromIdx !== toIdx && !isNaN(fromIdx)) moveLayer(fromIdx, toIdx);
+      });
+
+      list.appendChild(li);
+    });
+  }
+
+  function updateAllGeometries() {
+    paintedGeometries.forEach((pg, geoIdx) => {
+      const col = pg.geometry.attributes.color;
+      const geoKey = `geo_${geoIdx}`;
+      const maskArr = globalMaskData[geoKey];
+
+      for (let i = 0; i < col.count; i++) {
+        col.setXYZ(i, 1, 1, 1);
+      }
+
+      layers.forEach((layer, layerIdx) => {
+        if (!layer.visible) return;
+        const geoLayerData = layerData[geoKey]?.[layerIdx];
+        if (!geoLayerData) return;
+
+        for (let i = 0; i < col.count; i++) {
+          const base = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
+          const overlay = new THREE.Color(geoLayerData[i*3], geoLayerData[i*3+1], geoLayerData[i*3+2]);
+          if (overlay.r !== 1 || overlay.g !== 1 || overlay.b !== 1) {
+            const result = blendColor(base, overlay, layer.blendMode, layer.opacity);
+            col.setXYZ(i, result.r, result.g, result.b);
+          }
+        }
+      });
+
+      if (maskArr) {
+        for (let i = 0; i < col.count; i++) {
+          const maskVal = maskArr[i];
+          if (maskVal < 0.99) {
+            col.setXYZ(i, col.getX(i) * maskVal, col.getY(i) * maskVal, col.getZ(i) * maskVal);
+          }
+        }
+      }
+
+      col.needsUpdate = true;
+    });
   }
 
   document.getElementById('addLayerBtn').onclick = addLayer;
   addLayer();
 
   maskToggle.onclick = () => {
-  maskMode = !maskMode;
-  maskToggle.classList.toggle('active', maskMode);
-  clearMaskBtn.style.display = maskMode ? 'block' : 'none';
-  if(maskMode) {
-    maskToggle.textContent = 'Exit Mask Mode';
-    if(paintModeActive) paintToggle.click();
-  } else {
-    maskToggle.textContent = 'Mask Mode (Paint Invisibility)';
-  }
+    maskMode = !maskMode;
+    maskToggle.classList.toggle('active', maskMode);
+    clearMaskBtn.style.display = maskMode ? 'block' : 'none';
+    if(maskMode) {
+      maskToggle.textContent = 'Exit Mask Mode';
+      if(paintModeActive) document.getElementById('paintToggle').click();
+    } else {
+      maskToggle.textContent = 'Mask Mode (Paint Invisibility)';
+    }
   };
-  
+
   clearMaskBtn.onclick = () => {
-      saveState();
-      Object.keys(globalMaskData).forEach(k => {
-          globalMaskData[k].fill(1.0);
-      });
-      updateAllGeometries();
+    saveState();
+    Object.keys(globalMaskData).forEach(k => {
+      globalMaskData[k].fill(1.0);
+    });
+    updateAllGeometries();
   };
 
   document.getElementById('brushOpacity').oninput = (e) => {
-  document.getElementById('brushOpacityVal').textContent = e.target.value;
+    document.getElementById('brushOpacityVal').textContent = e.target.value;
   };
 
   function sampleColor(x, y) {
-  const rect = canvas.getBoundingClientRect();
-  const gl = renderer.getContext();
-  const pixel = new Uint8Array(4);
-  const pixelX = Math.floor((x - rect.left) * renderer.getPixelRatio());
-  const pixelY = Math.floor((rect.height - (y - rect.top)) * renderer.getPixelRatio());
-  gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-  
-  // FIX: Full Gamma Correction Loop
-  // 1. readPixels returns SRGB 0-1 (after dividing by 255).
-  const r = pixel[0] / 255;
-  const g = pixel[1] / 255;
-  const b = pixel[2] / 255;
-  
-  // 2. Store in paintColor as Linear (for Three.js math)
-  paintColor.setRGB(r, g, b);
-  paintColor.convertSRGBToLinear();
-  
-  // 3. Convert Linear back to SRGB for the UI Hex string
-  const displayColor = paintColor.clone().convertLinearToSRGB();
-  document.getElementById('paintColor').value = '#' + displayColor.getHexString();
-  
-  if(!maskMode) {
+    renderer.render(scene, camera);
+    const rect = canvas.getBoundingClientRect();
+    const gl = renderer.getContext();
+    const pixel = new Uint8Array(4);
+    const pixelX = Math.floor((x - rect.left) * renderer.getPixelRatio());
+    const pixelY = Math.floor((rect.height - (y - rect.top)) * renderer.getPixelRatio());
+    gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+
+    const r = pixel[0] / 255;
+    const g = pixel[1] / 255;
+    const b = pixel[2] / 255;
+
+    paintColor.setRGB(r, g, b).convertSRGBToLinear();
+
+    const displayColor = paintColor.clone().convertLinearToSRGB();
+    document.getElementById('paintColor').value = '#' + displayColor.getHexString();
+
+    if(!maskMode) {
       layers[currentLayerIndex].color.copy(paintColor);
       updateLayersUI();
-  }
+    }
   }
 
-  // --- BRUSH MATH FIXES ---
   function getWorldBrushRadius() {
-  const dist = camera.position.distanceTo(controls.target);
-  const fov = camera.fov * (Math.PI / 180);
-  const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  return brushSize * visibleHeight * 0.3;
+    const dist = camera.position.distanceTo(controls.target);
+    const fov = camera.fov * (Math.PI / 180);
+    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
+    return brushSize * visibleHeight * 0.3;
   }
 
   function getBrushRadiusInPixels() {
-  const worldRadius = getWorldBrushRadius();
-  const dist = camera.position.distanceTo(controls.target);
-  const fov = camera.fov * (Math.PI / 180);
-  const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  const pixelRadius = (worldRadius / visibleHeight) * window.innerHeight;
-  return pixelRadius;
+    const worldRadius = getWorldBrushRadius();
+    const dist = camera.position.distanceTo(controls.target);
+    const fov = camera.fov * (Math.PI / 180);
+    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
+    const pixelRadius = (worldRadius / visibleHeight) * window.innerHeight;
+    return pixelRadius;
   }
 
   function updateBrushCursor(x, y) {
-  if (!paintModeActive && !maskMode) return;
-  brushCursor.style.display = maskMode ? 'none' : 'block';
-  if (maskMode) {
-     brushCursor.style.display = 'block';
-     brushCursor.style.borderColor = '#ec4899';
-     brushCursor.style.backgroundColor = 'rgba(236, 72, 153, 0.1)';
-  } else {
-     brushCursor.style.borderColor = paintColor.getStyle();
-     brushCursor.style.backgroundColor = `rgba(${paintColor.r*255}, ${paintColor.g*255}, ${paintColor.b*255}, 0.1)`;
-  }
-  brushCursor.style.left = x + 'px';
-  brushCursor.style.top = y + 'px';
-  const radiusPx = getBrushRadiusInPixels();
-  const diameter = Math.max(radiusPx * 2, 10);
-  brushCursor.style.width = diameter + 'px';
-  brushCursor.style.height = diameter + 'px';
-  if (brushShape === 'soft-circle') {
-     brushCursor.style.boxShadow = `0 0 ${diameter/2}px ${diameter/4}px ${maskMode ? '#ec4899' : paintColor.getStyle()}`;
-  } else {
-     brushCursor.style.boxShadow = 'none';
-  }
+    if (!paintModeActive && !maskMode) return;
+    brushCursor.style.display = 'block';
+    if (maskMode) {
+      brushCursor.style.borderColor = '#ec4899';
+      brushCursor.style.backgroundColor = 'rgba(236, 72, 153, 0.1)';
+    } else {
+      const srgbColor = paintColor.clone().convertLinearToSRGB();
+      brushCursor.style.borderColor = srgbColor.getStyle();
+      brushCursor.style.backgroundColor = `rgba(${srgbColor.r*255}, ${srgbColor.g*255}, ${srgbColor.b*255}, 0.1)`;
+    }
+    brushCursor.style.left = x + 'px';
+    brushCursor.style.top = y + 'px';
+    const radiusPx = getBrushRadiusInPixels();
+    const diameter = Math.max(radiusPx * 2, 10);
+    brushCursor.style.width = diameter + 'px';
+    brushCursor.style.height = diameter + 'px';
+    if (brushShape === 'soft-circle') {
+      const shadowColor = maskMode ? '#ec4899' : paintColor.clone().convertLinearToSRGB().getStyle();
+      brushCursor.style.boxShadow = `0 0 ${diameter/2}px ${diameter/4}px ${shadowColor}`;
+    } else {
+      brushCursor.style.boxShadow = 'none';
+    }
   }
 
   function hideCursors() {
-  brushCursor.style.display = 'none';
-  eyedropperCursor.style.display = 'none';
+    brushCursor.style.display = 'none';
+    eyedropperCursor.style.display = 'none';
   }
 
   function paintAt(point) {
-  if ((!paintModeActive && !maskMode) || paintedGeometries.length === 0) return;
-  
-  const brushOpacity = document.getElementById('brushOpacity').value / 100;
-  const radius = getWorldBrushRadius();
-  const radiusSq = radius * radius;
-  const vert = new THREE.Vector3();
+    if ((!paintModeActive && !maskMode) || paintedGeometries.length === 0) return;
 
-  if (maskMode) {
+    const brushOpacity = document.getElementById('brushOpacity').value / 100;
+    const radius = getWorldBrushRadius();
+    const radiusSq = radius * radius;
+    const vert = new THREE.Vector3();
+
+    if (maskMode) {
       paintedGeometries.forEach((pg, geoIdx) => {
-          const pos = pg.geometry.attributes.position;
-          const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
-          const local = point.clone().applyMatrix4(inv);
-          const geoKey = `geo_${geoIdx}`;
-          if (!globalMaskData[geoKey]) return;
-          const maskArr = globalMaskData[geoKey];
-          for (let i = 0; i < pos.count; i++) {
-              vert.fromBufferAttribute(pos, i);
-              const distSq = vert.distanceToSquared(local);
-              if (distSq > radiusSq) continue;
-              let falloff = 1 - Math.sqrt(distSq) / radius;
-              if (brushShape === 'hard-circle') falloff = 1;
-              if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff); 
-              const alpha = brushOpacity * falloff;
-              maskArr[i] = maskArr[i] * (1 - alpha);
-          }
+        const pos = pg.geometry.attributes.position;
+        const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
+        const local = point.clone().applyMatrix4(inv);
+        const geoKey = `geo_${geoIdx}`;
+        let maskArr = globalMaskData[geoKey];
+        if (!maskArr) {
+          maskArr = new Float32Array(pos.count).fill(1.0);
+          globalMaskData[geoKey] = maskArr;
+        }
+        for (let i = 0; i < pos.count; i++) {
+          vert.fromBufferAttribute(pos, i);
+          const distSq = vert.distanceToSquared(local);
+          if (distSq > radiusSq) continue;
+          let falloff = 1 - Math.sqrt(distSq) / radius;
+          if (brushShape === 'hard-circle') falloff = 1;
+          if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff);
+          const alpha = brushOpacity * falloff;
+          maskArr[i] = Math.max(0, maskArr[i] - alpha);
+        }
       });
       updateAllGeometries();
       return;
-  }
+    }
 
-  paintedGeometries.forEach((pg, geoIdx) => {
-  const pos = pg.geometry.attributes.position;
-  const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
-  const local = point.clone().applyMatrix4(inv);
-  const geoKey = `geo_${geoIdx}`;
-  if (!layerData[geoKey]) layerData[geoKey] = {};
-  if (!layerData[geoKey][currentLayerIndex]) {
-  const colors = new Float32Array(pos.count * 3).fill(1);
-  layerData[geoKey][currentLayerIndex] = Array.from(colors);
-  }
-  const geoLayerColors = layerData[geoKey][currentLayerIndex];
-
-  for (let i = 0; i < pos.count; i++) {
-  vert.fromBufferAttribute(pos, i);
-  const distSq = vert.distanceToSquared(local);
-  if (distSq > radiusSq) continue;
-
-  let falloff = 1 - Math.sqrt(distSq) / radius;
-  if (brushShape === 'hard-circle') falloff = 1;
-  if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff); 
-
-  const alpha = brushOpacity * falloff;
-  const paintRGB = layers[currentLayerIndex].color;
-
-  const current = new THREE.Color(geoLayerColors[i*3], geoLayerColors[i*3+1], geoLayerColors[i*3+2]);
-  const result = blendColor(current, paintRGB, layers[currentLayerIndex].blendMode, alpha);
-
-  geoLayerColors[i*3] = result.r;
-  geoLayerColors[i*3+1] = result.g;
-  geoLayerColors[i*3+2] = result.b;
-  }
-  });
-
-  updateAllGeometries();
+    paintedGeometries.forEach((pg, geoIdx) => {
+      const pos = pg.geometry.attributes.position;
+      const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
+      const local = point.clone().applyMatrix4(inv);
+      const geoKey = `geo_${geoIdx}`;
+      if (!layerData[geoKey]) layerData[geoKey] = {};
+      if (!layerData[geoKey][currentLayerIndex]) {
+        const colors = new Float32Array(pos.count * 3).fill(1);
+        layerData[geoKey][currentLayerIndex] = Array.from(colors);
+      }
+      const geoLayerColors = layerData[geoKey][currentLayerIndex];
+      for (let i = 0; i < pos.count; i++) {
+        vert.fromBufferAttribute(pos, i);
+        const distSq = vert.distanceToSquared(local);
+        if (distSq > radiusSq) continue;
+        let falloff = 1 - Math.sqrt(distSq) / radius;
+        if (brushShape === 'hard-circle') falloff = 1;
+        if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff);
+        const alpha = brushOpacity * falloff;
+        const paintRGB = layers[currentLayerIndex].color;
+        const current = new THREE.Color(geoLayerColors[i*3], geoLayerColors[i*3+1], geoLayerColors[i*3+2]);
+        const result = blendColor(current, paintRGB, layers[currentLayerIndex].blendMode, alpha);
+        geoLayerColors[i*3] = result.r;
+        geoLayerColors[i*3+1] = result.g;
+        geoLayerColors[i*3+2] = result.b;
+      }
+    });
+    updateAllGeometries();
   }
 
   const raycaster = new THREE.Raycaster();
@@ -982,267 +875,327 @@
   let isPointerDown = false;
 
   canvas.addEventListener('pointermove', (e) => {
-  if (paintModeActive || maskMode) updateBrushCursor(e.clientX, e.clientY);
-  if (isPointerDown && (paintModeActive || maskMode) && currentModel && !eyedropperActive) {
-  const rect = canvas.getBoundingClientRect();
-  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObject(currentModel, true);
-  if (intersects.length > 0) paintAt(intersects[0].point);
-  }
+    if (paintModeActive || maskMode) updateBrushCursor(e.clientX, e.clientY);
+    if (isPointerDown && (paintModeActive || maskMode) && currentModel && !eyedropperActive) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
+    }
   });
 
   canvas.addEventListener('pointerdown', (e) => {
-  isPointerDown = true;
-  if (eyedropperActive) {
-  sampleColor(e.clientX, e.clientY);
-  return;
-  }
-  if ((paintModeActive || maskMode) && currentModel) {
-  const rect = canvas.getBoundingClientRect();
-  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObject(currentModel, true);
-  if (intersects.length > 0) paintAt(intersects[0].point);
-  }
+    isPointerDown = true;
+    if (eyedropperActive) {
+      sampleColor(e.clientX, e.clientY);
+      return;
+    }
+    if ((paintModeActive || maskMode) && currentModel) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(currentModel, true);
+      if (intersects.length > 0) paintAt(intersects[0].point);
+    }
   });
 
   canvas.addEventListener('pointerup', () => {
-  if (isPointerDown) {
-  isPointerDown = false;
-  saveState();
-  }
+    if (isPointerDown) {
+      isPointerDown = false;
+      saveState();
+    }
   });
 
   canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideCursors(); });
 
   window.addEventListener('keydown', (e) => {
-  if (e.altKey && (paintModeActive || maskMode) && !eyedropperActive) {
-  eyedropperActive = true;
-  hideCursors();
-  eyedropperCursor.style.display = 'block';
-  }
+    if (e.altKey && (paintModeActive || maskMode) && !eyedropperActive) {
+      eyedropperActive = true;
+      hideCursors();
+      eyedropperCursor.style.display = 'block';
+    }
   });
 
   window.addEventListener('keyup', (e) => {
-  if (!e.altKey && eyedropperActive) {
-  eyedropperActive = false;
-  hideCursors();
-  }
+    if (!e.altKey && eyedropperActive) {
+      eyedropperActive = false;
+      hideCursors();
+    }
   });
 
   document.getElementById('eyedropperToggle').addEventListener('click', () => {
-  eyedropperActive = !eyedropperActive;
-  const btn = document.getElementById('eyedropperToggle');
-  btn.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Tool';
-  btn.classList.toggle('active', eyedropperActive);
-  controls.enabled = !eyedropperActive;
-  if (!eyedropperActive) hideCursors();
+    eyedropperActive = !eyedropperActive;
+    const btn = document.getElementById('eyedropperToggle');
+    btn.textContent = eyedropperActive ? 'Cancel Eyedropper' : 'Eyedropper Tool';
+    btn.classList.toggle('active', eyedropperActive);
+    controls.enabled = !eyedropperActive;
+    if (!eyedropperActive) hideCursors();
   });
 
   document.getElementById('paintToggle').addEventListener('click', () => {
-  paintModeActive = !paintModeActive;
-  paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
-  paintToggle.classList.toggle('active', paintModeActive);
-  controls.enabled = !paintModeActive;
-  if(maskMode) maskToggle.click();
-  eyedropperActive = false;
-  document.getElementById('eyedropperToggle').classList.remove('active');
-  document.getElementById('eyedropperToggle').textContent = 'Eyedropper Tool';
-  if (!paintModeActive) hideCursors();
-  else updateBrushCursor(window.innerWidth/2, window.innerHeight/2);
+    paintModeActive = !paintModeActive;
+    const paintToggle = document.getElementById('paintToggle');
+    paintToggle.textContent = paintModeActive ? 'Deactivate Paint Mode' : 'Activate Paint Mode';
+    paintToggle.classList.toggle('active', paintModeActive);
+    controls.enabled = !paintModeActive;
+    if(maskMode) maskToggle.click();
+    eyedropperActive = false;
+    document.getElementById('eyedropperToggle').classList.remove('active');
+    document.getElementById('eyedropperToggle').textContent = 'Eyedropper Tool';
+    if (!paintModeActive) hideCursors();
+    else updateBrushCursor(window.innerWidth/2, window.innerHeight/2);
   });
 
   document.getElementById('uploadModel').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  loadModel(url);
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    loadModel(url);
   });
 
   function loadModel(url) {
-  loader.style.display = 'block';
-  loader.textContent = "Loading...";
-  new GLTFLoader().load(url, (gltf) => {
-  if (currentModel) scene.remove(currentModel);
-  currentModel = gltf.scene;
-  scene.add(currentModel);
-  const box = new THREE.Box3().setFromObject(currentModel);
-  modelSize = box.getSize(new THREE.Vector3()).length() || 1;
-  const center = box.getCenter(new THREE.Vector3());
-  camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
-  controls.target.copy(center);
-  controls.update();
-  
-  paintedGeometries = [];
-  layerData = {};
-  globalMaskData = {};
-  undoStack.length = 0;
-  redoStack.length = 0;
-  undoBtn.disabled = true;
-  redoBtn.disabled = true;
-  
-  currentModel.traverse((child) => {
-  if (child.isMesh) {
-  if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-  child.material = new THREE.MeshStandardMaterial({ map: child.material?.map, color: 0xffffff });
-  }
-  child.material.vertexColors = true;
-  if (!child.geometry.attributes.color) {
-  const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
-  child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  }
-  const geoIdx = paintedGeometries.length;
-  paintedGeometries.push({ geometry: child.geometry, mesh: child });
-  const geoKey = `geo_${geoIdx}`;
-  layerData[geoKey] = {};
-  globalMaskData[geoKey] = new Float32Array(child.geometry.attributes.position.count).fill(1.0);
-  layers.forEach((_, layerIdx) => {
-  const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
-  layerData[geoKey][layerIdx] = Array.from(colors);
-  });
-  }
-  });
-  updateAllGeometries();
-  saveState();
-  loader.style.display = 'none';
-  }, undefined, (error) => {
-  loader.textContent = "Error loading model";
-  console.error(error);
-  });
+    loader.style.display = 'block';
+    loader.textContent = "Loading...";
+    new GLTFLoader().load(url, (gltf) => {
+      if (currentModel) scene.remove(currentModel);
+      currentModel = gltf.scene;
+      scene.add(currentModel);
+      const box = new THREE.Box3().setFromObject(currentModel);
+      modelSize = box.getSize(new THREE.Vector3()).length() || 1;
+      const center = box.getCenter(new THREE.Vector3());
+      camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
+      controls.target.copy(center);
+      controls.update();
+
+      paintedGeometries = [];
+      layerData = {};
+      globalMaskData = {};
+      undoStack.length = 0;
+      redoStack.length = 0;
+      undoBtn.disabled = true;
+      redoBtn.disabled = true;
+
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          if (!(child.material instanceof THREE.MeshStandardMaterial)) {
+            child.material = new THREE.MeshStandardMaterial({ map: child.material?.map, color: 0xffffff });
+          }
+          child.material.vertexColors = true;
+          if (!child.geometry.attributes.color) {
+            const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
+            child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          }
+          const geoIdx = paintedGeometries.length;
+          paintedGeometries.push({ geometry: child.geometry, mesh: child });
+          const geoKey = `geo_${geoIdx}`;
+          layerData[geoKey] = {};
+          globalMaskData[geoKey] = new Float32Array(child.geometry.attributes.position.count).fill(1.0);
+          layers.forEach((_, layerIdx) => {
+            const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
+            layerData[geoKey][layerIdx] = Array.from(colors);
+          });
+        }
+      });
+      updateAllGeometries();
+      saveState();
+      loader.style.display = 'none';
+    }, undefined, (error) => {
+      loader.textContent = "Error loading model";
+      console.error(error);
+    });
   }
 
   function applyTexture(url) {
-  if (!currentModel) return;
-  new THREE.TextureLoader().load(url, (tex) => {
-  tex.flipY = false;
-  tex.colorSpace = THREE.SRGBColorSpace;
-  currentModel.traverse((child) => {
-  if (child.isMesh) {
-  child.material.map = tex.clone();
-  child.material.needsUpdate = true;
-  }
-  });
-  });
+    if (!currentModel) return;
+    new THREE.TextureLoader().load(url, (tex) => {
+      tex.flipY = false;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material.map = tex.clone();
+          child.material.needsUpdate = true;
+        }
+      });
+    });
   }
 
   document.getElementById('presetTexture').addEventListener('change', (e) => {
-  if (e.target.value) applyTexture(e.target.value);
+    if (e.target.value) applyTexture(e.target.value);
   });
 
   document.getElementById('uploadTexture').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file) applyTexture(URL.createObjectURL(file));
+    const file = e.target.files[0];
+    if (file) applyTexture(URL.createObjectURL(file));
   });
 
   document.getElementById('metallicSlider').addEventListener('input', (e) => {
-  const v = parseFloat(e.target.value);
-  document.getElementById('metallicVal').textContent = v.toFixed(2);
-  currentModel?.traverse((child) => {
-  if (child.isMesh) child.material.metalness = v;
-  });
+    const v = parseFloat(e.target.value);
+    document.getElementById('metallicVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => {
+      if (child.isMesh) child.material.metalness = v;
+    });
   });
 
   document.getElementById('roughnessSlider').addEventListener('input', (e) => {
-  const v = parseFloat(e.target.value);
-  document.getElementById('roughnessVal').textContent = v.toFixed(2);
-  currentModel?.traverse((child) => {
-  if (child.isMesh) child.material.roughness = v;
-  });
+    const v = parseFloat(e.target.value);
+    document.getElementById('roughnessVal').textContent = v.toFixed(2);
+    currentModel?.traverse((child) => {
+      if (child.isMesh) child.material.roughness = v;
+    });
   });
 
-  // Main Color Picker Input - needs Linear conversion
   document.getElementById('paintColor').addEventListener('input', (e) => {
-  paintColor.set(e.target.value); // Reads SRGB
-  paintColor.convertSRGBToLinear(); // Converts to Linear for math
-  layers[currentLayerIndex].color.copy(paintColor);
-  updateLayersUI();
+    paintColor.set(e.target.value);
+    paintColor.convertSRGBToLinear();
+    layers[currentLayerIndex].color.copy(paintColor);
+    updateLayersUI();
   });
 
   document.getElementById('brushSize').addEventListener('input', (e) => {
-  brushSize = parseFloat(e.target.value);
-  document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
+    brushSize = parseFloat(e.target.value);
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
   });
 
   document.getElementById('brushShape').addEventListener('change', (e) => {
-  brushShape = e.target.value;
-  const customGroup = document.getElementById('customBrushGroup');
-  customGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+    brushShape = e.target.value;
+    const customGroup = document.getElementById('customBrushGroup');
+    customGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
   });
 
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
   document.getElementById('clearPaint').addEventListener('click', () => {
-  saveState();
-  paintedGeometries.forEach((pg, geoIdx) => {
-  const geoKey = `geo_${geoIdx}`;
-  if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
-  layerData[geoKey][currentLayerIndex].fill(1);
-  }
-  });
-  updateAllGeometries();
+    saveState();
+    paintedGeometries.forEach((pg, geoIdx) => {
+      const geoKey = `geo_${geoIdx}`;
+      if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
+        layerData[geoKey][currentLayerIndex].fill(1);
+      }
+    });
+    updateAllGeometries();
   });
 
   document.getElementById('exportBtn').addEventListener('click', () => {
-  if (!currentModel) {
-  exportStatus.textContent = 'No model loaded';
-  exportStatus.style.color = '#ef4444';
-  return;
-  }
-  exportStatus.textContent = 'Exporting...';
-  exportStatus.style.color = '#60a5fa';
-  const exporter = new GLTFExporter();
-  const clone = currentModel.clone();
-  clone.traverse((child) => {
-  if (child.isMesh) {
-  child.material = child.material.clone();
-  child.material.vertexColors = true;
-  child.material.needsUpdate = true;
-  }
-  });
-  exporter.parse(clone, (result) => {
-  const blob = new Blob([result], { type: 'application/octet-stream' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'retextured_model.glb';
-  link.click();
-  exportStatus.textContent = 'Exported!';
-  exportStatus.style.color = '#4ade80';
-  }, (err) => {
-  exportStatus.textContent = 'Export failed';
-  exportStatus.style.color = '#ef4444';
-  console.error(err);
-  }, { binary: true });
+    if (!currentModel) {
+      exportStatus.textContent = 'No model loaded';
+      exportStatus.style.color = '#ef4444';
+      return;
+    }
+    exportStatus.textContent = 'Exporting...';
+    exportStatus.style.color = '#60a5fa';
+    const exporter = new GLTFExporter();
+    const clone = currentModel.clone();
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.material = child.material.clone();
+        child.material.vertexColors = true;
+        child.material.needsUpdate = true;
+      }
+    });
+    exporter.parse(clone, (result) => {
+      const blob = new Blob([result], { type: 'application/octet-stream' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'retextured_model.glb';
+      link.click();
+      exportStatus.textContent = 'Exported!';
+      exportStatus.style.color = '#4ade80';
+    }, (err) => {
+      exportStatus.textContent = 'Export failed';
+      exportStatus.style.color = '#ef4444';
+      console.error(err);
+    }, { binary: true });
   });
 
   window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  updatePanelMode();
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    updatePanelMode();
   });
 
   function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
   }
   animate();
-  
-  // Drag and drop support
+
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => {
-      e.preventDefault();
-      if(e.dataTransfer.files && e.dataTransfer.files[0]) {
-          const file = e.dataTransfer.files[0];
-          if(file.name.toLowerCase().endsWith('.glb') || file.name.toLowerCase().endsWith('.gltf')) {
-              loadModel(URL.createObjectURL(file));
-          }
+    e.preventDefault();
+    if(e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if(file.name.toLowerCase().endsWith('.glb') || file.name.toLowerCase().endsWith('.gltf')) {
+        loadModel(URL.createObjectURL(file));
       }
+    }
   });
 </script>
+  }
 
+  // === Quick Controls Logic ===
+  const quickControls = document.getElementById('quickControls');
+  const quickPaint = document.getElementById('quickPaint');
+  const quickEye = document.getElementById('quickEye');
+  const quickColor = document.getElementById('quickColor');
+  const colorDisplay = document.querySelector('.color-display');
+
+  quickPaint.onclick = () => document.getElementById('paintToggle').click();
+  quickEye.onclick = () => document.getElementById('eyedropperToggle').click();
+
+  quickColor.oninput = (e) => {
+    document.getElementById('paintColor').value = e.target.value;
+    document.getElementById('paintColor').dispatchEvent(new Event('input'));
+  };
+
+  // Sync color display
+  function updateQuickColor() {
+    const srgb = paintColor.clone().convertLinearToSRGB();
+    colorDisplay.style.background = srgb.getStyle();
+    quickColor.value = '#' + srgb.getHexString();
+  }
+
+  // Update visibility and state
+  function updateQuickControls() {
+    const isMobile = window.innerWidth <= 900;
+    quickControls.style.display = isMobile ? (panelVisible ? 'none' : 'flex') : 'flex';
+
+    quickPaint.classList.toggle('active', paintModeActive);
+    quickEye.classList.toggle('active', eyedropperActive);
+    updateQuickColor();
+  }
+
+  // Hook into existing toggle logic
+  const originalPaintClick = document.getElementById('paintToggle').onclick;
+  document.getElementById('paintToggle').onclick = () => {
+    originalPaintClick();
+    updateQuickControls();
+  };
+
+  const originalEyeClick = document.getElementById('eyedropperToggle').onclick;
+  document.getElementById('eyedropperToggle').onclick = () => {
+    originalEyeClick();
+    updateQuickControls();
+  };
+
+  // Also update on panel toggle and resize
+  const originalToggle = togglePanel;
+  togglePanel = () => {
+    originalToggle();
+    updateQuickControls();
+  };
+
+  window.addEventListener('resize', () => {
+    updatePanelMode();
+    updateQuickControls();
+  });
+
+  // Call once on load
+  updateQuickControls();
+</script>
 </body>
 </html>
