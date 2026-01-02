@@ -63,17 +63,17 @@
 
     #panelToggle {
       position: absolute;
-      left: -50px;
+      left: -60px;
       top: 50%;
       transform: translateY(-50%);
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 110px;
       background: rgba(2, 6, 23, 0.98);
       border: 1px solid #1e293b;
       border-right: none;
-      border-radius: 10px 0 0 10px;
+      border-radius: 20px 0 0 20px;
       color: #60a5fa;
-      font-size: 1.8rem;
+      font-size: 2.4rem;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -84,7 +84,7 @@
       box-shadow: 0 6px 30px rgba(0,0,0,0.5);
       transition: all 0.3s ease;
     }
-    #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; }
+    #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
 
     /* Mobile Bottom Sheet Panel */
     @media (max-width: 900px) {
@@ -94,49 +94,31 @@
         left: 0;
         bottom: 0;
         width: 100%;
-        height: 75vh;
+        height: 80vh;
         max-height: none;
         border-radius: 20px 20px 0 0;
         transform: translateY(100%);
         transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-        padding-top: 70px;
+        padding-top: 80px;
       }
-      .panel.visible { transform: translateY(0); }
-      #panelToggle { display: none !important; }
-      
+      .panel.visible {
+        transform: translateY(0);
+      }
+      #panelToggle { display: none; }
       #mobilePanelToggle {
-        display: flex !important;
+        display: block;
         position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 50px;
-        height: 50px;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 6px;
         background: #60a5fa;
-        border-radius: 50%;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 30;
-        box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
-        transition: all 0.3s ease;
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: white;
-      }
-      #mobilePanelToggle:hover {
-        background: #3b82f6;
-        transform: scale(1.1);
-      }
-      #mobilePanelToggle.close-btn {
-        background: #ef4444;
-        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-      }
-      #mobilePanelToggle.close-btn:hover {
-        background: #dc2626;
+        border-radius: 3px;
       }
     }
 
-    #mobilePanelToggle { display: none; }
+    #mobilePanelToggle { display: none; cursor: pointer; }
 
     .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; }
     .control-group { margin-bottom: 1.2rem; }
@@ -154,11 +136,11 @@
     }
     .layer-item:active { cursor: grabbing; }
     .layer-item.active { background: #1e293b; border: 1px solid #60a5fa; }
-    .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
-    .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+    .layer-visibility { font-size: 1.3rem; cursor: pointer; }
+    .layer-color { width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; }
     .layer-opacity { width: 90px; }
     .layer-name { flex: 1; font-size: 0.95rem; cursor: text; }
-    .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 20px; text-align: center; }
+    .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; }
     .layer-blend { width: 100px; font-size: 0.8rem; }
     #addLayerBtn { background: #10b981; }
 
@@ -169,7 +151,6 @@
     #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
     #paintToggle.active { background: #f87171; }
     #eyedropperToggle { background: #a78bfa; display: none; }
-    #eyedropperToggle.active { background: #8b5cf6; }
     #maskToggle { background: #8b5cf6; }
     #maskToggle.active { background: #ec4899; }
 
@@ -186,8 +167,6 @@
     @media (max-width: 768px) {
       #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 100px; position: relative; z-index: 30; }
     }
-    
-    .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -221,7 +200,7 @@
 
   <div class="panel" id="panel">
     <button id="panelToggle">←</button>
-    <div id="mobilePanelToggle">☰</div>
+    <div id="mobilePanelToggle"></div>
 
     <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.5;">
       Drag to rotate • Pinch/scroll to zoom<br>
@@ -390,7 +369,7 @@
     const levels = [0, 200, 500, 1000, 2000];
     let level = levels.filter(v => xp >= v).length - 1;
     let next = levels[level + 1] ?? levels[level];
-    let progress = next === layers[level] ? 100 : ((xp - levels[level]) / (next - layers[level])) * 100;
+    let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
 
     levelText.textContent = `Level ${level} • ${xp} XP`;
     xpBar.style.width = progress + "%";
@@ -460,10 +439,9 @@
   let eyedropperActive = false;
   let maskMode = false;
 
-  // Layers - Store layer data per geometry
+  // Layers
   const layers = [];
   let currentLayerIndex = 0;
-  let layerData = {}; // Store painted data per layer per geometry
 
   // Undo/Redo
   const undoStack = [];
@@ -474,16 +452,7 @@
 
   function saveState() {
     if (paintedGeometries.length === 0) return;
-    const state = {
-      layers: layers.map(layer => ({
-        color: layer.color.clone(),
-        opacity: layer.opacity,
-        blendMode: layer.blendMode,
-        visible: layer.visible,
-        name: layer.name
-      })),
-      layerData: JSON.parse(JSON.stringify(layerData))
-    };
+    const state = paintedGeometries.map(g => g.geometry.attributes.color.array.slice());
     undoStack.push(state);
     if (undoStack.length > MAX_UNDO) undoStack.shift();
     redoStack.length = 0;
@@ -493,54 +462,26 @@
 
   function undo() {
     if (undoStack.length === 0) return;
-    redoStack.push({
-      layers: layers.map(layer => ({
-        color: layer.color.clone(),
-        opacity: layer.opacity,
-        blendMode: layer.blendMode,
-        visible: layer.visible,
-        name: layer.name
-      })),
-      layerData: JSON.parse(JSON.stringify(layerData))
-    });
+    redoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
     const state = undoStack.pop();
-    restoreState(state);
+    paintedGeometries.forEach((g, i) => {
+      g.geometry.attributes.color.array.set(state[i]);
+      g.geometry.attributes.color.needsUpdate = true;
+    });
     undoBtn.disabled = undoStack.length === 0;
     redoBtn.disabled = false;
   }
 
   function redo() {
     if (redoStack.length === 0) return;
-    undoStack.push({
-      layers: layers.map(layer => ({
-        color: layer.color.clone(),
-        opacity: layer.opacity,
-        blendMode: layer.blendMode,
-        visible: layer.visible,
-        name: layer.name
-      })),
-      layerData: JSON.parse(JSON.stringify(layerData))
-    });
+    undoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
     const state = redoStack.pop();
-    restoreState(state);
-    redoStack.disabled = redoStack.length === 0;
-    undoBtn.disabled = false;
-  }
-
-  function restoreState(state) {
-    layers.length = 0;
-    state.layers.forEach(layerData => {
-      layers.push({
-        color: layerData.color,
-        opacity: layerData.opacity,
-        blendMode: layerData.blendMode,
-        visible: layerData.visible,
-        name: layerData.name
-      });
+    paintedGeometries.forEach((g, i) => {
+      g.geometry.attributes.color.array.set(state[i]);
+      g.geometry.attributes.color.needsUpdate = true;
     });
-    layerData = JSON.parse(JSON.stringify(state.layerData));
-    updateLayersUI();
-    updateAllGeometries();
+    redoBtn.disabled = redoStack.length === 0;
+    undoBtn.disabled = false;
   }
 
   undoBtn.onclick = undo;
@@ -568,54 +509,19 @@
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
     panel.classList.toggle('visible', panelVisible);
-    
-    // Update toggle button text
-    panelToggle.textContent = panelVisible ? '←' : '→';
-    
-    // Update mobile toggle
-    if (window.innerWidth <= 900) {
-      if (panelVisible) {
-        mobilePanelToggle.innerHTML = '×';
-        mobilePanelToggle.classList.add('close-btn');
-      } else {
-        mobilePanelToggle.innerHTML = '☰';
-        mobilePanelToggle.classList.remove('close-btn');
-      }
-    }
   }
-  
-  panelToggle.onclick = togglePanel;
-  mobilePanelToggle.onclick = togglePanel;
+  panelToggle.onclick = () => togglePanel();
+  mobilePanelToggle.onclick = () => togglePanel();
 
-  // Close panel on canvas tap (mobile)
+  // Close panel on canvas tap on mobile
   canvas.addEventListener('touchstart', (e) => {
-    if (window.innerWidth <= 900 && panelVisible && !paintModeActive) {
+    if (window.innerWidth <= 900 && panelVisible) {
       e.preventDefault();
       togglePanel();
     }
   });
 
-  // Blend function - FIXED: Proper implementation without gamma issues
-  function blendColor(base, overlay, mode, opacity) {
-    const o = overlay.clone();
-    switch (mode) {
-      case 'multiply': 
-        return base.clone().multiplyScalar(1 - opacity).add(base.clone().multiply(o).multiplyScalar(opacity));
-      case 'screen': 
-        return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r) * opacity);
-      case 'overlay': 
-        const r = base.r < 0.5 ? 2 * base.r * o.r : 1 - 2 * (1 - base.r) * (1 - o.r);
-        const g = base.g < 0.5 ? 2 * base.g * o.g : 1 - 2 * (1 - base.g) * (1 - o.g);
-        const b = base.b < 0.5 ? 2 * base.b * o.b : 1 - 2 * (1 - base.b) * (1 - o.b);
-        return base.clone().multiplyScalar(1 - opacity).add(new THREE.Color(r, g, b).multiplyScalar(opacity));
-      case 'add': 
-        return base.clone().add(o.multiplyScalar(opacity));
-      default: 
-        return base.clone().lerp(o, opacity);
-    }
-  }
-
-  // Layers UI
+  // Layers UI with Reorder, Delete, Rename, Blend Modes
   function addLayer() {
     const layer = {
       name: `Layer ${layers.length + 1}`,
@@ -625,65 +531,22 @@
       blendMode: 'normal'
     };
     layers.push(layer);
-    // Initialize layer data for all geometries
-    paintedGeometries.forEach((pg, idx) => {
-      const geoKey = `geo_${idx}`;
-      if (!layerData[geoKey]) layerData[geoKey] = {};
-      if (!layerData[geoKey][layers.length - 1]) {
-        const colors = new Float32Array(pg.geometry.attributes.position.count * 3).fill(1);
-        layerData[geoKey][layers.length - 1] = Array.from(colors);
-      }
-    });
     updateLayersUI();
     setActiveLayer(layers.length - 1);
   }
 
   function deleteLayer(idx) {
     if (layers.length <= 1) return;
-    
-    // Remove layer data
-    Object.keys(layerData).forEach(key => {
-      const geoLayers = layerData[key];
-      delete geoLayers[idx];
-      // Shift remaining layer data
-      for (let i = idx; i < layers.length - 1; i++) {
-        geoLayers[i] = geoLayers[i + 1];
-      }
-      delete geoLayers[layers.length - 1];
-    });
-    
     layers.splice(idx, 1);
     if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
     updateLayersUI();
-    updateAllGeometries();
   }
 
   function moveLayer(fromIdx, toIdx) {
     const [layer] = layers.splice(fromIdx, 1);
     layers.splice(toIdx, 0, layer);
-    
-    // Move layer data
-    Object.keys(layerData).forEach(key => {
-      const geoLayers = layerData[key];
-      const data = geoLayers[fromIdx];
-      delete geoLayers[fromIdx];
-      // Insert at new position
-      for (let i = Math.min(fromIdx, toIdx); i < Math.max(fromIdx, toIdx); i++) {
-        if (fromIdx < toIdx) {
-          geoLayers[i] = geoLayers[i + 1];
-        } else {
-          geoLayers[i + 1] = geoLayers[i];
-        }
-      }
-      geoLayers[toIdx] = data;
-    });
-    
     if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
-    else if (fromIdx < currentLayerIndex && toIdx >= currentLayerIndex) currentLayerIndex--;
-    else if (fromIdx > currentLayerIndex && toIdx <= currentLayerIndex) currentLayerIndex++;
-    
     updateLayersUI();
-    updateAllGeometries();
   }
 
   function setActiveLayer(idx) {
@@ -702,7 +565,7 @@
       li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
       li.draggable = true;
       li.innerHTML = `
-        <span class="layer-visibility">${layer.visible ? '👁' : '🚫'}</span>
+        <span class="layer-visibility">${layer.visible ? '👁' : '隠'}</span>
         <input type="color" class="layer-color" value="#${layer.color.getHexString()}">
         <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
         <select class="layer-blend">
@@ -715,112 +578,317 @@
         <span class="layer-name" contenteditable="true">${layer.name}</span>
         <span class="layer-delete">×</span>
       `;
-      
-      // Event handlers
-      li.onclick = (e) => {
-        if (!e.target.closest('.layer-visibility') && 
-            !e.target.closest('.layer-color') && 
-            !e.target.closest('.layer-opacity') && 
-            !e.target.closest('.layer-blend') && 
-            !e.target.closest('.layer-name') && 
-            !e.target.closest('.layer-delete')) {
-          setActiveLayer(i);
-        }
-      };
-      
+      li.onclick = () => setActiveLayer(i);
       li.querySelector('.layer-visibility').onclick = (e) => {
         e.stopPropagation();
         layer.visible = !layer.visible;
-        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '🚫';
-        updateAllGeometries();
+        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '隠';
       };
-      
       li.querySelector('.layer-color').oninput = (e) => {
         layer.color.set(e.target.value);
         if (i === currentLayerIndex) paintColor.copy(layer.color);
-        updateAllGeometries();
       };
-      
-      li.querySelector('.layer-opacity').oninput = (e) => {
-        layer.opacity = e.target.value / 100;
-        updateAllGeometries();
-      };
-      
-      li.querySelector('.layer-blend').onchange = (e) => {
-        layer.blendMode = e.target.value;
-        updateAllGeometries();
-      };
-      
-      li.querySelector('.layer-name').onblur = (e) => {
-        layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
-      };
-      
+      li.querySelector('.layer-opacity').oninput = (e) => layer.opacity = e.target.value / 100;
+      li.querySelector('.layer-blend').onchange = (e) => layer.blendMode = e.target.value;
+      li.querySelector('.layer-name').onblur = (e) => layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
       li.querySelector('.layer-delete').onclick = (e) => {
         e.stopPropagation();
         deleteLayer(i);
       };
-      
-      // Drag and drop
-      li.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', i);
-      });
-      
-      li.addEventListener('dragover', (e) => {
-        e.preventDefault();
-      });
-      
+      li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
+      li.addEventListener('dragover', (e) => e.preventDefault();
       li.addEventListener('drop', (e) => {
         e.preventDefault();
         const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
         const toIdx = i;
         if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
       });
-      
       list.appendChild(li);
-    });
-  }
-
-  function updateAllGeometries() {
-    paintedGeometries.forEach((pg, geoIdx) => {
-      const col = pg.geometry.attributes.color;
-      const geoKey = `geo_${geoIdx}`;
-      
-      // Start with white base
-      for (let i = 0; i < col.count; i++) {
-        col.setXYZ(i, 1, 1, 1);
-      }
-      
-      // Apply layers from bottom to top
-      layers.forEach((layer, layerIdx) => {
-        if (!layer.visible) return;
-        
-        const geoLayerData = layerData[geoKey]?.[layerIdx];
-        if (!geoLayerData) return;
-        
-        for (let i = 0; i < col.count; i++) {
-          const base = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
-          const overlay = new THREE.Color(
-            geoLayerData[i * 3],
-            geoLayerData[i * 3 + 1],
-            geoLayerData[i * 3 + 2]
-          );
-          
-          // Only blend if the layer has non-white paint
-          if (overlay.r !== 1 || overlay.g !== 1 || overlay.b !== 1) {
-            const result = blendColor(base, overlay, layer.blendMode, layer.opacity);
-            col.setXYZ(i, result.r, result.g, result.b);
-          }
-        }
-      });
-      
-      col.needsUpdate = true;
     });
   }
 
   document.getElementById('addLayerBtn').onclick = addLayer;
   addLayer();
 
-  // Mask mode
+  // Painting with blend modes
+  function blendColor(base, overlay, mode, opacity) {
+    const o = overlay.clone().multiplyScalar(opacity);
+    switch (mode) {
+      case 'multiply': return base.clone().multiply(o);
+      case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.g) * (1 - o.g)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.b) * (1 - o.b));
+      case 'overlay': return base.clone().lerp(o.multiply(base.clone().multiplyScalar(2)), base.r + base.g + base.b > 1.5 ? 1 : 0);
+      case 'add': return base.clone().add(o);
+      default: return base.clone().lerp(o, opacity);
+    }
+  }
+
+  function paintAt(point) {
+    if (!paintModeActive || paintedGeometries.length === 0) return;
+    const brushOpacity = document.getElementById('brushOpacity').value / 100;
+
+    const radius = getWorldBrushRadius();
+    const radiusSq = radius * radius;
+    const vert = new THREE.Vector3();
+
+    paintedGeometries.forEach(({ geometry, mesh }) => {
+      const pos = geometry.attributes.position;
+      const col = geometry.attributes.color;
+      const inv = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
+      const local = point.clone().applyMatrix4(inv);
+
+      let changed = false;
+      for (let i = 0; i < pos.count; i++) {
+        vert.fromBufferAttribute(pos, i);
+        if (vert.distanceToSquared(local) > radiusSq) continue;
+
+        changed = true;
+        const alpha = brushOpacity * (1 - Math.sqrt(vert.distanceToSquared(local)) / radius);
+
+        let result = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
+        layers.forEach(layer => {
+          if (!layer.visible) return;
+          const layerColor = maskMode && layer === layers[currentLayerIndex] ? new THREE.Color(0,0,0) : layer.color;
+          result = blendColor(result, layerColor, layer.blendMode, alpha * layer.opacity);
+        });
+
+        col.setXYZ(i, result.r, result.g, result.b);
+      }
+      if (changed) col.needsUpdate = true;
+    });
+  }
+
+ <script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+  import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+
+  const canvas = document.getElementById('canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x020617);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  dirLight.position.set(5, 10, 7);
+  scene.add(dirLight);
+
+  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(3, 2, 5);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
+
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  pmremGenerator.compileEquirectangularShader();
+  let currentEnvMap = null;
+
+  function loadEnvironment(url) {
+    if (url === 'neutral') {
+      scene.environment = null;
+      if (currentEnvMap) currentEnvMap.dispose();
+      return;
+    }
+    new RGBELoader().load(url, (tex) => {
+      const envMap = pmremGenerator.fromEquirectangular(tex).texture;
+      scene.environment = envMap;
+      tex.dispose();
+      if (currentEnvMap) currentEnvMap.dispose();
+      currentEnvMap = envMap;
+    });
+  }
+  loadEnvironment('neutral');
+
+  let currentModel = null;
+  let modelSize = 1;
+  let paintedGeometries = [];
+  let paintColor = new THREE.Color('#ff4444');
+  let brushSize = 0.5;
+  let brushShape = 'soft-circle';
+  let customBrushData = null;
+  let paintModeActive = false;
+  let eyedropperActive = false;
+  let maskMode = false;
+
+  // Layers
+  const layers = [];
+  let currentLayerIndex = 0;
+
+  // Undo/Redo
+  const undoStack = [];
+  const redoStack = [];
+  const MAX_UNDO = 30;
+  const undoBtn = document.getElementById('undoBtn');
+  const redoBtn = document.getElementById('redoBtn');
+
+  function saveState() {
+    if (paintedGeometries.length === 0) return;
+    const state = paintedGeometries.map(g => g.geometry.attributes.color.array.slice());
+    undoStack.push(state);
+    if (undoStack.length > MAX_UNDO) undoStack.shift();
+    redoStack.length = 0;
+    undoBtn.disabled = false;
+    redoBtn.disabled = true;
+  }
+
+  function undo() {
+    if (undoStack.length === 0) return;
+    redoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
+    const state = undoStack.pop();
+    paintedGeometries.forEach((g, i) => {
+      g.geometry.attributes.color.array.set(state[i]);
+      g.geometry.attributes.color.needsUpdate = true;
+    });
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = false;
+  }
+
+  function redo() {
+    if (redoStack.length === 0) return;
+    undoStack.push(paintedGeometries.map(g => g.geometry.attributes.color.array.slice()));
+    const state = redoStack.pop();
+    paintedGeometries.forEach((g, i) => {
+      g.geometry.attributes.color.array.set(state[i]);
+      g.geometry.attributes.color.needsUpdate = true;
+    });
+    redoBtn.disabled = redoStack.length === 0;
+    undoBtn.disabled = false;
+  }
+
+  undoBtn.onclick = undo;
+  redoBtn.onclick = redo;
+  window.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+  });
+
+  // Cursors
+  const brushCursor = document.getElementById('brushCursor');
+  const eyedropperCursor = document.getElementById('eyedropperCursor');
+  const paintToggle = document.getElementById('paintToggle');
+  const eyedropperToggle = document.getElementById('eyedropperToggle');
+  const maskToggle = document.getElementById('maskToggle');
+  const exportStatus = document.getElementById('exportStatus');
+
+  // Panel toggle
+  const panel = document.getElementById('panel');
+  const panelToggle = document.getElementById('panelToggle');
+  const mobilePanelToggle = document.getElementById('mobilePanelToggle');
+  let panelVisible = true;
+
+  function togglePanel() {
+    panelVisible = !panelVisible;
+    panel.classList.toggle('hidden', !panelVisible);
+    panel.classList.toggle('visible', panelVisible);
+  }
+  panelToggle.onclick = togglePanel;
+  mobilePanelToggle.onclick = togglePanel;
+
+  // Close panel on canvas tap (mobile)
+  canvas.addEventListener('touchstart', (e) => {
+    if (window.innerWidth <= 900 && panelVisible) {
+      e.preventDefault();
+      togglePanel();
+    }
+  });
+
+  // Layers UI
+  function addLayer() {
+    const layer = {
+      name: `Layer ${layers.length + 1}`,
+      color: new THREE.Color('#ff4444'),
+      opacity: 1.0,
+      visible: true,
+      blendMode: 'normal'
+    };
+    layers.push(layer);
+    updateLayersUI();
+    setActiveLayer(layers.length - 1);
+  }
+
+  function deleteLayer(idx) {
+    if (layers.length <= 1) return;
+    layers.splice(idx, 1);
+    if (currentLayerIndex >= layers.length) currentLayerIndex = layers.length - 1;
+    updateLayersUI();
+  }
+
+  function moveLayer(fromIdx, toIdx) {
+    const [layer] = layers.splice(fromIdx, 1);
+    layers.splice(toIdx, 0, layer);
+    if (currentLayerIndex === fromIdx) currentLayerIndex = toIdx;
+    updateLayersUI();
+  }
+
+  function setActiveLayer(idx) {
+    currentLayerIndex = idx;
+    updateLayersUI();
+    paintColor.copy(layers[idx].color);
+    document.getElementById('paintColor').value = '#' + paintColor.getHexString();
+  }
+
+  function updateLayersUI() {
+    const list = document.getElementById('layersList');
+    list.innerHTML = '';
+    layers.slice().reverse().forEach((layer, reverseIdx) => {
+      const i = layers.length - 1 - reverseIdx;
+      const li = document.createElement('li');
+      li.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
+      li.draggable = true;
+      li.innerHTML = `
+        <span class="layer-visibility">${layer.visible ? '👁' : '隠'}</span>
+        <input type="color" class="layer-color" value="#${layer.color.getHexString()}">
+        <input type="range" class="layer-opacity" min="0" max="100" value="${layer.opacity * 100}">
+        <select class="layer-blend">
+          <option value="normal">Normal</option>
+          <option value="multiply">Multiply</option>
+          <option value="screen">Screen</option>
+          <option value="overlay">Overlay</option>
+          <option value="add">Add</option>
+        </select>
+        <span class="layer-name" contenteditable="true">${layer.name}</span>
+        <span class="layer-delete">×</span>
+      `;
+      li.onclick = () => setActiveLayer(i);
+      li.querySelector('.layer-visibility').onclick = (e) => {
+        e.stopPropagation();
+        layer.visible = !layer.visible;
+        li.querySelector('.layer-visibility').textContent = layer.visible ? '👁' : '隠';
+      };
+      li.querySelector('.layer-color').oninput = (e) => {
+        layer.color.set(e.target.value);
+        if (i === currentLayerIndex) paintColor.copy(layer.color);
+      };
+      li.querySelector('.layer-opacity').oninput = (e) => layer.opacity = e.target.value / 100;
+      li.querySelector('.layer-blend').onchange = (e) => layer.blendMode = e.target.value;
+      li.querySelector('.layer-name').onblur = (e) => layer.name = e.target.textContent.trim() || `Layer ${i+1}`;
+      li.querySelector('.layer-delete').onclick = (e) => {
+        e.stopPropagation();
+        deleteLayer(i);
+      };
+      li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', i));
+      li.addEventListener('dragover', (e) => e.preventDefault();
+      li.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+        const toIdx = i;
+        if (fromIdx !== toIdx) moveLayer(fromIdx, toIdx);
+      });
+      list.appendChild(li);
+    });
+  }
+
+  document.getElementById('addLayerBtn').onclick = addLayer;
+  addLayer();
+
   maskToggle.onclick = () => {
     maskMode = !maskMode;
     maskToggle.classList.toggle('active', maskMode);
@@ -831,39 +899,31 @@
     document.getElementById('brushOpacityVal').textContent = e.target.value;
   };
 
-  // Eyedropper - FIXED: No gamma conversion, read as-is
+  // Eyedropper
   function sampleColor(x, y) {
     const rect = canvas.getBoundingClientRect();
     const gl = renderer.getContext();
     const pixel = new Uint8Array(4);
-    
-    const pixelX = (x - rect.left) * renderer.getPixelRatio();
-    const pixelY = (rect.height - (y - rect.top)) * renderer.getPixelRatio();
-    
-    gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-    
-    // Read colors directly without gamma conversion
-    paintColor.setRGB(pixel[0] / 255, pixel[1] / 255, pixel[2] / 255);
+    gl.readPixels(
+      (x - rect.left) * renderer.getPixelRatio(),
+      (rect.height - (y - rect.top)) * renderer.getPixelRatio(),
+      1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel
+    );
+    paintColor.setRGB(pixel[0]/255, pixel[1]/255, pixel[2]/255);
     document.getElementById('paintColor').value = '#' + paintColor.getHexString();
     layers[currentLayerIndex].color.copy(paintColor);
     updateLayersUI();
   }
 
-  // Brush & Painting - FIXED: Store per-layer data
+  // Brush & Painting
   function getWorldBrushRadius() {
-    const dist = camera.position.distanceTo(controls.target);
-    const fov = camera.fov * (Math.PI / 180);
-    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-    const pixelToWorld = visibleHeight / window.innerHeight;
-    return brushSize * visibleHeight * 0.1;
+    return brushSize * modelSize * 0.15;
   }
 
   function projectRadiusToScreen(worldRadius) {
     const dist = camera.position.distanceTo(controls.target);
-    const fov = camera.fov * (Math.PI / 180);
-    const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-    const pixelSize = (worldRadius / visibleHeight) * window.innerHeight;
-    return pixelSize * 2;
+    const height = 2 * Math.tan(camera.fov * Math.PI / 360) * dist;
+    return (worldRadius / height) * window.innerHeight;
   }
 
   function updateBrushCursor(x, y) {
@@ -875,8 +935,7 @@
     const size = Math.max(r * 2, 10);
     brushCursor.style.width = brushCursor.style.height = size + 'px';
     brushCursor.style.borderColor = paintColor.getStyle();
-    brushCursor.style.borderRadius = brushShape === 'hard-circle' ? '50%' : '50%';
-    brushCursor.style.boxShadow = brushShape === 'soft-circle' ? `0 0 ${size/2}px ${size/4}px ${paintColor.getStyle()}` : 'none';
+    brushCursor.style.borderRadius = '50%';
   }
 
   function hideCursors() {
@@ -892,63 +951,43 @@
     const radiusSq = radius * radius;
     const vert = new THREE.Vector3();
 
-    paintedGeometries.forEach((pg, geoIdx) => {
-      const pos = pg.geometry.attributes.position;
-      const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
+    paintedGeometries.forEach(({ geometry, mesh }) => {
+      const pos = geometry.attributes.position;
+      const col = geometry.attributes.color;
+      const inv = new THREE.Matrix4().copy(mesh.matrixWorld).invert();
       const local = point.clone().applyMatrix4(inv);
-      
-      const geoKey = `geo_${geoIdx}`;
-      if (!layerData[geoKey]) layerData[geoKey] = {};
-      if (!layerData[geoKey][currentLayerIndex]) {
-        const colors = new Float32Array(pos.count * 3).fill(1);
-        layerData[geoKey][currentLayerIndex] = Array.from(colors);
-      }
-      
-      const geoLayerColors = layerData[geoKey][currentLayerIndex];
 
+      let changed = false;
       for (let i = 0; i < pos.count; i++) {
         vert.fromBufferAttribute(pos, i);
-        const distSq = vert.distanceToSquared(local);
-        
-        if (distSq > radiusSq) continue;
+        if (vert.distanceToSquared(local) > radiusSq) continue;
 
-        // Calculate falloff for soft brush
-        const dist = Math.sqrt(distSq);
-        let falloff = 1 - (dist / radius);
-        if (brushShape === 'soft-circle') {
-          falloff = falloff * falloff;
-        }
-        
-        const alpha = brushOpacity * falloff;
-        
-        // Get current layer color (black if in mask mode)
-        let paintRGB;
-        if (maskMode) {
-          paintRGB = { r: 0, g: 0, b: 0 };
-        } else {
-          paintRGB = layers[currentLayerIndex].color;
-        }
+        changed = true;
+        const alpha = brushOpacity * (1 - Math.sqrt(vert.distanceToSquared(local)) / radius);
 
-        // Blend into layer data
-        const currentR = geoLayerColors[i * 3];
-        const currentG = geoLayerColors[i * 3 + 1];
-        const currentB = geoLayerColors[i * 3 + 2];
-        
-        const result = blendColor(
-          new THREE.Color(currentR, currentG, currentB),
-          paintRGB,
-          layers[currentLayerIndex].blendMode,
-          alpha
-        );
-        
-        geoLayerColors[i * 3] = result.r;
-        geoLayerColors[i * 3 + 1] = result.g;
-        geoLayerColors[i * 3 + 2] = result.b;
+        let result = new THREE.Color(col.getX(i), col.getY(i), col.getZ(i));
+        layers.forEach(layer => {
+          if (!layer.visible) return;
+          const layerColor = maskMode && layer === layers[currentLayerIndex] ? new THREE.Color(0,0,0) : layer.color;
+          result = blendColor(result, layerColor, layer.blendMode, alpha * layer.opacity);
+        });
+
+        col.setXYZ(i, result.r, result.g, result.b);
       }
+      if (changed) col.needsUpdate = true;
     });
-    
-    // Update geometry after painting
-    updateAllGeometries();
+  }
+
+  // Blend function
+  function blendColor(base, overlay, mode, opacity) {
+    const o = overlay.clone().multiplyScalar(opacity);
+    switch (mode) {
+      case 'multiply': return base.clone().multiply(o);
+      case 'screen': return base.clone().lerp(new THREE.Color(1,1,1), 1 - (1 - base.r) * (1 - o.r)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.g) * (1 - o.g)).lerp(new THREE.Color(1,1,1), 1 - (1 - base.b) * (1 - o.b));
+      case 'overlay': return base.clone().lerp(o.multiply(base.clone().multiplyScalar(2)), base.r + base.g + base.b > 1.5 ? 1 : 0);
+      case 'add': return base.clone().add(o);
+      default: return base.clone().lerp(o, opacity);
+    }
   }
 
   // Pointer events
@@ -958,7 +997,7 @@
 
   canvas.addEventListener('pointermove', (e) => {
     updateBrushCursor(e.clientX, e.clientY);
-    if (isPointerDown && paintModeActive && currentModel && !eyedropperActive) {
+    if (isPointerDown && paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
       mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
@@ -970,12 +1009,10 @@
 
   canvas.addEventListener('pointerdown', (e) => {
     isPointerDown = true;
-    
     if (eyedropperActive) {
       sampleColor(e.clientX, e.clientY);
       return;
     }
-    
     if (paintModeActive && currentModel) {
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
@@ -993,10 +1030,7 @@
     }
   });
 
-  canvas.addEventListener('pointerleave', () => { 
-    isPointerDown = false; 
-    hideCursors(); 
-  });
+  canvas.addEventListener('pointerleave', () => { isPointerDown = false; hideCursors(); });
 
   // Desktop Alt key eyedropper
   window.addEventListener('keydown', (e) => {
@@ -1045,7 +1079,6 @@
   function loadModel(url) {
     exportStatus.textContent = 'Loading model...';
     exportStatus.style.color = '#60a5fa';
-    
     new GLTFLoader().load(url, (gltf) => {
       if (currentModel) scene.remove(currentModel);
       currentModel = gltf.scene;
@@ -1054,13 +1087,11 @@
       const box = new THREE.Box3().setFromObject(currentModel);
       modelSize = box.getSize(new THREE.Vector3()).length() || 1;
       const center = box.getCenter(new THREE.Vector3());
-      
       camera.position.copy(center).add(new THREE.Vector3(modelSize, modelSize * 0.7, modelSize));
       controls.target.copy(center);
       controls.update();
 
       paintedGeometries = [];
-      layerData = {};
       undoStack.length = 0;
       redoStack.length = 0;
       undoBtn.disabled = true;
@@ -1069,33 +1100,18 @@
       currentModel.traverse((child) => {
         if (child.isMesh) {
           if (!(child.material instanceof THREE.MeshStandardMaterial)) {
-            child.material = new THREE.MeshStandardMaterial({ 
-              map: child.material?.map,
-              color: 0xffffff
-            });
+            child.material = new THREE.MeshStandardMaterial({ map: child.material.map });
           }
-          
-          child.material.color.set(0xffffff);
+          child.material.color.set(0xffffff); // Bright colors
           child.material.vertexColors = true;
-          
           if (!child.geometry.attributes.color) {
             const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
             child.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
           }
-          
-          const geoIdx = paintedGeometries.length;
           paintedGeometries.push({ geometry: child.geometry, mesh: child });
-          
-          // Initialize layer data for this geometry
-          layerData[`geo_${geoIdx}`] = {};
-          layers.forEach((_, layerIdx) => {
-            const colors = new Float32Array(child.geometry.attributes.position.count * 3).fill(1);
-            layerData[`geo_${geoIdx}`][layerIdx] = Array.from(colors);
-          });
         }
       });
 
-      updateAllGeometries();
       saveState();
       exportStatus.textContent = 'Model loaded!';
       exportStatus.style.color = '#4ade80';
@@ -1105,23 +1121,6 @@
       console.error(error);
     });
   }
-
-  // Clear current layer - FIXED: Only clear selected layer
-  document.getElementById('clearPaint').addEventListener('click', () => {
-    paintedGeometries.forEach((pg, geoIdx) => {
-      const geoKey = `geo_${geoIdx}`;
-      if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
-        const count = pg.geometry.attributes.position.count;
-        for (let i = 0; i < count; i++) {
-          layerData[geoKey][currentLayerIndex][i * 3] = 1;
-          layerData[geoKey][currentLayerIndex][i * 3 + 1] = 1;
-          layerData[geoKey][currentLayerIndex][i * 3 + 2] = 1;
-        }
-      }
-    });
-    updateAllGeometries();
-    saveState();
-  });
 
   // Texture apply
   function applyTexture(url) {
@@ -1176,10 +1175,19 @@
     document.getElementById('brushSizeVal').textContent = brushSize.toFixed(2);
   });
 
-  document.getElementById('brushShape').addEventListener('change', (e) => {
-    brushShape = e.target.value;
-    const customGroup = document.getElementById('customBrushGroup');
-    customGroup.style.display = brushShape === 'custom' ? 'block' : 'none';
+  // Clear current layer
+  document.getElementById('clearPaint').addEventListener('click', () => {
+    paintedGeometries.forEach(({ geometry }) => {
+      const count = geometry.attributes.position.count;
+      const colors = geometry.attributes.color.array;
+      for (let i = 0; i < count; i++) {
+        colors[i * 3] = 1;
+        colors[i * 3 + 1] = 1;
+        colors[i * 3 + 2] = 1;
+      }
+      geometry.attributes.color.needsUpdate = true;
+    });
+    saveState();
   });
 
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
@@ -1193,7 +1201,6 @@
     }
     exportStatus.textContent = 'Exporting...';
     exportStatus.style.color = '#60a5fa';
-    
     const exporter = new GLTFExporter();
     const clone = currentModel.clone();
     clone.traverse((child) => {
@@ -1203,7 +1210,6 @@
         child.material.needsUpdate = true;
       }
     });
-    
     exporter.parse(clone, (result) => {
       const blob = new Blob([result], { type: 'application/octet-stream' });
       const link = document.createElement('a');
@@ -1219,14 +1225,26 @@
     }, { binary: true });
   });
 
-  // Resize handler
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // Animation loop
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+</script>
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
   function animate() {
     requestAnimationFrame(animate);
     controls.update();
