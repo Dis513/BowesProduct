@@ -96,14 +96,18 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 80vh;
+  height: 85vh;
   max-height: none;
   border-radius: 20px 20px 0 0;
   transform: translateY(100%);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   padding-top: 80px;
+  padding-bottom: 20px;
   z-index: 25;
   overflow-y: auto;
+  background: rgba(2, 6, 23, 0.95);
+  border: 1px solid #1e293b;
+  border-bottom: none;
   }
   .panel.visible {
   transform: translateY(0);
@@ -112,9 +116,8 @@
   #panelToggle { display: none; }
 
   #mobilePanelToggle {
-  display: block;
   position: absolute;
-  top: 12px;
+  top: 16px;
   right: 20px;
   width: 50px;
   height: 50px;
@@ -129,6 +132,7 @@
   justify-content: center;
   box-shadow: 0 4px 20px rgba(96,165,250,0.5);
   transition: all 0.3s ease;
+  z-index: 30;
   }
   #mobilePanelToggle:hover { background: #3b82f6; transform: scale(1.1); }
   #mobilePanelToggle.close { background: #ef4444; box-shadow: 0 4px 20px rgba(239,68,68,0.5); }
@@ -145,7 +149,6 @@
   button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; position: relative; z-index: 30; }
   button:hover { background: #3b82f6; }
 
-  /* Layers UI */
   #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
   .layer-item {
   display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: grab;
@@ -166,7 +169,7 @@
 
   #customBrushPreview { width: 80px; height: 80px; background: #1e293b; border-radius: 8px; margin-top: 0.5rem; image-rendering: pixelated; }
   #paintToggle.active { background: #f87171; }
-  #eyedropperToggle { background: #a78bfa; display: none; }
+  #eyedropperToggle { background: #a78bfa; }
   #maskToggle { background: #8b5cf6; }
   #maskToggle.active { background: #ec4899; }
 
@@ -179,10 +182,6 @@
   .footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
   .footer-nav a { color: #cbd5e1; text-decoration: none; }
   .footer-nav a:hover { color: #60a5fa; }
-
-  @media (max-width: 768px) {
-  #exportBtn { width: 90%; max-width: 500px; padding: 20px; font-size: 1.3rem; display: block; margin: 40px auto 100px; position: relative; z-index: 30; }
-  }
 
   .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
   </style>
@@ -335,67 +334,7 @@
   </div>
 </footer>
 
-<!-- Firebase Auth -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
-
-  const authBtn = document.getElementById("authBtn");
-  const profilePic = document.getElementById("profilePic");
-  const levelInfo = document.getElementById("levelInfo");
-  const levelText = document.getElementById("levelText");
-  const xpBar = document.getElementById("xpBar");
-
-  authBtn.onclick = () => {
-  if (auth.currentUser) {
-  signOut(auth);
-  } else {
-  signInWithPopup(auth, provider);
-  }
-  };
-
-  onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-  authBtn.textContent = "Login";
-  profilePic.style.display = "none";
-  levelInfo.style.display = "none";
-  return;
-  }
-  authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL || "";
-  profilePic.style.display = "block";
-
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
-  if (!snap.exists()) {
-  await setDoc(ref, { xp: 10 });
-  snap = await getDoc(ref);
-  }
-  const xp = snap.data().xp || 0;
-  const levels = [0, 200, 500, 1000, 2000];
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
-  let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
-
-  levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
-  levelInfo.style.display = "block";
-  });
-</script>
-
-<!-- Three.js + Ultimate Features -->
+<!-- Three.js + Features -->
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -452,7 +391,6 @@
   let paintColor = new THREE.Color('#ff4444');
   let brushSize = 0.5;
   let brushShape = 'soft-circle';
-  let customBrushData = null;
   let paintModeActive = false;
   let eyedropperActive = false;
   let maskMode = false;
@@ -522,6 +460,7 @@
   const brushCursor = document.getElementById('brushCursor');
   const eyedropperCursor = document.getElementById('eyedropperCursor');
   const exportStatus = document.getElementById('exportStatus');
+  const maskToggle = document.getElementById('maskToggle');
 
   // Panel toggle
   const panel = document.getElementById('panel');
@@ -749,6 +688,13 @@
   document.getElementById('addLayerBtn').onclick = addLayer;
   addLayer();
 
+  // Fixed Mask Mode
+  maskToggle.onclick = () => {
+  maskMode = !maskMode;
+  maskToggle.classList.toggle('active', maskMode);
+  maskToggle.textContent = maskMode ? 'Normal Paint (exit mask)' : 'Mask Mode (paint black to hide)';
+  };
+
   document.getElementById('brushOpacity').oninput = (e) => {
   document.getElementById('brushOpacityVal').textContent = e.target.value;
   };
@@ -757,8 +703,8 @@
   const rect = canvas.getBoundingClientRect();
   const gl = renderer.getContext();
   const pixel = new Uint8Array(4);
-  const pixelX = (x - rect.left) * renderer.getPixelRatio();
-  const pixelY = (rect.height - (y - rect.top)) * renderer.getPixelRatio();
+  const pixelX = Math.floor((x - rect.left) * renderer.getPixelRatio());
+  const pixelY = Math.floor((rect.height - (y - rect.top)) * renderer.getPixelRatio());
   gl.readPixels(pixelX, pixelY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
   paintColor.setRGB(pixel[0]/255, pixel[1]/255, pixel[2]/255);
   document.getElementById('paintColor').value = '#' + paintColor.getHexString();
@@ -770,7 +716,7 @@
   const dist = camera.position.distanceTo(controls.target);
   const fov = camera.fov * (Math.PI / 180);
   const visibleHeight = 2 * Math.tan(fov / 2) * dist;
-  return brushSize * visibleHeight * 0.1;
+  return brushSize * visibleHeight * 0.15;
   }
 
   function projectRadiusToScreen(worldRadius) {
@@ -822,13 +768,16 @@
   vert.fromBufferAttribute(pos, i);
   const distSq = vert.distanceToSquared(local);
   if (distSq > radiusSq) continue;
-  const dist = Math.sqrt(distSq);
-  let falloff = 1 - (dist / radius);
-  if (brushShape === 'soft-circle') falloff = falloff * falloff;
+
+  let falloff = 1 - Math.sqrt(distSq) / radius;
+  if (brushShape === 'soft-circle') falloff = falloff * falloff * falloff;
   const alpha = brushOpacity * falloff;
-  let paintRGB = maskMode ? new THREE.Color(0,0,0) : layers[currentLayerIndex].color;
+
+  const paintRGB = maskMode ? new THREE.Color(0, 0, 0) : layers[currentLayerIndex].color;
+
   const current = new THREE.Color(geoLayerColors[i*3], geoLayerColors[i*3+1], geoLayerColors[i*3+2]);
   const result = blendColor(current, paintRGB, layers[currentLayerIndex].blendMode, alpha);
+
   geoLayerColors[i*3] = result.r;
   geoLayerColors[i*3+1] = result.g;
   geoLayerColors[i*3+2] = result.b;
@@ -845,8 +794,9 @@
   canvas.addEventListener('pointermove', (e) => {
   updateBrushCursor(e.clientX, e.clientY);
   if (isPointerDown && paintModeActive && currentModel && !eyedropperActive) {
-  mouse.x = ((e.clientX - canvas.getBoundingClientRect().left) / canvas.clientWidth) * 2 - 1;
-  mouse.y = -((e.clientY - canvas.getBoundingClientRect().top) / canvas.clientHeight) * 2 + 1;
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObject(currentModel, true);
   if (intersects.length > 0) paintAt(intersects[0].point);
@@ -860,8 +810,9 @@
   return;
   }
   if (paintModeActive && currentModel) {
-  mouse.x = ((e.clientX - canvas.getBoundingClientRect().left) / canvas.clientWidth) * 2 - 1;
-  mouse.y = -((e.clientY - canvas.getBoundingClientRect().top) / canvas.clientHeight) * 2 + 1;
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObject(currentModel, true);
   if (intersects.length > 0) paintAt(intersects[0].point);
@@ -1029,7 +980,10 @@
   paintedGeometries.forEach((pg, geoIdx) => {
   const geoKey = `geo_${geoIdx}`;
   if (layerData[geoKey] && layerData[geoKey][currentLayerIndex]) {
-  layerData[geoKey][currentLayerIndex].fill(1);
+  const count = pg.geometry.attributes.position.count;
+  for (let i = 0; i < count * 3; i++) {
+  layerData[geoKey][currentLayerIndex][i] = 1;
+  }
   }
   });
   updateAllGeometries();
