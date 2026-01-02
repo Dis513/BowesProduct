@@ -94,6 +94,65 @@ if (exportButton) {
         disableUnlitPaintMode(); // Ensure export has proper materials
     });
 }
+  // Hide/Show Panel Toggle
+const panel = document.querySelector('.panel');
+const togglePanelBtn = document.getElementById('togglePanelBtn');
+
+if (panel && togglePanelBtn) {
+    let panelHidden = false;
+
+    togglePanelBtn.addEventListener('click', () => {
+        if (panelHidden) {
+            // Show panel
+            panel.style.display = 'block';
+            togglePanelBtn.innerHTML = '✕'; // Close icon
+            panelHidden = false;
+        } else {
+            // Hide panel
+            panel.style.display = 'none';
+            panelHidden = true;
+        }
+    });
+
+    // Optional: Add a floating "Show Controls" button when hidden (great for mobile/desktop)
+    const floatingShowBtn = document.createElement('button');
+    floatingShowBtn.id = 'floatingShowBtn';
+    floatingShowBtn.innerHTML = '⚙️';
+    floatingShowBtn.style.cssText = `
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: #60a5fa;
+        border: none;
+        border-radius: 50%;
+        color: white;
+        font-size: 1.8rem;
+        cursor: pointer;
+        z-index: 999;
+        display: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    `;
+    document.body.appendChild(floatingShowBtn);
+
+    floatingShowBtn.addEventListener('click', () => {
+        panel.style.display = 'block';
+        floatingShowBtn.style.display = 'none';
+        togglePanelBtn.innerHTML = '✕';
+        panelHidden = false;
+    });
+
+    // Update floating button visibility
+    const originalToggle = togglePanelBtn.addEventListener('click', () => {
+        if (panelHidden) {
+            floatingShowBtn.style.display = 'none';
+        } else {
+            floatingShowBtn.style.display = 'block';
+        }
+    });
+}
   </div>
 </model-viewer>
+
 
