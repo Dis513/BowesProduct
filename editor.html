@@ -1,19 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vector Editor Pro \u2013 BowesProduct</title>
+  <title>Vector Editor Pro – BowesProduct (Illustrator 2026)</title>
   <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
-
-  /* ================= HEADER ================= */
+  
+  /* ================= HEADER (logo + nav only) ================= */
   .site-header {
     position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
   }
-  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .header-inner { max-width: 1400px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
   .header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
   .main-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -38,22 +37,22 @@
   }
 
   /* ================= APPLICATION MENU BAR ================= */
-  .app-menu-bar {
-    background: rgba(15,23,42,0.98);
-    border-bottom: 1px solid #1e293b;
-    padding: 0;
-    padding-left: 150px;
-    display: flex;
-    gap: 0;
-    font-size: 0.85rem;
-    position: sticky;
-    top: 56px;
-    z-index: 999;
-    backdrop-filter: blur(10px);
-    flex-wrap: wrap;
-    height: 36px;
-    align-items: center;
-  }
+.app-menu-bar {
+  background: rgba(15,23,42,0.98);
+  border-bottom: 1px solid #1e293b;
+  padding: 0;
+  padding-left: 150px; /* Nice moderate left indent — matches left toolbar feel */
+  display: flex;
+  gap: 0;
+  font-size: 0.85rem;
+  position: sticky;
+  top: 70px;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+  height: 36px;
+  align-items: center;
+}
   .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
     position: relative; cursor: pointer; padding: 0.5rem 1rem; height: 100%; display: flex; align-items: center; user-select: none;
@@ -71,13 +70,8 @@
   .dropdown div:hover .submenu { display: flex; }
   .menu-bar > div:hover .dropdown, .dropdown:hover { display: flex; }
 
-  @media (max-width: 900px) {
-    .app-menu-bar { gap: 1rem; padding-left: 60px; z-index: 999; }
-    .menu-bar > div { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
-  }
-
   /* ================= MAIN LAYOUT ================= */
-  #container { position: relative; width: 100%; height: 100%; padding-top: 92px; padding-bottom: 30px; display: flex; }
+  #container { position: relative; width: 100%; height: 100%; padding-top: 106px; padding-bottom: 0; display: flex; }
   
   /* ================= CANVAS AREA ================= */
   #canvas-container {
@@ -102,7 +96,7 @@
 
   /* ================= LEFT TOOLBAR ================= */
   #floatingToolbar {
-    position: fixed; left: 20px; top: 108px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
+    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
   }
   .tool-group { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-bottom: 1px solid #1e293b; }
   .tool-group:last-child { border-bottom: none; }
@@ -114,7 +108,7 @@
 
   /* ================= RIGHT PANEL DOCK ================= */
   .panel-dock {
-    position: fixed; right: 20px; top: 108px; width: 320px; max-height: calc(100vh - 140px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; z-index: 20; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column;
+    position: fixed; right: 20px; top: 116px; width: 320px; max-height: calc(100vh - 140px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; z-index: 20; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column;
   }
   
   #dockToggle { 
@@ -129,7 +123,7 @@
   .panel-tab:hover { color: #e5e7eb; }
   .panel-tab.active { color: #60a5fa; background: rgba(96, 165, 250, 0.1); border-bottom: 2px solid #60a5fa; }
   .panel-close-btn {
-    position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.2s; z-index: 100;
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.2s;
   }
   .panel-close-btn:hover { background: #334155; color: #e5e7eb; }
 
@@ -206,7 +200,7 @@
   /* Mobile */
   @media (max-width: 900px) {
     #floatingToolbar { 
-      left: 10px; top: 103px; padding: 6px; max-height: calc(100vh - 160px);
+      left: 10px; top: 111px; padding: 6px; max-height: calc(100vh - 160px);
     }
     .tool-btn { width: 38px; height: 38px; font-size: 1.1rem; }
     .panel-dock { 
@@ -236,7 +230,15 @@
     .ruler-h { left: 50px; }
     .ruler-v { display: none; }
     #canvas { margin-left: 50px; }
+    .app-menu-bar { gap: 1rem; padding-left: 60px; z-index: 999; }
+    .menu-bar > div { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
+    .status-bar { z-index: 1100; }
     .dropdown { z-index: 1900; }
+  }
+
+  /* Panel Backdrop/Overlay - DISABLED on mobile for canvas visibility */
+  .panel-backdrop {
+    display: none !important;
   }
 
   /* Tool/Panel Name Notification */
@@ -279,84 +281,12 @@
   .context-menu div { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.85rem; }
   .context-menu div:hover { background: #1e293b; }
   .context-menu hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
-
-  /* Modal */
-  .modal-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 20000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-overlay.active { display: flex; }
-  .modal {
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  }
-  .modal h2 {
-    color: #60a5fa;
-    margin: 0 0 1.5rem;
-    font-size: 1.3rem;
-  }
-  .modal-close {
-    position: absolute; top: 1rem; right: 1rem;
-    background: none; border: none;
-    color: #94a3b8;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  .modal-close:hover { color: white; }
-  .modal-actions {
-    margin-top: 1.5rem;
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-  }
   </style>
-  <!-- Paper.js for vector editing - using unminified version for better debugging -->
-  <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.js"></script>
+  <!-- Paper.js for vector editing -->
+  <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
-
-<!-- Modal for New Document -->
-<div class="modal-overlay" id="newDocumentModal">
-  <div class="modal">
-    <h2>Create New Document</h2>
-    <div class="control-group">
-      <label for="docWidth">Width (px)</label>
-      <input type="number" id="docWidth" value="1920" min="1">
-    </div>
-    <div class="control-group">
-      <label for="docHeight">Height (px)</label>
-      <input type="number" id="docHeight" value="1080" min="1">
-    </div>
-    <div class="control-group">
-      <label>Preset Sizes</label>
-      <select id="docPreset">
-        <option value="custom">Custom</option>
-        <option value="1920x1080">1920 x 1080 (Full HD)</option>
-        <option value="3840x2160">3840 x 2160 (4K)</option>
-        <option value="1280x720">1280 x 720 (HD)</option>
-        <option value="1080x1920">1080 x 1920 (Portrait)</option>
-        <option value="1080x1080">1080 x 1080 (Square)</option>
-        <option value="800x600">800 x 600</option>
-        <option value="1024x768">1024 x 768</option>
-        <option value="2560x1440">2560 x 1440 (2K)</option>
-      </select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeNewDocumentModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="createNewDocument()">Create</button>
-    </div>
-  </div>
-</div>
-
 <header class="site-header">
   <div class="header-inner">
     <div class="header-left">
@@ -384,118 +314,118 @@
   <div class="menu-bar">
     <div>File
       <div class="dropdown">
-        <div data-action="newDocument">New <span class="shortcut">Ctrl+Shift+N</span></div>
-        <div data-action="openFile">Open... <span class="shortcut">Ctrl+Shift+O</span></div>
-        <div data-action="saveDocument">Save <span class="shortcut">Ctrl+Shift+S</span></div>
-        <div data-action="saveDocumentAs">Save As... <span class="shortcut">Ctrl+Shift+A</span></div>
+        <div onclick="newDocument()">New <span class="shortcut">Ctrl+Shift+N</span></div>
+        <div onclick="document.getElementById('openFile').click()">Open... <span class="shortcut">Ctrl+Shift+O</span></div>
+        <div onclick="saveDocument()">Save <span class="shortcut">Ctrl+Shift+S</span></div>
+        <div onclick="saveDocumentAs()">Save As... <span class="shortcut">Ctrl+Shift+A</span></div>
         <hr>
-        <div data-action="placeImage">Place... <span class="shortcut">Ctrl+Shift+I</span></div>
+        <div onclick="document.getElementById('placeImage').click()">Place... <span class="shortcut">Ctrl+Shift+I</span></div>
         <hr>
-        <div data-action="exportSVG">Export As SVG <span class="shortcut">Ctrl+Alt+S</span></div>
-        <div data-action="exportPNG">Export As PNG <span class="shortcut">Ctrl+Alt+P</span></div>
-        <div data-action="exportPDF">Export As PDF <span class="shortcut">Ctrl+Alt+E</span></div>
+        <div onclick="exportSVG()">Export As SVG <span class="shortcut">Ctrl+Alt+S</span></div>
+        <div onclick="exportPNG()">Export As PNG <span class="shortcut">Ctrl+Alt+P</span></div>
+        <div onclick="exportPDF()">Export As PDF <span class="shortcut">Ctrl+Alt+E</span></div>
       </div>
     </div>
     <div>Edit
       <div class="dropdown">
-        <div data-action="undo">Undo <span class="shortcut">Ctrl+Z</span></div>
-        <div data-action="redo">Redo <span class="shortcut">Ctrl+Y</span></div>
+        <div onclick="undo()">Undo <span class="shortcut">Ctrl+Z</span></div>
+        <div onclick="redo()">Redo <span class="shortcut">Ctrl+Y</span></div>
         <hr>
-        <div data-action="cut">Cut <span class="shortcut">Ctrl+X</span></div>
-        <div data-action="copy">Copy <span class="shortcut">Ctrl+C</span></div>
-        <div data-action="paste">Paste <span class="shortcut">Ctrl+V</span></div>
-        <div data-action="duplicate">Duplicate <span class="shortcut">Ctrl+D</span></div>
-        <div data-action="deleteSelection">Delete <span class="shortcut">Del</span></div>
+        <div onclick="cut()">Cut <span class="shortcut">Ctrl+X</span></div>
+        <div onclick="copy()">Copy <span class="shortcut">Ctrl+C</span></div>
+        <div onclick="paste()">Paste <span class="shortcut">Ctrl+V</span></div>
+        <div onclick="duplicate()">Duplicate <span class="shortcut">Ctrl+D</span></div>
+        <div onclick="deleteSelection()">Delete <span class="shortcut">Del</span></div>
         <hr>
-        <div data-action="selectAll">Select All <span class="shortcut">Ctrl+A</span></div>
-        <div data-action="deselectAll">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
+        <div onclick="selectAll()">Select All <span class="shortcut">Ctrl+A</span></div>
+        <div onclick="deselectAll()">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
       </div>
     </div>
     <div>Object
       <div class="dropdown">
-        <div data-action="groupSelection">Group <span class="shortcut">Ctrl+G</span></div>
-        <div data-action="ungroupSelection">Ungroup <span class="shortcut">Ctrl+Shift+G</span></div>
+        <div onclick="groupSelection()">Group <span class="shortcut">Ctrl+G</span></div>
+        <div onclick="ungroupSelection()">Ungroup <span class="shortcut">Ctrl+Shift+G</span></div>
         <hr>
-        <div data-action="lockSelection">Lock <span class="shortcut">Ctrl+2</span></div>
-        <div data-action="unlockAll">Unlock All <span class="shortcut">Ctrl+Alt+2</span></div>
+        <div onclick="lockSelection()">Lock <span class="shortcut">Ctrl+2</span></div>
+        <div onclick="unlockAll()">Unlock All <span class="shortcut">Ctrl+Alt+2</span></div>
         <hr>
         <div>Arrange &darr;
           <div class="submenu">
-            <div data-action="bringToFront">Bring to Front <span class="shortcut">Ctrl+Shift+]</span></div>
-            <div data-action="sendToBack">Send to Back <span class="shortcut">Ctrl+Shift+[</span></div>
+            <div onclick="bringToFront()">Bring to Front <span class="shortcut">Ctrl+Shift+]</span></div>
+            <div onclick="sendToBack()">Send to Back <span class="shortcut">Ctrl+Shift+[</span></div>
             <hr>
-            <div data-action="bringForward">Bring Forward <span class="shortcut">Ctrl+]</span></div>
-            <div data-action="sendBackward">Send Backward <span class="shortcut">Ctrl+[</span></div>
+            <div onclick="bringForward()">Bring Forward <span class="shortcut">Ctrl+]</span></div>
+            <div onclick="sendBackward()">Send Backward <span class="shortcut">Ctrl+[</span></div>
           </div>
         </div>
         <div>Transform &darr;
           <div class="submenu">
-            <div data-action="rotateSelectionCW">Rotate 90\u00b0 CW</div>
-            <div data-action="rotateSelectionCCW">Rotate 90\u00b0 CCW</div>
+            <div onclick="rotateSelection(-90)">Rotate 90° CW</div>
+            <div onclick="rotateSelection(90)">Rotate 90° CCW</div>
             <hr>
-            <div data-action="flipSelectionHorizontal">Flip Horizontal</div>
-            <div data-action="flipSelectionVertical">Flip Vertical</div>
+            <div onclick="flipSelection('horizontal')">Flip Horizontal</div>
+            <div onclick="flipSelection('vertical')">Flip Vertical</div>
             <hr>
-            <div data-action="showTransformDialog">Transform...</div>
+            <div onclick="showTransformDialog()">Transform...</div>
           </div>
         </div>
         <hr>
         <div>Pathfinder &darr;
           <div class="submenu">
-            <div data-action="pathfinderUnite">Unite</div>
-            <div data-action="pathfinderMinus">Minus Front</div>
-            <div data-action="pathfinderIntersect">Intersect</div>
-            <div data-action="pathfinderExclude">Exclude</div>
+            <div onclick="pathfinder('unite')">Unite</div>
+            <div onclick="pathfinder('minus')">Minus Front</div>
+            <div onclick="pathfinder('intersect')">Intersect</div>
+            <div onclick="pathfinder('exclude')">Exclude</div>
             <hr>
-            <div data-action="pathfinderDivide">Divide</div>
-            <div data-action="pathfinderTrim">Trim</div>
-            <div data-action="pathfinderMerge">Merge</div>
+            <div onclick="pathfinder('divide')">Divide</div>
+            <div onclick="pathfinder('trim')">Trim</div>
+            <div onclick="pathfinder('merge')">Merge</div>
             <hr>
-            <div data-action="pathfinderCrop">Crop</div>
-            <div data-action="pathfinderOutline">Outline</div>
+            <div onclick="pathfinder('crop')">Crop</div>
+            <div onclick="pathfinder('outline')">Outline</div>
           </div>
         </div>
       </div>
     </div>
     <div>Type
       <div class="dropdown">
-        <div data-action="createOutlines">Create Outlines <span class="shortcut">Ctrl+Shift+O</span></div>
-        <div data-action="findFont">Find Font...</div>
+        <div onclick="createOutlines()">Create Outlines <span class="shortcut">Ctrl+Shift+O</span></div>
+        <div onclick="findFont()">Find Font...</div>
       </div>
     </div>
     <div>Select
       <div class="dropdown">
-        <div data-action="selectAll">All <span class="shortcut">Ctrl+A</span></div>
-        <div data-action="deselectAll">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
+        <div onclick="selectAll()">All <span class="shortcut">Ctrl+A</span></div>
+        <div onclick="deselectAll()">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
         <hr>
-        <div data-action="selectSameFill">Same Fill Color</div>
-        <div data-action="selectSameStroke">Same Stroke Color</div>
-        <div data-action="selectSameStrokeWidth">Same Stroke Width</div>
+        <div onclick="selectSameFill()">Same Fill Color</div>
+        <div onclick="selectSameStroke()">Same Stroke Color</div>
+        <div onclick="selectSameStrokeWidth()">Same Stroke Width</div>
       </div>
     </div>
     <div>View
       <div class="dropdown">
-        <div data-action="zoomIn">Zoom In <span class="shortcut">Ctrl++</span></div>
-        <div data-action="zoomOut">Zoom Out <span class="shortcut">Ctrl+-</span></div>
-        <div data-action="zoomToFit">Fit to Screen <span class="shortcut">Ctrl+0</span></div>
-        <div data-action="zoomTo100">100% <span class="shortcut">Ctrl+1</span></div>
+        <div onclick="zoomIn()">Zoom In <span class="shortcut">Ctrl++</span></div>
+        <div onclick="zoomOut()">Zoom Out <span class="shortcut">Ctrl+-</span></div>
+        <div onclick="zoomToFit()">Fit to Screen <span class="shortcut">Ctrl+0</span></div>
+        <div onclick="zoomTo100()">100% <span class="shortcut">Ctrl+1</span></div>
         <hr>
-        <div data-action="toggleGrid">Grid <span class="shortcut">Ctrl+'</span></div>
-        <div data-action="toggleRulers">Rulers <span class="shortcut">Ctrl+R</span></div>
-        <div data-action="toggleSnap">Snap to Grid <span class="shortcut">Ctrl+Shift+'</span></div>
+        <div onclick="toggleGrid()">Grid <span class="shortcut">Ctrl+'</span></div>
+        <div onclick="toggleRulers()">Rulers <span class="shortcut">Ctrl+R</span></div>
+        <div onclick="toggleSnap()">Snap to Grid <span class="shortcut">Ctrl+Shift+'</span></div>
       </div>
     </div>
     <div>Window
       <div class="dropdown">
-        <div data-action="showPanelProperties">Properties</div>
-        <div data-action="showPanelLayers">Layers <span class="shortcut">F7</span></div>
-        <div data-action="showPanelAppearance">Appearance <span class="shortcut">Shift+F6</span></div>
-        <div data-action="showPanelSwatches">Swatches</div>
-        <div data-action="showPanelGradient">Gradient</div>
-        <div data-action="showPanelStroke">Stroke</div>
-        <div data-action="showPanelAlign">Align <span class="shortcut">Shift+F7</span></div>
-        <div data-action="showPanelCharacter">Character</div>
-        <div data-action="showPanelParagraph">Paragraph</div>
+        <div onclick="showPanel('properties')">Properties</div>
+        <div onclick="showPanel('layers')">Layers <span class="shortcut">F7</span></div>
+        <div onclick="showPanel('appearance')">Appearance <span class="shortcut">Shift+F6</span></div>
+        <div onclick="showPanel('swatches')">Swatches</div>
+        <div onclick="showPanel('gradient')">Gradient</div>
+        <div onclick="showPanel('stroke')">Stroke</div>
+        <div onclick="showPanel('align')">Align <span class="shortcut">Shift+F7</span></div>
+        <div onclick="showPanel('character')">Character</div>
+        <div onclick="showPanel('paragraph')">Paragraph</div>
       </div>
     </div>
   </div>
@@ -503,14 +433,17 @@
 
 <div id="container">
   <!-- Hidden file inputs -->
-  <input type="file" id="openFile" accept=".svg,.json" style="display:none">
-  <input type="file" id="placeImage" accept="image/*" style="display:none">
+  <input type="file" id="openFile" accept=".svg,.json" style="display:none" onchange="handleOpen(event)">
+  <input type="file" id="placeImage" accept="image/*" style="display:none" onchange="handlePlace(event)">
+
+  <!-- Panel Backdrop -->
+  <div class="panel-backdrop" id="panelBackdrop"></div>
 
   <!-- Tool/Panel Name Notification -->
   <div class="tool-notification" id="toolNotification"></div>
 
   <div id="canvas-container">
-    <div id="loader">Vector Editor Pro \u2022 Initializing...</div>
+    <div id="loader">Vector Editor Pro • Initializing...</div>
     
     <!-- Rulers -->
     <div class="ruler-corner" id="rulerCorner"></div>
@@ -528,50 +461,50 @@
   <!-- Left Toolbar -->
   <div id="floatingToolbar">
     <div class="tool-group">
-      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)" data-tool="select">\u2b1a</div>
-      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)" data-tool="directSelect">\u2196</div>
-      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)" data-tool="select">\u2726</div>
+      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)">⬚</div>
+      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)">↖</div>
+      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)">✦</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="penTool" title="Pen Tool (P)" data-tool="pen">\u2712</div>
-      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)" data-tool="pencil">\u270e</div>
-      <div class="tool-btn" id="brushTool" title="Brush Tool (B)" data-tool="brush">\ud83d\udd8c</div>
+      <div class="tool-btn" id="penTool" title="Pen Tool (P)">✒</div>
+      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)">✎</div>
+      <div class="tool-btn" id="brushTool" title="Brush Tool (B)">🖌</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)" data-tool="rectangle">\u25a1</div>
-      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)" data-tool="ellipse">\u25cb</div>
-      <div class="tool-btn" id="polygonTool" title="Polygon Tool" data-tool="polygon">\u2b21</div>
-      <div class="tool-btn" id="starTool" title="Star Tool" data-tool="star">\u2605</div>
-      <div class="tool-btn" id="lineTool" title="Line Tool (/)" data-tool="line">\u2571</div>
+      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)">□</div>
+      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)">○</div>
+      <div class="tool-btn" id="polygonTool" title="Polygon Tool">⬡</div>
+      <div class="tool-btn" id="starTool" title="Star Tool">★</div>
+      <div class="tool-btn" id="lineTool" title="Line Tool (/)">╱</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="typeTool" title="Type Tool (T)" data-tool="type">T</div>
-      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool" data-tool="type">\u219d</div>
-      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool" data-tool="type">\ud835\udce3</div>
+      <div class="tool-btn" id="typeTool" title="Type Tool (T)">T</div>
+      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool">↝</div>
+      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool">𝓣</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool (Shift+M)" data-tool="select">\u29c6</div>
-      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool" data-tool="select">\u25a6</div>
-      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)" data-tool="select">\u2921</div>
+      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool (Shift+M)">⧆</div>
+      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool">▦</div>
+      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)">⤡</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)" data-tool="eyedropper">\ud83d\udca7</div>
-      <div class="tool-btn" id="measureTool" title="Measure Tool" data-tool="select">\ud83d\udccf</div>
+      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)">💧</div>
+      <div class="tool-btn" id="measureTool" title="Measure Tool">📏</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="handTool" title="Hand Tool (H)" data-tool="hand">\u270b</div>
-      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)" data-tool="zoom">\ud83d\udd0d</div>
+      <div class="tool-btn" id="handTool" title="Hand Tool (H)">✋</div>
+      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)">🔍</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="fillColor" title="Fill Color">\u25d0</div>
-      <div class="tool-btn" id="strokeColor" title="Stroke Color">\u2b58</div>
-      <div class="tool-btn" id="defaultColors" title="Default Colors">\u26ac</div>
+      <div class="tool-btn" id="fillColor" title="Fill Color">◐</div>
+      <div class="tool-btn" id="strokeColor" title="Stroke Color">⭘</div>
+      <div class="tool-btn" id="defaultColors" title="Default Colors">⚬</div>
     </div>
   </div>
 
   <!-- Right Panel Dock -->
   <div class="panel-dock visible" id="panelDock">
-    <button id="dockToggle">\u25c0</button>
+    <button id="dockToggle">◀</button>
     
     <div class="panel-tabs">
       <button class="panel-tab active" data-panel="properties">Properties</button>
@@ -583,7 +516,7 @@
       <button class="panel-tab" data-panel="align">Align</button>
       <button class="panel-tab" data-panel="character">Character</button>
       <button class="panel-tab" data-panel="paragraph">Paragraph</button>
-      <button class="panel-close-btn" id="panelCloseBtn" title="Close Panel">\u00d7</button>
+      <button class="panel-close-btn" id="panelCloseBtn" title="Close Panel">×</button>
     </div>
     
     <div class="panel-content">
@@ -592,41 +525,41 @@
         <h3>Transform</h3>
         <div class="control-row">
           <div class="control-group" style="flex:1">
-            <label for="propX">X</label>
-            <input type="number" id="propX">
+            <label>X</label>
+            <input type="number" id="propX" onchange="updateTransform()">
           </div>
           <div class="control-group" style="flex:1">
-            <label for="propY">Y</label>
-            <input type="number" id="propY">
+            <label>Y</label>
+            <input type="number" id="propY" onchange="updateTransform()">
           </div>
         </div>
         <div class="control-row">
           <div class="control-group" style="flex:1">
-            <label for="propW">W</label>
-            <input type="number" id="propW">
+            <label>W</label>
+            <input type="number" id="propW" onchange="updateTransform()">
           </div>
           <div class="control-group" style="flex:1">
-            <label for="propH">H</label>
-            <input type="number" id="propH">
+            <label>H</label>
+            <input type="number" id="propH" onchange="updateTransform()">
           </div>
         </div>
         <div class="control-row">
           <div class="control-group" style="flex:1">
-            <label for="propRotation">Rotation</label>
-            <input type="number" id="propRotation">
+            <label>Rotation</label>
+            <input type="number" id="propRotation" onchange="updateTransform()">
           </div>
           <div class="control-group" style="flex:1">
-            <label for="propShear">Shear</label>
-            <input type="number" id="propShear">
+            <label>Shear</label>
+            <input type="number" id="propShear" onchange="updateTransform()">
           </div>
         </div>
         <div class="control-group">
-          <label for="propOpacity">Opacity <span id="opacityVal">100</span>%</label>
-          <input type="range" id="propOpacity" min="0" max="100" value="100">
+          <label>Opacity <span id="opacityVal">100</span>%</label>
+          <input type="range" id="propOpacity" min="0" max="100" value="100" oninput="updateOpacity()">
         </div>
         <div class="control-group">
-          <label for="propBlendMode">Blend Mode</label>
-          <select id="propBlendMode">
+          <label>Blend Mode</label>
+          <select id="propBlendMode" onchange="updateBlendMode()">
             <option value="normal">Normal</option>
             <option value="multiply">Multiply</option>
             <option value="screen">Screen</option>
@@ -648,16 +581,16 @@
         
         <h3>Geometry</h3>
         <div class="control-row">
-          <button class="btn btn-sm" data-action="convertToPoint">Convert to Point</button>
-          <button class="btn btn-sm" data-action="convertToCurve">Convert to Curve</button>
+          <button class="btn btn-sm" onclick="convertToPoint()">Convert to Point</button>
+          <button class="btn btn-sm" onclick="convertToCurve()">Convert to Curve</button>
         </div>
       </div>
 
       <!-- Layers Panel -->
       <div id="panel-layers" class="panel-section">
         <div class="control-row" style="margin-bottom: 1rem;">
-          <button class="btn btn-sm" data-action="addLayer">+ New Layer</button>
-          <button class="btn btn-sm" data-action="deleteLayer">Delete Layer</button>
+          <button class="btn btn-sm" onclick="addLayer()">+ New Layer</button>
+          <button class="btn btn-sm" onclick="deleteLayer()">Delete Layer</button>
         </div>
         <div id="layersList">
           <!-- Layers will be populated dynamically -->
@@ -667,8 +600,8 @@
       <!-- Appearance Panel -->
       <div id="panel-appearance" class="panel-section">
         <div class="control-row" style="margin-bottom: 1rem;">
-          <button class="btn btn-sm btn-primary" data-action="addFill">+ Add Fill</button>
-          <button class="btn btn-sm" data-action="addStroke">+ Add Stroke</button>
+          <button class="btn btn-sm btn-primary" onclick="addFill()">+ Add Fill</button>
+          <button class="btn btn-sm" onclick="addStroke()">+ Add Stroke</button>
         </div>
         <div id="appearanceList">
           <!-- Appearance items will be populated dynamically -->
@@ -680,8 +613,8 @@
       <!-- Swatches Panel -->
       <div id="panel-swatches" class="panel-section">
         <div class="control-row" style="margin-bottom: 1rem;">
-          <button class="btn btn-sm" data-action="addSwatch">+ New Swatch</button>
-          <button class="btn btn-sm" data-action="clearSwatches">Clear</button>
+          <button class="btn btn-sm" onclick="addSwatch()">+ New Swatch</button>
+          <button class="btn btn-sm" onclick="clearSwatches()">Clear</button>
         </div>
         <div class="swatch-grid" id="swatchGrid">
           <!-- Swatches will be populated dynamically -->
@@ -692,29 +625,29 @@
       <div id="panel-gradient" class="panel-section">
         <h3>Gradient Type</h3>
         <div class="btn-group" style="margin-bottom: 1rem;">
-          <button class="btn" data-action="gradientLinear">Linear</button>
-          <button class="btn" data-action="gradientRadial">Radial</button>
+          <button class="btn" onclick="setGradientType('linear')">Linear</button>
+          <button class="btn" onclick="setGradientType('radial')">Radial</button>
         </div>
         
         <h3>Gradient Stops</h3>
         <div id="gradientStops">
           <div class="control-row">
             <div class="control-group" style="flex:1">
-              <label for="gradientStop1">Stop 1</label>
+              <label>Stop 1</label>
               <input type="color" id="gradientStop1" value="#60a5fa">
             </div>
             <div class="control-group" style="flex:1">
-              <label for="gradientPos1">Position</label>
+              <label>Position</label>
               <input type="range" id="gradientPos1" min="0" max="100" value="0">
             </div>
           </div>
           <div class="control-row">
             <div class="control-group" style="flex:1">
-              <label for="gradientStop2">Stop 2</label>
+              <label>Stop 2</label>
               <input type="color" id="gradientStop2" value="#020617">
             </div>
             <div class="control-group" style="flex:1">
-              <label for="gradientPos2">Position</label>
+              <label>Position</label>
               <input type="range" id="gradientPos2" min="0" max="100" value="100">
             </div>
           </div>
@@ -723,40 +656,40 @@
         <h3>Angle</h3>
         <div class="control-row">
           <input type="range" id="gradientAngle" min="0" max="360" value="0">
-          <span id="gradientAngleVal">0\u00b0</span>
+          <span id="gradientAngleVal">0°</span>
         </div>
       </div>
 
       <!-- Stroke Panel -->
       <div id="panel-stroke" class="panel-section">
         <div class="control-group">
-          <label for="strokeWeight">Weight</label>
-          <input type="range" id="strokeWeight" min="0" max="100" value="1">
+          <label>Weight</label>
+          <input type="range" id="strokeWeight" min="0" max="100" value="1" oninput="updateStroke()">
           <span id="strokeWeightVal">1 px</span>
         </div>
         <div class="control-group">
           <label>Cap</label>
           <div class="btn-group">
-            <button class="btn" data-action="strokeCapButt">Butt</button>
-            <button class="btn" data-action="strokeCapRound">Round</button>
-            <button class="btn" data-action="strokeCapSquare">Square</button>
+            <button class="btn" onclick="setStrokeCap('butt')">Butt</button>
+            <button class="btn" onclick="setStrokeCap('round')">Round</button>
+            <button class="btn" onclick="setStrokeCap('square')">Square</button>
           </div>
         </div>
         <div class="control-group">
           <label>Join</label>
           <div class="btn-group">
-            <button class="btn" data-action="strokeJoinMiter">Miter</button>
-            <button class="btn" data-action="strokeJoinRound">Round</button>
-            <button class="btn" data-action="strokeJoinBevel">Bevel</button>
+            <button class="btn" onclick="setStrokeJoin('miter')">Miter</button>
+            <button class="btn" onclick="setStrokeJoin('round')">Round</button>
+            <button class="btn" onclick="setStrokeJoin('bevel')">Bevel</button>
           </div>
         </div>
         <div class="control-group">
-          <label for="strokeDash">Dash Array</label>
-          <input type="text" id="strokeDash" placeholder="5,5">
+          <label>Dash Array</label>
+          <input type="text" id="strokeDash" placeholder="5,5" oninput="updateStroke()">
         </div>
         <div class="control-group">
-          <label for="strokeColorInput">Color</label>
-          <input type="color" id="strokeColorInput" value="#000000">
+          <label>Color</label>
+          <input type="color" id="strokeColorInput" value="#000000" oninput="updateStroke()">
         </div>
       </div>
 
@@ -764,30 +697,30 @@
       <div id="panel-align" class="panel-section">
         <h3>Align Objects</h3>
         <div class="align-grid">
-          <button class="align-btn" data-action="alignLeft" title="Align Left">\u2b05</button>
-          <button class="align-btn" data-action="alignCenterH" title="Align Center">\u2b0c</button>
-          <button class="align-btn" data-action="alignRight" title="Align Right">\u27a1</button>
-          <button class="align-btn" data-action="alignTop" title="Align Top">\u2b06</button>
-          <button class="align-btn" data-action="alignCenterV" title="Align Center">\u2b0d</button>
-          <button class="align-btn" data-action="alignBottom" title="Align Bottom">\u2b07</button>
+          <button class="align-btn" onclick="align('left')" title="Align Left">⬅</button>
+          <button class="align-btn" onclick="align('center-h')" title="Align Center">⬌</button>
+          <button class="align-btn" onclick="align('right')" title="Align Right">➡</button>
+          <button class="align-btn" onclick="align('top')" title="Align Top">⬆</button>
+          <button class="align-btn" onclick="align('center-v')" title="Align Center">⬍</button>
+          <button class="align-btn" onclick="align('bottom')" title="Align Bottom">⬇</button>
         </div>
         
         <h3>Distribute Objects</h3>
         <div class="align-grid">
-          <button class="align-btn" data-action="distributeLeft">\u2af7</button>
-          <button class="align-btn" data-action="distributeCenterH">\u2af8</button>
-          <button class="align-btn" data-action="distributeRight">\u2af9</button>
-          <button class="align-btn" data-action="distributeTop">\u2b0f</button>
-          <button class="align-btn" data-action="distributeCenterV">\u2b0e</button>
-          <button class="align-btn" data-action="distributeBottom">\u2b10</button>
+          <button class="align-btn" onclick="distribute('left')">⫷</button>
+          <button class="align-btn" onclick="distribute('center-h')">⫸</button>
+          <button class="align-btn" onclick="distribute('right')">⫹</button>
+          <button class="align-btn" onclick="distribute('top')">⬏</button>
+          <button class="align-btn" onclick="distribute('center-v')">⬎</button>
+          <button class="align-btn" onclick="distribute('bottom')">⬐</button>
         </div>
       </div>
 
       <!-- Character Panel -->
       <div id="panel-character" class="panel-section">
         <div class="control-group">
-          <label for="fontFamily">Font Family</label>
-          <select id="fontFamily">
+          <label>Font Family</label>
+          <select id="fontFamily" onchange="updateTypography()">
             <option value="Arial">Arial</option>
             <option value="Helvetica">Helvetica</option>
             <option value="Times New Roman">Times New Roman</option>
@@ -800,30 +733,30 @@
         </div>
         <div class="control-row">
           <div class="control-group" style="flex:1">
-            <label for="fontSize">Font Size</label>
-            <input type="number" id="fontSize" value="32">
+            <label>Font Size</label>
+            <input type="number" id="fontSize" value="32" onchange="updateTypography()">
           </div>
           <div class="control-group" style="flex:1">
-            <label for="lineHeight">Leading</label>
-            <input type="number" id="lineHeight" value="40">
+            <label>Leading</label>
+            <input type="number" id="lineHeight" value="40" onchange="updateTypography()">
           </div>
         </div>
         <div class="control-row">
           <div class="control-group" style="flex:1">
-            <label for="letterSpacing">Tracking</label>
-            <input type="number" id="letterSpacing" value="0">
+            <label>Tracking</label>
+            <input type="number" id="letterSpacing" value="0" onchange="updateTypography()">
           </div>
         </div>
         <div class="btn-group" style="margin-bottom: 1rem;">
-          <button class="btn" data-action="fontStyleBold">B</button>
-          <button class="btn" data-action="fontStyleItalic">I</button>
-          <button class="btn" data-action="fontStyleUnderline">U</button>
+          <button class="btn" onclick="setFontStyle('bold')">B</button>
+          <button class="btn" onclick="setFontStyle('italic')">I</button>
+          <button class="btn" onclick="setFontStyle('underline')">U</button>
         </div>
         <div class="btn-group">
-          <button class="btn" data-action="textAlignLeft">\u2b05</button>
-          <button class="btn" data-action="textAlignCenter">\u2b0c</button>
-          <button class="btn" data-action="textAlignRight">\u27a1</button>
-          <button class="btn" data-action="textAlignJustify">\u2261</button>
+          <button class="btn" onclick="setTextAlign('left')">⬅</button>
+          <button class="btn" onclick="setTextAlign('center')">⬌</button>
+          <button class="btn" onclick="setTextAlign('right')">➡</button>
+          <button class="btn" onclick="setTextAlign('justify')">≡</button>
         </div>
       </div>
 
@@ -832,33 +765,33 @@
         <div class="control-group">
           <label>Alignment</label>
           <div class="btn-group">
-            <button class="btn" data-action="textAlignLeft">Left</button>
-            <button class="btn" data-action="textAlignCenter">Center</button>
-            <button class="btn" data-action="textAlignRight">Right</button>
-            <button class="btn" data-action="textAlignJustify">Justify</button>
+            <button class="btn" onclick="setTextAlign('left')">Left</button>
+            <button class="btn" onclick="setTextAlign('center')">Center</button>
+            <button class="btn" onclick="setTextAlign('right')">Right</button>
+            <button class="btn" onclick="setTextAlign('justify')">Justify</button>
           </div>
         </div>
         <div class="control-row">
           <div class="control-group" style="flex:1">
-            <label for="indentLeft">Left Indent</label>
-            <input type="number" id="indentLeft" value="0">
+            <label>Left Indent</label>
+            <input type="number" id="indentLeft" value="0" onchange="updateTypography()">
           </div>
           <div class="control-group" style="flex:1">
-            <label for="indentRight">Right Indent</label>
-            <input type="number" id="indentRight" value="0">
+            <label>Right Indent</label>
+            <input type="number" id="indentRight" value="0" onchange="updateTypography()">
           </div>
         </div>
         <div class="control-group">
-          <label for="indentFirst">First Line Indent</label>
-          <input type="number" id="indentFirst" value="0">
+          <label>First Line Indent</label>
+          <input type="number" id="indentFirst" value="0" onchange="updateTypography()">
         </div>
         <div class="control-group">
-          <label for="spaceBefore">Space Before</label>
-          <input type="number" id="spaceBefore" value="0">
+          <label>Space Before</label>
+          <input type="number" id="spaceBefore" value="0" onchange="updateTypography()">
         </div>
         <div class="control-group">
-          <label for="spaceAfter">Space After</label>
-          <input type="number" id="spaceAfter" value="0">
+          <label>Space After</label>
+          <input type="number" id="spaceAfter" value="0" onchange="updateTypography()">
         </div>
       </div>
     </div>
@@ -880,17 +813,17 @@
 
 <!-- Context Menu -->
 <div class="context-menu" id="contextMenu">
-  <div data-action="copy">Copy</div>
-  <div data-action="paste">Paste</div>
-  <div data-action="duplicate">Duplicate</div>
+  <div onclick="copy()">Copy</div>
+  <div onclick="paste()">Paste</div>
+  <div onclick="duplicate()">Duplicate</div>
   <hr>
-  <div data-action="bringToFront">Bring to Front</div>
-  <div data-action="sendToBack">Send to Back</div>
+  <div onclick="bringToFront()">Bring to Front</div>
+  <div onclick="sendToBack()">Send to Back</div>
   <hr>
-  <div data-action="groupSelection">Group</div>
-  <div data-action="ungroupSelection">Ungroup</div>
+  <div onclick="groupSelection()">Group</div>
+  <div onclick="ungroupSelection()">Ungroup</div>
   <hr>
-  <div data-action="deleteSelection">Delete</div>
+  <div onclick="deleteSelection()">Delete</div>
 </div>
 
 <!-- Firebase Auth -->
@@ -942,7 +875,7 @@ onAuthStateChanged(auth, async (user) => {
   let progress = next === levels[level] ? 100 :
     ((xp - levels[level]) / (next - levels[level])) * 100;
 
-  levelText.textContent = `Level ${level} \u2022 ${xp} XP`;
+  levelText.textContent = `Level ${level} • ${xp} XP`;
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
@@ -973,8 +906,6 @@ var gridSize = 20;
 var layers = [];
 var currentLayerIndex = 0;
 var zoomLevel = 1;
-var documentWidth = 1920;
-var documentHeight = 1080;
 
 console.log('Paper.js initialized, view size:', view.size);
 
@@ -985,26 +916,6 @@ function initLayers() {
   ];
   console.log('Layers initialized:', layers);
   updateLayersList();
-}
-
-// Create artboard based on document size
-function createArtboard() {
-  var artboard = document.getElementById('artboardIndicator');
-  var canvasRect = document.getElementById('canvas').getBoundingClientRect();
-  
-  // Calculate scale to fit document in view
-  var scaleX = (view.size.width - 100) / documentWidth;
-  var scaleY = (view.size.height - 100) / documentHeight;
-  var scale = Math.min(scaleX, scaleY, 1);
-  
-  var artboardWidth = documentWidth * scale;
-  var artboardHeight = documentHeight * scale;
-  
-  artboard.style.left = ((view.size.width - artboardWidth) / 2 + 60) + 'px';
-  artboard.style.top = ((view.size.height - artboardHeight) / 2 + 20) + 'px';
-  artboard.style.width = artboardWidth + 'px';
-  artboard.style.height = artboardHeight + 'px';
-  artboard.style.display = 'block';
 }
 
 // Tool/Panel Notification System
@@ -1040,7 +951,7 @@ function activateTool(name) {
     currentTool = tools[name];
     currentTool.activate();
     console.log('Tool activated:', name);
-    document.querySelectorAll('.tool-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
     var btn = document.getElementById(name + 'Tool');
     if (btn) btn.classList.add('active');
     
@@ -1532,6 +1443,59 @@ tools.zoom.onMouseDown = function(event) {
   updateZoomDisplay();
 };
 
+// Bind tool buttons
+document.getElementById('selectTool').onclick = function() { activateTool('select'); };
+document.getElementById('directSelectTool').onclick = function() { activateTool('directSelect'); };
+document.getElementById('magicWandTool').onclick = function() { activateTool('select'); };
+document.getElementById('penTool').onclick = function() { activateTool('pen'); };
+document.getElementById('pencilTool').onclick = function() { activateTool('pencil'); };
+document.getElementById('brushTool').onclick = function() { activateTool('brush'); };
+document.getElementById('rectangleTool').onclick = function() { activateTool('rectangle'); };
+document.getElementById('ellipseTool').onclick = function() { activateTool('ellipse'); };
+document.getElementById('polygonTool').onclick = function() { activateTool('polygon'); };
+document.getElementById('starTool').onclick = function() { activateTool('star'); };
+document.getElementById('lineTool').onclick = function() { activateTool('line'); };
+document.getElementById('typeTool').onclick = function() { activateTool('type'); };
+document.getElementById('eyedropperTool').onclick = function() { activateTool('eyedropper'); };
+document.getElementById('handTool').onclick = function() { activateTool('hand'); };
+document.getElementById('zoomTool').onclick = function() { activateTool('zoom'); };
+
+// Color pickers
+document.getElementById('fillColor').onclick = function() {
+  var colorStr = fillColor.toCSS ? fillColor.toCSS(true) : fillColor;
+  var color = prompt('Enter fill color (hex):', colorStr);
+  if (color) {
+    fillColor = new Color(color);
+    this.style.backgroundColor = color;
+    if (project.selectedItems.length) {
+      project.selectedItems.forEach(function(item) {
+        item.fillColor = new Color(color);
+      });
+    }
+  }
+};
+
+document.getElementById('strokeColor').onclick = function() {
+  var colorStr = strokeColor.toCSS ? strokeColor.toCSS(true) : strokeColor;
+  var color = prompt('Enter stroke color (hex):', colorStr);
+  if (color) {
+    strokeColor = new Color(color);
+    this.style.backgroundColor = color;
+    if (project.selectedItems.length) {
+      project.selectedItems.forEach(function(item) {
+        item.strokeColor = new Color(color);
+      });
+    }
+  }
+};
+
+document.getElementById('defaultColors').onclick = function() {
+  fillColor = new Color('#ff0000');
+  strokeColor = new Color('#000000');
+  document.getElementById('fillColor').style.backgroundColor = '#ff0000';
+  document.getElementById('strokeColor').style.backgroundColor = '#000000';
+};
+
 // Update properties panel
 function updateProperties() {
   var item = project.selectedItems[0];
@@ -1636,12 +1600,12 @@ function updateLayersList() {
     var layer = layers[i];
     var layerItem = document.createElement('div');
     layerItem.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
-    layerItem.innerHTML = `  
-      <span class="layer-icon">\ud83d\udcc4</span>
+    layerItem.innerHTML = `
+      <span class="layer-icon">📄</span>
       <span class="layer-name">${layer.name}</span>
       <div class="layer-actions">
-        <button class="btn btn-sm" data-action="toggleLayerVisibility" data-index="${i}">${layer.visible ? '\ud83d\udc41' : '\ud83d\udc41\u200d\ud83d\udde8'}</button>
-        <button class="btn btn-sm" data-action="toggleLayerLock" data-index="${i}">${layer.locked ? '\ud83d\udd12' : '\ud83d\udd13'}</button>
+        <button class="btn btn-sm" onclick="toggleLayerVisibility(${i})">${layer.visible ? '👁' : '👁‍🗨'}</button>
+        <button class="btn btn-sm" onclick="toggleLayerLock(${i})">${layer.locked ? '🔒' : '🔓'}</button>
       </div>
     `;
     layerItem.onclick = function(e) {
@@ -1844,20 +1808,6 @@ function ungroupSelection() {
   saveState();
 }
 
-function lockSelection() {
-  if (project.selectedItems.length) {
-    project.selectedItems.forEach(function(item) {
-      item.locked = true;
-    });
-  }
-}
-
-function unlockAll() {
-  project.activeLayer.children.forEach(function(item) {
-    item.locked = false;
-  });
-}
-
 // Transform
 function rotateSelection(angle) {
   if (project.selectedItems.length) {
@@ -1881,40 +1831,13 @@ function flipSelection(direction) {
   }
 }
 
-// Create Outlines - WORKING IMPLEMENTATION
-function createOutlines() {
-  if (project.selectedItems.length === 0) {
-    alert('Please select a text object to create outlines.');
-    return;
-  }
-  
-  project.selectedItems.forEach(function(item) {
-    if (item instanceof PointText) {
-      var outline = item.createOutline();
-      if (outline) {
-        outline.fillColor = item.fillColor;
-        outline.strokeColor = item.strokeColor;
-        outline.strokeWidth = item.strokeWidth || 0;
-        outline.selected = true;
-        item.remove();
-        saveState();
-      } else {
-        alert('Could not create outlines for this text. The text may be empty.');
-      }
-    }
-  });
-}
-
 // Pathfinder operations
 function pathfinder(operation) {
   var items = project.selectedItems.filter(function(item) {
     return item instanceof Path && item.selected;
   });
   
-  if (items.length < 2) {
-    alert('Please select at least 2 paths for pathfinder operations.');
-    return;
-  }
+  if (items.length < 2) return;
   
   var result;
   switch(operation) {
@@ -1930,21 +1853,6 @@ function pathfinder(operation) {
     case 'exclude':
       result = items[0].exclude(items[1]);
       break;
-    case 'divide':
-      alert('Divide operation not yet implemented');
-      return;
-    case 'trim':
-      alert('Trim operation not yet implemented');
-      return;
-    case 'merge':
-      alert('Merge operation not yet implemented');
-      return;
-    case 'crop':
-      alert('Crop operation not yet implemented');
-      return;
-    case 'outline':
-      alert('Outline operation not yet implemented');
-      return;
   }
   
   if (result) {
@@ -1963,8 +1871,6 @@ function selectSameFill() {
   if (project.selectedItems.length === 0) return;
   
   var targetColor = project.selectedItems[0].fillColor;
-  if (!targetColor) return;
-  
   project.deselectAll();
   
   project.activeLayer.children.forEach(function(item) {
@@ -1978,8 +1884,6 @@ function selectSameStroke() {
   if (project.selectedItems.length === 0) return;
   
   var targetColor = project.selectedItems[0].strokeColor;
-  if (!targetColor) return;
-  
   project.deselectAll();
   
   project.activeLayer.children.forEach(function(item) {
@@ -1993,7 +1897,6 @@ function selectSameStrokeWidth() {
   if (project.selectedItems.length === 0) return;
   
   var targetWidth = project.selectedItems[0].strokeWidth;
-  
   project.deselectAll();
   
   project.activeLayer.children.forEach(function(item) {
@@ -2098,57 +2001,25 @@ function exportPDF() {
   URL.revokeObjectURL(url);
 }
 
-// File operations - NEW DOCUMENT WITH SIZE OPTIONS
+// File operations
 function newDocument() {
-  var modal = document.getElementById('newDocumentModal');
-  if (modal) {
-    modal.classList.add('active');
-  }
-}
-
-function closeNewDocumentModal() {
-  var modal = document.getElementById('newDocumentModal');
-  if (modal) {
-    modal.classList.remove('active');
-  }
-}
-
-function createNewDocument() {
-  var width = parseInt(document.getElementById('docWidth').value);
-  var height = parseInt(document.getElementById('docHeight').value);
-  
-  if (isNaN(width) || isNaN(height) || width < 1 || height < 1) {
-    alert('Please enter valid document dimensions.');
-    return;
-  }
-  
-  documentWidth = width;
-  documentHeight = height;
-  
-  // Clear the project properly
-  project.activeLayer.removeChildren();
-  undoStack = [];
-  redoStack = [];
-  layers = [];
-  initLayers();
-  createArtboard();
-  saveState();
-  updateLayersList();
-  updateProperties();
-  
-  // Update status bar
-  var statusMemory = document.getElementById('statusMemory');
-  if (statusMemory) {
-    statusMemory.textContent = 'Document: ' + width + ' x ' + height;
-  }
-  
-  closeNewDocumentModal();
-  console.log('New document created:', width, 'x', height);
-  
-  // Make sure the canvas is visible
-  var loader = document.getElementById('loader');
-  if (loader) {
-    loader.style.display = 'none';
+  if (confirm('Create new document? All unsaved changes will be lost.')) {
+    // Clear the project properly
+    project.activeLayer.removeChildren();
+    undoStack = [];
+    redoStack = [];
+    layers = [];
+    initLayers();
+    saveState();
+    updateLayersList();
+    updateProperties();
+    console.log('New document created');
+    
+    // Make sure the canvas is visible
+    var loader = document.getElementById('loader');
+    if (loader) {
+      loader.style.display = 'none';
+    }
   }
 }
 
@@ -2218,229 +2089,19 @@ function handlePlace(event) {
 }
 
 // Type operations
-function findFont() {
-  alert('Font search feature coming soon!');
-}
-
-function showTransformDialog() {
-  alert('Transform dialog - coming soon!');
-}
-
-// Placeholder functions for other features
-function convertToPoint() {
-  console.log('Convert to point - coming soon!');
-}
-
-function convertToCurve() {
-  console.log('Convert to curve - coming soon!');
-}
-
-function align(alignment) {
-  if (!project || !project.selectedItems || project.selectedItems.length < 2) {
-    alert('Please select at least 2 objects to align.');
-    return;
-  }
-  
-  var items = project.selectedItems;
-  var bounds = items.map(function(item) { return item.bounds; });
-  
-  switch(alignment) {
-    case 'left':
-      items.forEach(function(item) { item.position.x = bounds[0].left; });
-      break;
-    case 'right':
-      items.forEach(function(item) { item.position.x = bounds[0].right - (item.bounds.width / 2); });
-      break;
-    case 'top':
-      items.forEach(function(item) { item.position.y = bounds[0].top; });
-      break;
-    case 'bottom':
-      items.forEach(function(item) { item.position.y = bounds[0].bottom - (item.bounds.height / 2); });
-      break;
-    case 'center-h':
-      items.forEach(function(item) { item.position.x = bounds[0].center.x; });
-      break;
-    case 'center-v':
-      items.forEach(function(item) { item.position.y = bounds[0].center.y; });
-      break;
-  }
+function createOutlines() {
+  project.selectedItems.forEach(function(item) {
+    if (item instanceof PointText) {
+      var outline = item.createOutline();
+      item.remove();
+      outline.selected = true;
+    }
+  });
   saveState();
 }
 
-function distribute(distribution) {
-  if (!project || !project.selectedItems || project.selectedItems.length < 3) {
-    alert('Please select at least 3 objects to distribute.');
-    return;
-  }
-  
-  var items = project.selectedItems;
-  alert('Distribute feature - arrange items evenly');
-}
-
-function addFill() {
-  var appearanceList = document.getElementById('appearanceList');
-  if (appearanceList) {
-    var item = document.createElement('div');
-    item.className = 'appearance-item';
-    item.innerHTML = `
-      <span class="type">Fill</span>
-      <div class="color-preview" style="background-color: #ff0000"></div>
-      <span class="value">#ff0000</span>
-    `;
-    appearanceList.appendChild(item);
-  }
-}
-
-function addStroke() {
-  var appearanceList = document.getElementById('appearanceList');
-  if (appearanceList) {
-    var item = document.createElement('div');
-    item.className = 'appearance-item';
-    item.innerHTML = `
-      <span class="type">Stroke</span>
-      <div class="color-preview" style="background-color: #000000"></div>
-      <span class="value">#000000</span>
-    `;
-    appearanceList.appendChild(item);
-  }
-}
-
-function setStrokeCap(cap) {
-  if (project && project.selectedItems && project.selectedItems.length) {
-    project.selectedItems.forEach(function(item) {
-      item.strokeCap = cap;
-    });
-  }
-}
-
-function setStrokeJoin(join) {
-  if (project && project.selectedItems && project.selectedItems.length) {
-    project.selectedItems.forEach(function(item) {
-      item.strokeJoin = join;
-    });
-  }
-}
-
-function updateStroke() {
-  var weight = parseFloat(document.getElementById('strokeWeight').value);
-  var dash = document.getElementById('strokeDash').value;
-  var color = document.getElementById('strokeColorInput').value;
-  
-  if (project && project.selectedItems && project.selectedItems.length) {
-    project.selectedItems.forEach(function(item) {
-      item.strokeWidth = weight;
-      if (dash) {
-        var dashArray = dash.split(',').map(function(d) { return parseFloat(d.trim()); });
-        item.dashArray = dashArray;
-      } else {
-        item.dashArray = [];
-      }
-      item.strokeColor = color;
-    });
-  }
-}
-
-function updateTypography() {
-  if (!project || !project.selectedItems || project.selectedItems.length === 0) return;
-  
-  var fontFamily = document.getElementById('fontFamily').value;
-  var fontSize = parseInt(document.getElementById('fontSize').value);
-  var lineHeight = parseInt(document.getElementById('lineHeight').value);
-  var letterSpacing = parseInt(document.getElementById('letterSpacing').value);
-  
-  project.selectedItems.forEach(function(item) {
-    if (item instanceof PointText) {
-      item.fontFamily = fontFamily;
-      item.fontSize = fontSize;
-      item.leading = lineHeight;
-    }
-  });
-}
-
-function setFontStyle(style) {
-  if (!project || !project.selectedItems || project.selectedItems.length === 0) return;
-  
-  project.selectedItems.forEach(function(item) {
-    if (item instanceof PointText) {
-      switch(style) {
-        case 'bold':
-          item.fontWeight = 'bold';
-          break;
-        case 'italic':
-          item.fontStyle = 'italic';
-          break;
-        case 'underline':
-          // Text decoration not directly available in Paper.js
-          break;
-      }
-    }
-  });
-}
-
-function setTextAlign(align) {
-  if (!project || !project.selectedItems || project.selectedItems.length === 0) return;
-  
-  project.selectedItems.forEach(function(item) {
-    if (item instanceof PointText) {
-      item.justification = align;
-    }
-  });
-}
-
-function addSwatch() {
-  var color = prompt('Enter hex color:', '#000000');
-  if (color && /^#[0-9A-Fa-f]{6}$/.test(color)) {
-    // Would add to swatches
-    console.log('Add swatch:', color);
-  }
-}
-
-function clearSwatches() {
-  if (confirm('Clear all custom swatches?')) {
-    // Would clear swatches
-    console.log('Clear swatches');
-  }
-}
-
-function setGradientType(type) {
-  alert('Gradient type: ' + type);
-}
-
-function showPanel(panelName) {
-  document.querySelectorAll('.panel-tab').forEach(function(t) { t.classList.remove('active'); });
-  document.querySelectorAll('.panel-section').forEach(function(s) { s.classList.remove('active'); });
-  
-  var tab = document.querySelector('.panel-tab[data-panel="' + panelName + '"]');
-  if (tab) tab.classList.add('active');
-  
-  var section = document.getElementById('panel-' + panelName);
-  if (section) section.classList.add('active');
-  
-  // Show dock if hidden
-  var dock = document.getElementById('panelDock');
-  if (dock) {
-    dock.classList.add('visible');
-    dock.classList.remove('hidden');
-    var dockToggle = document.getElementById('dockToggle');
-    if (dockToggle) dockToggle.textContent = '\u25c0';
-  }
-  
-  // Show notification with panel name
-  var panelNames = {
-    'properties': 'Properties Panel',
-    'layers': 'Layers Panel',
-    'appearance': 'Appearance Panel',
-    'swatches': 'Swatches Panel',
-    'gradient': 'Gradient Panel',
-    'stroke': 'Stroke Panel',
-    'align': 'Align Panel',
-    'character': 'Character Panel',
-    'paragraph': 'Paragraph Panel'
-  };
-  
-  if (panelNames[panelName]) {
-    showToolNotification(panelNames[panelName]);
-  }
+function findFont() {
+  alert('Font search feature coming soon!');
 }
 
 // Context menu
@@ -2607,7 +2268,7 @@ document.addEventListener('keydown', function(event) {
   }
 });
 
-// Mouse position tracking for desktop
+// Mouse and Touch position tracking
 view.onMouseMove = function(event) {
   var statusPosition = document.getElementById('statusPosition');
   if (statusPosition) {
@@ -2625,8 +2286,6 @@ console.log('Activating selection tool...');
 activateTool('select');
 console.log('Saving initial state...');
 saveState();
-console.log('Creating default artboard...');
-createArtboard();
 console.log('Paper.js setup complete!');
 
 // Hide loader after a short delay
@@ -2642,8 +2301,6 @@ view.onFrame = function(event) {
 
 // Expose functions to global scope for HTML onclick handlers
 window.newDocument = newDocument;
-window.closeNewDocumentModal = closeNewDocumentModal;
-window.createNewDocument = createNewDocument;
 window.saveDocument = saveDocument;
 window.saveDocumentAs = saveDocumentAs;
 window.handleOpen = handleOpen;
@@ -2710,502 +2367,111 @@ window.setTextAlign = setTextAlign;
 
 <script>
 // Panel tab switching
-document.querySelectorAll('.panel-tab').forEach(function(tab) {
+document.querySelectorAll('.panel-tab').forEach(tab => {
   tab.addEventListener('click', function() {
-    document.querySelectorAll('.panel-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.panel-section').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
     
     this.classList.add('active');
-    var panelName = this.dataset.panel;
-    var section = document.getElementById('panel-' + panelName);
-    if (section) section.classList.add('active');
+    document.getElementById('panel-' + this.dataset.panel).classList.add('active');
   });
 });
 
-// Dock toggle - Fixed to work properly
-var dock = document.getElementById('panelDock');
-var dockToggle = document.getElementById('dockToggle');
-var panelCloseBtn = document.getElementById('panelCloseBtn');
-var dockVisible = true;
+// Dock toggle
+const dock = document.getElementById('panelDock');
+const dockToggle = document.getElementById('dockToggle');
+const panelCloseBtn = document.getElementById('panelCloseBtn');
+const panelBackdrop = document.getElementById('panelBackdrop');
+let dockVisible = true;
 
 function toggleDock() {
   dockVisible = !dockVisible;
-  if (dock) {
-    dock.classList.toggle('visible', dockVisible);
-    dock.classList.toggle('hidden', !dockVisible);
-  }
-  if (dockToggle) {
-    dockToggle.textContent = dockVisible ? '\u25c0' : '\u25b6';
-  }
+  dock.classList.toggle('visible', dockVisible);
+  dock.classList.toggle('hidden', !dockVisible);
+  dockToggle.textContent = dockVisible ? '◀' : '▶';
 }
 
-if (dockToggle) {
-  dockToggle.onclick = toggleDock;
-}
-
+dockToggle.onclick = toggleDock;
 if (panelCloseBtn) {
   panelCloseBtn.onclick = toggleDock;
 }
 
-// Document preset handler
-document.getElementById('docPreset').addEventListener('change', function() {
-  var preset = this.value;
-  if (preset !== 'custom') {
-    var dimensions = preset.split('x');
-    document.getElementById('docWidth').value = dimensions[0];
-    document.getElementById('docHeight').value = dimensions[1];
-  }
-});
-
-// Action handler for menu items and buttons
-document.addEventListener('click', function(event) {
-  var element = event.target;
-  var action = element.dataset.action;
+// Show specific panel
+function showPanel(panelName) {
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
   
-  // Handle click on buttons with data-action
-  if (action) {
-    console.log('Action clicked:', action);
-    
-    switch(action) {
-      // File menu actions
-      case 'newDocument':
-        if (window.newDocument) window.newDocument();
-        break;
-      case 'openFile':
-        var openInput = document.getElementById('openFile');
-        if (openInput) openInput.click();
-        break;
-      case 'saveDocument':
-        if (window.saveDocument) window.saveDocument();
-        break;
-      case 'saveDocumentAs':
-        if (window.saveDocumentAs) window.saveDocumentAs();
-        break;
-      case 'placeImage':
-        var placeInput = document.getElementById('placeImage');
-        if (placeInput) placeInput.click();
-        break;
-      case 'exportSVG':
-        if (window.exportSVG) window.exportSVG();
-        break;
-      case 'exportPNG':
-        if (window.exportPNG) window.exportPNG();
-        break;
-      case 'exportPDF':
-        if (window.exportPDF) window.exportPDF();
-        break;
-      
-      // Edit menu actions
-      case 'undo':
-        if (window.undo) window.undo();
-        break;
-      case 'redo':
-        if (window.redo) window.redo();
-        break;
-      case 'cut':
-        if (window.cut) window.cut();
-        break;
-      case 'copy':
-        if (window.copy) window.copy();
-        break;
-      case 'paste':
-        if (window.paste) window.paste();
-        break;
-      case 'duplicate':
-        if (window.duplicate) window.duplicate();
-        break;
-      case 'deleteSelection':
-        if (window.deleteSelection) window.deleteSelection();
-        break;
-      case 'selectAll':
-        if (window.selectAll) window.selectAll();
-        break;
-      case 'deselectAll':
-        if (window.deselectAll) window.deselectAll();
-        break;
-      
-      // Object menu actions
-      case 'groupSelection':
-        if (window.groupSelection) window.groupSelection();
-        break;
-      case 'ungroupSelection':
-        if (window.ungroupSelection) window.ungroupSelection();
-        break;
-      case 'lockSelection':
-        if (window.lockSelection) window.lockSelection();
-        break;
-      case 'unlockAll':
-        if (window.unlockAll) window.unlockAll();
-        break;
-      case 'bringToFront':
-        if (window.bringToFront) window.bringToFront();
-        break;
-      case 'sendToBack':
-        if (window.sendToBack) window.sendToBack();
-        break;
-      case 'bringForward':
-        if (window.bringForward) window.bringForward();
-        break;
-      case 'sendBackward':
-        if (window.sendBackward) window.sendBackward();
-        break;
-      case 'rotateSelectionCW':
-        if (window.rotateSelection) window.rotateSelection(-90);
-        break;
-      case 'rotateSelectionCCW':
-        if (window.rotateSelection) window.rotateSelection(90);
-        break;
-      case 'flipSelectionHorizontal':
-        if (window.flipSelection) window.flipSelection('horizontal');
-        break;
-      case 'flipSelectionVertical':
-        if (window.flipSelection) window.flipSelection('vertical');
-        break;
-      case 'showTransformDialog':
-        if (window.showTransformDialog) window.showTransformDialog();
-        break;
-      case 'pathfinderUnite':
-        if (window.pathfinder) window.pathfinder('unite');
-        break;
-      case 'pathfinderMinus':
-        if (window.pathfinder) window.pathfinder('minus');
-        break;
-      case 'pathfinderIntersect':
-        if (window.pathfinder) window.pathfinder('intersect');
-        break;
-      case 'pathfinderExclude':
-        if (window.pathfinder) window.pathfinder('exclude');
-        break;
-      case 'pathfinderDivide':
-        if (window.pathfinder) window.pathfinder('divide');
-        break;
-      case 'pathfinderTrim':
-        if (window.pathfinder) window.pathfinder('trim');
-        break;
-      case 'pathfinderMerge':
-        if (window.pathfinder) window.pathfinder('merge');
-        break;
-      case 'pathfinderCrop':
-        if (window.pathfinder) window.pathfinder('crop');
-        break;
-      case 'pathfinderOutline':
-        if (window.pathfinder) window.pathfinder('outline');
-        break;
-      
-      // Type menu actions
-      case 'createOutlines':
-        if (window.createOutlines) window.createOutlines();
-        break;
-      case 'findFont':
-        if (window.findFont) window.findFont();
-        break;
-      
-      // Select menu actions
-      case 'selectSameFill':
-        if (window.selectSameFill) window.selectSameFill();
-        break;
-      case 'selectSameStroke':
-        if (window.selectSameStroke) window.selectSameStroke();
-        break;
-      case 'selectSameStrokeWidth':
-        if (window.selectSameStrokeWidth) window.selectSameStrokeWidth();
-        break;
-      
-      // View menu actions
-      case 'zoomIn':
-        if (window.zoomIn) window.zoomIn();
-        break;
-      case 'zoomOut':
-        if (window.zoomOut) window.zoomOut();
-        break;
-      case 'zoomToFit':
-        if (window.zoomToFit) window.zoomToFit();
-        break;
-      case 'zoomTo100':
-        if (window.zoomTo100) window.zoomTo100();
-        break;
-      case 'toggleGrid':
-        if (window.toggleGrid) window.toggleGrid();
-        break;
-      case 'toggleRulers':
-        if (window.toggleRulers) window.toggleRulers();
-        break;
-      case 'toggleSnap':
-        if (window.toggleSnap) window.toggleSnap();
-        break;
-      
-      // Window menu actions
-      case 'showPanelProperties':
-        if (window.showPanel) window.showPanel('properties');
-        break;
-      case 'showPanelLayers':
-        if (window.showPanel) window.showPanel('layers');
-        break;
-      case 'showPanelAppearance':
-        if (window.showPanel) window.showPanel('appearance');
-        break;
-      case 'showPanelSwatches':
-        if (window.showPanel) window.showPanel('swatches');
-        break;
-      case 'showPanelGradient':
-        if (window.showPanel) window.showPanel('gradient');
-        break;
-      case 'showPanelStroke':
-        if (window.showPanel) window.showPanel('stroke');
-        break;
-      case 'showPanelAlign':
-        if (window.showPanel) window.showPanel('align');
-        break;
-      case 'showPanelCharacter':
-        if (window.showPanel) window.showPanel('character');
-        break;
-      case 'showPanelParagraph':
-        if (window.showPanel) window.showPanel('paragraph');
-        break;
-      
-      // Layer actions
-      case 'addLayer':
-        if (window.addLayer) window.addLayer();
-        break;
-      case 'deleteLayer':
-        if (window.deleteLayer) window.deleteLayer();
-        break;
-      case 'toggleLayerVisibility':
-        var index = parseInt(element.dataset.index);
-        if (!isNaN(index) && window.toggleLayerVisibility) {
-          window.toggleLayerVisibility(index);
-        }
-        break;
-      case 'toggleLayerLock':
-        var index = parseInt(element.dataset.index);
-        if (!isNaN(index) && window.toggleLayerLock) {
-          window.toggleLayerLock(index);
-        }
-        break;
-      
-      // Appearance actions
-      case 'addFill':
-        if (window.addFill) window.addFill();
-        break;
-      case 'addStroke':
-        if (window.addStroke) window.addStroke();
-        break;
-      
-      // Swatch actions
-      case 'addSwatch':
-        if (window.addSwatch) window.addSwatch();
-        break;
-      case 'clearSwatches':
-        if (window.clearSwatches) window.clearSwatches();
-        break;
-      
-      // Gradient actions
-      case 'gradientLinear':
-        if (window.setGradientType) window.setGradientType('linear');
-        break;
-      case 'gradientRadial':
-        if (window.setGradientType) window.setGradientType('radial');
-        break;
-      
-      // Stroke actions
-      case 'strokeCapButt':
-        if (window.setStrokeCap) window.setStrokeCap('butt');
-        break;
-      case 'strokeCapRound':
-        if (window.setStrokeCap) window.setStrokeCap('round');
-        break;
-      case 'strokeCapSquare':
-        if (window.setStrokeCap) window.setStrokeCap('square');
-        break;
-      case 'strokeJoinMiter':
-        if (window.setStrokeJoin) window.setStrokeJoin('miter');
-        break;
-      case 'strokeJoinRound':
-        if (window.setStrokeJoin) window.setStrokeJoin('round');
-        break;
-      case 'strokeJoinBevel':
-        if (window.setStrokeJoin) window.setStrokeJoin('bevel');
-        break;
-      
-      // Align actions
-      case 'alignLeft':
-        if (window.align) window.align('left');
-        break;
-      case 'alignRight':
-        if (window.align) window.align('right');
-        break;
-      case 'alignTop':
-        if (window.align) window.align('top');
-        break;
-      case 'alignBottom':
-        if (window.align) window.align('bottom');
-        break;
-      case 'alignCenterH':
-        if (window.align) window.align('center-h');
-        break;
-      case 'alignCenterV':
-        if (window.align) window.align('center-v');
-        break;
-      case 'distributeLeft':
-        if (window.distribute) window.distribute('left');
-        break;
-      case 'distributeRight':
-        if (window.distribute) window.distribute('right');
-        break;
-      case 'distributeTop':
-        if (window.distribute) window.distribute('top');
-        break;
-      case 'distributeBottom':
-        if (window.distribute) window.distribute('bottom');
-        break;
-      case 'distributeCenterH':
-        if (window.distribute) window.distribute('center-h');
-        break;
-      case 'distributeCenterV':
-        if (window.distribute) window.distribute('center-v');
-        break;
-      
-      // Typography actions
-      case 'fontStyleBold':
-        if (window.setFontStyle) window.setFontStyle('bold');
-        break;
-      case 'fontStyleItalic':
-        if (window.setFontStyle) window.setFontStyle('italic');
-        break;
-      case 'fontStyleUnderline':
-        if (window.setFontStyle) window.setFontStyle('underline');
-        break;
-      case 'textAlignLeft':
-        if (window.setTextAlign) window.setTextAlign('left');
-        break;
-      case 'textAlignCenter':
-        if (window.setTextAlign) window.setTextAlign('center');
-        break;
-      case 'textAlignRight':
-        if (window.setTextAlign) window.setTextAlign('right');
-        break;
-      case 'textAlignJustify':
-        if (window.setTextAlign) window.setTextAlign('justify');
-        break;
-      
-      // Transform actions
-      case 'convertToPoint':
-        if (window.convertToPoint) window.convertToPoint();
-        break;
-      case 'convertToCurve':
-        if (window.convertToCurve) window.convertToCurve();
-        break;
-    }
+  var tab = document.querySelector('.panel-tab[data-panel="' + panelName + '"]');
+  if (tab) tab.classList.add('active');
+  
+  var section = document.getElementById('panel-' + panelName);
+  if (section) section.classList.add('active');
+  
+  // Show dock if hidden
+  if (!dockVisible) {
+    dock.classList.add('visible');
+    dock.classList.remove('hidden');
+    dockVisible = true;
+    dockToggle.textContent = '◀';
   }
   
-  // Handle tool buttons
-  var tool = element.dataset.tool;
-  if (tool && window.activateTool) {
-    window.activateTool(tool);
+  // Show notification with panel name
+  var panelNames = {
+    'properties': 'Properties Panel',
+    'layers': 'Layers Panel',
+    'appearance': 'Appearance Panel',
+    'swatches': 'Swatches Panel',
+    'gradient': 'Gradient Panel',
+    'stroke': 'Stroke Panel',
+    'align': 'Align Panel',
+    'character': 'Character Panel',
+    'paragraph': 'Paragraph Panel'
+  };
+  
+  if (panelNames[panelName]) {
+    showToolNotification(panelNames[panelName]);
   }
-});
-
-// Tool button click handlers
-document.querySelectorAll('.tool-btn[data-tool]').forEach(function(btn) {
-  btn.addEventListener('click', function(event) {
-    var tool = this.dataset.tool;
-    if (window.activateTool) {
-      window.activateTool(tool);
-    }
-  });
-});
-
-// Property change handlers
-document.getElementById('propX').addEventListener('change', function() {
-  if (window.updateTransform) window.updateTransform();
-});
-document.getElementById('propY').addEventListener('change', function() {
-  if (window.updateTransform) window.updateTransform();
-});
-document.getElementById('propW').addEventListener('change', function() {
-  if (window.updateTransform) window.updateTransform();
-});
-document.getElementById('propH').addEventListener('change', function() {
-  if (window.updateTransform) window.updateTransform();
-});
-document.getElementById('propRotation').addEventListener('change', function() {
-  if (window.updateTransform) window.updateTransform();
-});
-document.getElementById('propShear').addEventListener('change', function() {
-  if (window.updateTransform) window.updateTransform();
-});
-document.getElementById('propOpacity').addEventListener('input', function() {
-  if (window.updateOpacity) window.updateOpacity();
-});
-document.getElementById('propBlendMode').addEventListener('change', function() {
-  if (window.updateBlendMode) window.updateBlendMode();
-});
+}
 
 // Gradient controls
 document.getElementById('gradientAngle').addEventListener('input', function() {
-  document.getElementById('gradientAngleVal').textContent = this.value + '\u00b0';
+  document.getElementById('gradientAngleVal').textContent = this.value + '°';
 });
 
 // Stroke controls
 document.getElementById('strokeWeight').addEventListener('input', function() {
   document.getElementById('strokeWeightVal').textContent = this.value + ' px';
-  if (window.updateStroke) window.updateStroke();
-});
-document.getElementById('strokeDash').addEventListener('input', function() {
-  if (window.updateStroke) window.updateStroke();
-});
-document.getElementById('strokeColorInput').addEventListener('input', function() {
-  if (window.updateStroke) window.updateStroke();
-});
-
-// Typography controls
-document.getElementById('fontFamily').addEventListener('change', function() {
-  if (window.updateTypography) window.updateTypography();
-});
-document.getElementById('fontSize').addEventListener('change', function() {
-  if (window.updateTypography) window.updateTypography();
-});
-document.getElementById('lineHeight').addEventListener('change', function() {
-  if (window.updateTypography) window.updateTypography();
-});
-document.getElementById('letterSpacing').addEventListener('change', function() {
-  if (window.updateTypography) window.updateTypography();
 });
 
 // Window resize handler
 window.addEventListener('resize', function() {
   if (window.innerWidth > 900) {
     // On desktop, always show dock
-    if (dock) {
-      dock.classList.add('visible');
-      dock.classList.remove('hidden');
-      dockVisible = true;
-    }
-    if (dockToggle) {
-      dockToggle.textContent = '\u25c0';
-    }
+    dock.classList.add('visible');
+    dock.classList.remove('hidden');
+    dockVisible = true;
   }
 });
 
 // Swatches
-var defaultSwatches = [
+const defaultSwatches = [
   '#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff',
   '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#6c5ce7', '#fd79a8',
   '#e17055', '#00b894', '#0984e3', '#6c5ce7', '#fdcb6e', '#636e72', '#2d3436', '#b2bec3'
 ];
 
 function initSwatches() {
-  var swatchGrid = document.getElementById('swatchGrid');
+  const swatchGrid = document.getElementById('swatchGrid');
   if (!swatchGrid) return;
   
   swatchGrid.innerHTML = '';
-  defaultSwatches.forEach(function(color) {
-    var swatch = document.createElement('div');
+  defaultSwatches.forEach(color => {
+    const swatch = document.createElement('div');
     swatch.className = 'swatch';
     swatch.style.backgroundColor = color;
     swatch.onclick = function() {
       if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
-        window.project.selectedItems.forEach(function(item) {
+        window.project.selectedItems.forEach(item => {
           item.fillColor = color;
         });
       }
@@ -3214,76 +2480,196 @@ function initSwatches() {
   });
 }
 
-// File input handlers
-document.getElementById('openFile').addEventListener('change', function(event) {
-  if (window.handleOpen) window.handleOpen(event);
-});
-
-document.getElementById('placeImage').addEventListener('change', function(event) {
-  if (window.handlePlace) window.handlePlace(event);
-});
-
-// Color pickers
-document.getElementById('fillColor').addEventListener('click', function() {
-  var fillColor = window.fillColor;
-  var colorStr = fillColor && fillColor.toCSS ? fillColor.toCSS(true) : '#ff0000';
-  var color = prompt('Enter fill color (hex):', colorStr);
-  if (color) {
-    window.fillColor = new paper.Color(color);
-    this.style.backgroundColor = color;
-    if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
-      window.project.selectedItems.forEach(function(item) {
-        item.fillColor = new paper.Color(color);
-      });
-    }
+// Appearance panel functions
+function addFill() {
+  // Add new fill appearance item
+  const appearanceList = document.getElementById('appearanceList');
+  if (appearanceList) {
+    const item = document.createElement('div');
+    item.className = 'appearance-item';
+    item.innerHTML = `
+      <span class="type">Fill</span>
+      <div class="color-preview" style="background-color: #ff0000"></div>
+      <span class="value">#ff0000</span>
+    `;
+    appearanceList.appendChild(item);
   }
-});
+}
 
-document.getElementById('strokeColor').addEventListener('click', function() {
-  var strokeColor = window.strokeColor;
-  var colorStr = strokeColor && strokeColor.toCSS ? strokeColor.toCSS(true) : '#000000';
-  var color = prompt('Enter stroke color (hex):', colorStr);
-  if (color) {
-    window.strokeColor = new paper.Color(color);
-    this.style.backgroundColor = color;
-    if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
-      window.project.selectedItems.forEach(function(item) {
-        item.strokeColor = new paper.Color(color);
-      });
-    }
+function addStroke() {
+  const appearanceList = document.getElementById('appearanceList');
+  if (appearanceList) {
+    const item = document.createElement('div');
+    item.className = 'appearance-item';
+    item.innerHTML = `
+      <span class="type">Stroke</span>
+      <div class="color-preview" style="background-color: #000000"></div>
+      <span class="value">#000000</span>
+    `;
+    appearanceList.appendChild(item);
   }
-});
+}
 
-document.getElementById('defaultColors').addEventListener('click', function() {
-  window.fillColor = new paper.Color('#ff0000');
-  window.strokeColor = new paper.Color('#000000');
-  document.getElementById('fillColor').style.backgroundColor = '#ff0000';
-  document.getElementById('strokeColor').style.backgroundColor = '#000000';
-});
+// Stroke panel functions
+function setStrokeCap(cap) {
+  if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
+    window.project.selectedItems.forEach(item => {
+      item.strokeCap = cap;
+    });
+  }
+}
 
-// Initialize on load
-window.addEventListener('load', function() {
+function setStrokeJoin(join) {
+  if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
+    window.project.selectedItems.forEach(item => {
+      item.strokeJoin = join;
+    });
+  }
+}
+
+function updateStroke() {
+  const weight = parseFloat(document.getElementById('strokeWeight').value);
+  const dash = document.getElementById('strokeDash').value;
+  const color = document.getElementById('strokeColorInput').value;
+  
+  if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
+    window.project.selectedItems.forEach(item => {
+      item.strokeWidth = weight;
+      if (dash) {
+        const dashArray = dash.split(',').map(d => parseFloat(d.trim()));
+        item.dashArray = dashArray;
+      } else {
+        item.dashArray = [];
+      }
+      item.strokeColor = color;
+    });
+  }
+}
+
+// Align functions
+function align(alignment) {
+  if (!window.project || !window.project.selectedItems || window.project.selectedItems.length < 2) return;
+  
+  const items = window.project.selectedItems;
+  const bounds = items.map(item => item.bounds);
+  
+  switch(alignment) {
+    case 'left':
+      items.forEach(item => item.position.x = bounds[0].left);
+      break;
+    case 'right':
+      items.forEach(item => item.position.x = bounds[0].right - (item.bounds.width / 2));
+      break;
+    case 'top':
+      items.forEach(item => item.position.y = bounds[0].top);
+      break;
+    case 'bottom':
+      items.forEach(item => item.position.y = bounds[0].bottom - (item.bounds.height / 2));
+      break;
+    case 'center-h':
+      items.forEach(item => item.position.x = bounds[0].center.x);
+      break;
+    case 'center-v':
+      items.forEach(item => item.position.y = bounds[0].center.y);
+      break;
+  }
+}
+
+function distribute(distribution) {
+  if (!project || !project.selectedItems || project.selectedItems.length < 3) return;
+  
+  const items = project.selectedItems;
+  // Simplified distribution - would need more complex calculation for proper distribution
+  alert('Distribute feature - arrange items evenly');
+}
+
+// Typography functions
+function updateTypography() {
+  if (!window.project || !window.project.selectedItems || window.project.selectedItems.length === 0) return;
+  
+  const fontFamily = document.getElementById('fontFamily').value;
+  const fontSize = parseInt(document.getElementById('fontSize').value);
+  const lineHeight = parseInt(document.getElementById('lineHeight').value);
+  const letterSpacing = parseInt(document.getElementById('letterSpacing').value);
+  
+  window.project.selectedItems.forEach(item => {
+    if (item instanceof PointText) {
+      item.fontFamily = fontFamily;
+      item.fontSize = fontSize;
+      item.leading = lineHeight;
+      // item.letterSpacing = letterSpacing; // May need different property name
+    }
+  });
+}
+
+function setFontStyle(style) {
+  if (!window.project || !window.project.selectedItems || window.project.selectedItems.length === 0) return;
+  
+  window.project.selectedItems.forEach(item => {
+    if (item instanceof PointText) {
+      switch(style) {
+        case 'bold':
+          item.fontWeight = 'bold';
+          break;
+        case 'italic':
+          item.fontStyle = 'italic';
+          break;
+        case 'underline':
+          // Text decoration not directly available in Paper.js
+          break;
+      }
+    }
+  });
+}
+
+function setTextAlign(align) {
+  if (!window.project || !window.project.selectedItems || window.project.selectedItems.length === 0) return;
+  
+  window.project.selectedItems.forEach(item => {
+    if (item instanceof PointText) {
+      item.justification = align;
+    }
+  });
+}
+
+// Swatch functions
+function addSwatch() {
+  const color = prompt('Enter hex color:', '#000000');
+  if (color && /^#[0-9A-Fa-f]{6}$/.test(color)) {
+    defaultSwatches.push(color);
+    initSwatches();
+  }
+}
+
+function clearSwatches() {
+  if (confirm('Clear all custom swatches?')) {
+    defaultSwatches.length = 8; // Keep original 8
+    initSwatches();
+  }
+}
+
+// Gradient functions
+function setGradientType(type) {
+  // Would implement gradient application to selected items
+  alert('Gradient type: ' + type);
+}
+
+// Transform dialog
+function showTransformDialog() {
+  alert('Transform dialog - coming soon!');
+}
+
+// Initialize swatches on load
+window.onload = function() {
   initSwatches();
   addFill();
   addStroke();
-});
-
-// Desktop mouse position tracking
-document.addEventListener('mousemove', function(event) {
-  var canvas = document.getElementById('canvas');
-  var statusPosition = document.getElementById('statusPosition');
   
-  if (canvas && statusPosition) {
-    var rect = canvas.getBoundingClientRect();
-    if (event.clientX >= rect.left && event.clientX <= rect.right &&
-        event.clientY >= rect.top && event.clientY <= rect.bottom) {
-      // Calculate position accounting for zoom and scroll
-      var x = Math.round(event.clientX - rect.left - 60);
-      var y = Math.round(event.clientY - rect.top - 20);
-      statusPosition.textContent = 'X: ' + x + ' Y: ' + y;
-    }
+  // Set initial backdrop state on mobile
+  if (window.innerWidth <= 900 && dockVisible) {
+    panelBackdrop.classList.add('visible');
   }
-});
+};
 
 // Mobile touch support for position tracking
 document.addEventListener('DOMContentLoaded', function() {
@@ -3293,8 +2679,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (e.touches.length > 0) {
         var touch = e.touches[0];
         var rect = canvas.getBoundingClientRect();
-        var x = touch.clientX - rect.left - 60;
-        var y = touch.clientY - rect.top - 20;
+        var x = touch.clientX - rect.left;
+        var y = touch.clientY - rect.top;
         var statusPosition = document.getElementById('statusPosition');
         if (statusPosition) {
           statusPosition.textContent = 'X: ' + Math.round(x) + ' Y: ' + Math.round(y);
@@ -3303,6 +2689,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { passive: true });
   }
 });
+
+// Mobile touch support
+document.addEventListener('touchstart', function(e) {
+  // Prevent default touch behaviors that might interfere with drawing
+  if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
+    // e.preventDefault(); // Commented out to allow scrolling
+  }
+}, { passive: false });
 </script>
 </body>
 </html>
+
+
+
