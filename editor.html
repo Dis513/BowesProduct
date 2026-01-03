@@ -207,7 +207,289 @@
 paper.install(window);
 paper.setup(document.getElementById('canvas'));
 
-// === ALL YOUR EDITOR CODE GOES HERE (paste the entire content that was inside the paperscript tag) ===
+<!-- Load Paper.js -->
+<script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
+
+<!-- Your Vector Editor Script (Standard Paper.js Mode) -->
+<script>
+// Install Paper.js into the global window scope and setup the canvas
+paper.install(window);
+paper.setup(document.getElementById('canvas'));
+
+// ==================== GLOBAL STATE ====================
+var tools = {};
+var currentTool = null;
+
+var fillColor = '#ff0000';
+var strokeColor = '#000000';
+var strokeWidth = 1;
+
+var currentPath = null;
+var startPoint = null;
+var currentShape = null;
+
+var undoStack = [];
+var redoStack = [];
+
+// ==================== INITIALIZATION ====================
+function initEditor() {
+  initLayers();
+  activateTool('select');
+  saveState();
+
+  // Hide loader immediately
+  const loader = document.getElementById('loader');
+  if (loader) loader.style.display = 'none';
+
+  // Force initial draw
+  view.draw();
+}
+
+function initLayers() {
+  // Simple layer system (expand as needed)
+  updateLayersList?.(); // if you have a layers panel
+}
+
+// ==================== TOOL ACTIVATION ====================
+function activateTool(name) {
+  if (tools[name]) {
+    currentTool = tools[name];
+    currentTool.activate();
+
+    // Update UI
+    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+    const btn = document.getElementById(name + 'Tool');
+    if (btn) btn.classList.add('active');
+
+    // Update status bar
+    const statusTool = document.getElementById('statusTool');
+    if (statusTool) statusTool.textContent = getToolName(name);
+  }
+}
+
+function getToolName(name) {
+  const names = {
+    select: 'Selection Tool (V)',
+    directSelect: 'Direct Selection Tool (A)',
+    pen: 'Pen Tool (P)',
+    rectangle: 'Rectangle Tool (M)',
+    ellipse: 'Ellipse Tool (L)',
+    type: 'Type Tool (T)',
+    hand: 'Hand Tool (H)',
+    zoom: 'Zoom Tool (Z)'
+  };
+  return names[name] || 'Tool';
+}
+
+// ==================== BASIC TOOLS ====================
+
+// Selection Tool
+tools.select = new Tool();
+tools.select.onMouseDown = function(event) {
+  const hitResult = project.hitTest(event.point, {
+    fill: true,
+    stroke: true,
+    tolerance: 8
+  });
+
+  if (hitResult && hitResult.item) {
+    if (!event.modifiers.shift) project.deselectAll();
+    hitResult.item.selected = true;
+  } else if (!event.modifiers.shift) {
+    project.deselectAll();
+  }
+};
+
+tools.select.onMouseDrag = function(event) {
+  if (project.selectedItems.length > 0) {
+    project.selectedItems.forEach(item => {
+      item.position += event.delta;
+    });
+  }
+};
+
+tools.select.onMouseUp = saveState;
+
+// Pen Tool
+tools.pen = new Tool();
+tools.pen.minDistance = 10;
+
+tools.pen.onMouseDown = function(event) {
+  currentPath = new Path({
+    strokeColor: strokeColor,
+    strokeWidth: strokeWidth,
+    fillColor: null
+  });
+  currentPath.add(event.point);
+};
+
+tools.pen.onMouseDrag = function(event) {
+  currentPath.add(event.point);
+  currentPath.smooth();
+};
+
+tools.pen.onMouseUp = function() {
+  currentPath.simplify();
+  currentPath.fillColor = fillColor;
+  currentPath.selected = true;
+  currentPath = null;
+  saveState();
+};
+
+// Rectangle Tool
+tools.rectangle = new Tool();
+
+tools.rectangle.onMouseDown = function(event) {
+  startPoint = event.point;
+};
+
+tools.rectangle.onMouseDrag = function(event) {
+  if (currentShape) currentShape.remove();
+
+  let rect = new Rectangle(startPoint, event.point);
+  if (event.modifiers.shift) {
+    const size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
+    rect = new Rectangle(startPoint, startPoint.add(size * Math.sign(rect.width), size * Math.sign(rect.height)));
+  }
+
+  currentShape = new Path.Rectangle(rect);
+  currentShape.fillColor = fillColor;
+  currentShape.strokeColor = strokeColor;
+  currentShape.strokeWidth = strokeWidth;
+};
+
+tools.rectangle.onMouseUp = function() {
+  if (currentShape) {
+    currentShape.selected = true;
+    currentShape = null;
+    saveState();
+  }
+};
+
+// Hand Tool (Panning)
+tools.hand = new Tool();
+let lastPoint;
+
+tools.hand.onMouseDown = function(event) {
+  lastPoint = event.point;
+  view.element.style.cursor = 'grabbing';
+};
+
+tools.hand.onMouseDrag = function(event) {
+  const delta = event.point.subtract(lastPoint);
+  view.center = view.center.subtract(delta);
+  lastPoint = event.point;
+};
+
+tools.hand.onMouseUp = function() {
+  view.element.style.cursor = 'grab';
+};
+
+// Zoom Tool
+tools.zoom = new Tool();
+
+tools.zoom.onMouseDown = function(event) {
+  const factor = event.modifiers.alt ? 0.9 : 1.1;
+  view.zoom *= factor;
+  view.center = event.point;
+};
+
+// ==================== UTILITIES ====================
+
+function saveState() {
+  const json = project.exportJSON();
+  undoStack.push(json);
+  if (undoStack.length > 50) undoStack.shift();
+  redoStack = [];
+}
+
+function undo() {
+  if (undoStack.length > 1) {
+    redoStack.push(undoStack.pop());
+    project.clear();
+    project.importJSON(undoStack[undoStack.length - 1]);
+    view.draw();
+  }
+}
+
+function redo() {
+  if (redoStack.length > 0) {
+    const state = redoStack.pop();
+    undoStack.push(state);
+    project.clear();
+    project.importJSON(state);
+    view.draw();
+  }
+}
+
+// Keyboard Shortcuts
+document.addEventListener('keydown', function(event) {
+  if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
+
+  if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
+    event.preventDefault();
+    event.shiftKey ? redo() : undo();
+  }
+
+  // Tool shortcuts
+  const keyMap = {
+    'v': 'select',
+    'p': 'pen',
+    'm': 'rectangle',
+    'h': 'hand',
+    'z': 'zoom'
+  };
+  if (keyMap[event.key] && !event.ctrlKey && !event.metaKey) {
+    activateTool(keyMap[event.key]);
+  }
+});
+
+// Mouse position in status bar
+view.onMouseMove = function(event) {
+  const pos = document.getElementById('statusPosition');
+  if (pos) {
+    pos.textContent = `X: ${Math.round(event.point.x)} Y: ${Math.round(event.point.y)}`;
+  }
+};
+
+// Update zoom display
+function updateZoom() {
+  const zoomEl = document.getElementById('statusZoom');
+  if (zoomEl) zoomEl.textContent = Math.round(view.zoom * 100) + '%';
+}
+view.onResize = updateZoom;
+updateZoom();
+
+// ==================== TOOL BUTTON BINDINGS ====================
+document.getElementById('selectTool')?.addEventListener('click', () => activateTool('select'));
+document.getElementById('penTool')?.addEventListener('click', () => activateTool('pen'));
+document.getElementById('rectangleTool')?.addEventListener('click', () => activateTool('rectangle'));
+document.getElementById('handTool')?.addEventListener('click', () => activateTool('hand'));
+document.getElementById('zoomTool')?.addEventListener('click', () => activateTool('zoom'));
+
+// Color pickers (simple prompt-based)
+document.getElementById('fillColor')?.addEventListener('click', function() {
+  const color = prompt('Fill color (hex):', fillColor);
+  if (color) {
+    fillColor = color;
+    this.style.backgroundColor = color;
+    project.selectedItems.forEach(item => item.fillColor = color);
+  }
+});
+
+document.getElementById('strokeColor')?.addEventListener('click', function() {
+  const color = prompt('Stroke color (hex):', strokeColor);
+  if (color) {
+    strokeColor = color;
+    this.style.backgroundColor = color;
+    project.selectedItems.forEach(item => item.strokeColor = color);
+  }
+});
+
+// ==================== START THE EDITOR ====================
+initEditor();
+
+</script>
 
 // Global state
 var tools = {};
@@ -2419,5 +2701,6 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
