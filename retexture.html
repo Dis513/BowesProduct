@@ -20,25 +20,28 @@
   .site-header {
   position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
   }
-  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-  .header-left { display: flex; align-items: center; gap: 1.6rem; }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
-  .main-nav { display: flex; gap: 1.4rem; }
-  .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
+  .main-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.9rem; white-space: nowrap; }
   .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
-  .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
+  .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; flex-wrap: wrap; }
   #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
   .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
-  #levelInfo { display: none; width: 140px; font-size: 0.8rem; color: #cbd5e1; }
-  #levelText { white-space: nowrap; }
-  #xpOuter { width: 100%; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+  #levelInfo { display: none; font-size: 0.8rem; color: #cbd5e1; }
+  #levelText { white-space: nowrap; font-size: 0.75rem; }
+  #xpOuter { width: 100px; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
   #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
-  @media (max-width: 768px) {
-  .header-inner { flex-direction: column; align-items: stretch; gap: 8px; }
-  .header-left { justify-content: space-between; }
-  .header-right { justify-content: space-between; width: 100%; }
-  #levelInfo { width: 100%; }
+  @media (max-width: 900px) {
+  .header-inner { padding: 0.5rem; }
+  .header-left { width: 100%; justify-content: space-between; }
+  .main-nav { gap: 0.8rem; order: 3; width: 100%; }
+  .main-nav a { font-size: 0.85rem; }
+  .header-right { width: 100%; justify-content: space-between; }
+  #levelInfo { flex: 1; }
+  #xpOuter { width: 100%; }
   }
 
   #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
@@ -504,9 +507,7 @@
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // FIX: Changed ToneMapping to Linear for accurate color representation
-  // ACESFilmic was causing colors to appear darker/desaturated compared to Hex values.
-  renderer.toneMapping = THREE.LinearToneMapping;
+  renderer.toneMapping = THREE.NoToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -916,13 +917,20 @@
   maskMode = !maskMode;
   maskToggle.classList.toggle('active', maskMode);
   clearMaskBtn.style.display = maskMode ? 'block' : 'none';
-  // FIX: Disable orbit controls when mask mode is active
   controls.enabled = !maskMode && !paintModeActive && !eyedropperActive;
   
   if(maskMode) {
     maskToggle.textContent = 'Exit Mask Mode';
     if(paintModeActive) setPaintMode(false);
     if(eyedropperActive) setEyedropperMode(false);
+    
+    // Initialize mask data if it doesn't exist
+    paintedGeometries.forEach((pg, geoIdx) => {
+      const geoKey = `geo_${geoIdx}`;
+      if (!globalMaskData[geoKey]) {
+        globalMaskData[geoKey] = new Float32Array(pg.geometry.attributes.position.count).fill(1.0);
+      }
+    });
   } else {
     maskToggle.textContent = 'Mask Mode (Paint Invisibility)';
   }
@@ -1022,25 +1030,35 @@
   const vert = new THREE.Vector3();
 
   if (maskMode) {
+      let painted = false;
       paintedGeometries.forEach((pg, geoIdx) => {
           const pos = pg.geometry.attributes.position;
+          const col = pg.geometry.attributes.color;
           const inv = new THREE.Matrix4().copy(pg.mesh.matrixWorld).invert();
           const local = point.clone().applyMatrix4(inv);
           const geoKey = `geo_${geoIdx}`;
-          if (!globalMaskData[geoKey]) return;
+          if (!globalMaskData[geoKey]) {
+              globalMaskData[geoKey] = new Float32Array(pos.count).fill(1.0);
+          }
           const maskArr = globalMaskData[geoKey];
+          
           for (let i = 0; i < pos.count; i++) {
               vert.fromBufferAttribute(pos, i);
               const distSq = vert.distanceToSquared(local);
               if (distSq > radiusSq) continue;
+              
               let falloff = 1 - Math.sqrt(distSq) / radius;
               if (brushShape === 'hard-circle') falloff = 1;
-              if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff); 
+              if (brushShape === 'soft-circle') falloff = Math.pow(falloff, 2);
+              
               const alpha = brushOpacity * falloff;
-              maskArr[i] = maskArr[i] * (1 - alpha);
+              maskArr[i] = Math.max(0, maskArr[i] * (1 - alpha));
+              painted = true;
           }
       });
-      updateAllGeometries();
+      if (painted) {
+          updateAllGeometries();
+      }
       return;
   }
 
@@ -1065,7 +1083,7 @@
   
   let falloff = 1 - Math.sqrt(distSq) / radius;
   if (brushShape === 'hard-circle') falloff = 1;
-  if (brushShape === 'soft-circle') falloff = 1 - (falloff * falloff); 
+  if (brushShape === 'soft-circle') falloff = Math.pow(falloff, 2);
 
   const alpha = brushOpacity * falloff;
   const paintRGB = layers[currentLayerIndex].color;
