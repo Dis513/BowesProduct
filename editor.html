@@ -1804,8 +1804,23 @@ function sendBackward() {
 // Group/Ungroup
 function groupSelection() {
   if (project.selectedItems.length > 1) {
-    var group = new Group(project.selectedItems);
+    var selected = Array.from(project.selectedItems); // Save reference before grouping
+    var group = new Group(selected);
+    
+    // Important: Select the new group so it stays highlighted
+    project.deselectAll();
+    group.selected = true;
+    
+    // Optional: Give the group a subtle stroke so it's visible even when deselected
+    // group.strokeColor = new Color(0.3, 0.65, 0.98, 0.5);
+    // group.strokeWidth = 1;
+    // group.dashArray = [4, 4];
+    
     saveState();
+    updateProperties();
+    console.log('Grouped', selected.length, 'objects');
+  } else {
+    alert('Select 2 or more objects to group');
   }
 }
 
@@ -2714,6 +2729,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
