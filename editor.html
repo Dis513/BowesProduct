@@ -24,7 +24,7 @@
 
   /* ================= APPLICATION MENU BAR ================= */
   .app-menu-bar {
-    background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0; display: flex; gap: 0; font-size: 0.85rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap; height: 36px; align-items: center;
+    background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0; padding-left: 80px; display: flex; gap: 0; font-size: 0.85rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap; height: 36px; align-items: center;
   }
   .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
@@ -69,7 +69,7 @@
 
   /* ================= LEFT TOOLBAR ================= */
   #floatingToolbar {
-    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 900 display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
+    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150 display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
   }
   .tool-group { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-bottom: 1px solid #1e293b; }
   .tool-group:last-child { border-bottom: none; }
@@ -184,7 +184,7 @@
     .ruler-h { left: 50px; }
     .ruler-v { display: none; }
     #canvas { margin-left: 50px; }
-    .app-menu-bar { gap: 1rem; }
+    .app-menu-bar { gap: 1rem; padding-left: 60px; }
     .menu-bar > div { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
   }
 
@@ -2419,3 +2419,4 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
