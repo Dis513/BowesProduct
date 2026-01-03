@@ -1445,6 +1445,7 @@ tools.zoom.onMouseDown = function(event) {
 
 // Bind tool buttons
 document.getElementById('selectTool').onclick = function() { activateTool('select'); };
+  document.getElementById('statusPosition').textContent = 'X: 0 Y: 0';
 document.getElementById('directSelectTool').onclick = function() { activateTool('directSelect'); };
 document.getElementById('magicWandTool').onclick = function() { activateTool('select'); };
 document.getElementById('penTool').onclick = function() { activateTool('pen'); };
@@ -2740,6 +2741,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
