@@ -3,73 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vector Editor Pro – BowesProduct (Illustrator-style)</title>
+  <title>Vector Editor Pro – BowesProduct (Advanced Illustrator-style)</title>
   <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
   
-  /* ================= HEADER WITH MENU BAR ================= */
+  /* Header with Menu Bar */
   .site-header {
     position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
   }
-  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-  .header-left { display: flex; align-items: center; gap: 1.6rem; }
+  .header-inner { max-width: 1400px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .header-left { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
   .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
   .main-nav { display: flex; gap: 1.4rem; }
   .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
   .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
   .menu-bar {
-    display: flex; gap: 1.5rem; font-size: 0.9rem; margin-left: 2rem;
+    display: flex; gap: 1.5rem; font-size: 0.9rem;
   }
   .menu-bar > div {
-    position: relative; cursor: pointer;
+    position: relative; cursor: pointer; padding: 0.4rem 0.8rem;
   }
   .menu-bar > div:hover { color: #60a5fa; }
   .dropdown {
-    position: absolute; top: 100%; left: 0; background: #0f172a; border: 1px solid #1e293b; min-width: 180px; display: none; flex-direction: column; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    position: absolute; top: 100%; left: 0; background: #0f172a; border: 1px solid #1e293b; min-width: 220px; display: none; flex-direction: column; box-shadow: 0 8px 20px rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden;
   }
-  .dropdown a, .dropdown div {
-    padding: 0.6rem 1rem; text-align: left; white-space: nowrap;
+  .dropdown div {
+    padding: 0.7rem 1rem; text-align: left; white-space: nowrap; transition: background 0.2s;
   }
-  .dropdown a:hover, .dropdown div:hover { background: #1e293b; }
+  .dropdown div:hover { background: #1e293b; }
+  .dropdown hr { border: none; border-top: 1px solid #1e293b; margin: 0.4rem 0; }
   .menu-bar > div:hover .dropdown { display: flex; }
 
   .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
   #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
   .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
 
-  /* ================= MAIN LAYOUT ================= */
+  /* Main Layout */
   #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
   #canvas { display: block; width: 100%; height: 100%; background: #0a0a0a; touch-action: none; outline: none; }
 
-  /* ================= LEFT TOOLBAR (Illustrator Advanced) ================= */
+  /* Left Toolbar - More Groups & Tools */
   #floatingToolbar {
-    position: fixed; left: 20px; top: 90px; background: rgba(30, 41, 59, 0.95); padding: 12px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150;
+    position: fixed; left: 20px; top: 90px; background: rgba(30, 41, 59, 0.95); padding: 12px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 12px;
   }
-  .tool-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-  .tool-group:last-child { margin-bottom: 0; }
+  .tool-group { display: flex; flex-direction: column; gap: 4px; }
   .tool-btn {
     width: 44px; height: 44px; border-radius: 8px; border: 1px solid #475569; background: rgba(2, 6, 23, 0.8); color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 1.4rem;
   }
   .tool-btn:hover { background: rgba(51, 65, 85, 1); color: white; }
   .tool-btn.active { color: #60a5fa; border-color: #60a5fa; background: rgba(2, 6, 23, 1); }
 
-  /* ================= RIGHT PANEL ================= */
+  /* Right Panel - Multiple Sections */
   .panel {
-    position: absolute; top: 90px; right: 20px; width: 380px; max-height: calc(100vh - 220px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; overflow-y: auto; z-index: 20; backdrop-filter: blur(10px); transition: transform 0.3s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    position: absolute; top: 90px; right: 20px; width: 400px; max-height: calc(100vh - 220px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; overflow-y: auto; z-index: 20; backdrop-filter: blur(10px); transition: transform 0.3s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   }
-  .panel.hidden { transform: translateX(420px); }
-  #panelToggle { /* same as before */ }
+  .panel.hidden { transform: translateX(440px); }
+  #panelToggle { position: absolute; left: -60px; top: 50%; transform: translateY(-50%); width: 60px; height: 110px; background: rgba(2, 6, 23, 0.98); border: 1px solid #1e293b; border-right: none; border-radius: 20px 0 0 20px; color: #60a5fa; font-size: 2.4rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 21; backdrop-filter: blur(12px); box-shadow: 0 6px 30px rgba(0,0,0,0.5); transition: all 0.3s ease; }
+  #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
+
   .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
   .control-group { margin-bottom: 1.2rem; }
   label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
   input, select { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; }
   input[type="range"] { accent-color: #60a5fa; }
-  input[type="color"] { height: 44px; }
+  input[type="color"] { height: 44px; padding: 0.2rem; }
+  button { background: #60a5fa; border: none; color: white; cursor: pointer; padding: 0.6rem; border-radius: 8px; font-weight: 600; transition: background 0.2s; }
+  button:hover { background: #3b82f6; }
 
-  /* Mobile & Footer same */
-  @media (max-width: 900px) { /* same as before */ }
-  .site-footer { /* same */ }
+  .layer-item { display: flex; align-items: center; gap: 8px; padding: 8px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
+  .layer-item.active { background: #1e293b; border: 1px solid #60a5fa; }
+
+  /* Mobile & Footer */
+  @media (max-width: 900px) {
+    .panel { position: absolute; top: auto; right: 0; left: 0; bottom: 0; width: 100%; height: 85vh; max-height: none; border-radius: 20px 20px 0 0; transform: translateY(calc(100% - 60px)); transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); padding-top: 20px; padding-bottom: 120px; }
+    .panel.visible { transform: translateY(0); }
+    #panelToggle { display: none; }
+  }
+  .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
+  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
   #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #60a5fa; font-size: 1.5rem; font-weight: bold; pointer-events: none; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
@@ -90,16 +102,19 @@
         <div>File
           <div class="dropdown">
             <div onclick="newDocument()">New</div>
-            <div>Open...</div>
+            <div>Open Image...</div>
             <div>Save</div>
-            <div>Export > SVG</div>
-            <div>Export > PNG</div>
+            <hr>
+            <div onclick="exportSVG()">Export SVG</div>
+            <div onclick="exportPNG()">Export PNG</div>
+            <div>Export PDF</div>
           </div>
         </div>
         <div>Edit
           <div class="dropdown">
-            <div>Undo</div>
-            <div>Redo</div>
+            <div>Undo (Ctrl+Z)</div>
+            <div>Redo (Ctrl+Y)</div>
+            <hr>
             <div>Cut</div>
             <div>Copy</div>
             <div>Paste</div>
@@ -109,19 +124,22 @@
           <div class="dropdown">
             <div>Group</div>
             <div>Ungroup</div>
-            <div>Transform</div>
+            <div>Lock</div>
+            <hr>
+            <div>Pathfinder > Unite</div>
+            <div>Pathfinder > Minus Front</div>
           </div>
         </div>
         <div>Type
           <div class="dropdown">
             <div>Create Outlines</div>
-            <div>Font...</div>
+            <div>Font Browser</div>
           </div>
         </div>
         <div>Select
           <div class="dropdown">
             <div>All</div>
-            <div>Deselect</div>
+            <div>Deselect All</div>
           </div>
         </div>
         <div>View
@@ -136,6 +154,8 @@
             <div>Layers</div>
             <div>Properties</div>
             <div>Swatches</div>
+            <div>Gradient</div>
+            <div>Appearance</div>
           </div>
         </div>
       </div>
@@ -148,30 +168,32 @@
 </header>
 
 <div id="container">
-  <div id="loader">Vector Editor • Use tools to draw</div>
+  <div id="loader">Advanced Vector Editor • Draw with Pen, Shapes, Type • Many Illustrator features!</div>
   <canvas id="canvas" resize></canvas>
 
-  <!-- Expanded Illustrator Toolbar -->
+  <!-- Expanded Toolbar -->
   <div id="floatingToolbar">
     <div class="tool-group">
       <div class="tool-btn active" id="selectTool" title="Selection (V)">⬚</div>
       <div class="tool-btn" id="directSelectTool" title="Direct Selection (A)">↖</div>
+      <div class="tool-btn" id="lassoTool" title="Lasso">↺</div>
     </div>
     <div class="tool-group">
       <div class="tool-btn" id="penTool" title="Pen (P)">✒</div>
       <div class="tool-btn" id="pencilTool" title="Pencil (N)">✏</div>
       <div class="tool-btn" id="brushTool" title="Brush (B)">🖌</div>
+      <div class="tool-btn" id="eraserTool" title="Eraser">✂</div>
     </div>
     <div class="tool-group">
       <div class="tool-btn" id="rectangleTool" title="Rectangle (M)">□</div>
       <div class="tool-btn" id="ellipseTool" title="Ellipse (L)">○</div>
       <div class="tool-btn" id="polygonTool" title="Polygon">🔺</div>
+      <div class="tool-btn" id="starTool" title="Star">⭐</div>
       <div class="tool-btn" id="lineTool" title="Line">╱</div>
     </div>
     <div class="tool-group">
       <div class="tool-btn" id="typeTool" title="Type (T)">T</div>
       <div class="tool-btn" id="eyedropperTool" title="Eyedropper (I)">💧</div>
-      <div class="tool-btn" id="eraseTool" title="Eraser">✂</div>
     </div>
     <div class="tool-group">
       <div class="tool-btn" id="handTool" title="Hand (H)">✋</div>
@@ -179,15 +201,19 @@
     </div>
   </div>
 
-  <!-- Right Panel -->
+  <!-- Right Panel - Expanded Sections -->
   <div class="panel visible" id="panel">
     <button id="panelToggle">←</button>
+
     <h2>Properties</h2>
-    <div id="propertiesContent">Select an object</div>
+    <div id="propertiesContent">Select an object for details</div>
 
     <h2>Layers</h2>
-    <ol id="layersList"></ol>
+    <ol id="layersList">
+      <li class="layer-item active">Layer 1</li>
+    </ol>
     <button id="addLayerBtn">+ Add Layer</button>
+    <button id="deleteLayerBtn">Delete Layer</button>
 
     <h2>Appearance</h2>
     <div class="control-group">
@@ -199,10 +225,46 @@
       <input type="color" id="strokeColor" value="#000000">
     </div>
     <div class="control-group">
-      <label>Stroke Width</label>
-      <input type="range" min="0" max="50" value="1" id="strokeWidth">
-      <span id="strokeWidthVal">1</span>
+      <label>Stroke Width <span id="strokeWidthVal">1</span></label>
+      <input type="range" min="0" max="100" value="1" id="strokeWidth">
     </div>
+    <div class="control-group">
+      <label>Opacity <span id="opacityVal">100</span>%</label>
+      <input type="range" min="0" max="100" value="100" id="opacity">
+    </div>
+
+    <h2>Transform</h2>
+    <div class="control-group">
+      <label>X</label>
+      <input type="number" id="transformX">
+    </div>
+    <div class="control-group">
+      <label>Y</label>
+      <input type="number" id="transformY">
+    </div>
+    <div class="control-group">
+      <label>Width</label>
+      <input type="number" id="transformW">
+    </div>
+    <div class="control-group">
+      <label>Height</label>
+      <input type="number" id="transformH">
+    </div>
+
+    <h2>Gradient (Basic)</h2>
+    <div class="control-group">
+      <label>Start Color</label>
+      <input type="color" id="gradStart" value="#ff0000">
+    </div>
+    <div class="control-group">
+      <label>End Color</label>
+      <input type="color" id="gradEnd" value="#0000ff">
+    </div>
+    <button id="applyGradient">Apply Gradient</button>
+
+    <h2>Pathfinder (Basic)</h2>
+    <button id="uniteBtn">Unite</button>
+    <button id="minusFrontBtn">Minus Front</button>
 
     <h2>Export</h2>
     <button id="exportSVG">Export SVG</button>
@@ -210,92 +272,127 @@
   </div>
 </div>
 
-<footer class="site-footer"> ... </footer>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </nav>
+    <p>© 2026 BowesProduct</p>
+  </div>
+</footer>
+
 <div id="mobilePanelToggle"><span>▲ Controls</span></div>
 
-<!-- Firebase same as before -->
+<!-- Firebase Auth (same) -->
+<script type="module">
+  // ... (your Firebase code from previous versions)
+</script>
 
 <script type="text/paperscript" canvas="canvas">
+var tools = {};
+var currentTool;
 var currentPath;
-var fillColor = new Color('#ff0000');
-var strokeColor = new Color('#000000');
+var fillColor = '#ff0000';
+var strokeColor = '#000000';
 var strokeWidth = 1;
+var opacity = 1;
 
-var selectTool = new Tool();
-var penTool = new Tool();
-var rectangleTool = new Tool();
-var typeTool = new Tool();
-var eyedropperTool = new Tool();
+function activateTool(toolName) {
+  if (currentTool) currentTool.activate();
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(toolName + 'Tool').classList.add('active');
+}
 
-// Selection
-selectTool.onMouseDrag = function(event) {
-  if (project.selectedItems.length > 0) {
+// Selection Tool
+tools.select = new Tool();
+tools.select.onMouseDrag = function(event) {
+  if (project.selectedItems.length) {
     project.selectedItems.forEach(item => item.position += event.delta);
   }
+  updateProperties();
 };
 
-// Pen Tool
-penTool.onMouseDown = function(event) {
+// Pen Tool (advanced)
+tools.pen = new Tool();
+tools.pen.onMouseDown = function(event) {
   currentPath = new Path({
     strokeColor: strokeColor,
-    strokeWidth: strokeWidth
+    strokeWidth: strokeWidth,
+    fillColor: null,
+    opacity: opacity
   });
   currentPath.add(event.point);
 };
-penTool.onMouseDrag = function(event) {
+tools.pen.onMouseDrag = function(event) {
   currentPath.add(event.point);
+  currentPath.smooth();
 };
-penTool.onMouseUp = function() {
+tools.pen.onMouseUp = function() {
   currentPath.simplify();
+  currentPath.closed = true;
+  currentPath.fillColor = fillColor;
   currentPath.selected = true;
+  updateProperties();
 };
 
-// Rectangle
-rectangleTool.onMouseDrag = function(event) {
+// Rectangle Tool
+tools.rectangle = new Tool();
+tools.rectangle.onMouseDrag = function(event) {
   if (currentPath) currentPath.remove();
   var rect = new Rectangle(event.downPoint, event.point);
   currentPath = new Path.Rectangle(rect);
   currentPath.fillColor = fillColor;
   currentPath.strokeColor = strokeColor;
   currentPath.strokeWidth = strokeWidth;
+  currentPath.opacity = opacity;
 };
-rectangleTool.onMouseUp = function() {
+tools.rectangle.onMouseUp = function() {
   currentPath.selected = true;
+  updateProperties();
 };
 
-// Type
-typeTool.onMouseDown = function(event) {
+// Type Tool
+tools.type = new Tool();
+tools.type.onMouseDown = function(event) {
   var text = new PointText(event.point);
-  text.content = 'Edit text';
+  text.content = 'Double-click to edit';
   text.fillColor = fillColor;
   text.fontSize = 32;
-  text.justification = 'center';
+  text.opacity = opacity;
   text.selected = true;
+  updateProperties();
 };
 
 // Eyedropper
-eyedropperTool.onMouseDown = function(event) {
+tools.eyedropper = new Tool();
+tools.eyedropper.onMouseDown = function(event) {
   var hit = project.hitTest(event.point);
   if (hit && hit.item) {
     if (hit.type === 'fill' && hit.item.fillColor) {
-      document.getElementById('fillColor').value = hit.item.fillColor.toCSS(true);
-      fillColor = hit.item.fillColor;
+      fillColor = hit.item.fillColor.toCSS(true);
+      document.getElementById('fillColor').value = fillColor;
     }
     if (hit.type === 'stroke' && hit.item.strokeColor) {
-      document.getElementById('strokeColor').value = hit.item.strokeColor.toCSS(true);
-      strokeColor = hit.item.strokeColor;
+      strokeColor = hit.item.strokeColor.toCSS(true);
+      document.getElementById('strokeColor').value = strokeColor;
     }
   }
 };
 
-// Activate tools
-document.getElementById('selectTool').onclick = () => selectTool.activate();
-document.getElementById('penTool').onclick = () => penTool.activate();
-document.getElementById('rectangleTool').onclick = () => rectangleTool.activate();
-document.getElementById('typeTool').onclick = () => typeTool.activate();
-document.getElementById('eyedropperTool').onclick = () => eyedropperTool.activate();
+// Bind tools
+document.getElementById('selectTool').onclick = () => { currentTool = tools.select; activateTool('select'); };
+document.getElementById('penTool').onclick = () => { currentTool = tools.pen; activateTool('pen'); };
+document.getElementById('rectangleTool').onclick = () => { currentTool = tools.rectangle; activateTool('rectangle'); };
+document.getElementById('typeTool').onclick = () => { currentTool = tools.type; activateTool('type'); };
+document.getElementById('eyedropperTool').onclick = () => { currentTool = tools.eyedropper; activateTool('eyedropper'); };
 
-// Color & Stroke sync
+// Default tool
+currentTool = tools.select;
+activateTool('select');
+
+// Update controls
 document.getElementById('fillColor').oninput = e => {
   fillColor = e.target.value;
   if (project.selectedItems.length) project.selectedItems.forEach(i => i.fillColor = fillColor);
@@ -309,15 +406,73 @@ document.getElementById('strokeWidth').oninput = e => {
   document.getElementById('strokeWidthVal').textContent = strokeWidth;
   if (project.selectedItems.length) project.selectedItems.forEach(i => i.strokeWidth = strokeWidth);
 };
+document.getElementById('opacity').oninput = e => {
+  opacity = e.target.value / 100;
+  document.getElementById('opacityVal').textContent = e.target.value;
+  if (project.selectedItems.length) project.selectedItems.forEach(i => i.opacity = opacity);
+};
 
 // Properties update
-project.on('selectionchanged', () => {
+function updateProperties() {
   var item = project.selectedItems[0];
-  var html = item ? `<p>Type: ${item.className}</p><p>Position: ${item.position}</p>` : 'No selection';
-  document.getElementById('propertiesContent').innerHTML = html;
-});
+  if (item) {
+    document.getElementById('propertiesContent').innerHTML = `
+      <p>Type: ${item.className}</p>
+      <p>Position: ${item.position.x.toFixed(0)}, ${item.position.y.toFixed(0)}</p>
+      <p>Size: ${item.bounds.width.toFixed(0)} × ${item.bounds.height.toFixed(0)}</p>
+    `;
+    document.getElementById('transformX').value = item.position.x;
+    document.getElementById('transformY').value = item.position.y;
+    if (item.bounds) {
+      document.getElementById('transformW').value = item.bounds.width;
+      document.getElementById('transformH').value = item.bounds.height;
+    }
+  } else {
+    document.getElementById('propertiesContent').innerHTML = 'No selection';
+  }
+}
+project.on('selectionchanged', updateProperties);
 
-// Export
+// Basic Gradient
+document.getElementById('applyGradient').onclick = () => {
+  if (project.selectedItems.length) {
+    var item = project.selectedItems[0];
+    item.fillColor = {
+      gradient: {
+        stops: [document.getElementById('gradStart').value, document.getElementById('gradEnd').value]
+      },
+      origin: item.bounds.topLeft,
+      destination: item.bounds.bottomRight
+    };
+  }
+};
+
+// Basic Pathfinder
+document.getElementById('uniteBtn').onclick = () => {
+  if (project.selectedItems.length > 1) {
+    var united = project.selectedItems[0].unite(project.selectedItems[1]);
+    project.selectedItems[1].remove();
+    united.selected = true;
+  }
+};
+document.getElementById('minusFrontBtn').onclick = () => {
+  if (project.selectedItems.length > 1) {
+    var diff = project.selectedItems[0].subtract(project.selectedItems[1]);
+    project.selectedItems[1].remove();
+    diff.selected = true;
+  }
+};
+
+// Layers (basic)
+document.getElementById('addLayerBtn').onclick = () => {
+  var li = document.createElement('li');
+  li.className = 'layer-item';
+  li.textContent = 'Layer ' + (document.querySelectorAll('#layersList li').length + 1);
+  li.onclick = () => document.querySelectorAll('.layer-item').forEach(l => l.classList.remove('active')); li.classList.add('active');
+  document.getElementById('layersList').appendChild(li);
+};
+
+// Export functions
 function exportSVG() {
   var svg = project.exportSVG({asString: true});
   var blob = new Blob([svg], {type: 'image/svg+xml'});
@@ -330,19 +485,32 @@ function exportPNG() {
   var a = document.createElement('a');
   a.href = data; a.download = 'artwork.png'; a.click();
 }
+
+// New Document
+function newDocument() {
+  project.clear();
+  document.getElementById('loader').style.display = 'none';
+}
+
+// Hide loader
+document.getElementById('loader').style.display = 'none';
 </script>
 
 <script>
-// Panel toggle, menu actions, etc.
-function newDocument() { project.clear(); }
-document.querySelectorAll('.dropdown div').forEach(item => {
-  item.onclick = () => {
-    if (item.textContent.includes('Export > SVG')) exportSVG();
-    if (item.textContent.includes('Export > PNG')) exportPNG();
-  };
-});
-// Panel toggle same as previous
-document.getElementById('loader').style.display = 'none';
+// Panel toggle (same)
+const panel = document.getElementById('panel');
+const panelToggle = document.getElementById('panelToggle');
+const mobileToggle = document.getElementById('mobilePanelToggle');
+let visible = true;
+const toggle = () => {
+  visible = !visible;
+  panel.classList.toggle('hidden', !visible);
+  panel.classList.toggle('visible', visible);
+  panelToggle.textContent = visible ? '←' : '→';
+  mobileToggle.querySelector('span').textContent = visible ? '▼ Hide' : '▲ Controls';
+};
+panelToggle.onclick = toggle;
+mobileToggle.onclick = toggle;
 </script>
 </body>
 </html>
