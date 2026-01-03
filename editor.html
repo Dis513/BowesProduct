@@ -3,23 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vector Editor Pro – BowesProduct (Advanced Illustrator-style)</title>
+  <title>Vector Editor Pro – BowesProduct (Illustrator-style)</title>
   <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
   
-  /* Header with Menu Bar */
+  /* ================= HEADER (logo + nav only) ================= */
   .site-header {
     position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
   }
-  .header-inner { max-width: 1400px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-  .header-left { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
+  .header-inner { max-width: 1400px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+  .header-left { display: flex; align-items: center; gap: 1.6rem; }
   .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
   .main-nav { display: flex; gap: 1.4rem; }
   .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.95rem; }
   .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
-  .menu-bar {
-    display: flex; gap: 1.5rem; font-size: 0.9rem;
+  .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
+  #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+  .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+
+  /* ================= APPLICATION MENU BAR (below header) ================= */
+  .app-menu-bar {
+    background: rgba(15,23,42,0.95); border-bottom: 1px solid #1e293b; padding: 4px 1rem; display: flex; gap: 2rem; font-size: 0.9rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px);
   }
   .menu-bar > div {
     position: relative; cursor: pointer; padding: 0.4rem 0.8rem;
@@ -35,17 +40,13 @@
   .dropdown hr { border: none; border-top: 1px solid #1e293b; margin: 0.4rem 0; }
   .menu-bar > div:hover .dropdown { display: flex; }
 
-  .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; }
-  #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
-  .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
-
-  /* Main Layout */
-  #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
+  /* ================= MAIN LAYOUT ================= */
+  #container { position: relative; width: 100%; height: 100%; padding-top: 110px; padding-bottom: 80px; }
   #canvas { display: block; width: 100%; height: 100%; background: #0a0a0a; touch-action: none; outline: none; }
 
-  /* Left Toolbar - More Groups & Tools */
+  /* ================= LEFT TOOLBAR ================= */
   #floatingToolbar {
-    position: fixed; left: 20px; top: 90px; background: rgba(30, 41, 59, 0.95); padding: 12px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 12px;
+    position: fixed; left: 20px; top: 120px; background: rgba(30, 41, 59, 0.95); padding: 12px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 12px;
   }
   .tool-group { display: flex; flex-direction: column; gap: 4px; }
   .tool-btn {
@@ -54,9 +55,9 @@
   .tool-btn:hover { background: rgba(51, 65, 85, 1); color: white; }
   .tool-btn.active { color: #60a5fa; border-color: #60a5fa; background: rgba(2, 6, 23, 1); }
 
-  /* Right Panel - Multiple Sections */
+  /* ================= RIGHT PANEL ================= */
   .panel {
-    position: absolute; top: 90px; right: 20px; width: 400px; max-height: calc(100vh - 220px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; overflow-y: auto; z-index: 20; backdrop-filter: blur(10px); transition: transform 0.3s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    position: absolute; top: 120px; right: 20px; width: 400px; max-height: calc(100vh - 260px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; overflow-y: auto; z-index: 20; backdrop-filter: blur(10px); transition: transform 0.3s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   }
   .panel.hidden { transform: translateX(440px); }
   #panelToggle { position: absolute; left: -60px; top: 50%; transform: translateY(-50%); width: 60px; height: 110px; background: rgba(2, 6, 23, 0.98); border: 1px solid #1e293b; border-right: none; border-radius: 20px 0 0 20px; color: #60a5fa; font-size: 2.4rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 21; backdrop-filter: blur(12px); box-shadow: 0 6px 30px rgba(0,0,0,0.5); transition: all 0.3s ease; }
@@ -76,7 +77,7 @@
 
   /* Mobile & Footer */
   @media (max-width: 900px) {
-    .panel { position: absolute; top: auto; right: 0; left: 0; bottom: 0; width: 100%; height: 85vh; max-height: none; border-radius: 20px 20px 0 0; transform: translateY(calc(100% - 60px)); transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); padding-top: 20px; padding-bottom: 120px; }
+    .panel { top: auto; bottom: 0; width: 100%; height: 85vh; max-height: none; border-radius: 20px 20px 0 0; transform: translateY(calc(100% - 60px)); }
     .panel.visible { transform: translateY(0); }
     #panelToggle { display: none; }
   }
@@ -84,7 +85,9 @@
   .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
   #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #60a5fa; font-size: 1.5rem; font-weight: bold; pointer-events: none; }
   </style>
+  <!-- Paper.js for vector editing -->
   <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
+  <!-- Your existing ninja script -->
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
@@ -98,67 +101,6 @@
         <a href="retexture.html">Retexture</a>
         <a href="editor.html" class="active">Editor</a>
       </nav>
-      <div class="menu-bar">
-        <div>File
-          <div class="dropdown">
-            <div onclick="newDocument()">New</div>
-            <div>Open Image...</div>
-            <div>Save</div>
-            <hr>
-            <div onclick="exportSVG()">Export SVG</div>
-            <div onclick="exportPNG()">Export PNG</div>
-            <div>Export PDF</div>
-          </div>
-        </div>
-        <div>Edit
-          <div class="dropdown">
-            <div>Undo (Ctrl+Z)</div>
-            <div>Redo (Ctrl+Y)</div>
-            <hr>
-            <div>Cut</div>
-            <div>Copy</div>
-            <div>Paste</div>
-          </div>
-        </div>
-        <div>Object
-          <div class="dropdown">
-            <div>Group</div>
-            <div>Ungroup</div>
-            <div>Lock</div>
-            <hr>
-            <div>Pathfinder > Unite</div>
-            <div>Pathfinder > Minus Front</div>
-          </div>
-        </div>
-        <div>Type
-          <div class="dropdown">
-            <div>Create Outlines</div>
-            <div>Font Browser</div>
-          </div>
-        </div>
-        <div>Select
-          <div class="dropdown">
-            <div>All</div>
-            <div>Deselect All</div>
-          </div>
-        </div>
-        <div>View
-          <div class="dropdown">
-            <div>Zoom In</div>
-            <div>Zoom Out</div>
-            <div>Fit Artboard</div>
-          </div>
-        </div>
-        <div>Window
-          <div class="dropdown">
-            <div>Layers</div>
-            <div>Properties</div>
-            <div>Swatches</div>
-            <div>Gradient</div>
-            <div>Appearance</div>
-          </div>
-        </div>
-      </div>
     </div>
     <div class="header-right">
       <img id="profilePic" alt="Profile">
@@ -167,53 +109,78 @@
   </div>
 </header>
 
+<!-- Application Menu Bar BELOW header -->
+<div class="app-menu-bar">
+  <div class="menu-bar">
+    <div>File
+      <div class="dropdown">
+        <div onclick="newDocument()">New</div>
+        <div>Open...</div>
+        <div>Save</div>
+        <hr>
+        <div onclick="exportSVG()">Export SVG</div>
+        <div onclick="exportPNG()">Export PNG</div>
+      </div>
+    </div>
+    <div>Edit
+      <div class="dropdown">
+        <div>Undo (Ctrl+Z)</div>
+        <div>Redo (Ctrl+Y)</div>
+        <hr>
+        <div>Cut</div>
+        <div>Copy</div>
+        <div>Paste</div>
+      </div>
+    </div>
+    <div>Object
+      <div class="dropdown">
+        <div>Group</div>
+        <div>Ungroup</div>
+        <hr>
+        <div>Unite</div>
+        <div>Minus Front</div>
+      </div>
+    </div>
+    <div>View
+      <div class="dropdown">
+        <div>Zoom In</div>
+        <div>Zoom Out</div>
+        <div>Fit Artboard</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="container">
-  <div id="loader">Advanced Vector Editor • Draw with Pen, Shapes, Type • Many Illustrator features!</div>
+  <div id="loader">Vector Editor • Use tools to draw</div>
   <canvas id="canvas" resize></canvas>
 
-  <!-- Expanded Toolbar -->
+  <!-- Left Toolbar -->
   <div id="floatingToolbar">
     <div class="tool-group">
       <div class="tool-btn active" id="selectTool" title="Selection (V)">⬚</div>
       <div class="tool-btn" id="directSelectTool" title="Direct Selection (A)">↖</div>
-      <div class="tool-btn" id="lassoTool" title="Lasso">↺</div>
     </div>
     <div class="tool-group">
       <div class="tool-btn" id="penTool" title="Pen (P)">✒</div>
-      <div class="tool-btn" id="pencilTool" title="Pencil (N)">✏</div>
-      <div class="tool-btn" id="brushTool" title="Brush (B)">🖌</div>
-      <div class="tool-btn" id="eraserTool" title="Eraser">✂</div>
-    </div>
-    <div class="tool-group">
       <div class="tool-btn" id="rectangleTool" title="Rectangle (M)">□</div>
-      <div class="tool-btn" id="ellipseTool" title="Ellipse (L)">○</div>
-      <div class="tool-btn" id="polygonTool" title="Polygon">🔺</div>
-      <div class="tool-btn" id="starTool" title="Star">⭐</div>
-      <div class="tool-btn" id="lineTool" title="Line">╱</div>
-    </div>
-    <div class="tool-group">
       <div class="tool-btn" id="typeTool" title="Type (T)">T</div>
       <div class="tool-btn" id="eyedropperTool" title="Eyedropper (I)">💧</div>
     </div>
-    <div class="tool-group">
-      <div class="tool-btn" id="handTool" title="Hand (H)">✋</div>
-      <div class="tool-btn" id="zoomTool" title="Zoom (Z)">🔍</div>
-    </div>
   </div>
 
-  <!-- Right Panel - Expanded Sections -->
+  <!-- Right Panel -->
   <div class="panel visible" id="panel">
     <button id="panelToggle">←</button>
 
     <h2>Properties</h2>
-    <div id="propertiesContent">Select an object for details</div>
+    <div id="propertiesContent">Select an object</div>
 
     <h2>Layers</h2>
     <ol id="layersList">
       <li class="layer-item active">Layer 1</li>
     </ol>
     <button id="addLayerBtn">+ Add Layer</button>
-    <button id="deleteLayerBtn">Delete Layer</button>
 
     <h2>Appearance</h2>
     <div class="control-group">
@@ -228,43 +195,6 @@
       <label>Stroke Width <span id="strokeWidthVal">1</span></label>
       <input type="range" min="0" max="100" value="1" id="strokeWidth">
     </div>
-    <div class="control-group">
-      <label>Opacity <span id="opacityVal">100</span>%</label>
-      <input type="range" min="0" max="100" value="100" id="opacity">
-    </div>
-
-    <h2>Transform</h2>
-    <div class="control-group">
-      <label>X</label>
-      <input type="number" id="transformX">
-    </div>
-    <div class="control-group">
-      <label>Y</label>
-      <input type="number" id="transformY">
-    </div>
-    <div class="control-group">
-      <label>Width</label>
-      <input type="number" id="transformW">
-    </div>
-    <div class="control-group">
-      <label>Height</label>
-      <input type="number" id="transformH">
-    </div>
-
-    <h2>Gradient (Basic)</h2>
-    <div class="control-group">
-      <label>Start Color</label>
-      <input type="color" id="gradStart" value="#ff0000">
-    </div>
-    <div class="control-group">
-      <label>End Color</label>
-      <input type="color" id="gradEnd" value="#0000ff">
-    </div>
-    <button id="applyGradient">Apply Gradient</button>
-
-    <h2>Pathfinder (Basic)</h2>
-    <button id="uniteBtn">Unite</button>
-    <button id="minusFrontBtn">Minus Front</button>
 
     <h2>Export</h2>
     <button id="exportSVG">Export SVG</button>
@@ -285,11 +215,59 @@
 
 <div id="mobilePanelToggle"><span>▲ Controls</span></div>
 
-<!-- Firebase Auth (same) -->
+<!-- Firebase Auth (your original) -->
 <script type="module">
-  // ... (your Firebase code from previous versions)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+    levelInfo.style.display = "none";
+    return;
+  }
+  authBtn.textContent = "Logout";
+  profilePic.src = user.photoURL || "";
+  profilePic.style.display = "block";
+  const ref = doc(db, "users", user.uid);
+  let snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, { xp: 10 });
+    snap = await getDoc(ref);
+  }
+  const xp = snap.data().xp || 0;
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level] ? 100 : ((xp - levels[level]) / (next - levels[level])) * 100;
+  levelText.textContent = `Level ${level} • ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
+});
 </script>
 
+<!-- Paper.js Vector Editor -->
 <script type="text/paperscript" canvas="canvas">
 var tools = {};
 var currentTool;
@@ -297,12 +275,12 @@ var currentPath;
 var fillColor = '#ff0000';
 var strokeColor = '#000000';
 var strokeWidth = 1;
-var opacity = 1;
 
-function activateTool(toolName) {
-  if (currentTool) currentTool.activate();
+function activateTool(name) {
+  currentTool = tools[name];
+  currentTool.activate();
   document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(toolName + 'Tool').classList.add('active');
+  document.getElementById(name + 'Tool').classList.add('active');
 }
 
 // Selection Tool
@@ -314,15 +292,10 @@ tools.select.onMouseDrag = function(event) {
   updateProperties();
 };
 
-// Pen Tool (advanced)
+// Pen Tool
 tools.pen = new Tool();
 tools.pen.onMouseDown = function(event) {
-  currentPath = new Path({
-    strokeColor: strokeColor,
-    strokeWidth: strokeWidth,
-    fillColor: null,
-    opacity: opacity
-  });
+  currentPath = new Path({ strokeColor: strokeColor, strokeWidth: strokeWidth });
   currentPath.add(event.point);
 };
 tools.pen.onMouseDrag = function(event) {
@@ -334,7 +307,6 @@ tools.pen.onMouseUp = function() {
   currentPath.closed = true;
   currentPath.fillColor = fillColor;
   currentPath.selected = true;
-  updateProperties();
 };
 
 // Rectangle Tool
@@ -346,23 +318,19 @@ tools.rectangle.onMouseDrag = function(event) {
   currentPath.fillColor = fillColor;
   currentPath.strokeColor = strokeColor;
   currentPath.strokeWidth = strokeWidth;
-  currentPath.opacity = opacity;
 };
 tools.rectangle.onMouseUp = function() {
   currentPath.selected = true;
-  updateProperties();
 };
 
 // Type Tool
 tools.type = new Tool();
 tools.type.onMouseDown = function(event) {
   var text = new PointText(event.point);
-  text.content = 'Double-click to edit';
+  text.content = 'Edit me';
   text.fillColor = fillColor;
   text.fontSize = 32;
-  text.opacity = opacity;
   text.selected = true;
-  updateProperties();
 };
 
 // Eyedropper
@@ -382,17 +350,16 @@ tools.eyedropper.onMouseDown = function(event) {
 };
 
 // Bind tools
-document.getElementById('selectTool').onclick = () => { currentTool = tools.select; activateTool('select'); };
-document.getElementById('penTool').onclick = () => { currentTool = tools.pen; activateTool('pen'); };
-document.getElementById('rectangleTool').onclick = () => { currentTool = tools.rectangle; activateTool('rectangle'); };
-document.getElementById('typeTool').onclick = () => { currentTool = tools.type; activateTool('type'); };
-document.getElementById('eyedropperTool').onclick = () => { currentTool = tools.eyedropper; activateTool('eyedropper'); };
+document.getElementById('selectTool').onclick = () => activateTool('select');
+document.getElementById('penTool').onclick = () => activateTool('pen');
+document.getElementById('rectangleTool').onclick = () => activateTool('rectangle');
+document.getElementById('typeTool').onclick = () => activateTool('type');
+document.getElementById('eyedropperTool').onclick = () => activateTool('eyedropper');
 
-// Default tool
-currentTool = tools.select;
+// Default
 activateTool('select');
 
-// Update controls
+// Controls sync
 document.getElementById('fillColor').oninput = e => {
   fillColor = e.target.value;
   if (project.selectedItems.length) project.selectedItems.forEach(i => i.fillColor = fillColor);
@@ -406,73 +373,17 @@ document.getElementById('strokeWidth').oninput = e => {
   document.getElementById('strokeWidthVal').textContent = strokeWidth;
   if (project.selectedItems.length) project.selectedItems.forEach(i => i.strokeWidth = strokeWidth);
 };
-document.getElementById('opacity').oninput = e => {
-  opacity = e.target.value / 100;
-  document.getElementById('opacityVal').textContent = e.target.value;
-  if (project.selectedItems.length) project.selectedItems.forEach(i => i.opacity = opacity);
-};
 
-// Properties update
+// Properties
 function updateProperties() {
   var item = project.selectedItems[0];
-  if (item) {
-    document.getElementById('propertiesContent').innerHTML = `
-      <p>Type: ${item.className}</p>
-      <p>Position: ${item.position.x.toFixed(0)}, ${item.position.y.toFixed(0)}</p>
-      <p>Size: ${item.bounds.width.toFixed(0)} × ${item.bounds.height.toFixed(0)}</p>
-    `;
-    document.getElementById('transformX').value = item.position.x;
-    document.getElementById('transformY').value = item.position.y;
-    if (item.bounds) {
-      document.getElementById('transformW').value = item.bounds.width;
-      document.getElementById('transformH').value = item.bounds.height;
-    }
-  } else {
-    document.getElementById('propertiesContent').innerHTML = 'No selection';
-  }
+  document.getElementById('propertiesContent').innerHTML = item 
+    ? `<p>Type: ${item.className}</p><p>Position: ${item.position.x.toFixed(0)}, ${item.position.y.toFixed(0)}</p>`
+    : 'No selection';
 }
 project.on('selectionchanged', updateProperties);
 
-// Basic Gradient
-document.getElementById('applyGradient').onclick = () => {
-  if (project.selectedItems.length) {
-    var item = project.selectedItems[0];
-    item.fillColor = {
-      gradient: {
-        stops: [document.getElementById('gradStart').value, document.getElementById('gradEnd').value]
-      },
-      origin: item.bounds.topLeft,
-      destination: item.bounds.bottomRight
-    };
-  }
-};
-
-// Basic Pathfinder
-document.getElementById('uniteBtn').onclick = () => {
-  if (project.selectedItems.length > 1) {
-    var united = project.selectedItems[0].unite(project.selectedItems[1]);
-    project.selectedItems[1].remove();
-    united.selected = true;
-  }
-};
-document.getElementById('minusFrontBtn').onclick = () => {
-  if (project.selectedItems.length > 1) {
-    var diff = project.selectedItems[0].subtract(project.selectedItems[1]);
-    project.selectedItems[1].remove();
-    diff.selected = true;
-  }
-};
-
-// Layers (basic)
-document.getElementById('addLayerBtn').onclick = () => {
-  var li = document.createElement('li');
-  li.className = 'layer-item';
-  li.textContent = 'Layer ' + (document.querySelectorAll('#layersList li').length + 1);
-  li.onclick = () => document.querySelectorAll('.layer-item').forEach(l => l.classList.remove('active')); li.classList.add('active');
-  document.getElementById('layersList').appendChild(li);
-};
-
-// Export functions
+// Export
 function exportSVG() {
   var svg = project.exportSVG({asString: true});
   var blob = new Blob([svg], {type: 'image/svg+xml'});
@@ -485,19 +396,13 @@ function exportPNG() {
   var a = document.createElement('a');
   a.href = data; a.download = 'artwork.png'; a.click();
 }
+function newDocument() { project.clear(); }
 
-// New Document
-function newDocument() {
-  project.clear();
-  document.getElementById('loader').style.display = 'none';
-}
-
-// Hide loader
 document.getElementById('loader').style.display = 'none';
 </script>
 
 <script>
-// Panel toggle (same)
+// Panel toggle
 const panel = document.getElementById('panel');
 const panelToggle = document.getElementById('panelToggle');
 const mobileToggle = document.getElementById('mobilePanelToggle');
