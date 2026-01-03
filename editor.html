@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Vector Editor Pro – BowesProduct (Illustrator 2026)</title>
+  <title>Vector Editor Pro \u2013 BowesProduct (Illustrator 2026)</title>
   <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
@@ -282,7 +283,6 @@
   </style>
   <!-- Paper.js for vector editing -->
   <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -354,8 +354,8 @@
         </div>
         <div>Transform &darr;
           <div class="submenu">
-            <div onclick="rotateSelection(-90)">Rotate 90° CW</div>
-            <div onclick="rotateSelection(90)">Rotate 90° CCW</div>
+            <div onclick="rotateSelection(-90)">Rotate 90\u00b0 CW</div>
+            <div onclick="rotateSelection(90)">Rotate 90\u00b0 CCW</div>
             <hr>
             <div onclick="flipSelection('horizontal')">Flip Horizontal</div>
             <div onclick="flipSelection('vertical')">Flip Vertical</div>
@@ -431,7 +431,7 @@
   <input type="file" id="placeImage" accept="image/*" style="display:none" onchange="handlePlace(event)">
 
   <div id="canvas-container">
-    <div id="loader">Vector Editor Pro • Initializing...</div>
+    <div id="loader">Vector Editor Pro \u2022 Initializing...</div>
     
     <!-- Rulers -->
     <div class="ruler-corner" id="rulerCorner"></div>
@@ -449,50 +449,50 @@
   <!-- Left Toolbar -->
   <div id="floatingToolbar">
     <div class="tool-group">
-      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)">⬚<span class="tooltip">Selection (V)</span></div>
-      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)">↖<span class="tooltip">Direct Selection (A)</span></div>
-      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)">✦<span class="tooltip">Magic Wand (Y)</span></div>
+      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)">\u2b1a<span class="tooltip">Selection (V)</span></div>
+      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)">\u2196<span class="tooltip">Direct Selection (A)</span></div>
+      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)">\u2726<span class="tooltip">Magic Wand (Y)</span></div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="penTool" title="Pen Tool (P)">✒<span class="tooltip">Pen (P)</span></div>
-      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)">✎<span class="tooltip">Pencil (N)</span></div>
-      <div class="tool-btn" id="brushTool" title="Brush Tool (B)">🖌<span class="tooltip">Brush (B)</span></div>
+      <div class="tool-btn" id="penTool" title="Pen Tool (P)">\u2712<span class="tooltip">Pen (P)</span></div>
+      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)">\u270e<span class="tooltip">Pencil (N)</span></div>
+      <div class="tool-btn" id="brushTool" title="Brush Tool (B)">\ud83d\udd8c<span class="tooltip">Brush (B)</span></div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)">□<span class="tooltip">Rectangle (M)</span></div>
-      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)">○<span class="tooltip">Ellipse (L)</span></div>
-      <div class="tool-btn" id="polygonTool" title="Polygon Tool">⬡<span class="tooltip">Polygon</span></div>
-      <div class="tool-btn" id="starTool" title="Star Tool">★<span class="tooltip">Star</span></div>
-      <div class="tool-btn" id="lineTool" title="Line Tool (/)">╱<span class="tooltip">Line (/)</span></div>
+      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)">\u25a1<span class="tooltip">Rectangle (M)</span></div>
+      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)">\u25cb<span class="tooltip">Ellipse (L)</span></div>
+      <div class="tool-btn" id="polygonTool" title="Polygon Tool">\u2b21<span class="tooltip">Polygon</span></div>
+      <div class="tool-btn" id="starTool" title="Star Tool">\u2605<span class="tooltip">Star</span></div>
+      <div class="tool-btn" id="lineTool" title="Line Tool (/)">\u2571<span class="tooltip">Line (/)</span></div>
     </div>
     <div class="tool-group">
       <div class="tool-btn" id="typeTool" title="Type Tool (T)">T<span class="tooltip">Type (T)</span></div>
-      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool">↝<span class="tooltip">Type on Path</span></div>
-      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool">𝓣<span class="tooltip">Touch Type</span></div>
+      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool">\u219d<span class="tooltip">Type on Path</span></div>
+      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool">\ud835\udce3<span class="tooltip">Touch Type</span></div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool">⧆<span class="tooltip">Shape Builder</span></div>
-      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool">▦<span class="tooltip">Perspective Grid</span></div>
-      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)">⤡<span class="tooltip">Free Transform (E)</span></div>
+      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool">\u29c6<span class="tooltip">Shape Builder</span></div>
+      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool">\u25a6<span class="tooltip">Perspective Grid</span></div>
+      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)">\u2921<span class="tooltip">Free Transform (E)</span></div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)">💧<span class="tooltip">Eyedropper (I)</span></div>
-      <div class="tool-btn" id="measureTool" title="Measure Tool">📏<span class="tooltip">Measure</span></div>
+      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)">\ud83d\udca7<span class="tooltip">Eyedropper (I)</span></div>
+      <div class="tool-btn" id="measureTool" title="Measure Tool">\ud83d\udccf<span class="tooltip">Measure</span></div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="handTool" title="Hand Tool (H)">✋<span class="tooltip">Hand (H)</span></div>
-      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)">🔍<span class="tooltip">Zoom (Z)</span></div>
+      <div class="tool-btn" id="handTool" title="Hand Tool (H)">\u270b<span class="tooltip">Hand (H)</span></div>
+      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)">\ud83d\udd0d<span class="tooltip">Zoom (Z)</span></div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="fillColor" title="Fill Color">◐<span class="tooltip">Fill</span></div>
-      <div class="tool-btn" id="strokeColor" title="Stroke Color">⭘<span class="tooltip">Stroke</span></div>
-      <div class="tool-btn" id="defaultColors" title="Default Colors">⚬<span class="tooltip">Default Colors</span></div>
+      <div class="tool-btn" id="fillColor" title="Fill Color">\u25d0<span class="tooltip">Fill</span></div>
+      <div class="tool-btn" id="strokeColor" title="Stroke Color">\u2b58<span class="tooltip">Stroke</span></div>
+      <div class="tool-btn" id="defaultColors" title="Default Colors">\u26ac<span class="tooltip">Default Colors</span></div>
     </div>
   </div>
 
   <!-- Right Panel Dock -->
   <div class="panel-dock" id="panelDock">
-    <button id="dockToggle">◀</button>
+    <button id="dockToggle">\u25c0</button>
     
     <div class="panel-tabs">
       <button class="panel-tab active" data-panel="properties">Properties</button>
@@ -643,7 +643,7 @@
         <h3>Angle</h3>
         <div class="control-row">
           <input type="range" id="gradientAngle" min="0" max="360" value="0">
-          <span id="gradientAngleVal">0°</span>
+          <span id="gradientAngleVal">0\u00b0</span>
         </div>
       </div>
 
@@ -684,22 +684,22 @@
       <div id="panel-align" class="panel-section">
         <h3>Align Objects</h3>
         <div class="align-grid">
-          <button class="align-btn" onclick="window.align('left')" title="Align Left">⬅</button>
-          <button class="align-btn" onclick="window.align('center-h')" title="Align Center">⬌</button>
-          <button class="align-btn" onclick="window.align('right')" title="Align Right">➡</button>
-          <button class="align-btn" onclick="window.align('top')" title="Align Top">⬆</button>
-          <button class="align-btn" onclick="window.align('center-v')" title="Align Center">⬍</button>
-          <button class="align-btn" onclick="window.align('bottom')" title="Align Bottom">⬇</button>
+          <button class="align-btn" onclick="window.align('left')" title="Align Left">\u2b05</button>
+          <button class="align-btn" onclick="window.align('center-h')" title="Align Center">\u2b0c</button>
+          <button class="align-btn" onclick="window.align('right')" title="Align Right">\u27a1</button>
+          <button class="align-btn" onclick="window.align('top')" title="Align Top">\u2b06</button>
+          <button class="align-btn" onclick="window.align('center-v')" title="Align Center">\u2b0d</button>
+          <button class="align-btn" onclick="window.align('bottom')" title="Align Bottom">\u2b07</button>
         </div>
         
         <h3>Distribute Objects</h3>
         <div class="align-grid">
-          <button class="align-btn" onclick="window.distribute('left')">⫷</button>
-          <button class="align-btn" onclick="window.distribute('center-h')">⫸</button>
-          <button class="align-btn" onclick="window.distribute('right')">⫹</button>
-          <button class="align-btn" onclick="window.distribute('top')">⬏</button>
-          <button class="align-btn" onclick="window.distribute('center-v')">⬎</button>
-          <button class="align-btn" onclick="window.distribute('bottom')">⬐</button>
+          <button class="align-btn" onclick="window.distribute('left')">\u2af7</button>
+          <button class="align-btn" onclick="window.distribute('center-h')">\u2af8</button>
+          <button class="align-btn" onclick="window.distribute('right')">\u2af9</button>
+          <button class="align-btn" onclick="window.distribute('top')">\u2b0f</button>
+          <button class="align-btn" onclick="window.distribute('center-v')">\u2b0e</button>
+          <button class="align-btn" onclick="window.distribute('bottom')">\u2b10</button>
         </div>
       </div>
 
@@ -740,10 +740,10 @@
           <button class="btn" onclick="window.setFontStyle('underline')">U</button>
         </div>
         <div class="btn-group">
-          <button class="btn" onclick="window.setTextAlign('left')">⬅</button>
-          <button class="btn" onclick="window.setTextAlign('center')">⬌</button>
-          <button class="btn" onclick="window.setTextAlign('right')">➡</button>
-          <button class="btn" onclick="window.setTextAlign('justify')">≡</button>
+          <button class="btn" onclick="window.setTextAlign('left')">\u2b05</button>
+          <button class="btn" onclick="window.setTextAlign('center')">\u2b0c</button>
+          <button class="btn" onclick="window.setTextAlign('right')">\u27a1</button>
+          <button class="btn" onclick="window.setTextAlign('justify')">\u2261</button>
         </div>
       </div>
 
@@ -1516,7 +1516,7 @@ function initEditor() {
       var layer = window.editorState.layers[i];
       var layerItem = document.createElement('div');
       layerItem.className = 'layer-item' + (i === window.editorState.currentLayerIndex ? ' active' : '');
-      layerItem.innerHTML = '<span class="layer-icon">📄</span><span class="layer-name">' + layer.name + '</span><div class="layer-actions"><button class="btn btn-sm" onclick="window.toggleLayerVisibility(' + i + ')">' + (layer.visible ? '👁' : '👁‍🗨') + '</button><button class="btn btn-sm" onclick="window.toggleLayerLock(' + i + ')">' + (layer.locked ? '🔒' : '🔓') + '</button></div>';
+      layerItem.innerHTML = '<span class="layer-icon">\ud83d\udcc4</span><span class="layer-name">' + layer.name + '</span><div class="layer-actions"><button class="btn btn-sm" onclick="window.toggleLayerVisibility(' + i + ')">' + (layer.visible ? '\ud83d\udc41' : '\ud83d\udc41\u200d\ud83d\udde8') + '</button><button class="btn btn-sm" onclick="window.toggleLayerLock(' + i + ')">' + (layer.locked ? '\ud83d\udd12' : '\ud83d\udd13') + '</button></div>';
       layerItem.onclick = function(e) {
         if (e.target.tagName !== 'BUTTON') {
           window.selectLayer(i);
@@ -2153,7 +2153,7 @@ if (dockToggle) {
     dockVisible = !dockVisible;
     dock.classList.toggle('visible', dockVisible);
     dock.classList.toggle('hidden', !dockVisible);
-    dockToggle.textContent = dockVisible ? '◀' : '▶';
+    dockToggle.textContent = dockVisible ? '\u25c0' : '\u25b6';
   };
 }
 
@@ -2176,7 +2176,7 @@ window.showPanel = function(panelName) {
   dock.classList.add('visible');
   dock.classList.remove('hidden');
   dockVisible = true;
-  if (dockToggle) dockToggle.textContent = '◀';
+  if (dockToggle) dockToggle.textContent = '\u25c0';
 };
 
 // Gradient controls
@@ -2184,7 +2184,7 @@ var gradientAngle = document.getElementById('gradientAngle');
 if (gradientAngle) {
   gradientAngle.addEventListener('input', function() {
     var gradientAngleVal = document.getElementById('gradientAngleVal');
-    if (gradientAngleVal) gradientAngleVal.textContent = this.value + '°';
+    if (gradientAngleVal) gradientAngleVal.textContent = this.value + '\u00b0';
   });
 }
 
