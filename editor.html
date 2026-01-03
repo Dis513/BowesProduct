@@ -825,61 +825,6 @@
   <hr>
   <div onclick="window.deleteSelection && window.deleteSelection()">Delete</div>
 </div>
-<!-- Firebase Auth -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-
-const authBtn = document.getElementById("authBtn");
-const profilePic = document.getElementById("profilePic");
-const levelInfo = document.getElementById("levelInfo");
-const levelText = document.getElementById("levelText");
-const xpBar = document.getElementById("xpBar");
-
-authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    authBtn.textContent = "Login";
-    profilePic.style.display = "none";
-    levelInfo.style.display = "none";
-    return;
-  }
-  authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL || "";
-  profilePic.style.display = "block";
-
-  const ref = doc(db, "users", user.uid);
-  let snap = await getDoc(ref);
-  if (!snap.exists()) {
-    await setDoc(ref, { xp: 10 });
-    snap = await getDoc(ref);
-  }
-  const xp = snap.data().xp || 0;
-  const levels = [0, 200, 500, 1000, 2000];
-  let level = levels.filter(v => xp >= v).length - 1;
-  let next = levels[level + 1] ?? levels[level];
-  let progress = next === levels[level] ? 100 :
-    ((xp - levels[level]) / (next - levels[level])) * 100;
-
-  levelText.textContent = `Level ${level} \u2022 ${xp} XP`;
-  xpBar.style.width = progress + "%";
-  levelInfo.style.display = "block";
-});
-</script>
-
 <!-- Paper.js Vector Editor -->
 <script type="text/paperscript" canvas="canvas">
 // IMPORTANT: This script runs in Paper.js scope
@@ -3123,9 +3068,66 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { passive: true });
   }
 });
+  
 </script>
+  <!-- Firebase Auth -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+    levelInfo.style.display = "none";
+    return;
+  }
+  authBtn.textContent = "Logout";
+  profilePic.src = user.photoURL || "";
+  profilePic.style.display = "block";
+
+  const ref = doc(db, "users", user.uid);
+  let snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, { xp: 10 });
+    snap = await getDoc(ref);
+  }
+  const xp = snap.data().xp || 0;
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level] ? 100 :
+    ((xp - levels[level]) / (next - levels[level])) * 100;
+
+  levelText.textContent = `Level ${level} \u2022 ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
+});
+</script>
+
 </body>
 </html>
+
 
 
 
