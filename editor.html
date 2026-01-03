@@ -69,7 +69,7 @@
 
   /* ================= LEFT TOOLBAR ================= */
   #floatingToolbar {
-    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
+    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 900 display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
   }
   .tool-group { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-bottom: 1px solid #1e293b; }
   .tool-group:last-child { border-bottom: none; }
@@ -199,9 +199,24 @@
   .context-menu div { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.85rem; }
   .context-menu div:hover { background: #1e293b; }
   .context-menu hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
+    
   </style>
   <!-- Paper.js for vector editing -->
   <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
+  <script>
+paper.install(window);
+paper.setup(document.getElementById('canvas'));
+
+// === ALL YOUR EDITOR CODE GOES HERE (paste the entire content that was inside the paperscript tag) ===
+
+// Global state
+var tools = {};
+var currentTool;
+// ... (everything from "var fillColor = '#ff0000';" down to the very end, including initLayers(); activateTool('select'); etc.)
+
+// At the very end, hide the loader immediately since setup is synchronous
+document.getElementById('loader').style.display = 'none';
+</script>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
