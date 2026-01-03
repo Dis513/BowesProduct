@@ -885,6 +885,7 @@ onAuthStateChanged(auth, async (user) => {
 // Setup Paper.js manually – THIS IS REQUIRED
 paper.setup(document.getElementById('canvas'));
 paper.install(window);   // ← this line makes everything work with modern JS
+  
 
 console.log('Paper.js script starting...');
 
@@ -998,18 +999,25 @@ function activateTool(name) {
 tools.select = new Tool();
 tools.select.onMouseDown = function(event) {
   var hit = project.hitTest(event.point, {
-    fill: true, stroke: true, segments: true, tolerance: 5
+    fill: true,
+    stroke: true,
+    segments: true,
+    tolerance: 10  // ← Increased tolerance for easier clicking
   });
-  
+
   if (hit && hit.item && !hit.item.locked) {
     if (!Key.modifiers.shift) {
+      // Only deselect everything if Shift is NOT held
       project.deselectAll();
     }
     hit.item.selected = true;
-  } else if (!Key.modifiers.shift) {
-    project.deselectAll();
+  } else {
+    // Only deselect if Shift is NOT held AND we missed the hit
+    if (!Key.modifiers.shift) {
+      project.deselectAll();
+    }
   }
-  
+
   updateProperties();
 };
 
@@ -2706,6 +2714,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
