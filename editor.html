@@ -222,6 +222,36 @@
     .dropdown { z-index: 1900; }
   }
 
+  /* Panel Backdrop/Overlay */
+  .panel-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1999;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .panel-backdrop.visible {
+    display: block;
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    .panel-backdrop.visible {
+      display: block;
+    }
+  }
+  @media (min-width: 901px) {
+    .panel-backdrop {
+      display: none !important;
+    }
+  }
+
   #loader { 
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #60a5fa; font-size: 1.2rem; font-weight: 600; pointer-events: none; z-index: 5;
   }
@@ -387,6 +417,9 @@
   <!-- Hidden file inputs -->
   <input type="file" id="openFile" accept=".svg,.json" style="display:none" onchange="handleOpen(event)">
   <input type="file" id="placeImage" accept="image/*" style="display:none" onchange="handlePlace(event)">
+
+  <!-- Panel Backdrop -->
+  <div class="panel-backdrop" id="panelBackdrop"></div>
 
   <div id="canvas-container">
     <div id="loader">Vector Editor Pro • Initializing...</div>
@@ -829,11 +862,14 @@ onAuthStateChanged(auth, async (user) => {
 
 <!-- Paper.js Vector Editor -->
 <script type="text/paperscript" canvas="canvas">
+// IMPORTANT: This script runs in Paper.js scope
+console.log('Paper.js script starting...');
+
 // Global state
 var tools = {};
 var currentTool;
-var fillColor = '#ff0000';
-var strokeColor = '#000000';
+var fillColor = new Color('#ff0000');
+var strokeColor = new Color('#000000');
 var strokeWidth = 1;
 var currentPath;
 var isDrawing = false;
@@ -849,6 +885,8 @@ var gridSize = 20;
 var layers = [];
 var currentLayerIndex = 0;
 var zoomLevel = 1;
+
+console.log('Paper.js initialized, view size:', view.size);
 
 // Initialize layers
 function initLayers() {
@@ -1312,12 +1350,14 @@ tools.eyedropper.onMouseDown = function(event) {
   
   if (hit && hit.item) {
     if (hit.type === 'fill' && hit.item.fillColor) {
-      fillColor = hit.item.fillColor.toCSS(true);
-      document.getElementById('fillColor').style.backgroundColor = fillColor;
+      fillColor = hit.item.fillColor.clone();
+      var colorHex = fillColor.toCSS(true);
+      document.getElementById('fillColor').style.backgroundColor = colorHex;
     }
     if (hit.type === 'stroke' && hit.item.strokeColor) {
-      strokeColor = hit.item.strokeColor.toCSS(true);
-      document.getElementById('strokeColor').style.backgroundColor = strokeColor;
+      strokeColor = hit.item.strokeColor.clone();
+      var colorHex = strokeColor.toCSS(true);
+      document.getElementById('strokeColor').style.backgroundColor = colorHex;
     }
   }
 };
@@ -1369,36 +1409,38 @@ document.getElementById('zoomTool').onclick = function() { activateTool('zoom');
 
 // Color pickers
 document.getElementById('fillColor').onclick = function() {
-  var color = prompt('Enter fill color (hex):', fillColor);
+  var colorStr = fillColor.toCSS ? fillColor.toCSS(true) : fillColor;
+  var color = prompt('Enter fill color (hex):', colorStr);
   if (color) {
-    fillColor = color;
+    fillColor = new Color(color);
     this.style.backgroundColor = color;
     if (project.selectedItems.length) {
       project.selectedItems.forEach(function(item) {
-        item.fillColor = color;
+        item.fillColor = new Color(color);
       });
     }
   }
 };
 
 document.getElementById('strokeColor').onclick = function() {
-  var color = prompt('Enter stroke color (hex):', strokeColor);
+  var colorStr = strokeColor.toCSS ? strokeColor.toCSS(true) : strokeColor;
+  var color = prompt('Enter stroke color (hex):', colorStr);
   if (color) {
-    strokeColor = color;
+    strokeColor = new Color(color);
     this.style.backgroundColor = color;
     if (project.selectedItems.length) {
       project.selectedItems.forEach(function(item) {
-        item.strokeColor = color;
+        item.strokeColor = new Color(color);
       });
     }
   }
 };
 
 document.getElementById('defaultColors').onclick = function() {
-  fillColor = '#ff0000';
-  strokeColor = '#000000';
-  document.getElementById('fillColor').style.backgroundColor = fillColor;
-  document.getElementById('strokeColor').style.backgroundColor = strokeColor;
+  fillColor = new Color('#ff0000');
+  strokeColor = new Color('#000000');
+  document.getElementById('fillColor').style.backgroundColor = '#ff0000';
+  document.getElementById('strokeColor').style.backgroundColor = '#000000';
 };
 
 // Update properties panel
@@ -2181,47 +2223,29 @@ view.onMouseMove = function(event) {
   }
 };
 
-// Add touch move tracking
-var canvas = document.getElementById('canvas');
-canvas.addEventListener('touchmove', function(e) {
-  if (e.touches.length > 0) {
-    var touch = e.touches[0];
-    var rect = canvas.getBoundingClientRect();
-    var x = touch.clientX - rect.left;
-    var y = touch.clientY - rect.top;
-    var statusPosition = document.getElementById('statusPosition');
-    if (statusPosition) {
-      statusPosition.textContent = 'X: ' + Math.round(x) + ' Y: ' + Math.round(y);
-    }
-  }
-}, { passive: true });
-
 // Selection changed handler
 project.on('selectionchanged', updateProperties);
 
 // Initialize
+console.log('Initializing layers...');
 initLayers();
+console.log('Activating selection tool...');
 activateTool('select');
+console.log('Saving initial state...');
 saveState();
+console.log('Paper.js setup complete!');
 
-// Hide loader and log initialization
-setTimeout(function() {
-  var loader = document.getElementById('loader');
-  if (loader) {
-    loader.style.display = 'none';
+// Hide loader after a short delay
+view.onFrame = function(event) {
+  if (event.count === 10) {
+    var loader = document.getElementById('loader');
+    if (loader) {
+      loader.style.display = 'none';
+      console.log('Loader hidden, editor ready!');
+    }
   }
-  
-  // Ensure the canvas is properly sized and visible
-  if (typeof view !== 'undefined' && view) {
-    view.viewSize = new Size(view.element.width, view.element.height);
-    view.draw();
-  }
-  
-  console.log('Vector Editor Pro initialized successfully');
-  console.log('Paper.js version:', paper.version);
-  console.log('Canvas size:', view.size);
-  console.log('Project layers:', project.layers.length);
-}, 500);
+};
+
 </script>
 
 <script>
@@ -2240,6 +2264,7 @@ document.querySelectorAll('.panel-tab').forEach(tab => {
 const dock = document.getElementById('panelDock');
 const dockToggle = document.getElementById('dockToggle');
 const panelCloseBtn = document.getElementById('panelCloseBtn');
+const panelBackdrop = document.getElementById('panelBackdrop');
 let dockVisible = true;
 
 function toggleDock() {
@@ -2247,11 +2272,25 @@ function toggleDock() {
   dock.classList.toggle('visible', dockVisible);
   dock.classList.toggle('hidden', !dockVisible);
   dockToggle.textContent = dockVisible ? '◀' : '▶';
+  
+  // Toggle backdrop on mobile
+  if (window.innerWidth <= 900) {
+    panelBackdrop.classList.toggle('visible', dockVisible);
+  }
 }
 
 dockToggle.onclick = toggleDock;
 if (panelCloseBtn) {
   panelCloseBtn.onclick = toggleDock;
+}
+
+// Click backdrop to close panel on mobile
+if (panelBackdrop) {
+  panelBackdrop.onclick = function() {
+    if (window.innerWidth <= 900 && dockVisible) {
+      toggleDock();
+    }
+  };
 }
 
 // Show specific panel
@@ -2271,6 +2310,11 @@ function showPanel(panelName) {
     dock.classList.remove('hidden');
     dockVisible = true;
     dockToggle.textContent = '◀';
+    
+    // Show backdrop on mobile
+    if (window.innerWidth <= 900) {
+      panelBackdrop.classList.add('visible');
+    }
   }
 }
 
@@ -2287,11 +2331,13 @@ document.getElementById('strokeWeight').addEventListener('input', function() {
 // Window resize handler - keep panels visible by default on mobile
 window.addEventListener('resize', function() {
   if (window.innerWidth <= 900) {
-    // On mobile, panels are visible by default
-    dock.classList.add('visible');
-    dock.classList.remove('hidden');
-    dockVisible = true;
+    // On mobile, show backdrop if panel is visible
+    if (dockVisible) {
+      panelBackdrop.classList.add('visible');
+    }
   } else {
+    // On desktop, always hide backdrop
+    panelBackdrop.classList.remove('visible');
     dock.classList.add('visible');
     dock.classList.remove('hidden');
     dockVisible = true;
@@ -2509,7 +2555,31 @@ window.onload = function() {
   initSwatches();
   addFill();
   addStroke();
+  
+  // Set initial backdrop state on mobile
+  if (window.innerWidth <= 900 && dockVisible) {
+    panelBackdrop.classList.add('visible');
+  }
 };
+
+// Mobile touch support for position tracking
+document.addEventListener('DOMContentLoaded', function() {
+  var canvas = document.getElementById('canvas');
+  if (canvas) {
+    canvas.addEventListener('touchmove', function(e) {
+      if (e.touches.length > 0) {
+        var touch = e.touches[0];
+        var rect = canvas.getBoundingClientRect();
+        var x = touch.clientX - rect.left;
+        var y = touch.clientY - rect.top;
+        var statusPosition = document.getElementById('statusPosition');
+        if (statusPosition) {
+          statusPosition.textContent = 'X: ' + Math.round(x) + ' Y: ' + Math.round(y);
+        }
+      }
+    }, { passive: true });
+  }
+});
 
 // Mobile touch support
 document.addEventListener('touchstart', function(e) {
