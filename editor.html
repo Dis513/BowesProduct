@@ -1,24 +1,31 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vector Editor Pro</title>
+  <title>Vector Editor Pro \u2013 BowesProduct</title>
   <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
-  
+
   /* ================= HEADER ================= */
   .site-header {
     position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
   }
-  .header-inner { max-width: 1400px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
   .header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
   .main-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
   .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.9rem; white-space: nowrap; }
   .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
   .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; flex-wrap: wrap; }
+  #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+  .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+  #levelInfo { display: none; font-size: 0.8rem; color: #cbd5e1; }
+  #levelText { white-space: nowrap; font-size: 0.75rem; }
+  #xpOuter { width: 100px; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+  #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
   @media (max-width: 900px) {
     .header-inner { padding: 0.5rem; }
@@ -26,25 +33,27 @@
     .main-nav { gap: 0.8rem; order: 3; width: 100%; }
     .main-nav a { font-size: 0.85rem; }
     .header-right { width: 100%; justify-content: space-between; }
+    #levelInfo { flex: 1; }
+    #xpOuter { width: 100%; }
   }
 
   /* ================= APPLICATION MENU BAR ================= */
-.app-menu-bar {
-  background: rgba(15,23,42,0.98);
-  border-bottom: 1px solid #1e293b;
-  padding: 0;
-  padding-left: 150px;
-  display: flex;
-  gap: 0;
-  font-size: 0.85rem;
-  position: sticky;
-  top: 70px;
-  z-index: 999;
-  backdrop-filter: blur(10px);
-  flex-wrap: wrap;
-  height: 36px;
-  align-items: center;
-}
+  .app-menu-bar {
+    background: rgba(15,23,42,0.98);
+    border-bottom: 1px solid #1e293b;
+    padding: 0;
+    padding-left: 150px;
+    display: flex;
+    gap: 0;
+    font-size: 0.85rem;
+    position: sticky;
+    top: 56px;
+    z-index: 999;
+    backdrop-filter: blur(10px);
+    flex-wrap: wrap;
+    height: 36px;
+    align-items: center;
+  }
   .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
     position: relative; cursor: pointer; padding: 0.5rem 1rem; height: 100%; display: flex; align-items: center; user-select: none;
@@ -62,8 +71,13 @@
   .dropdown div:hover .submenu { display: flex; }
   .menu-bar > div:hover .dropdown, .dropdown:hover { display: flex; }
 
+  @media (max-width: 900px) {
+    .app-menu-bar { gap: 1rem; padding-left: 60px; z-index: 999; }
+    .menu-bar > div { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
+  }
+
   /* ================= MAIN LAYOUT ================= */
-  #container { position: relative; width: 100%; height: 100%; padding-top: 106px; padding-bottom: 0; display: flex; }
+  #container { position: relative; width: 100%; height: 100%; padding-top: 92px; padding-bottom: 30px; display: flex; }
   
   /* ================= CANVAS AREA ================= */
   #canvas-container {
@@ -88,7 +102,7 @@
 
   /* ================= LEFT TOOLBAR ================= */
   #floatingToolbar {
-    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
+    position: fixed; left: 20px; top: 108px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
   }
   .tool-group { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-bottom: 1px solid #1e293b; }
   .tool-group:last-child { border-bottom: none; }
@@ -100,7 +114,7 @@
 
   /* ================= RIGHT PANEL DOCK ================= */
   .panel-dock {
-    position: fixed; right: 20px; top: 116px; width: 320px; max-height: calc(100vh - 140px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; z-index: 20; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column;
+    position: fixed; right: 20px; top: 108px; width: 320px; max-height: calc(100vh - 140px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; z-index: 20; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column;
   }
   
   #dockToggle { 
@@ -192,7 +206,7 @@
   /* Mobile */
   @media (max-width: 900px) {
     #floatingToolbar { 
-      left: 10px; top: 111px; padding: 6px; max-height: calc(100vh - 160px);
+      left: 10px; top: 103px; padding: 6px; max-height: calc(100vh - 160px);
     }
     .tool-btn { width: 38px; height: 38px; font-size: 1.1rem; }
     .panel-dock { 
@@ -222,15 +236,7 @@
     .ruler-h { left: 50px; }
     .ruler-v { display: none; }
     #canvas { margin-left: 50px; }
-    .app-menu-bar { gap: 1rem; padding-left: 60px; z-index: 999; }
-    .menu-bar > div { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
-    .status-bar { z-index: 1100; }
     .dropdown { z-index: 1900; }
-  }
-
-  /* Panel Backdrop/Overlay - DISABLED on mobile for canvas visibility */
-  .panel-backdrop {
-    display: none !important;
   }
 
   /* Tool/Panel Name Notification */
@@ -273,11 +279,84 @@
   .context-menu div { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.85rem; }
   .context-menu div:hover { background: #1e293b; }
   .context-menu hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 20000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal h2 {
+    color: #60a5fa;
+    margin: 0 0 1.5rem;
+    font-size: 1.3rem;
+  }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none;
+    color: #94a3b8;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .modal-close:hover { color: white; }
+  .modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
   </style>
   <!-- Paper.js for vector editing - using unminified version for better debugging -->
   <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.js"></script>
 </head>
 <body>
+
+<!-- Modal for New Document -->
+<div class="modal-overlay" id="newDocumentModal">
+  <div class="modal">
+    <h2>Create New Document</h2>
+    <div class="control-group">
+      <label for="docWidth">Width (px)</label>
+      <input type="number" id="docWidth" value="1920" min="1">
+    </div>
+    <div class="control-group">
+      <label for="docHeight">Height (px)</label>
+      <input type="number" id="docHeight" value="1080" min="1">
+    </div>
+    <div class="control-group">
+      <label>Preset Sizes</label>
+      <select id="docPreset">
+        <option value="custom">Custom</option>
+        <option value="1920x1080">1920 x 1080 (Full HD)</option>
+        <option value="3840x2160">3840 x 2160 (4K)</option>
+        <option value="1280x720">1280 x 720 (HD)</option>
+        <option value="1080x1920">1080 x 1920 (Portrait)</option>
+        <option value="1080x1080">1080 x 1080 (Square)</option>
+        <option value="800x600">800 x 600</option>
+        <option value="1024x768">1024 x 768</option>
+        <option value="2560x1440">2560 x 1440 (2K)</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeNewDocumentModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="createNewDocument()">Create</button>
+    </div>
+  </div>
+</div>
+
 <header class="site-header">
   <div class="header-inner">
     <div class="header-left">
@@ -290,7 +369,12 @@
       </nav>
     </div>
     <div class="header-right">
-      <!-- User info can be added here if needed -->
+      <img id="profilePic" alt="Profile">
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+      <button id="authBtn" class="login-btn">Login</button>
     </div>
   </div>
 </header>
@@ -346,8 +430,8 @@
         </div>
         <div>Transform &darr;
           <div class="submenu">
-            <div data-action="rotateSelectionCW">Rotate 90° CW</div>
-            <div data-action="rotateSelectionCCW">Rotate 90° CCW</div>
+            <div data-action="rotateSelectionCW">Rotate 90\u00b0 CW</div>
+            <div data-action="rotateSelectionCCW">Rotate 90\u00b0 CCW</div>
             <hr>
             <div data-action="flipSelectionHorizontal">Flip Horizontal</div>
             <div data-action="flipSelectionVertical">Flip Vertical</div>
@@ -422,14 +506,11 @@
   <input type="file" id="openFile" accept=".svg,.json" style="display:none">
   <input type="file" id="placeImage" accept="image/*" style="display:none">
 
-  <!-- Panel Backdrop -->
-  <div class="panel-backdrop" id="panelBackdrop"></div>
-
   <!-- Tool/Panel Name Notification -->
   <div class="tool-notification" id="toolNotification"></div>
 
   <div id="canvas-container">
-    <div id="loader">Vector Editor Pro • Initializing...</div>
+    <div id="loader">Vector Editor Pro \u2022 Initializing...</div>
     
     <!-- Rulers -->
     <div class="ruler-corner" id="rulerCorner"></div>
@@ -447,50 +528,50 @@
   <!-- Left Toolbar -->
   <div id="floatingToolbar">
     <div class="tool-group">
-      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)" data-tool="select">⬚</div>
-      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)" data-tool="directSelect">↖</div>
-      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)" data-tool="select">✦</div>
+      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)" data-tool="select">\u2b1a</div>
+      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)" data-tool="directSelect">\u2196</div>
+      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)" data-tool="select">\u2726</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="penTool" title="Pen Tool (P)" data-tool="pen">✒</div>
-      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)" data-tool="pencil">✎</div>
-      <div class="tool-btn" id="brushTool" title="Brush Tool (B)" data-tool="brush">🖌</div>
+      <div class="tool-btn" id="penTool" title="Pen Tool (P)" data-tool="pen">\u2712</div>
+      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)" data-tool="pencil">\u270e</div>
+      <div class="tool-btn" id="brushTool" title="Brush Tool (B)" data-tool="brush">\ud83d\udd8c</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)" data-tool="rectangle">□</div>
-      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)" data-tool="ellipse">○</div>
-      <div class="tool-btn" id="polygonTool" title="Polygon Tool" data-tool="polygon">⬡</div>
-      <div class="tool-btn" id="starTool" title="Star Tool" data-tool="star">★</div>
-      <div class="tool-btn" id="lineTool" title="Line Tool (/)" data-tool="line">╱</div>
+      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)" data-tool="rectangle">\u25a1</div>
+      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)" data-tool="ellipse">\u25cb</div>
+      <div class="tool-btn" id="polygonTool" title="Polygon Tool" data-tool="polygon">\u2b21</div>
+      <div class="tool-btn" id="starTool" title="Star Tool" data-tool="star">\u2605</div>
+      <div class="tool-btn" id="lineTool" title="Line Tool (/)" data-tool="line">\u2571</div>
     </div>
     <div class="tool-group">
       <div class="tool-btn" id="typeTool" title="Type Tool (T)" data-tool="type">T</div>
-      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool" data-tool="type">↝</div>
-      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool" data-tool="type">𝓣</div>
+      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool" data-tool="type">\u219d</div>
+      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool" data-tool="type">\ud835\udce3</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool (Shift+M)" data-tool="select">⧆</div>
-      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool" data-tool="select">▦</div>
-      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)" data-tool="select">⤡</div>
+      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool (Shift+M)" data-tool="select">\u29c6</div>
+      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool" data-tool="select">\u25a6</div>
+      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)" data-tool="select">\u2921</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)" data-tool="eyedropper">💧</div>
-      <div class="tool-btn" id="measureTool" title="Measure Tool" data-tool="select">📏</div>
+      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)" data-tool="eyedropper">\ud83d\udca7</div>
+      <div class="tool-btn" id="measureTool" title="Measure Tool" data-tool="select">\ud83d\udccf</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="handTool" title="Hand Tool (H)" data-tool="hand">✋</div>
-      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)" data-tool="zoom">🔍</div>
+      <div class="tool-btn" id="handTool" title="Hand Tool (H)" data-tool="hand">\u270b</div>
+      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)" data-tool="zoom">\ud83d\udd0d</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="fillColor" title="Fill Color">◐</div>
-      <div class="tool-btn" id="strokeColor" title="Stroke Color">⭘</div>
-      <div class="tool-btn" id="defaultColors" title="Default Colors">⚬</div>
+      <div class="tool-btn" id="fillColor" title="Fill Color">\u25d0</div>
+      <div class="tool-btn" id="strokeColor" title="Stroke Color">\u2b58</div>
+      <div class="tool-btn" id="defaultColors" title="Default Colors">\u26ac</div>
     </div>
   </div>
 
   <!-- Right Panel Dock -->
   <div class="panel-dock visible" id="panelDock">
-    <button id="dockToggle">◀</button>
+    <button id="dockToggle">\u25c0</button>
     
     <div class="panel-tabs">
       <button class="panel-tab active" data-panel="properties">Properties</button>
@@ -502,7 +583,7 @@
       <button class="panel-tab" data-panel="align">Align</button>
       <button class="panel-tab" data-panel="character">Character</button>
       <button class="panel-tab" data-panel="paragraph">Paragraph</button>
-      <button class="panel-close-btn" id="panelCloseBtn" title="Close Panel">×</button>
+      <button class="panel-close-btn" id="panelCloseBtn" title="Close Panel">\u00d7</button>
     </div>
     
     <div class="panel-content">
@@ -642,7 +723,7 @@
         <h3>Angle</h3>
         <div class="control-row">
           <input type="range" id="gradientAngle" min="0" max="360" value="0">
-          <span id="gradientAngleVal">0°</span>
+          <span id="gradientAngleVal">0\u00b0</span>
         </div>
       </div>
 
@@ -683,22 +764,22 @@
       <div id="panel-align" class="panel-section">
         <h3>Align Objects</h3>
         <div class="align-grid">
-          <button class="align-btn" data-action="alignLeft" title="Align Left">⬅</button>
-          <button class="align-btn" data-action="alignCenterH" title="Align Center">⬌</button>
-          <button class="align-btn" data-action="alignRight" title="Align Right">➡</button>
-          <button class="align-btn" data-action="alignTop" title="Align Top">⬆</button>
-          <button class="align-btn" data-action="alignCenterV" title="Align Center">⬍</button>
-          <button class="align-btn" data-action="alignBottom" title="Align Bottom">⬇</button>
+          <button class="align-btn" data-action="alignLeft" title="Align Left">\u2b05</button>
+          <button class="align-btn" data-action="alignCenterH" title="Align Center">\u2b0c</button>
+          <button class="align-btn" data-action="alignRight" title="Align Right">\u27a1</button>
+          <button class="align-btn" data-action="alignTop" title="Align Top">\u2b06</button>
+          <button class="align-btn" data-action="alignCenterV" title="Align Center">\u2b0d</button>
+          <button class="align-btn" data-action="alignBottom" title="Align Bottom">\u2b07</button>
         </div>
         
         <h3>Distribute Objects</h3>
         <div class="align-grid">
-          <button class="align-btn" data-action="distributeLeft">⫷</button>
-          <button class="align-btn" data-action="distributeCenterH">⫸</button>
-          <button class="align-btn" data-action="distributeRight">⫹</button>
-          <button class="align-btn" data-action="distributeTop">⬏</button>
-          <button class="align-btn" data-action="distributeCenterV">⬎</button>
-          <button class="align-btn" data-action="distributeBottom">⬐</button>
+          <button class="align-btn" data-action="distributeLeft">\u2af7</button>
+          <button class="align-btn" data-action="distributeCenterH">\u2af8</button>
+          <button class="align-btn" data-action="distributeRight">\u2af9</button>
+          <button class="align-btn" data-action="distributeTop">\u2b0f</button>
+          <button class="align-btn" data-action="distributeCenterV">\u2b0e</button>
+          <button class="align-btn" data-action="distributeBottom">\u2b10</button>
         </div>
       </div>
 
@@ -739,10 +820,10 @@
           <button class="btn" data-action="fontStyleUnderline">U</button>
         </div>
         <div class="btn-group">
-          <button class="btn" data-action="textAlignLeft">⬅</button>
-          <button class="btn" data-action="textAlignCenter">⬌</button>
-          <button class="btn" data-action="textAlignRight">➡</button>
-          <button class="btn" data-action="textAlignJustify">≡</button>
+          <button class="btn" data-action="textAlignLeft">\u2b05</button>
+          <button class="btn" data-action="textAlignCenter">\u2b0c</button>
+          <button class="btn" data-action="textAlignRight">\u27a1</button>
+          <button class="btn" data-action="textAlignJustify">\u2261</button>
         </div>
       </div>
 
@@ -811,6 +892,7 @@
   <hr>
   <div data-action="deleteSelection">Delete</div>
 </div>
+
 <!-- Firebase Auth -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -891,6 +973,8 @@ var gridSize = 20;
 var layers = [];
 var currentLayerIndex = 0;
 var zoomLevel = 1;
+var documentWidth = 1920;
+var documentHeight = 1080;
 
 console.log('Paper.js initialized, view size:', view.size);
 
@@ -901,6 +985,26 @@ function initLayers() {
   ];
   console.log('Layers initialized:', layers);
   updateLayersList();
+}
+
+// Create artboard based on document size
+function createArtboard() {
+  var artboard = document.getElementById('artboardIndicator');
+  var canvasRect = document.getElementById('canvas').getBoundingClientRect();
+  
+  // Calculate scale to fit document in view
+  var scaleX = (view.size.width - 100) / documentWidth;
+  var scaleY = (view.size.height - 100) / documentHeight;
+  var scale = Math.min(scaleX, scaleY, 1);
+  
+  var artboardWidth = documentWidth * scale;
+  var artboardHeight = documentHeight * scale;
+  
+  artboard.style.left = ((view.size.width - artboardWidth) / 2 + 60) + 'px';
+  artboard.style.top = ((view.size.height - artboardHeight) / 2 + 20) + 'px';
+  artboard.style.width = artboardWidth + 'px';
+  artboard.style.height = artboardHeight + 'px';
+  artboard.style.display = 'block';
 }
 
 // Tool/Panel Notification System
@@ -1533,11 +1637,11 @@ function updateLayersList() {
     var layerItem = document.createElement('div');
     layerItem.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
     layerItem.innerHTML = `  
-      <span class="layer-icon">📄</span>
+      <span class="layer-icon">\ud83d\udcc4</span>
       <span class="layer-name">${layer.name}</span>
       <div class="layer-actions">
-        <button class="btn btn-sm" data-action="toggleLayerVisibility" data-index="${i}">${layer.visible ? '👁' : '👁‍🗨'}</button>
-        <button class="btn btn-sm" data-action="toggleLayerLock" data-index="${i}">${layer.locked ? '🔒' : '🔓'}</button>
+        <button class="btn btn-sm" data-action="toggleLayerVisibility" data-index="${i}">${layer.visible ? '\ud83d\udc41' : '\ud83d\udc41\u200d\ud83d\udde8'}</button>
+        <button class="btn btn-sm" data-action="toggleLayerLock" data-index="${i}">${layer.locked ? '\ud83d\udd12' : '\ud83d\udd13'}</button>
       </div>
     `;
     layerItem.onclick = function(e) {
@@ -1777,13 +1881,40 @@ function flipSelection(direction) {
   }
 }
 
+// Create Outlines - WORKING IMPLEMENTATION
+function createOutlines() {
+  if (project.selectedItems.length === 0) {
+    alert('Please select a text object to create outlines.');
+    return;
+  }
+  
+  project.selectedItems.forEach(function(item) {
+    if (item instanceof PointText) {
+      var outline = item.createOutline();
+      if (outline) {
+        outline.fillColor = item.fillColor;
+        outline.strokeColor = item.strokeColor;
+        outline.strokeWidth = item.strokeWidth || 0;
+        outline.selected = true;
+        item.remove();
+        saveState();
+      } else {
+        alert('Could not create outlines for this text. The text may be empty.');
+      }
+    }
+  });
+}
+
 // Pathfinder operations
 function pathfinder(operation) {
   var items = project.selectedItems.filter(function(item) {
     return item instanceof Path && item.selected;
   });
   
-  if (items.length < 2) return;
+  if (items.length < 2) {
+    alert('Please select at least 2 paths for pathfinder operations.');
+    return;
+  }
   
   var result;
   switch(operation) {
@@ -1799,6 +1930,21 @@ function pathfinder(operation) {
     case 'exclude':
       result = items[0].exclude(items[1]);
       break;
+    case 'divide':
+      alert('Divide operation not yet implemented');
+      return;
+    case 'trim':
+      alert('Trim operation not yet implemented');
+      return;
+    case 'merge':
+      alert('Merge operation not yet implemented');
+      return;
+    case 'crop':
+      alert('Crop operation not yet implemented');
+      return;
+    case 'outline':
+      alert('Outline operation not yet implemented');
+      return;
   }
   
   if (result) {
@@ -1817,6 +1963,8 @@ function selectSameFill() {
   if (project.selectedItems.length === 0) return;
   
   var targetColor = project.selectedItems[0].fillColor;
+  if (!targetColor) return;
+  
   project.deselectAll();
   
   project.activeLayer.children.forEach(function(item) {
@@ -1830,6 +1978,8 @@ function selectSameStroke() {
   if (project.selectedItems.length === 0) return;
   
   var targetColor = project.selectedItems[0].strokeColor;
+  if (!targetColor) return;
+  
   project.deselectAll();
   
   project.activeLayer.children.forEach(function(item) {
@@ -1843,6 +1993,7 @@ function selectSameStrokeWidth() {
   if (project.selectedItems.length === 0) return;
   
   var targetWidth = project.selectedItems[0].strokeWidth;
+  
   project.deselectAll();
   
   project.activeLayer.children.forEach(function(item) {
@@ -1947,25 +2098,57 @@ function exportPDF() {
   URL.revokeObjectURL(url);
 }
 
-// File operations
+// File operations - NEW DOCUMENT WITH SIZE OPTIONS
 function newDocument() {
-  if (confirm('Create new document? All unsaved changes will be lost.')) {
-    // Clear the project properly
-    project.activeLayer.removeChildren();
-    undoStack = [];
-    redoStack = [];
-    layers = [];
-    initLayers();
-    saveState();
-    updateLayersList();
-    updateProperties();
-    console.log('New document created');
-    
-    // Make sure the canvas is visible
-    var loader = document.getElementById('loader');
-    if (loader) {
-      loader.style.display = 'none';
-    }
+  var modal = document.getElementById('newDocumentModal');
+  if (modal) {
+    modal.classList.add('active');
+  }
+}
+
+function closeNewDocumentModal() {
+  var modal = document.getElementById('newDocumentModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+
+function createNewDocument() {
+  var width = parseInt(document.getElementById('docWidth').value);
+  var height = parseInt(document.getElementById('docHeight').value);
+  
+  if (isNaN(width) || isNaN(height) || width < 1 || height < 1) {
+    alert('Please enter valid document dimensions.');
+    return;
+  }
+  
+  documentWidth = width;
+  documentHeight = height;
+  
+  // Clear the project properly
+  project.activeLayer.removeChildren();
+  undoStack = [];
+  redoStack = [];
+  layers = [];
+  initLayers();
+  createArtboard();
+  saveState();
+  updateLayersList();
+  updateProperties();
+  
+  // Update status bar
+  var statusMemory = document.getElementById('statusMemory');
+  if (statusMemory) {
+    statusMemory.textContent = 'Document: ' + width + ' x ' + height;
+  }
+  
+  closeNewDocumentModal();
+  console.log('New document created:', width, 'x', height);
+  
+  // Make sure the canvas is visible
+  var loader = document.getElementById('loader');
+  if (loader) {
+    loader.style.display = 'none';
   }
 }
 
@@ -2035,17 +2218,6 @@ function handlePlace(event) {
 }
 
 // Type operations
-function createOutlines() {
-  project.selectedItems.forEach(function(item) {
-    if (item instanceof PointText) {
-      var outline = item.createOutline();
-      item.remove();
-      outline.selected = true;
-    }
-  });
-  saveState();
-}
-
 function findFont() {
   alert('Font search feature coming soon!');
 }
@@ -2064,7 +2236,10 @@ function convertToCurve() {
 }
 
 function align(alignment) {
-  if (!project || !project.selectedItems || project.selectedItems.length < 2) return;
+  if (!project || !project.selectedItems || project.selectedItems.length < 2) {
+    alert('Please select at least 2 objects to align.');
+    return;
+  }
   
   var items = project.selectedItems;
   var bounds = items.map(function(item) { return item.bounds; });
@@ -2089,10 +2264,14 @@ function align(alignment) {
       items.forEach(function(item) { item.position.y = bounds[0].center.y; });
       break;
   }
+  saveState();
 }
 
 function distribute(distribution) {
-  if (!project || !project.selectedItems || project.selectedItems.length < 3) return;
+  if (!project || !project.selectedItems || project.selectedItems.length < 3) {
+    alert('Please select at least 3 objects to distribute.');
+    return;
+  }
   
   var items = project.selectedItems;
   alert('Distribute feature - arrange items evenly');
@@ -2243,7 +2422,7 @@ function showPanel(panelName) {
     dock.classList.add('visible');
     dock.classList.remove('hidden');
     var dockToggle = document.getElementById('dockToggle');
-    if (dockToggle) dockToggle.textContent = '◀';
+    if (dockToggle) dockToggle.textContent = '\u25c0';
   }
   
   // Show notification with panel name
@@ -2446,6 +2625,8 @@ console.log('Activating selection tool...');
 activateTool('select');
 console.log('Saving initial state...');
 saveState();
+console.log('Creating default artboard...');
+createArtboard();
 console.log('Paper.js setup complete!');
 
 // Hide loader after a short delay
@@ -2461,6 +2642,8 @@ view.onFrame = function(event) {
 
 // Expose functions to global scope for HTML onclick handlers
 window.newDocument = newDocument;
+window.closeNewDocumentModal = closeNewDocumentModal;
+window.createNewDocument = createNewDocument;
 window.saveDocument = saveDocument;
 window.saveDocumentAs = saveDocumentAs;
 window.handleOpen = handleOpen;
@@ -2552,7 +2735,7 @@ function toggleDock() {
     dock.classList.toggle('hidden', !dockVisible);
   }
   if (dockToggle) {
-    dockToggle.textContent = dockVisible ? '◀' : '▶';
+    dockToggle.textContent = dockVisible ? '\u25c0' : '\u25b6';
   }
 }
 
@@ -2563,6 +2746,16 @@ if (dockToggle) {
 if (panelCloseBtn) {
   panelCloseBtn.onclick = toggleDock;
 }
+
+// Document preset handler
+document.getElementById('docPreset').addEventListener('change', function() {
+  var preset = this.value;
+  if (preset !== 'custom') {
+    var dimensions = preset.split('x');
+    document.getElementById('docWidth').value = dimensions[0];
+    document.getElementById('docHeight').value = dimensions[1];
+  }
+});
 
 // Action handler for menu items and buttons
 document.addEventListener('click', function(event) {
@@ -2950,7 +3143,7 @@ document.getElementById('propBlendMode').addEventListener('change', function() {
 
 // Gradient controls
 document.getElementById('gradientAngle').addEventListener('input', function() {
-  document.getElementById('gradientAngleVal').textContent = this.value + '°';
+  document.getElementById('gradientAngleVal').textContent = this.value + '\u00b0';
 });
 
 // Stroke controls
@@ -2989,7 +3182,7 @@ window.addEventListener('resize', function() {
       dockVisible = true;
     }
     if (dockToggle) {
-      dockToggle.textContent = '◀';
+      dockToggle.textContent = '\u25c0';
     }
   }
 });
@@ -3084,8 +3277,9 @@ document.addEventListener('mousemove', function(event) {
     var rect = canvas.getBoundingClientRect();
     if (event.clientX >= rect.left && event.clientX <= rect.right &&
         event.clientY >= rect.top && event.clientY <= rect.bottom) {
-      var x = Math.round(event.clientX - rect.left - 60); // Subtract ruler offset
-      var y = Math.round(event.clientY - rect.top - 20);  // Subtract ruler offset
+      // Calculate position accounting for zoom and scroll
+      var x = Math.round(event.clientX - rect.left - 60);
+      var y = Math.round(event.clientY - rect.top - 20);
       statusPosition.textContent = 'X: ' + x + ' Y: ' + y;
     }
   }
@@ -3112,5 +3306,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-
-
