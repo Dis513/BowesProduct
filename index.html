@@ -32,13 +32,16 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 /* LEFT */
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 .logo a {
   font-size: 1.3rem;
@@ -49,12 +52,14 @@ html, body {
 }
 .main-nav {
   display: flex;
-  gap: 1.4rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 .main-nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 .main-nav a.active,
 .main-nav a:hover {
@@ -67,6 +72,7 @@ html, body {
   align-items: center;
   gap: 0.8rem;
   min-height: 44px;
+  flex-wrap: wrap;
 }
 
 /* PROFILE */
@@ -93,15 +99,15 @@ html, body {
 /* XP */
 #levelInfo {
   display: none;
-  width: 140px;
   font-size: 0.8rem;
   color: #cbd5e1;
 }
 #levelText {
   white-space: nowrap;
+  font-size: 0.75rem;
 }
 #xpOuter {
-  width: 100%;
+  width: 100px;
   height: 5px;
   background: #1e293b;
   border-radius: 3px;
@@ -116,20 +122,30 @@ html, body {
 }
 
 /* MOBILE HEADER */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .header-inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
+    padding: 0.5rem;
   }
   .header-left {
+    width: 100%;
     justify-content: space-between;
   }
-  .header-right {
-    justify-content: space-between;
+  .main-nav {
+    gap: 0.8rem;
+    order: 3;
     width: 100%;
   }
+  .main-nav a {
+    font-size: 0.85rem;
+  }
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
   #levelInfo {
+    flex: 1;
+  }
+  #xpOuter {
     width: 100%;
   }
 }
