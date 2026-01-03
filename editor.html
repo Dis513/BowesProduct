@@ -204,11 +204,29 @@
     }
     .tool-btn { width: 38px; height: 38px; font-size: 1.1rem; }
     .panel-dock { 
-      top: 116px; bottom: auto; right: 20px; left: auto; width: 320px; max-height: calc(100vh - 140px); border-radius: 12px; transform: none; z-index: 2000;
+      top: auto; 
+      bottom: 0; 
+      right: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 40vh;
+      max-height: 40vh;
+      border-radius: 12px 12px 0 0; 
+      transform: none; 
+      z-index: 2000;
+      overflow-y: auto;
     }
-    .panel-dock.hidden { transform: translateX(420px); }
-    .panel-dock.visible { transform: translateX(0); }
-    #dockToggle { display: flex; }
+    .panel-dock.hidden { transform: translateY(100%); }
+    .panel-dock.visible { transform: translateY(0); }
+    #dockToggle { 
+      display: flex; 
+      top: -50px; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      width: 100px; 
+      height: 50px; 
+      border-radius: 12px 12px 0 0; 
+    }
     .ruler-h { left: 50px; }
     .ruler-v { display: none; }
     #canvas { margin-left: 50px; }
@@ -218,34 +236,9 @@
     .dropdown { z-index: 1900; }
   }
 
-  /* Panel Backdrop/Overlay */
+  /* Panel Backdrop/Overlay - DISABLED on mobile for canvas visibility */
   .panel-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 1999;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  .panel-backdrop.visible {
-    display: block;
-    opacity: 1;
-  }
-
-  @media (max-width: 900px) {
-    .panel-backdrop.visible {
-      display: block;
-    }
-  }
-  @media (min-width: 901px) {
-    .panel-backdrop {
-      display: none !important;
-    }
+    display: none !important;
   }
 
   /* Tool/Panel Name Notification */
@@ -2306,6 +2299,70 @@ view.onFrame = function(event) {
   }
 };
 
+// Expose functions to global scope for HTML onclick handlers
+window.newDocument = newDocument;
+window.saveDocument = saveDocument;
+window.saveDocumentAs = saveDocumentAs;
+window.handleOpen = handleOpen;
+window.handlePlace = handlePlace;
+window.exportSVG = exportSVG;
+window.exportPNG = exportPNG;
+window.exportPDF = exportPDF;
+window.undo = undo;
+window.redo = redo;
+window.cut = cut;
+window.copy = copy;
+window.paste = paste;
+window.duplicate = duplicate;
+window.deleteSelection = deleteSelection;
+window.selectAll = selectAll;
+window.deselectAll = deselectAll;
+window.groupSelection = groupSelection;
+window.ungroupSelection = ungroupSelection;
+window.lockSelection = lockSelection;
+window.unlockAll = unlockAll;
+window.bringToFront = bringToFront;
+window.sendToBack = sendToBack;
+window.bringForward = bringForward;
+window.sendBackward = sendBackward;
+window.rotateSelection = rotateSelection;
+window.flipSelection = flipSelection;
+window.showTransformDialog = showTransformDialog;
+window.pathfinder = pathfinder;
+window.createOutlines = createOutlines;
+window.findFont = findFont;
+window.selectSameFill = selectSameFill;
+window.selectSameStroke = selectSameStroke;
+window.selectSameStrokeWidth = selectSameStrokeWidth;
+window.zoomIn = zoomIn;
+window.zoomOut = zoomOut;
+window.zoomToFit = zoomToFit;
+window.zoomTo100 = zoomTo100;
+window.toggleGrid = toggleGrid;
+window.toggleRulers = toggleRulers;
+window.toggleSnap = toggleSnap;
+window.showPanel = showPanel;
+window.updateTransform = updateTransform;
+window.updateOpacity = updateOpacity;
+window.updateBlendMode = updateBlendMode;
+window.convertToPoint = convertToPoint;
+window.convertToCurve = convertToCurve;
+window.addLayer = addLayer;
+window.deleteLayer = deleteLayer;
+window.addFill = addFill;
+window.addStroke = addStroke;
+window.addSwatch = addSwatch;
+window.clearSwatches = clearSwatches;
+window.setGradientType = setGradientType;
+window.updateStroke = updateStroke;
+window.setStrokeCap = setStrokeCap;
+window.setStrokeJoin = setStrokeJoin;
+window.align = align;
+window.distribute = distribute;
+window.updateTypography = updateTypography;
+window.setFontStyle = setFontStyle;
+window.setTextAlign = setTextAlign;
+
 </script>
 
 <script>
@@ -2332,25 +2389,11 @@ function toggleDock() {
   dock.classList.toggle('visible', dockVisible);
   dock.classList.toggle('hidden', !dockVisible);
   dockToggle.textContent = dockVisible ? '◀' : '▶';
-  
-  // Toggle backdrop on mobile
-  if (window.innerWidth <= 900) {
-    panelBackdrop.classList.toggle('visible', dockVisible);
-  }
 }
 
 dockToggle.onclick = toggleDock;
 if (panelCloseBtn) {
   panelCloseBtn.onclick = toggleDock;
-}
-
-// Click backdrop to close panel on mobile
-if (panelBackdrop) {
-  panelBackdrop.onclick = function() {
-    if (window.innerWidth <= 900 && dockVisible) {
-      toggleDock();
-    }
-  };
 }
 
 // Show specific panel
@@ -2370,11 +2413,6 @@ function showPanel(panelName) {
     dock.classList.remove('hidden');
     dockVisible = true;
     dockToggle.textContent = '◀';
-    
-    // Show backdrop on mobile
-    if (window.innerWidth <= 900) {
-      panelBackdrop.classList.add('visible');
-    }
   }
   
   // Show notification with panel name
@@ -2405,16 +2443,10 @@ document.getElementById('strokeWeight').addEventListener('input', function() {
   document.getElementById('strokeWeightVal').textContent = this.value + ' px';
 });
 
-// Window resize handler - keep panels visible by default on mobile
+// Window resize handler
 window.addEventListener('resize', function() {
-  if (window.innerWidth <= 900) {
-    // On mobile, show backdrop if panel is visible
-    if (dockVisible) {
-      panelBackdrop.classList.add('visible');
-    }
-  } else {
-    // On desktop, always hide backdrop
-    panelBackdrop.classList.remove('visible');
+  if (window.innerWidth > 900) {
+    // On desktop, always show dock
     dock.classList.add('visible');
     dock.classList.remove('hidden');
     dockVisible = true;
