@@ -2686,6 +2686,16 @@ window.onload = function() {
     panelBackdrop.classList.add('visible');
   }
 };
+  // Track mouse position in project coordinates
+view.onMouseMove = function(event) {
+  var statusPosition = document.getElementById('statusPosition');
+  if (statusPosition) {
+    // Round to nearest integer for clean display
+    var x = Math.round(event.point.x);
+    var y = Math.round(event.point.y);
+    statusPosition.textContent = 'X: ' + x + ' Y: ' + y;
+  }
+};
 
 // Improved touch position tracking using Paper.js view coordinates
 view.onMouseMove = function(event) {
@@ -2722,6 +2732,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
