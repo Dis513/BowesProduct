@@ -1902,14 +1902,22 @@ function exportPDF() {
 // File operations
 function newDocument() {
   if (confirm('Create new document? All unsaved changes will be lost.')) {
-    project.clear();
+    // Clear the project properly
     project.activeLayer.removeChildren();
     undoStack = [];
     redoStack = [];
+    layers = [];
     initLayers();
     saveState();
     updateLayersList();
+    updateProperties();
     console.log('New document created');
+    
+    // Make sure the canvas is visible
+    var loader = document.getElementById('loader');
+    if (loader) {
+      loader.style.display = 'none';
+    }
   }
 }
 
