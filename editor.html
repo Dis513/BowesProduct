@@ -2003,24 +2003,40 @@ function exportPDF() {
 
 // File operations
 function newDocument() {
-  if (confirm('Create new document? All unsaved changes will be lost.')) {
-    // Clear the project properly
-    project.activeLayer.removeChildren();
-    undoStack = [];
-    redoStack = [];
-    layers = [];
-    initLayers();
-    saveState();
-    updateLayersList();
-    updateProperties();
-    console.log('New document created');
-    
-    // Make sure the canvas is visible
-    var loader = document.getElementById('loader');
-    if (loader) {
-      loader.style.display = 'none';
-    }
-  }
+  if (!confirm('Create new document? All unsaved changes will be lost.')) return;
+
+  // Clear all items
+  project.clear();
+  
+  // Reset layers
+  layers = [];
+  currentLayerIndex = 0;
+  initLayers(); // This creates Layer 1 again
+  
+  // Reset undo/redo
+  undoStack = [];
+  redoStack = [];
+  
+  // Deselect everything
+  project.deselectAll();
+  
+  // Reset zoom and center
+  view.zoom = 1;
+  view.center = view.viewSize / 2;
+  updateZoomDisplay();
+  
+  // Update UI
+  updateProperties();
+  updateLayersList();
+  
+  // Save initial empty state
+  saveState();
+  
+  // Update status
+  document.getElementById('statusSelection').textContent = 'No selection';
+  document.getElementById('statusMemory').textContent = 'Document: Untitled';
+  
+  console.log('New document created and fully reset');
 }
 
 function saveDocument() {
@@ -2671,24 +2687,30 @@ window.onload = function() {
   }
 };
 
-// Mobile touch support for position tracking
-document.addEventListener('DOMContentLoaded', function() {
-  var canvas = document.getElementById('canvas');
-  if (canvas) {
-    canvas.addEventListener('touchmove', function(e) {
-      if (e.touches.length > 0) {
-        var touch = e.touches[0];
-        var rect = canvas.getBoundingClientRect();
-        var x = touch.clientX - rect.left;
-        var y = touch.clientY - rect.top;
-        var statusPosition = document.getElementById('statusPosition');
-        if (statusPosition) {
-          statusPosition.textContent = 'X: ' + Math.round(x) + ' Y: ' + Math.round(y);
-        }
-      }
-    }, { passive: true });
+// Improved touch position tracking using Paper.js view coordinates
+view.onMouseMove = function(event) {
+  var statusPosition = document.getElementById('statusPosition');
+  if (statusPosition) {
+    statusPosition.textContent = 'X: ' + Math.round(event.point.x) + ' Y: ' + Math.round(event.point.y);
   }
-});
+};
+
+// Also handle touchmove to update position (Paper.js already translates touch to mouse events in most cases)
+// But for reliability on mobile, add this fallback:
+document.getElementById('canvas').addEventListener('touchmove', function(e) {
+  if (e.touches.length === 1) {
+    e.preventDefault(); // Prevent scrolling while drawing/panning
+    var touch = e.touches[0];
+    var rect = e.target.getBoundingClientRect();
+    var x = touch.clientX - rect.left;
+    var y = touch.clientY - rect.top;
+    var point = view.viewToProject(new Point(x, y));
+    var statusPosition = document.getElementById('statusPosition');
+    if (statusPosition) {
+      statusPosition.textContent = 'X: ' + Math.round(point.x) + ' Y: ' + Math.round(point.y);
+    }
+  }
+}, { passive: false });
 
 // Mobile touch support
 document.addEventListener('touchstart', function(e) {
@@ -2700,6 +2722,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
