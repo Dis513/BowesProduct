@@ -981,478 +981,420 @@ function activateTool(name) {
       'zoom': 'Zoom Tool'
     };
     
-    var statusTool = document.getElementById('statusTool');
-    if (statusTool && toolNames[name]) {
-      statusTool.textContent = toolNames[name];
-    }
-    
-    // Show notification popup
-    if (toolNames[name]) {
-      showToolNotification(toolNames[name]);
-    }
-  } else {
+// Unified Tool Definitions with Improvements + RGBA Color Wheels
+const toolNames = {
+  'select': 'Selection Tool (V)',
+  'directSelect': 'Direct Selection Tool (A)',
+  'pen': 'Pen Tool (P)',
+  'pencil': 'Pencil Tool (N)',
+  'brush': 'Brush Tool (B)',
+  'rectangle': 'Rectangle Tool (M)',
+  'ellipse': 'Ellipse Tool (L)',
+  'polygon': 'Polygon Tool',
+  'star': 'Star Tool',
+  'line': 'Line Tool (\\)',
+  'type': 'Type Tool (T)',
+  'eyedropper': 'Eyedropper Tool (I)',
+  'hand': 'Hand Tool (H)',
+  'zoom': 'Zoom Tool (Z)'
+};
+
+// Default colors and stroke for visibility
+let fillColor = new Color('#ff0000');       // Default red fill
+let strokeColor = new Color('#60a5fa');     // Light blue stroke
+const defaultStrokeWidth = 2;
+
+// Global currentPath / currentShape
+let currentPath = null;
+let currentShape = null;
+let startPoint = null;
+
+function activateTool(name) {
+  if (!tools[name]) {
     console.warn('Tool not found:', name);
+    return;
+  }
+
+  currentTool = tools[name];
+  currentTool.activate();
+
+  // Update toolbar buttons
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById(name + 'Tool');
+  if (btn) btn.classList.add('active');
+
+  // Update status bar
+  const statusTool = document.getElementById('statusTool');
+  if (statusTool && toolNames[name]) {
+    statusTool.textContent = toolNames[name];
+  }
+
+  // Show notification
+  if (toolNames[name]) {
+    showToolNotification(toolNames[name]);
   }
 }
+
+// === COLOR WHEELS (RGBA) ===
+// Fill Color Button
+document.getElementById('fillColor').onclick = function() {
+  showColorPicker('fill');
+};
+
+// Stroke Color Button
+document.getElementById('strokeColor').onclick = function() {
+  showColorPicker('stroke');
+};
+
+// Reusable RGBA Color Picker Modal
+function showColorPicker(type) {
+  // Remove existing picker if any
+  const existing = document.getElementById('colorPickerModal');
+  if (existing) existing.remove();
+
+  const current = type === 'fill' ? fillColor : strokeColor;
+
+  const modal = document.createElement('div');
+  modal.id = 'colorPickerModal';
+  modal.style.cssText = `
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 320px; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px;
+    padding: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.8); z-index: 10000;
+    color: white; font-family: system-ui;
+  `;
+
+  modal.innerHTML = `
+    <h3 style="margin: 0 0 1rem; color: #60a5fa;">${type === 'fill' ? 'Fill' : 'Stroke'} Color (RGBA)</h3>
+    <div style="display: grid; grid-template-columns: 1fr 80px; gap: 1rem; align-items: center;">
+      <div>
+        <canvas id="colorWheel" width="200" height="200"></canvas>
+      </div>
+      <div>
+        <label>R: <input type="range" id="rgbaR" min="0" max="255" value="${Math.round(current.red * 255)}"></label><br>
+        <label>G: <input type="range" id="rgbaG" min="0" max="255" value="${Math.round(current.green * 255)}"></label><br>
+        <label>B: <input type="range" id="rgbaB" min="0" max="255" value="${Math.round(current.blue * 255)}"></label><br>
+        <label>A: <input type="range" id="rgbaA" min="0" max="100" step="1" value="${Math.round(current.alpha * 100)}">%</label>
+        <div id="colorPreview" style="width:80px;height:80px;border-radius:8px;margin-top:10px;border:2px solid #334155;"></div>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem; text-align:right;">
+      <button id="colorCancel" class="btn">Cancel</button>
+      <button id="colorOK" class="btn btn-primary">OK</button>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const canvas = document.getElementById('colorWheel');
+  const ctx = canvas.getContext('2d');
+  const preview = document.getElementById('colorPreview');
+
+  // Draw color wheel (simple HSV wheel)
+  function drawWheel() {
+    const img = ctx.createImageData(200, 200);
+    const data = img.data;
+    for (let x = 0; x < 200; x++) {
+      for (let y = 0; y < 200; y++) {
+        const dx = x - 100;
+        const dy = y - 100;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 100) {
+          const angle = Math.atan2(dy, dx);
+          const hue = (angle + Math.PI) / (2 * Math.PI);
+          const saturation = dist / 100;
+          const rgb = hsvToRgb(hue, saturation, 1);
+          const i = (y * 200 + x) * 4;
+          data[i] = rgb[0] * 255;
+          data[i+1] = rgb[1] * 255;
+          data[i+2] = rgb[2] * 255;
+          data[i+3] = 255;
+        }
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  function hsvToRgb(h, s, v) {
+    let r, g, b;
+    const i = Math.floor(h * 6);
+    const f = h * 6 - i;
+    const p = v * (1 - s);
+    const q = v * (1 - f * s);
+    const t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+      case 0: r = v; g = t; b = p; break;
+      case 1: r = q; g = v; b = p; break;
+      case 2: r = p; g = v; b = t; break;
+      case 3: r = p; g = q; b = v; break;
+      case 4: r = t; g = p; b = v; break;
+      case 5: r = v; g = p; b = q; break;
+    }
+    return [r, g, b];
+  }
+
+  drawWheel();
+
+  function updatePreview() {
+    const r = document.getElementById('rgbaR').value / 255;
+    const g = document.getElementById('rgbaG').value / 255;
+    const b = document.getElementById('rgbaB').value / 255;
+    const a = document.getElementById('rgbaA').value / 100;
+    const color = new Color(r, g, b, a);
+    preview.style.backgroundColor = color.toCSS(true);
+  }
+
+  // Sync sliders ↔ preview
+  ['rgbaR','rgbaG','rgbaB','rgbaA'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updatePreview);
+  });
+  updatePreview();
+
+  // Click on wheel to pick color
+  canvas.addEventListener('click', function(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const dx = x - 100;
+    const dy = y - 100;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 100) {
+      const angle = Math.atan2(dy, dx);
+      const hue = (angle + Math.PI) / (2 * Math.PI);
+      const sat = dist / 100;
+      const rgb = hsvToRgb(hue, sat, 1);
+      document.getElementById('rgbaR').value = Math.round(rgb[0] * 255);
+      document.getElementById('rgbaG').value = Math.round(rgb[1] * 255);
+      document.getElementById('rgbaB').value = Math.round(rgb[2] * 255);
+      updatePreview();
+    }
+  });
+
+  // OK Button
+  document.getElementById('colorOK').onclick = function() {
+    const r = document.getElementById('rgbaR').value / 255;
+    const g = document.getElementById('rgbaG').value / 255;
+    const b = document.getElementById('rgbaB').value / 255;
+    const a = document.getElementById('rgbaA').value / 100;
+
+    if (type === 'fill') {
+      fillColor = new Color(r, g, b, a);
+      document.getElementById('fillColor').style.backgroundColor = fillColor.toCSS(true);
+      // Apply to selected items
+      project.selectedItems.forEach(item => {
+        if (item.fillColor !== null) item.fillColor = fillColor.clone();
+      });
+    } else {
+      strokeColor = new Color(r, g, b, a);
+      document.getElementById('strokeColor').style.backgroundColor = strokeColor.toCSS(true);
+      project.selectedItems.forEach(item => {
+        if (item.strokeColor !== null) item.strokeColor = strokeColor.clone();
+      });
+    }
+    modal.remove();
+  };
+
+  // Cancel
+  document.getElementById('colorCancel').onclick = () => modal.remove();
+
+  // Close on click outside
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) modal.remove();
+  });
+}
+
+// === TOOL DEFINITIONS (same improved ones as before) ===
 
 // Selection Tool
 tools.select = new Tool();
 tools.select.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    fill: true,
-    stroke: true,
-    segments: true,
-    tolerance: 10  // ← Increased tolerance for easier clicking
-  });
-
-  if (hit && hit.item && !hit.item.locked) {
-    if (!Key.modifiers.shift) {
-      // Only deselect everything if Shift is NOT held
-      project.deselectAll();
-    }
+  const hit = project.hitTest(event.point, { fill: true, stroke: true, segments: true, tolerance: 10 });
+  if (hit?.item && !hit.item.locked) {
+    if (!Key.modifiers.shift) project.deselectAll();
     hit.item.selected = true;
-  } else {
-    // Only deselect if Shift is NOT held AND we missed the hit
-    if (!Key.modifiers.shift) {
-      project.deselectAll();
-    }
+  } else if (!Key.modifiers.shift) {
+    project.deselectAll();
   }
-
   updateProperties();
 };
-
 tools.select.onMouseDrag = function(event) {
-  if (project.selectedItems.length) {
-    var delta = event.delta;
-    if (snapToGrid) {
-      delta.x = Math.round(delta.x / gridSize) * gridSize;
-      delta.y = Math.round(delta.y / gridSize) * gridSize;
-    }
-    project.selectedItems.forEach(function(item) {
-      if (!item.locked) {
-        item.position += delta;
-      }
-    });
-    updateProperties();
-  }
+  if (project.selectedItems.length === 0) return;
+  let delta = event.delta;
+  if (snapToGrid) delta = delta.multiply(1/gridSize).round().multiply(gridSize);
+  project.selectedItems.forEach(item => { if (!item.locked) item.position += delta; });
+  updateProperties();
 };
+tools.select.onMouseUp = saveState;
 
-tools.select.onMouseUp = function() {
-  saveState();
-};
-
-// Direct Selection Tool
+// Direct Selection
 tools.directSelect = new Tool();
 tools.directSelect.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    segments: true, tolerance: 5
-  });
-  
-  if (hit && hit.segment) {
-    hit.segment.selected = true;
+  const hit = project.hitTest(event.point, { segments: true, handles: true, tolerance: 8 });
+  if (hit?.segment || hit?.handle) {
+    if (hit.segment) hit.segment.selected = true;
+    if (hit.handle) hit.handle.selected = true;
   } else {
     project.deselectAll();
   }
 };
-
 tools.directSelect.onMouseDrag = function(event) {
-  var selectedSegments = project.activeLayer.segments.filter(function(s) {
-    return s.selected;
-  });
-  
-  if (selectedSegments.length) {
-    selectedSegments.forEach(function(segment) {
-      segment.point += event.delta;
-    });
-  }
+  project.selectedSegments?.forEach(s => s.point += event.delta);
+  project.selectedHandles?.forEach(h => h.point += event.delta);
 };
 
 // Pen Tool
 tools.pen = new Tool();
-var penPoints = [];
-
+let penPoints = [];
 tools.pen.onMouseDown = function(event) {
   if (Key.modifiers.alt) {
-    // Convert point to curve
-    var hit = project.hitTest(event.point, { segments: true, tolerance: 5 });
-    if (hit && hit.segment) {
-      if (hit.segment.hasHandles()) {
-        hit.segment.clearHandles();
-      } else {
-        hit.segment.handleIn = new Point(-20, 0);
-        hit.segment.handleOut = new Point(20, 0);
-      }
-    }
+    const hit = project.hitTest(event.point, { segments: true, tolerance: 8 });
+    if (hit?.segment) hit.segment.hasHandles() ? hit.segment.clearHandles() : hit.segment.smooth();
     return;
   }
-  
-  if (currentPath && penPoints.length > 0 && event.point.isClose(penPoints[0], 5)) {
-    // Close path
+  if (currentPath && penPoints.length > 0 && event.point.isClose(penPoints[0], 10)) {
     currentPath.closed = true;
-    currentPath.fillColor = fillColor;
-    currentPath.strokeColor = strokeColor;
-    currentPath.strokeWidth = strokeWidth;
-    currentPath.simplify();
-    currentPath.selected = true;
-    penPoints = [];
-    currentPath = null;
-    saveState();
+    finishPath();
     return;
   }
-  
   if (!currentPath) {
-    currentPath = new Path();
-    currentPath.strokeColor = strokeColor;
-    currentPath.strokeWidth = strokeWidth;
+    currentPath = new Path({ strokeColor: strokeColor, strokeWidth: defaultStrokeWidth, fillColor: fillColor });
     penPoints = [];
   }
-  
   currentPath.add(event.point);
   penPoints.push(event.point);
 };
-
-tools.pen.onMouseMove = function(event) {
-  if (currentPath && penPoints.length > 0) {
-    // Draw preview line
-    document.body.style.cursor = 'crosshair';
-  }
-};
-
 tools.pen.onMouseDrag = function(event) {
-  if (currentPath && penPoints.length > 0) {
-    // Adjust handles for last point
-    var lastSegment = currentPath.lastSegment;
-    if (lastSegment) {
-      lastSegment.handleOut = event.point - lastSegment.point;
-      lastSegment.handleIn = lastSegment.handleOut.rotate(180);
-    }
+  if (currentPath?.lastSegment) {
+    const last = currentPath.lastSegment;
+    last.handleOut = event.point - last.point;
+    last.handleIn = last.handleOut.rotate(180);
   }
 };
-
 tools.pen.onKeyDown = function(event) {
-  if (event.key === 'escape') {
+  if (event.key === 'escape' && currentPath) { currentPath.remove(); currentPath = null; penPoints = []; }
+  if (event.key === 'enter' && currentPath) finishPath();
+};
+function finishPath() {
+  if (!currentPath) return;
+  currentPath.simplify(10);
+  currentPath.selected = true;
+  currentPath = null;
+  penPoints = [];
+  saveState();
+}
+
+// Freehand: Pencil & Brush
+['pencil', 'brush'].forEach(name => {
+  tools[name] = new Tool();
+  tools[name].minDistance = name === 'brush' ? 3 : 6;
+  tools[name].onMouseDown = e => {
+    currentPath = new Path({ strokeColor: strokeColor, strokeWidth: defaultStrokeWidth, strokeCap: 'round', strokeJoin: 'round' });
+    currentPath.add(e.point);
+  };
+  tools[name].onMouseDrag = e => currentPath.add(e.point);
+  tools[name].onMouseUp = () => {
     if (currentPath) {
-      if (currentPath.segments.length > 1) {
-        currentPath.fillColor = fillColor;
-        currentPath.simplify();
-        saveState();
-      } else {
-        currentPath.remove();
-      }
-      currentPath = null;
-      penPoints = [];
-    }
-  } else if (event.key === 'enter') {
-    if (currentPath) {
-      currentPath.closed = true;
-      currentPath.fillColor = fillColor;
-      currentPath.strokeColor = strokeColor;
-      currentPath.strokeWidth = strokeWidth;
       currentPath.simplify();
+      if (fillColor) currentPath.fillColor = fillColor;
       currentPath.selected = true;
-      currentPath = null;
-      penPoints = [];
       saveState();
+      currentPath = null;
     }
-  }
-};
+  };
+});
 
-// Pencil Tool
-tools.pencil = new Tool();
-tools.pencil.minDistance = 5;
+// Shape Tools
+['rectangle', 'ellipse', 'polygon', 'star', 'line'].forEach(name => {
+  tools[name] = new Tool();
+  tools[name].onMouseDown = e => {
+    startPoint = e.point;
+    if (name === 'rectangle') currentShape = new Path.Rectangle(startPoint, 0);
+    else if (name === 'ellipse') currentShape = new Path.Ellipse(new Rectangle(startPoint, 0));
+    else if (name === 'polygon') currentShape = new Path.RegularPolygon(startPoint, 6, 0);
+    else if (name === 'star') currentShape = new Path.Star(startPoint, 5, 0, 0);
+    else currentShape = new Path.Line(startPoint, startPoint);
 
-tools.pencil.onMouseDown = function(event) {
-  currentPath = new Path();
-  currentPath.strokeColor = strokeColor;
-  currentPath.strokeWidth = strokeWidth;
-  currentPath.add(event.point);
-};
-
-tools.pencil.onMouseDrag = function(event) {
-  currentPath.add(event.point);
-};
-
-tools.pencil.onMouseUp = function(event) {
-  if (currentPath) {
-    currentPath.simplify();
-    currentPath.fillColor = fillColor;
-    currentPath.selected = true;
-    saveState();
-    currentPath = null;
-  }
-};
-
-// Brush Tool
-tools.brush = new Tool();
-tools.brush.minDistance = 2;
-
-tools.brush.onMouseDown = function(event) {
-  currentPath = new Path();
-  currentPath.strokeColor = strokeColor;
-  currentPath.strokeWidth = strokeWidth;
-  currentPath.strokeCap = 'round';
-  currentPath.strokeJoin = 'round';
-  currentPath.add(event.point);
-};
-
-tools.brush.onMouseDrag = function(event) {
-  currentPath.add(event.point);
-};
-
-tools.brush.onMouseUp = function(event) {
-  if (currentPath) {
-    currentPath.smooth();
-    currentPath.fillColor = fillColor;
-    currentPath.selected = true;
-    saveState();
-    currentPath = null;
-  }
-};
-
-// Rectangle Tool
-tools.rectangle = new Tool();
-
-tools.rectangle.onMouseDown = function(event) {
-  startPoint = event.point;
-  currentShape = new Path.Rectangle(startPoint, startPoint);
-  currentShape.fillColor = fillColor;
-  currentShape.strokeColor = strokeColor;
-  currentShape.strokeWidth = strokeWidth;
-};
-
-tools.rectangle.onMouseDrag = function(event) {
-  if (currentShape) {
-    var rect = new Rectangle(startPoint, event.point);
+    currentShape.fillColor = fillColor;
+    currentShape.strokeColor = strokeColor;
+    currentShape.strokeWidth = defaultStrokeWidth;
+  };
+  tools[name].onMouseDrag = e => {
+    if (!currentShape) return;
+    let rect = new Rectangle(startPoint, e.point);
     if (Key.modifiers.shift) {
-      // Constrain to square
-      var size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
-      rect = new Rectangle(startPoint, new Point(startPoint.x + size, startPoint.y + size));
+      const size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
+      rect = new Rectangle(startPoint, startPoint.add(size * Math.sign(rect.width), size * Math.sign(rect.height)));
     }
     currentShape.remove();
-    currentShape = new Path.Rectangle(rect);
-    currentShape.fillColor = fillColor;
-    currentShape.strokeColor = strokeColor;
-    currentShape.strokeWidth = strokeWidth;
-  }
-};
-
-tools.rectangle.onMouseUp = function() {
-  if (currentShape) {
-    currentShape.selected = true;
-    saveState();
-    currentShape = null;
-  }
-};
-
-// Ellipse Tool
-tools.ellipse = new Tool();
-
-tools.ellipse.onMouseDown = function(event) {
-  startPoint = event.point;
-  currentShape = new Path.Ellipse({
-    center: startPoint,
-    radius: [0, 0]
-  });
-  currentShape.fillColor = fillColor;
-  currentShape.strokeColor = strokeColor;
-  currentShape.strokeWidth = strokeWidth;
-};
-
-tools.ellipse.onMouseDrag = function(event) {
-  if (currentShape) {
-    var rect = new Rectangle(startPoint, event.point);
-    if (Key.modifiers.shift) {
-      // Constrain to circle
-      var size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
-      rect = new Rectangle(startPoint, new Point(startPoint.x + size, startPoint.y + size));
+    if (name === 'rectangle') currentShape = new Path.Rectangle(rect);
+    else if (name === 'ellipse') currentShape = new Path.Ellipse(rect);
+    else if (name === 'polygon') currentShape = new Path.RegularPolygon(startPoint, startPoint.getDistance(e.point), 6);
+    else if (name === 'star') {
+      const r = startPoint.getDistance(e.point);
+      currentShape = new Path.Star(startPoint, 5, r * 0.4, r);
     }
-    currentShape.remove();
-    currentShape = new Path.Ellipse(rect);
-    currentShape.fillColor = fillColor;
-    currentShape.strokeColor = strokeColor;
-    currentShape.strokeWidth = strokeWidth;
-  }
-};
-
-tools.ellipse.onMouseUp = function() {
-  if (currentShape) {
-    currentShape.selected = true;
-    saveState();
-    currentShape = null;
-  }
-};
-
-// Polygon Tool
-tools.polygon = new Tool();
-
-tools.polygon.onMouseDown = function(event) {
-  startPoint = event.point;
-  var sides = 6;
-  currentShape = new Path.RegularPolygon(startPoint, 0, sides);
-  currentShape.fillColor = fillColor;
-  currentShape.strokeColor = strokeColor;
-  currentShape.strokeWidth = strokeWidth;
-};
-
-tools.polygon.onMouseDrag = function(event) {
-  if (currentShape) {
-    var radius = startPoint.getDistance(event.point);
-    var sides = 6;
-    currentShape.remove();
-    currentShape = new Path.RegularPolygon(startPoint, radius, sides);
-    currentShape.fillColor = fillColor;
-    currentShape.strokeColor = strokeColor;
-    currentShape.strokeWidth = strokeWidth;
-  }
-};
-
-tools.polygon.onMouseUp = function() {
-  if (currentShape) {
-    currentShape.selected = true;
-    saveState();
-    currentShape = null;
-  }
-};
-
-// Star Tool
-tools.star = new Tool();
-
-tools.star.onMouseDown = function(event) {
-  startPoint = event.point;
-  var points = 5;
-  currentShape = new Path.Star(startPoint, 0, 0, 0, points);
-  currentShape.fillColor = fillColor;
-  currentShape.strokeColor = strokeColor;
-  currentShape.strokeWidth = strokeWidth;
-};
-
-tools.star.onMouseDrag = function(event) {
-  if (currentShape) {
-    var outerRadius = startPoint.getDistance(event.point);
-    var innerRadius = outerRadius * 0.4;
-    var points = 5;
-    currentShape.remove();
-    currentShape = new Path.Star(startPoint, innerRadius, outerRadius, points);
-    currentShape.fillColor = fillColor;
-    currentShape.strokeColor = strokeColor;
-    currentShape.strokeWidth = strokeWidth;
-  }
-};
-
-tools.star.onMouseUp = function() {
-  if (currentShape) {
-    currentShape.selected = true;
-    saveState();
-    currentShape = null;
-  }
-};
-
-// Line Tool
-tools.line = new Tool();
-
-tools.line.onMouseDown = function(event) {
-  startPoint = event.point;
-  currentShape = new Path.Line(startPoint, startPoint);
-  currentShape.strokeColor = strokeColor;
-  currentShape.strokeWidth = strokeWidth;
-};
-
-tools.line.onMouseDrag = function(event) {
-  if (currentShape) {
-    if (Key.modifiers.shift) {
-      // Constrain to 45-degree angles
-      var angle = Math.atan2(event.point.y - startPoint.y, event.point.x - startPoint.x);
-      angle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
-      var length = startPoint.getDistance(event.point);
-      var endPoint = new Point(
-        startPoint.x + length * Math.cos(angle),
-        startPoint.y + length * Math.sin(angle)
-      );
-      currentShape.remove();
-      currentShape = new Path.Line(startPoint, endPoint);
-    } else {
-      currentShape.remove();
-      currentShape = new Path.Line(startPoint, event.point);
+    else {
+      let end = Key.modifiers.shift
+        ? startPoint.add(startPoint.getDirectedAngle(e.point) / 45 * 45 * e.point.subtract(startPoint).length, 0).rotate(startPoint.getDirectedAngle(e.point) / 45 * 45)
+        : e.point;
+      currentShape = new Path.Line(startPoint, end);
     }
+    currentShape.fillColor = fillColor;
     currentShape.strokeColor = strokeColor;
-    currentShape.strokeWidth = strokeWidth;
-  }
-};
-
-tools.line.onMouseUp = function() {
-  if (currentShape) {
-    currentShape.selected = true;
-    saveState();
-    currentShape = null;
-  }
-};
+    currentShape.strokeWidth = defaultStrokeWidth;
+  };
+  tools[name].onMouseUp = () => {
+    if (currentShape) {
+      currentShape.selected = true;
+      saveState();
+      currentShape = null;
+    }
+  };
+});
 
 // Type Tool
 tools.type = new Tool();
-
-tools.type.onMouseDown = function(event) {
-  var text = prompt('Enter text:', 'Sample Text');
+tools.type.onMouseDown = e => {
+  const text = prompt('Enter text:', 'Sample Text')?.trim();
   if (text) {
-    var pointText = new PointText(event.point);
-    pointText.content = text;
-    pointText.fillColor = fillColor;
-    pointText.fontSize = 32;
-    pointText.fontFamily = 'Arial';
-    pointText.selected = true;
+    const pt = new PointText(e.point);
+    pt.content = text;
+    pt.fillColor = fillColor || '#ffffff';
+    pt.fontSize = 32;
+    pt.fontFamily = 'Arial';
+    pt.selected = true;
     saveState();
   }
 };
 
-// Eyedropper Tool
+// Eyedropper
 tools.eyedropper = new Tool();
-
-tools.eyedropper.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    fill: true, stroke: true, tolerance: 5
-  });
-  
-  if (hit && hit.item) {
+tools.eyedropper.onMouseDown = e => {
+  const hit = project.hitTest(e.point, { fill: true, stroke: true, tolerance: 10 });
+  if (hit?.item) {
     if (hit.type === 'fill' && hit.item.fillColor) {
       fillColor = hit.item.fillColor.clone();
-      var colorHex = fillColor.toCSS(true);
-      document.getElementById('fillColor').style.backgroundColor = colorHex;
+      document.getElementById('fillColor').style.backgroundColor = fillColor.toCSS(true);
     }
     if (hit.type === 'stroke' && hit.item.strokeColor) {
       strokeColor = hit.item.strokeColor.clone();
-      var colorHex = strokeColor.toCSS(true);
-      document.getElementById('strokeColor').style.backgroundColor = colorHex;
+      document.getElementById('strokeColor').style.backgroundColor = strokeColor.toCSS(true);
     }
   }
 };
 
-// Hand Tool (Pan)
+// Hand & Zoom (unchanged)
 tools.hand = new Tool();
-var handStart;
+let handStart;
+tools.hand.onMouseDown = e => { handStart = e.point; document.body.style.cursor = 'grabbing'; };
+tools.hand.onMouseDrag = e => { view.center -= e.point - handStart; handStart = e.point; };
+tools.hand.onMouseUp = () => document.body.style.cursor = 'default';
 
-tools.hand.onMouseDown = function(event) {
-  handStart = event.point;
-  document.body.style.cursor = 'grabbing';
-};
-
-tools.hand.onMouseDrag = function(event) {
-  var delta = event.point.subtract(handStart);
-  view.center = view.center.subtract(delta);
-};
-
-tools.hand.onMouseUp = function() {
-  document.body.style.cursor = 'default';
-};
-
-// Zoom Tool
 tools.zoom = new Tool();
-
-tools.zoom.onMouseDown = function(event) {
-  var zoomFactor = Key.modifiers.alt ? 0.8 : 1.25;
-  view.zoom = view.zoom * zoomFactor;
-  view.center = event.point;
+tools.zoom.onMouseDown = e => {
+  view.zoom *= Key.modifiers.alt ? 0.8 : 1.25;
+  view.center = e.point;
   updateZoomDisplay();
 };
-
 // Bind tool buttons
 document.getElementById('selectTool').onclick = function() { activateTool('select'); };
 document.getElementById('directSelectTool').onclick = function() { activateTool('directSelect'); };
@@ -2729,6 +2671,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
