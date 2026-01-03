@@ -284,7 +284,6 @@
   </style>
   <!-- Paper.js for vector editing -->
   <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -882,8 +881,11 @@ onAuthStateChanged(auth, async (user) => {
 </script>
 
 <!-- Paper.js Vector Editor -->
-<script type="text/paperscript" canvas="canvas">
-// IMPORTANT: This script runs in Paper.js scope
+<script type="text/javascript">
+// Setup Paper.js manually – THIS IS REQUIRED
+paper.setup(document.getElementById('canvas'));
+paper.install(window);   // ← this line makes everything work with modern JS
+
 console.log('Paper.js script starting...');
 
 // Global state
@@ -2704,6 +2706,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
