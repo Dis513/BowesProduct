@@ -283,23 +283,7 @@
   .context-menu hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
   </style>
   <!-- Paper.js for vector editing -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.17/paper-full.min.js"></script>
-  <!-- === ADD YOUR FIX HERE === -->
-<script>
-// Make selection highlights more visible and prevent disappearing objects
-paper.settings.handleSize = 10;
-paper.settings.selectedColor = new paper.Color('#60a5fa'); // bright blue to match your theme
-
-// Fix the disappearing bug: draw the item itself BEFORE the selection overlay
-paper.Item.inject({
-    _drawSelection: function(ctx, matrix, selectionDrawing) {
-        // First draw the original item appearance
-        this._draw(ctx, matrix, selectionDrawing);
-        // Then draw the normal blue selection handles/outline on top
-        paper.Item.prototype._drawSelection.call(this, ctx, matrix, selectionDrawing);
-    }
-});
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -901,6 +885,7 @@ onAuthStateChanged(auth, async (user) => {
 // Setup Paper.js manually – THIS IS REQUIRED
 paper.setup(document.getElementById('canvas'));
 paper.install(window);   // ← this line makes everything work with modern JS
+  
 
 console.log('Paper.js script starting...');
 
@@ -1014,18 +999,25 @@ function activateTool(name) {
 tools.select = new Tool();
 tools.select.onMouseDown = function(event) {
   var hit = project.hitTest(event.point, {
-    fill: true, stroke: true, segments: true, tolerance: 5
+    fill: true,
+    stroke: true,
+    segments: true,
+    tolerance: 10  // ← Increased tolerance for easier clicking
   });
-  
+
   if (hit && hit.item && !hit.item.locked) {
     if (!Key.modifiers.shift) {
+      // Only deselect everything if Shift is NOT held
       project.deselectAll();
     }
     hit.item.selected = true;
-  } else if (!Key.modifiers.shift) {
-    project.deselectAll();
+  } else {
+    // Only deselect if Shift is NOT held AND we missed the hit
+    if (!Key.modifiers.shift) {
+      project.deselectAll();
+    }
   }
-  
+
   updateProperties();
 };
 
@@ -1812,8 +1804,23 @@ function sendBackward() {
 // Group/Ungroup
 function groupSelection() {
   if (project.selectedItems.length > 1) {
-    var group = new Group(project.selectedItems);
+    var selected = Array.from(project.selectedItems); // Save reference before grouping
+    var group = new Group(selected);
+    
+    // Important: Select the new group so it stays highlighted
+    project.deselectAll();
+    group.selected = true;
+    
+    // Optional: Give the group a subtle stroke so it's visible even when deselected
+    // group.strokeColor = new Color(0.3, 0.65, 0.98, 0.5);
+    // group.strokeWidth = 1;
+    // group.dashArray = [4, 4];
+    
     saveState();
+    updateProperties();
+    console.log('Grouped', selected.length, 'objects');
+  } else {
+    alert('Select 2 or more objects to group');
   }
 }
 
