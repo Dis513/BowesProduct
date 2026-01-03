@@ -781,118 +781,1332 @@ onAuthStateChanged(auth, async (user) => {
 </script>
 
 <!-- Paper.js Vector Editor -->
-<script>
-// Clean Paper.js setup
-paper.install(window);
-paper.setup(document.getElementById('canvas'));
-
-// State
+<script type="text/paperscript" canvas="canvas">
+// Global state
 var tools = {};
-var currentTool = null;
+var currentTool;
 var fillColor = '#ff0000';
 var strokeColor = '#000000';
 var strokeWidth = 1;
-var currentPath = null;
-var startPoint = null;
-var currentShape = null;
+var currentPath;
+var isDrawing = false;
+var startPoint;
+var currentShape;
+var clipboard = null;
+var undoStack = [];
+var redoStack = [];
+var showGrid = false;
+var showRulers = true;
+var snapToGrid = false;
+var gridSize = 20;
+var layers = [];
+var currentLayerIndex = 0;
+var zoomLevel = 1;
 
-// Activate tool
+// Initialize layers
+function initLayers() {
+  layers = [
+    { name: 'Layer 1', visible: true, locked: false, items: [] }
+  ];
+  updateLayersList();
+}
+
+// Tool activation
 function activateTool(name) {
   if (tools[name]) {
     currentTool = tools[name];
     currentTool.activate();
     document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    const btn = document.getElementById(name + 'Tool');
+    var btn = document.getElementById(name + 'Tool');
     if (btn) btn.classList.add('active');
-    const status = document.getElementById('statusTool');
-    if (status) status.textContent = name.charAt(0).toUpperCase() + name.slice(1) + ' Tool';
+    
+    var toolNames = {
+      'select': 'Selection Tool',
+      'directSelect': 'Direct Selection Tool',
+      'pen': 'Pen Tool',
+      'pencil': 'Pencil Tool',
+      'brush': 'Brush Tool',
+      'rectangle': 'Rectangle Tool',
+      'ellipse': 'Ellipse Tool',
+      'polygon': 'Polygon Tool',
+      'star': 'Star Tool',
+      'line': 'Line Tool',
+      'type': 'Type Tool',
+      'typeOnPath': 'Type on Path Tool',
+      'touchType': 'Touch Type Tool',
+      'shapeBuilder': 'Shape Builder Tool',
+      'perspectiveGrid': 'Perspective Grid Tool',
+      'freeTransform': 'Free Transform Tool',
+      'eyedropper': 'Eyedropper Tool',
+      'measure': 'Measure Tool',
+      'hand': 'Hand Tool',
+      'zoom': 'Zoom Tool'
+    };
+    
+    var statusTool = document.getElementById('statusTool');
+    if (statusTool && toolNames[name]) {
+      statusTool.textContent = toolNames[name];
+    }
   }
 }
 
 // Selection Tool
 tools.select = new Tool();
 tools.select.onMouseDown = function(event) {
-  const hit = project.hitTest(event.point, { fill: true, stroke: true, tolerance: 10 });
-  if (hit && hit.item) {
-    if (!event.modifiers.shift) project.deselectAll();
+  var hit = project.hitTest(event.point, {
+    fill: true, stroke: true, segments: true, tolerance: 5
+  });
+  
+  if (hit && hit.item && !hit.item.locked) {
+    if (!Key.modifiers.shift) {
+      project.deselectAll();
+    }
     hit.item.selected = true;
-  } else if (!event.modifiers.shift) {
+  } else if (!Key.modifiers.shift) {
+    project.deselectAll();
+  }
+  
+  updateProperties();
+};
+
+tools.select.onMouseDrag = function(event) {
+  if (project.selectedItems.length) {
+    var delta = event.delta;
+    if (snapToGrid) {
+      delta.x = Math.round(delta.x / gridSize) * gridSize;
+      delta.y = Math.round(delta.y / gridSize) * gridSize;
+    }
+    project.selectedItems.forEach(function(item) {
+      if (!item.locked) {
+        item.position += delta;
+      }
+    });
+    updateProperties();
+  }
+};
+
+tools.select.onMouseUp = function() {
+  saveState();
+};
+
+// Direct Selection Tool
+tools.directSelect = new Tool();
+tools.directSelect.onMouseDown = function(event) {
+  var hit = project.hitTest(event.point, {
+    segments: true, tolerance: 5
+  });
+  
+  if (hit && hit.segment) {
+    hit.segment.selected = true;
+  } else {
     project.deselectAll();
   }
 };
-tools.select.onMouseDrag = function(event) {
-  project.selectedItems.forEach(item => item.position += event.delta);
+
+tools.directSelect.onMouseDrag = function(event) {
+  var selectedSegments = project.activeLayer.segments.filter(function(s) {
+    return s.selected;
+  });
+  
+  if (selectedSegments.length) {
+    selectedSegments.forEach(function(segment) {
+      segment.point += event.delta;
+    });
+  }
 };
 
 // Pen Tool
 tools.pen = new Tool();
+var penPoints = [];
+
 tools.pen.onMouseDown = function(event) {
-  currentPath = new Path({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+  if (Key.modifiers.alt) {
+    // Convert point to curve
+    var hit = project.hitTest(event.point, { segments: true, tolerance: 5 });
+    if (hit && hit.segment) {
+      if (hit.segment.hasHandles()) {
+        hit.segment.clearHandles();
+      } else {
+        hit.segment.handleIn = new Point(-20, 0);
+        hit.segment.handleOut = new Point(20, 0);
+      }
+    }
+    return;
+  }
+  
+  if (currentPath && penPoints.length > 0 && event.point.isClose(penPoints[0], 5)) {
+    // Close path
+    currentPath.closed = true;
+    currentPath.fillColor = fillColor;
+    currentPath.strokeColor = strokeColor;
+    currentPath.strokeWidth = strokeWidth;
+    currentPath.simplify();
+    currentPath.selected = true;
+    penPoints = [];
+    currentPath = null;
+    saveState();
+    return;
+  }
+  
+  if (!currentPath) {
+    currentPath = new Path();
+    currentPath.strokeColor = strokeColor;
+    currentPath.strokeWidth = strokeWidth;
+    penPoints = [];
+  }
+  
   currentPath.add(event.point);
+  penPoints.push(event.point);
 };
+
+tools.pen.onMouseMove = function(event) {
+  if (currentPath && penPoints.length > 0) {
+    // Draw preview line
+    document.body.style.cursor = 'crosshair';
+  }
+};
+
 tools.pen.onMouseDrag = function(event) {
-  currentPath.add(event.point);
-  currentPath.smooth();
+  if (currentPath && penPoints.length > 0) {
+    // Adjust handles for last point
+    var lastSegment = currentPath.lastSegment;
+    if (lastSegment) {
+      lastSegment.handleOut = event.point - lastSegment.point;
+      lastSegment.handleIn = lastSegment.handleOut.rotate(180);
+    }
+  }
 };
-tools.pen.onMouseUp = function() {
-  currentPath.simplify();
-  currentPath.fillColor = fillColor;
-  currentPath.selected = true;
-  currentPath = null;
+
+tools.pen.onKeyDown = function(event) {
+  if (event.key === 'escape') {
+    if (currentPath) {
+      if (currentPath.segments.length > 1) {
+        currentPath.fillColor = fillColor;
+        currentPath.simplify();
+        saveState();
+      } else {
+        currentPath.remove();
+      }
+      currentPath = null;
+      penPoints = [];
+    }
+  } else if (event.key === 'enter') {
+    if (currentPath) {
+      currentPath.closed = true;
+      currentPath.fillColor = fillColor;
+      currentPath.strokeColor = strokeColor;
+      currentPath.strokeWidth = strokeWidth;
+      currentPath.simplify();
+      currentPath.selected = true;
+      currentPath = null;
+      penPoints = [];
+      saveState();
+    }
+  }
+};
+
+// Pencil Tool
+tools.pencil = new Tool();
+tools.pencil.minDistance = 5;
+
+tools.pencil.onMouseDown = function(event) {
+  currentPath = new Path();
+  currentPath.strokeColor = strokeColor;
+  currentPath.strokeWidth = strokeWidth;
+  currentPath.add(event.point);
+};
+
+tools.pencil.onMouseDrag = function(event) {
+  currentPath.add(event.point);
+};
+
+tools.pencil.onMouseUp = function(event) {
+  if (currentPath) {
+    currentPath.simplify();
+    currentPath.fillColor = fillColor;
+    currentPath.selected = true;
+    saveState();
+    currentPath = null;
+  }
+};
+
+// Brush Tool
+tools.brush = new Tool();
+tools.brush.minDistance = 2;
+
+tools.brush.onMouseDown = function(event) {
+  currentPath = new Path();
+  currentPath.strokeColor = strokeColor;
+  currentPath.strokeWidth = strokeWidth;
+  currentPath.strokeCap = 'round';
+  currentPath.strokeJoin = 'round';
+  currentPath.add(event.point);
+};
+
+tools.brush.onMouseDrag = function(event) {
+  currentPath.add(event.point);
+};
+
+tools.brush.onMouseUp = function(event) {
+  if (currentPath) {
+    currentPath.smooth();
+    currentPath.fillColor = fillColor;
+    currentPath.selected = true;
+    saveState();
+    currentPath = null;
+  }
 };
 
 // Rectangle Tool
 tools.rectangle = new Tool();
+
 tools.rectangle.onMouseDown = function(event) {
   startPoint = event.point;
-};
-tools.rectangle.onMouseDrag = function(event) {
-  if (currentShape) currentShape.remove();
-  let rect = new Rectangle(startPoint, event.point);
-  if (event.modifiers.shift) {
-    const size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
-    rect = new Rectangle(startPoint, startPoint.add(size * Math.sign(rect.width), size * Math.sign(rect.height)));
-  }
-  currentShape = new Path.Rectangle(rect);
+  currentShape = new Path.Rectangle(startPoint, startPoint);
   currentShape.fillColor = fillColor;
   currentShape.strokeColor = strokeColor;
   currentShape.strokeWidth = strokeWidth;
 };
+
+tools.rectangle.onMouseDrag = function(event) {
+  if (currentShape) {
+    var rect = new Rectangle(startPoint, event.point);
+    if (Key.modifiers.shift) {
+      // Constrain to square
+      var size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
+      rect = new Rectangle(startPoint, new Point(startPoint.x + size, startPoint.y + size));
+    }
+    currentShape.remove();
+    currentShape = new Path.Rectangle(rect);
+    currentShape.fillColor = fillColor;
+    currentShape.strokeColor = strokeColor;
+    currentShape.strokeWidth = strokeWidth;
+  }
+};
+
 tools.rectangle.onMouseUp = function() {
   if (currentShape) {
     currentShape.selected = true;
+    saveState();
     currentShape = null;
   }
 };
 
-// Hand Tool
-tools.hand = new Tool();
-var lastPoint;
-tools.hand.onMouseDown = function(event) {
-  lastPoint = event.point;
+// Ellipse Tool
+tools.ellipse = new Tool();
+
+tools.ellipse.onMouseDown = function(event) {
+  startPoint = event.point;
+  currentShape = new Path.Ellipse({
+    center: startPoint,
+    radius: [0, 0]
+  });
+  currentShape.fillColor = fillColor;
+  currentShape.strokeColor = strokeColor;
+  currentShape.strokeWidth = strokeWidth;
 };
+
+tools.ellipse.onMouseDrag = function(event) {
+  if (currentShape) {
+    var rect = new Rectangle(startPoint, event.point);
+    if (Key.modifiers.shift) {
+      // Constrain to circle
+      var size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
+      rect = new Rectangle(startPoint, new Point(startPoint.x + size, startPoint.y + size));
+    }
+    currentShape.remove();
+    currentShape = new Path.Ellipse(rect);
+    currentShape.fillColor = fillColor;
+    currentShape.strokeColor = strokeColor;
+    currentShape.strokeWidth = strokeWidth;
+  }
+};
+
+tools.ellipse.onMouseUp = function() {
+  if (currentShape) {
+    currentShape.selected = true;
+    saveState();
+    currentShape = null;
+  }
+};
+
+// Polygon Tool
+tools.polygon = new Tool();
+
+tools.polygon.onMouseDown = function(event) {
+  startPoint = event.point;
+  var sides = 6;
+  currentShape = new Path.RegularPolygon(startPoint, 0, sides);
+  currentShape.fillColor = fillColor;
+  currentShape.strokeColor = strokeColor;
+  currentShape.strokeWidth = strokeWidth;
+};
+
+tools.polygon.onMouseDrag = function(event) {
+  if (currentShape) {
+    var radius = startPoint.getDistance(event.point);
+    var sides = 6;
+    currentShape.remove();
+    currentShape = new Path.RegularPolygon(startPoint, radius, sides);
+    currentShape.fillColor = fillColor;
+    currentShape.strokeColor = strokeColor;
+    currentShape.strokeWidth = strokeWidth;
+  }
+};
+
+tools.polygon.onMouseUp = function() {
+  if (currentShape) {
+    currentShape.selected = true;
+    saveState();
+    currentShape = null;
+  }
+};
+
+// Star Tool
+tools.star = new Tool();
+
+tools.star.onMouseDown = function(event) {
+  startPoint = event.point;
+  var points = 5;
+  currentShape = new Path.Star(startPoint, 0, 0, 0, points);
+  currentShape.fillColor = fillColor;
+  currentShape.strokeColor = strokeColor;
+  currentShape.strokeWidth = strokeWidth;
+};
+
+tools.star.onMouseDrag = function(event) {
+  if (currentShape) {
+    var outerRadius = startPoint.getDistance(event.point);
+    var innerRadius = outerRadius * 0.4;
+    var points = 5;
+    currentShape.remove();
+    currentShape = new Path.Star(startPoint, innerRadius, outerRadius, points);
+    currentShape.fillColor = fillColor;
+    currentShape.strokeColor = strokeColor;
+    currentShape.strokeWidth = strokeWidth;
+  }
+};
+
+tools.star.onMouseUp = function() {
+  if (currentShape) {
+    currentShape.selected = true;
+    saveState();
+    currentShape = null;
+  }
+};
+
+// Line Tool
+tools.line = new Tool();
+
+tools.line.onMouseDown = function(event) {
+  startPoint = event.point;
+  currentShape = new Path.Line(startPoint, startPoint);
+  currentShape.strokeColor = strokeColor;
+  currentShape.strokeWidth = strokeWidth;
+};
+
+tools.line.onMouseDrag = function(event) {
+  if (currentShape) {
+    if (Key.modifiers.shift) {
+      // Constrain to 45-degree angles
+      var angle = Math.atan2(event.point.y - startPoint.y, event.point.x - startPoint.x);
+      angle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
+      var length = startPoint.getDistance(event.point);
+      var endPoint = new Point(
+        startPoint.x + length * Math.cos(angle),
+        startPoint.y + length * Math.sin(angle)
+      );
+      currentShape.remove();
+      currentShape = new Path.Line(startPoint, endPoint);
+    } else {
+      currentShape.remove();
+      currentShape = new Path.Line(startPoint, event.point);
+    }
+    currentShape.strokeColor = strokeColor;
+    currentShape.strokeWidth = strokeWidth;
+  }
+};
+
+tools.line.onMouseUp = function() {
+  if (currentShape) {
+    currentShape.selected = true;
+    saveState();
+    currentShape = null;
+  }
+};
+
+// Type Tool
+tools.type = new Tool();
+
+tools.type.onMouseDown = function(event) {
+  var text = prompt('Enter text:', 'Sample Text');
+  if (text) {
+    var pointText = new PointText(event.point);
+    pointText.content = text;
+    pointText.fillColor = fillColor;
+    pointText.fontSize = 32;
+    pointText.fontFamily = 'Arial';
+    pointText.selected = true;
+    saveState();
+  }
+};
+
+// Eyedropper Tool
+tools.eyedropper = new Tool();
+
+tools.eyedropper.onMouseDown = function(event) {
+  var hit = project.hitTest(event.point, {
+    fill: true, stroke: true, tolerance: 5
+  });
+  
+  if (hit && hit.item) {
+    if (hit.type === 'fill' && hit.item.fillColor) {
+      fillColor = hit.item.fillColor.toCSS(true);
+      document.getElementById('fillColor').style.backgroundColor = fillColor;
+    }
+    if (hit.type === 'stroke' && hit.item.strokeColor) {
+      strokeColor = hit.item.strokeColor.toCSS(true);
+      document.getElementById('strokeColor').style.backgroundColor = strokeColor;
+    }
+  }
+};
+
+// Hand Tool (Pan)
+tools.hand = new Tool();
+var handStart;
+
+tools.hand.onMouseDown = function(event) {
+  handStart = event.point;
+  document.body.style.cursor = 'grabbing';
+};
+
 tools.hand.onMouseDrag = function(event) {
-  view.center -= event.point - lastPoint;
-  lastPoint = event.point;
+  var delta = event.point.subtract(handStart);
+  view.center = view.center.subtract(delta);
+};
+
+tools.hand.onMouseUp = function() {
+  document.body.style.cursor = 'default';
 };
 
 // Zoom Tool
 tools.zoom = new Tool();
+
 tools.zoom.onMouseDown = function(event) {
-  view.zoom *= event.modifiers.alt ? 0.9 : 1.1;
+  var zoomFactor = Key.modifiers.alt ? 0.8 : 1.25;
+  view.zoom = view.zoom * zoomFactor;
   view.center = event.point;
+  updateZoomDisplay();
 };
 
-// Button connections
-document.getElementById('selectTool')?.addEventListener('click', () => activateTool('select'));
-document.getElementById('penTool')?.addEventListener('click', () => activateTool('pen'));
-document.getElementById('rectangleTool')?.addEventListener('click', () => activateTool('rectangle'));
-document.getElementById('handTool')?.addEventListener('click', () => activateTool('hand'));
-document.getElementById('zoomTool')?.addEventListener('click', () => activateTool('zoom'));
+// Bind tool buttons
+document.getElementById('selectTool').onclick = function() { activateTool('select'); };
+document.getElementById('directSelectTool').onclick = function() { activateTool('directSelect'); };
+document.getElementById('magicWandTool').onclick = function() { activateTool('select'); };
+document.getElementById('penTool').onclick = function() { activateTool('pen'); };
+document.getElementById('pencilTool').onclick = function() { activateTool('pencil'); };
+document.getElementById('brushTool').onclick = function() { activateTool('brush'); };
+document.getElementById('rectangleTool').onclick = function() { activateTool('rectangle'); };
+document.getElementById('ellipseTool').onclick = function() { activateTool('ellipse'); };
+document.getElementById('polygonTool').onclick = function() { activateTool('polygon'); };
+document.getElementById('starTool').onclick = function() { activateTool('star'); };
+document.getElementById('lineTool').onclick = function() { activateTool('line'); };
+document.getElementById('typeTool').onclick = function() { activateTool('type'); };
+document.getElementById('eyedropperTool').onclick = function() { activateTool('eyedropper'); };
+document.getElementById('handTool').onclick = function() { activateTool('hand'); };
+document.getElementById('zoomTool').onclick = function() { activateTool('zoom'); };
 
-// Hide loader and start
-document.getElementById('loader').style.display = 'none';
+// Color pickers
+document.getElementById('fillColor').onclick = function() {
+  var color = prompt('Enter fill color (hex):', fillColor);
+  if (color) {
+    fillColor = color;
+    this.style.backgroundColor = color;
+    if (project.selectedItems.length) {
+      project.selectedItems.forEach(function(item) {
+        item.fillColor = color;
+      });
+    }
+  }
+};
+
+document.getElementById('strokeColor').onclick = function() {
+  var color = prompt('Enter stroke color (hex):', strokeColor);
+  if (color) {
+    strokeColor = color;
+    this.style.backgroundColor = color;
+    if (project.selectedItems.length) {
+      project.selectedItems.forEach(function(item) {
+        item.strokeColor = color;
+      });
+    }
+  }
+};
+
+document.getElementById('defaultColors').onclick = function() {
+  fillColor = '#ff0000';
+  strokeColor = '#000000';
+  document.getElementById('fillColor').style.backgroundColor = fillColor;
+  document.getElementById('strokeColor').style.backgroundColor = strokeColor;
+};
+
+// Update properties panel
+function updateProperties() {
+  var item = project.selectedItems[0];
+  var propX = document.getElementById('propX');
+  var propY = document.getElementById('propY');
+  var propW = document.getElementById('propW');
+  var propH = document.getElementById('propH');
+  var propRotation = document.getElementById('propRotation');
+  var propShear = document.getElementById('propShear');
+  var propOpacity = document.getElementById('propOpacity');
+  var propBlendMode = document.getElementById('propBlendMode');
+  
+  if (item) {
+    if (propX) propX.value = Math.round(item.position.x);
+    if (propY) propY.value = Math.round(item.position.y);
+    if (propW) propW.value = Math.round(item.bounds.width);
+    if (propH) propH.value = Math.round(item.bounds.height);
+    if (propRotation) propRotation.value = Math.round(item.rotation);
+    if (propShear) propShear.value = Math.round(item.shear ? item.shear.x : 0);
+    if (propOpacity) propOpacity.value = (item.opacity || 1) * 100;
+    if (propBlendMode) propBlendMode.value = item.blendMode || 'normal';
+    
+    var statusSelection = document.getElementById('statusSelection');
+    if (statusSelection) {
+      statusSelection.textContent = item.className + ' selected';
+    }
+  } else {
+    if (propX) propX.value = '';
+    if (propY) propY.value = '';
+    if (propW) propW.value = '';
+    if (propH) propH.value = '';
+    if (propRotation) propRotation.value = '';
+    if (propShear) propShear.value = '';
+    
+    var statusSelection = document.getElementById('statusSelection');
+    if (statusSelection) {
+      statusSelection.textContent = 'No selection';
+    }
+  }
+}
+
+// Update transform from properties panel
+function updateTransform() {
+  var item = project.selectedItems[0];
+  if (!item) return;
+  
+  var x = parseFloat(document.getElementById('propX').value);
+  var y = parseFloat(document.getElementById('propY').value);
+  var w = parseFloat(document.getElementById('propW').value);
+  var h = parseFloat(document.getElementById('propH').value);
+  var rotation = parseFloat(document.getElementById('propRotation').value);
+  var shear = parseFloat(document.getElementById('propShear').value);
+  
+  if (!isNaN(x) && !isNaN(y)) {
+    item.position = new Point(x, y);
+  }
+  if (!isNaN(w) && !isNaN(h)) {
+    item.bounds.width = w;
+    item.bounds.height = h;
+  }
+  if (!isNaN(rotation)) {
+    item.rotation = rotation;
+  }
+  if (!isNaN(shear)) {
+    item.shear = new Point(shear, 0);
+  }
+  
+  saveState();
+}
+
+// Update opacity
+function updateOpacity() {
+  var opacity = parseFloat(document.getElementById('propOpacity').value);
+  document.getElementById('opacityVal').textContent = opacity;
+  
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      item.opacity = opacity / 100;
+    });
+  }
+}
+
+// Update blend mode
+function updateBlendMode() {
+  var blendMode = document.getElementById('propBlendMode').value;
+  
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      item.blendMode = blendMode;
+    });
+  }
+}
+
+// Layers
+function updateLayersList() {
+  var layersList = document.getElementById('layersList');
+  if (!layersList) return;
+  
+  layersList.innerHTML = '';
+  
+  for (var i = layers.length - 1; i >= 0; i--) {
+    var layer = layers[i];
+    var layerItem = document.createElement('div');
+    layerItem.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
+    layerItem.innerHTML = `
+      <span class="layer-icon">📄</span>
+      <span class="layer-name">${layer.name}</span>
+      <div class="layer-actions">
+        <button class="btn btn-sm" onclick="toggleLayerVisibility(${i})">${layer.visible ? '👁' : '👁‍🗨'}</button>
+        <button class="btn btn-sm" onclick="toggleLayerLock(${i})">${layer.locked ? '🔒' : '🔓'}</button>
+      </div>
+    `;
+    layerItem.onclick = function(e) {
+      if (e.target.tagName !== 'BUTTON') {
+        selectLayer(i);
+      }
+    };
+    layersList.appendChild(layerItem);
+  }
+}
+
+function addLayer() {
+  layers.push({
+    name: 'Layer ' + (layers.length + 1),
+    visible: true,
+    locked: false,
+    items: []
+  });
+  currentLayerIndex = layers.length - 1;
+  updateLayersList();
+}
+
+function deleteLayer() {
+  if (layers.length > 1) {
+    layers.splice(currentLayerIndex, 1);
+    currentLayerIndex = Math.min(currentLayerIndex, layers.length - 1);
+    updateLayersList();
+  }
+}
+
+function selectLayer(index) {
+  currentLayerIndex = index;
+  updateLayersList();
+}
+
+function toggleLayerVisibility(index) {
+  layers[index].visible = !layers[index].visible;
+  updateLayersList();
+}
+
+function toggleLayerLock(index) {
+  layers[index].locked = !layers[index].locked;
+  updateLayersList();
+}
+
+// Save/Undo/Redo
+function saveState() {
+  var json = project.exportJSON({ asString: false });
+  undoStack.push(JSON.stringify(json));
+  if (undoStack.length > 50) {
+    undoStack.shift();
+  }
+  redoStack = [];
+}
+
+function undo() {
+  if (undoStack.length > 1) {
+    redoStack.push(undoStack.pop());
+    project.clear();
+    project.importJSON(JSON.parse(undoStack[undoStack.length - 1]));
+  }
+}
+
+function redo() {
+  if (redoStack.length > 0) {
+    var state = redoStack.pop();
+    undoStack.push(state);
+    project.clear();
+    project.importJSON(JSON.parse(state));
+  }
+}
+
+// Edit operations
+function cut() {
+  if (project.selectedItems.length) {
+    clipboard = JSON.stringify(project.selectedItems.map(function(item) {
+      return item.exportJSON({ asString: false });
+    }));
+    project.selectedItems.forEach(function(item) {
+      item.remove();
+    });
+    saveState();
+  }
+}
+
+function copy() {
+  if (project.selectedItems.length) {
+    clipboard = JSON.stringify(project.selectedItems.map(function(item) {
+      return item.exportJSON({ asString: false });
+    }));
+  }
+}
+
+function paste() {
+  if (clipboard) {
+    project.deselectAll();
+    var items = JSON.parse(clipboard);
+    items.forEach(function(itemData) {
+      var item = project.importJSON(itemData);
+      item.position = item.position.add(new Point(20, 20));
+      item.selected = true;
+    });
+    saveState();
+  }
+}
+
+function duplicate() {
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      var clone = item.clone();
+      clone.position = item.position.add(new Point(20, 20));
+      clone.selected = true;
+      item.selected = false;
+    });
+    saveState();
+  }
+}
+
+function deleteSelection() {
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      item.remove();
+    });
+    saveState();
+    updateProperties();
+  }
+}
+
+function selectAll() {
+  project.activeLayer.children.forEach(function(item) {
+    item.selected = true;
+  });
+  updateProperties();
+}
+
+function deselectAll() {
+  project.deselectAll();
+  updateProperties();
+}
+
+// Arrange
+function bringToFront() {
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      item.sendToFront();
+    });
+    saveState();
+  }
+}
+
+function sendToBack() {
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      item.sendToBack();
+    });
+    saveState();
+  }
+}
+
+function bringForward() {
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      var siblings = project.activeLayer.children;
+      var index = siblings.indexOf(item);
+      if (index < siblings.length - 1) {
+        item.insertAbove(siblings[index + 1]);
+      }
+    });
+    saveState();
+  }
+}
+
+function sendBackward() {
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      var siblings = project.activeLayer.children;
+      var index = siblings.indexOf(item);
+      if (index > 0) {
+        item.insertBelow(siblings[index - 1]);
+      }
+    });
+    saveState();
+  }
+}
+
+// Group/Ungroup
+function groupSelection() {
+  if (project.selectedItems.length > 1) {
+    var group = new Group(project.selectedItems);
+    saveState();
+  }
+}
+
+function ungroupSelection() {
+  project.selectedItems.forEach(function(item) {
+    if (item instanceof Group) {
+      item.ungroup();
+    }
+  });
+  saveState();
+}
+
+// Transform
+function rotateSelection(angle) {
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      item.rotate(angle);
+    });
+    saveState();
+  }
+}
+
+function flipSelection(direction) {
+  if (project.selectedItems.length) {
+    project.selectedItems.forEach(function(item) {
+      if (direction === 'horizontal') {
+        item.scale(-1, 1);
+      } else {
+        item.scale(1, -1);
+      }
+    });
+    saveState();
+  }
+}
+
+// Pathfinder operations
+function pathfinder(operation) {
+  var items = project.selectedItems.filter(function(item) {
+    return item instanceof Path && item.selected;
+  });
+  
+  if (items.length < 2) return;
+  
+  var result;
+  switch(operation) {
+    case 'unite':
+      result = items[0].unite(items[1]);
+      break;
+    case 'minus':
+      result = items[0].exclude(items[1]);
+      break;
+    case 'intersect':
+      result = items[0].intersect(items[1]);
+      break;
+    case 'exclude':
+      result = items[0].exclude(items[1]);
+      break;
+  }
+  
+  if (result) {
+    items.forEach(function(item) {
+      if (item !== result) item.remove();
+    });
+    result.fillColor = fillColor;
+    result.strokeColor = strokeColor;
+    result.strokeWidth = strokeWidth;
+    saveState();
+  }
+}
+
+// Select same
+function selectSameFill() {
+  if (project.selectedItems.length === 0) return;
+  
+  var targetColor = project.selectedItems[0].fillColor;
+  project.deselectAll();
+  
+  project.activeLayer.children.forEach(function(item) {
+    if (item.fillColor && item.fillColor.toCSS() === targetColor.toCSS()) {
+      item.selected = true;
+    }
+  });
+}
+
+function selectSameStroke() {
+  if (project.selectedItems.length === 0) return;
+  
+  var targetColor = project.selectedItems[0].strokeColor;
+  project.deselectAll();
+  
+  project.activeLayer.children.forEach(function(item) {
+    if (item.strokeColor && item.strokeColor.toCSS() === targetColor.toCSS()) {
+      item.selected = true;
+    }
+  });
+}
+
+function selectSameStrokeWidth() {
+  if (project.selectedItems.length === 0) return;
+  
+  var targetWidth = project.selectedItems[0].strokeWidth;
+  project.deselectAll();
+  
+  project.activeLayer.children.forEach(function(item) {
+    if (item.strokeWidth === targetWidth) {
+      item.selected = true;
+    }
+  });
+}
+
+// Zoom
+function zoomIn() {
+  view.zoom = view.zoom * 1.25;
+  updateZoomDisplay();
+}
+
+function zoomOut() {
+  view.zoom = view.zoom * 0.8;
+  updateZoomDisplay();
+}
+
+function zoomToFit() {
+  if (project.activeLayer.children.length > 0) {
+    view.fitBounds(project.activeLayer.bounds);
+  } else {
+    view.zoom = 1;
+  }
+  updateZoomDisplay();
+}
+
+function zoomTo100() {
+  view.zoom = 1;
+  updateZoomDisplay();
+}
+
+function updateZoomDisplay() {
+  var zoomPercent = Math.round(view.zoom * 100);
+  var statusZoom = document.getElementById('statusZoom');
+  if (statusZoom) {
+    statusZoom.textContent = zoomPercent + '%';
+  }
+}
+
+// View options
+function toggleGrid() {
+  showGrid = !showGrid;
+}
+
+function toggleRulers() {
+  showRulers = !showRulers;
+  var rulerH = document.getElementById('rulerH');
+  var rulerV = document.getElementById('rulerV');
+  var rulerCorner = document.getElementById('rulerCorner');
+  
+  if (rulerH) rulerH.style.display = showRulers ? 'block' : 'none';
+  if (rulerV) rulerV.style.display = showRulers ? 'block' : 'none';
+  if (rulerCorner) rulerCorner.style.display = showRulers ? 'block' : 'none';
+}
+
+function toggleSnap() {
+  snapToGrid = !snapToGrid;
+}
+
+// Draw grid
+function onFrame(event) {
+  if (showGrid) {
+    // Grid would be drawn here
+  }
+}
+
+// Export functions
+function exportSVG() {
+  var svg = project.exportSVG({ asString: true });
+  var blob = new Blob([svg], { type: 'image/svg+xml' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'artwork.svg';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportPNG() {
+  var data = view.element.toDataURL('image/png');
+  var a = document.createElement('a');
+  a.href = data;
+  a.download = 'artwork.png';
+  a.click();
+}
+
+function exportPDF() {
+  // Simplified PDF export using SVG
+  var svg = project.exportSVG({ asString: true });
+  var blob = new Blob([svg], { type: 'application/pdf' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'artwork.pdf';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// File operations
+function newDocument() {
+  if (confirm('Create new document? All unsaved changes will be lost.')) {
+    project.clear();
+    undoStack = [];
+    redoStack = [];
+    initLayers();
+    saveState();
+  }
+}
+
+function saveDocument() {
+  var json = project.exportJSON({ asString: true });
+  var blob = new Blob([json], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'document.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function saveDocumentAs() {
+  saveDocument();
+}
+
+function handleOpen(event) {
+  var file = event.target.files[0];
+  if (file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      project.clear();
+      project.importJSON(JSON.parse(e.target.result));
+      saveState();
+    };
+    reader.readAsText(file);
+  }
+}
+
+function handlePlace(event) {
+  var file = event.target.files[0];
+  if (file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var raster = new Raster(e.target.result);
+      raster.position = view.center;
+      saveState();
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Type operations
+function createOutlines() {
+  project.selectedItems.forEach(function(item) {
+    if (item instanceof PointText) {
+      var outline = item.createOutline();
+      item.remove();
+      outline.selected = true;
+    }
+  });
+  saveState();
+}
+
+function findFont() {
+  alert('Font search feature coming soon!');
+}
+
+// Context menu
+document.addEventListener('contextmenu', function(event) {
+  event.preventDefault();
+  var contextMenu = document.getElementById('contextMenu');
+  if (contextMenu) {
+    contextMenu.style.display = 'block';
+    contextMenu.style.left = event.pageX + 'px';
+    contextMenu.style.top = event.pageY + 'px';
+  }
+});
+
+document.addEventListener('click', function(event) {
+  var contextMenu = document.getElementById('contextMenu');
+  if (contextMenu) {
+    contextMenu.style.display = 'none';
+  }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(event) {
+  if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
+  
+  // File shortcuts
+  if ((event.ctrlKey || event.metaKey) && (event.key === 'n' || event.key === 'N')) {
+    if (event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+      newDocument();
+    }
+  }
+  if ((event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S')) {
+    if (event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+      saveDocument();
+    }
+  }
+  if ((event.ctrlKey || event.metaKey) && (event.key === 'o' || event.key === 'O')) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('openFile').click();
+  }
+  
+  // Tool shortcuts
+  if (event.key === 'v' || event.key === 'V') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('select');
+  }
+  if (event.key === 'a' || event.key === 'A') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('directSelect');
+  }
+  if (event.key === 'p' || event.key === 'P') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('pen');
+  }
+  if (event.key === 'n' || event.key === 'N') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('pencil');
+  }
+  if (event.key === 'b' || event.key === 'B') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('brush');
+  }
+  if (event.key === 'm' || event.key === 'M') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('rectangle');
+  }
+  if (event.key === 'l' || event.key === 'L') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('ellipse');
+  }
+  if (event.key === 't' || event.key === 'T') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('type');
+  }
+  if (event.key === 'i' || event.key === 'I') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('eyedropper');
+  }
+  if (event.key === 'h' || event.key === 'H') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('hand');
+  }
+  if (event.key === 'z' || event.key === 'Z') {
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      if (event.shiftKey) {
+        redo();
+      } else {
+        undo();
+      }
+    } else {
+      activateTool('zoom');
+    }
+  }
+  
+  // Edit shortcuts
+  if ((event.ctrlKey || event.metaKey) && event.key === 'c') copy();
+  if ((event.ctrlKey || event.metaKey) && event.key === 'x') cut();
+  if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+    if (!event.shiftKey) paste();
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
+    event.preventDefault();
+    duplicate();
+  }
+  if (event.key === 'Delete' || event.key === 'Backspace') {
+    if (event.target.tagName !== 'INPUT') {
+      deleteSelection();
+    }
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key === 'a') {
+    event.preventDefault();
+    selectAll();
+  }
+  if ((event.ctrlKey || event.metaKey) && event.shiftKey && (event.key === 'a' || event.key === 'A')) {
+    event.preventDefault();
+    deselectAll();
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key === 'g') {
+    event.preventDefault();
+    if (event.shiftKey) {
+      ungroupSelection();
+    } else {
+      groupSelection();
+    }
+  }
+  
+  // Arrange shortcuts
+  if ((event.ctrlKey || event.metaKey) && event.key === ']') {
+    if (event.shiftKey) {
+      bringToFront();
+    } else {
+      bringForward();
+    }
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key === '[') {
+    if (event.shiftKey) {
+      sendToBack();
+    } else {
+      sendBackward();
+    }
+  }
+  
+  // Zoom shortcuts
+  if ((event.ctrlKey || event.metaKey) && (event.key === '=' || event.key === '+')) {
+    event.preventDefault();
+    zoomIn();
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key === '-') {
+    event.preventDefault();
+    zoomOut();
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key === '0') {
+    event.preventDefault();
+    zoomToFit();
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key === '1') {
+    event.preventDefault();
+    zoomTo100();
+  }
+  
+  // Escape key
+  if (event.key === 'Escape') {
+    deselectAll();
+    if (currentPath) {
+      currentPath.remove();
+      currentPath = null;
+      penPoints = [];
+    }
+  }
+});
+
+// Mouse position tracking
+view.onMouseMove = function(event) {
+  var statusPosition = document.getElementById('statusPosition');
+  if (statusPosition) {
+    statusPosition.textContent = 'X: ' + Math.round(event.point.x) + ' Y: ' + Math.round(event.point.y);
+  }
+};
+
+// Selection changed handler
+project.on('selectionchanged', updateProperties);
+
+// Initialize
+initLayers();
 activateTool('select');
+saveState();
+
+// Hide loader
+setTimeout(function() {
+  var loader = document.getElementById('loader');
+  if (loader) {
+    loader.style.display = 'none';
+  }
+}, 500);
 </script>
 
 <script>
@@ -1200,55 +2414,9 @@ document.addEventListener('touchstart', function(e) {
     // e.preventDefault(); // Commented out to allow scrolling
   }
 }, { passive: false });
-
-// Placeholder functions for menu items
-function newDocument() { alert('New Document'); }
-function saveDocument() { alert('Save Document'); }
-function saveDocumentAs() { alert('Save As'); }
-function exportSVG() { alert('Export SVG'); }
-function exportPNG() { alert('Export PNG'); }
-function exportPDF() { alert('Export PDF'); }
-function undo() { alert('Undo'); }
-function redo() { alert('Redo'); }
-function cut() { alert('Cut'); }
-function copy() { alert('Copy'); }
-function paste() { alert('Paste'); }
-function duplicate() { alert('Duplicate'); }
-function deleteSelection() { alert('Delete'); }
-function selectAll() { alert('Select All'); }
-function deselectAll() { alert('Deselect'); }
-function groupSelection() { alert('Group'); }
-function ungroupSelection() { alert('Ungroup'); }
-function lockSelection() { alert('Lock'); }
-function unlockAll() { alert('Unlock All'); }
-function bringToFront() { alert('Bring to Front'); }
-function sendToBack() { alert('Send to Back'); }
-function bringForward() { alert('Bring Forward'); }
-function sendBackward() { alert('Send Backward'); }
-function rotateSelection() { alert('Rotate'); }
-function flipSelection() { alert('Flip'); }
-function pathfinder() { alert('Pathfinder'); }
-function createOutlines() { alert('Create Outlines'); }
-function findFont() { alert('Find Font'); }
-function selectSameFill() { alert('Select Same Fill'); }
-function selectSameStroke() { alert('Select Same Stroke'); }
-function selectSameStrokeWidth() { alert('Select Same Stroke Width'); }
-function zoomIn() { alert('Zoom In'); }
-function zoomOut() { alert('Zoom Out'); }
-function zoomToFit() { alert('Zoom to Fit'); }
-function zoomTo100() { alert('Zoom to 100%'); }
-function toggleGrid() { alert('Toggle Grid'); }
-function toggleRulers() { alert('Toggle Rulers'); }
-function toggleSnap() { alert('Toggle Snap'); }
-function updateTransform() { alert('Update Transform'); }
-function updateOpacity() { alert('Update Opacity'); }
-function updateBlendMode() { alert('Update Blend Mode'); }
-function convertToPoint() { alert('Convert to Point'); }
-function convertToCurve() { alert('Convert to Curve'); }
-function addLayer() { alert('Add Layer'); }
-function deleteLayer() { alert('Delete Layer'); }
-function handleOpen() { alert('Handle Open'); }
-function handlePlace() { alert('Handle Place'); }
 </script>
 </body>
 </html>
+
+
+
