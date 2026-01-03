@@ -23,10 +23,11 @@
   .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
 
   /* ================= APPLICATION MENU BAR ================= */
-  .app-menu-bar {
+.app-menu-bar {
   background: rgba(15,23,42,0.98);
   border-bottom: 1px solid #1e293b;
-  padding: 0 20px; /* Clean horizontal padding on both sides */
+  padding: 0;
+  padding-left: 150px; /* Nice moderate left indent — matches left toolbar feel */
   display: flex;
   gap: 0;
   font-size: 0.85rem;
@@ -37,7 +38,6 @@
   flex-wrap: wrap;
   height: 36px;
   align-items: center;
-  justify-content: flex-start; /* Aligns items to the left nicely */
 }
   .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
@@ -2417,4 +2417,5 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
