@@ -120,12 +120,16 @@
   }
   #dockToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
 
-  .panel-tabs { display: flex; background: #0f172a; border-bottom: 1px solid #1e293b; overflow-x: auto; }
+  .panel-tabs { display: flex; background: #0f172a; border-bottom: 1px solid #1e293b; overflow-x: auto; position: relative; }
   .panel-tab {
     padding: 0.6rem 1rem; background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 0.8rem; white-space: nowrap; transition: all 0.2s; flex-shrink: 0;
   }
   .panel-tab:hover { color: #e5e7eb; }
   .panel-tab.active { color: #60a5fa; background: rgba(96, 165, 250, 0.1); border-bottom: 2px solid #60a5fa; }
+  .panel-close-btn {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.2s;
+  }
+  .panel-close-btn:hover { background: #334155; color: #e5e7eb; }
 
   .panel-content { padding: 1rem; overflow-y: auto; flex: 1; }
   .panel-section { display: none; }
@@ -204,16 +208,18 @@
     }
     .tool-btn { width: 38px; height: 38px; font-size: 1.1rem; }
     .panel-dock { 
-      top: auto; bottom: 0; right: 0; left: 0; width: 100%; max-height: 70vh; border-radius: 20px 20px 0 0; transform: translateY(calc(100% - 50px)); z-index: 1200;
+      top: 116px; bottom: auto; right: 20px; left: auto; width: 320px; max-height: calc(100vh - 140px); border-radius: 12px; transform: none; z-index: 2000;
     }
-    .panel-dock.visible { transform: translateY(0); }
-    #dockToggle { display: none; }
+    .panel-dock.hidden { transform: translateX(420px); }
+    .panel-dock.visible { transform: translateX(0); }
+    #dockToggle { display: flex; }
     .ruler-h { left: 50px; }
     .ruler-v { display: none; }
     #canvas { margin-left: 50px; }
-    .app-menu-bar { gap: 1rem; padding-left: 60px; }
+    .app-menu-bar { gap: 1rem; padding-left: 60px; z-index: 999; }
     .menu-bar > div { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
     .status-bar { z-index: 1100; }
+    .dropdown { z-index: 1900; }
   }
 
   #loader { 
@@ -456,6 +462,7 @@
       <button class="panel-tab" data-panel="align">Align</button>
       <button class="panel-tab" data-panel="character">Character</button>
       <button class="panel-tab" data-panel="paragraph">Paragraph</button>
+      <button class="panel-close-btn" id="panelCloseBtn" title="Close Panel">×</button>
     </div>
     
     <div class="panel-content">
@@ -2232,14 +2239,20 @@ document.querySelectorAll('.panel-tab').forEach(tab => {
 // Dock toggle
 const dock = document.getElementById('panelDock');
 const dockToggle = document.getElementById('dockToggle');
+const panelCloseBtn = document.getElementById('panelCloseBtn');
 let dockVisible = true;
 
-dockToggle.onclick = function() {
+function toggleDock() {
   dockVisible = !dockVisible;
   dock.classList.toggle('visible', dockVisible);
   dock.classList.toggle('hidden', !dockVisible);
   dockToggle.textContent = dockVisible ? '◀' : '▶';
-};
+}
+
+dockToggle.onclick = toggleDock;
+if (panelCloseBtn) {
+  panelCloseBtn.onclick = toggleDock;
+}
 
 // Show specific panel
 function showPanel(panelName) {
@@ -2253,10 +2266,12 @@ function showPanel(panelName) {
   if (section) section.classList.add('active');
   
   // Show dock if hidden
-  dock.classList.add('visible');
-  dock.classList.remove('hidden');
-  dockVisible = true;
-  dockToggle.textContent = '◀';
+  if (!dockVisible) {
+    dock.classList.add('visible');
+    dock.classList.remove('hidden');
+    dockVisible = true;
+    dockToggle.textContent = '◀';
+  }
 }
 
 // Gradient controls
@@ -2269,33 +2284,14 @@ document.getElementById('strokeWeight').addEventListener('input', function() {
   document.getElementById('strokeWeightVal').textContent = this.value + ' px';
 });
 
-// Mobile bottom sheet toggle
-const mobilePanelToggle = document.createElement('div');
-mobilePanelToggle.id = 'mobilePanelToggle';
-mobilePanelToggle.style.cssText = 'position:fixed;bottom:0;left:0;right:0;height:50px;background:rgba(2,6,23,0.98);border-top:1px solid #1e293b;display:flex;align-items:center;justify-content:center;color:#60a5fa;font-size:0.9rem;cursor:pointer;z-index:1150;display:none;backdrop-filter:blur(10px);';
-mobilePanelToggle.innerHTML = '<span>▲ Show Panels</span>';
-document.body.appendChild(mobilePanelToggle);
-
-if (window.innerWidth <= 900) {
-  mobilePanelToggle.style.display = 'flex';
-  dock.classList.remove('visible');
-  dock.classList.add('hidden');
-  dockVisible = false;
-}
-
-mobilePanelToggle.onclick = function() {
-  dockVisible = !dockVisible;
-  dock.classList.toggle('visible', dockVisible);
-  dock.classList.toggle('hidden', !dockVisible);
-  this.querySelector('span').textContent = dockVisible ? '▼ Hide Panels' : '▲ Show Panels';
-};
-
-// Window resize handler
+// Window resize handler - keep panels visible by default on mobile
 window.addEventListener('resize', function() {
   if (window.innerWidth <= 900) {
-    mobilePanelToggle.style.display = 'flex';
+    // On mobile, panels are visible by default
+    dock.classList.add('visible');
+    dock.classList.remove('hidden');
+    dockVisible = true;
   } else {
-    mobilePanelToggle.style.display = 'none';
     dock.classList.add('visible');
     dock.classList.remove('hidden');
     dockVisible = true;
