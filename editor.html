@@ -2203,9 +2203,17 @@ setTimeout(function() {
   if (loader) {
     loader.style.display = 'none';
   }
+  
+  // Ensure the canvas is properly sized and visible
+  if (typeof view !== 'undefined' && view) {
+    view.viewSize = new Size(view.element.width, view.element.height);
+    view.draw();
+  }
+  
   console.log('Vector Editor Pro initialized successfully');
   console.log('Paper.js version:', paper.version);
   console.log('Canvas size:', view.size);
+  console.log('Project layers:', project.layers.length);
 }, 500);
 </script>
 
