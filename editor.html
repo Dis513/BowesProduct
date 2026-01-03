@@ -24,8 +24,21 @@
 
   /* ================= APPLICATION MENU BAR ================= */
   .app-menu-bar {
-    background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0; display: flex; gap: 0; font-size: 0.85rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap; height: 36px; align-items: center;
-  }
+  background: rgba(15,23,42,0.98);
+  border-bottom: 1px solid #1e293b;
+  padding: 0 20px; /* Clean horizontal padding on both sides */
+  display: flex;
+  gap: 0;
+  font-size: 0.85rem;
+  position: sticky;
+  top: 70px;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+  height: 36px;
+  align-items: center;
+  justify-content: flex-start; /* Aligns items to the left nicely */
+}
   .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
     position: relative; cursor: pointer; padding: 0.5rem 1rem; height: 100%; display: flex; align-items: center; user-select: none;
@@ -2404,3 +2417,4 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
