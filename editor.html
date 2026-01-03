@@ -2686,24 +2686,32 @@ window.onload = function() {
     panelBackdrop.classList.add('visible');
   }
 };
-  // Track mouse position in project coordinates
+// === DESKTOP + MOBILE MOUSE/TOUCH COORDINATES (ALWAYS WORKS) ===
 view.onMouseMove = function(event) {
-  var statusPosition = document.getElementById('statusPosition');
-  if (statusPosition) {
-    // Round to nearest integer for clean display
-    var x = Math.round(event.point.x);
-    var y = Math.round(event.point.y);
-    statusPosition.textContent = 'X: ' + x + ' Y: ' + y;
+  const status = document.getElementById('statusPosition');
+  if (status) {
+    const x = Math.round(event.point.x);
+    const y = Math.round(event.point.y);
+    status.textContent = `X: ${x} Y: ${y}`;
   }
 };
 
-// Improved touch position tracking using Paper.js view coordinates
-view.onMouseMove = function(event) {
-  var statusPosition = document.getElementById('statusPosition');
-  if (statusPosition) {
-    statusPosition.textContent = 'X: ' + Math.round(event.point.x) + ' Y: ' + Math.round(event.point.y);
+// Extra safety for touch devices (some browsers need this)
+document.getElementById('canvas').addEventListener('touchmove', function(e) {
+  if (e.touches.length === 1) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = this.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    const point = view.viewToProject(new Point(x, y));
+    
+    const status = document.getElementById('statusPosition');
+    if (status) {
+      status.textContent = `X: ${Math.round(point.x)} Y: ${Math.round(point.y)}`;
+    }
   }
-};
+}, { passive: false });
 
 // Also handle touchmove to update position (Paper.js already translates touch to mouse events in most cases)
 // But for reliability on mobile, add this fallback:
@@ -2732,6 +2740,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
