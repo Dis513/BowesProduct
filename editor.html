@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vector Editor Pro</title>
+  <title>Vector Editor Pro \u2013 BowesProduct (Illustrator 2026)</title>
   <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
@@ -19,6 +20,12 @@
   .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.9rem; white-space: nowrap; }
   .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
   .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; flex-wrap: wrap; }
+  #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+  .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+  #levelInfo { display: none; font-size: 0.8rem; color: #cbd5e1; }
+  #levelText { white-space: nowrap; font-size: 0.75rem; }
+  #xpOuter { width: 100px; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+  #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
 
   @media (max-width: 900px) {
     .header-inner { padding: 0.5rem; }
@@ -26,6 +33,8 @@
     .main-nav { gap: 0.8rem; order: 3; width: 100%; }
     .main-nav a { font-size: 0.85rem; }
     .header-right { width: 100%; justify-content: space-between; }
+    #levelInfo { flex: 1; }
+    #xpOuter { width: 100%; }
   }
 
   /* ================= APPLICATION MENU BAR ================= */
@@ -274,7 +283,7 @@
   .context-menu div:hover { background: #1e293b; }
   .context-menu hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
   </style>
-  <!-- Paper.js for vector editing - using unminified version for better debugging -->
+  <!-- Paper.js for vector editing -->
   <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.js"></script>
 </head>
 <body>
@@ -290,7 +299,12 @@
       </nav>
     </div>
     <div class="header-right">
-      <!-- User info can be added here if needed -->
+      <img id="profilePic" alt="Profile">
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+      <button id="authBtn" class="login-btn">Login</button>
     </div>
   </div>
 </header>
@@ -300,118 +314,118 @@
   <div class="menu-bar">
     <div>File
       <div class="dropdown">
-        <div data-action="newDocument">New <span class="shortcut">Ctrl+Shift+N</span></div>
-        <div data-action="openFile">Open... <span class="shortcut">Ctrl+Shift+O</span></div>
-        <div data-action="saveDocument">Save <span class="shortcut">Ctrl+Shift+S</span></div>
-        <div data-action="saveDocumentAs">Save As... <span class="shortcut">Ctrl+Shift+A</span></div>
+        <div onclick="window.newDocument && window.newDocument()">New <span class="shortcut">Ctrl+Shift+N</span></div>
+        <div onclick="document.getElementById('openFile').click()">Open... <span class="shortcut">Ctrl+Shift+O</span></div>
+        <div onclick="window.saveDocument && window.saveDocument()">Save <span class="shortcut">Ctrl+Shift+S</span></div>
+        <div onclick="window.saveDocumentAs && window.saveDocumentAs()">Save As... <span class="shortcut">Ctrl+Shift+A</span></div>
         <hr>
-        <div data-action="placeImage">Place... <span class="shortcut">Ctrl+Shift+I</span></div>
+        <div onclick="document.getElementById('placeImage').click()">Place... <span class="shortcut">Ctrl+Shift+I</span></div>
         <hr>
-        <div data-action="exportSVG">Export As SVG <span class="shortcut">Ctrl+Alt+S</span></div>
-        <div data-action="exportPNG">Export As PNG <span class="shortcut">Ctrl+Alt+P</span></div>
-        <div data-action="exportPDF">Export As PDF <span class="shortcut">Ctrl+Alt+E</span></div>
+        <div onclick="window.exportSVG && window.exportSVG()">Export As SVG <span class="shortcut">Ctrl+Alt+S</span></div>
+        <div onclick="window.exportPNG && window.exportPNG()">Export As PNG <span class="shortcut">Ctrl+Alt+P</span></div>
+        <div onclick="window.exportPDF && window.exportPDF()">Export As PDF <span class="shortcut">Ctrl+Alt+E</span></div>
       </div>
     </div>
     <div>Edit
       <div class="dropdown">
-        <div data-action="undo">Undo <span class="shortcut">Ctrl+Z</span></div>
-        <div data-action="redo">Redo <span class="shortcut">Ctrl+Y</span></div>
+        <div onclick="window.undo && window.undo()">Undo <span class="shortcut">Ctrl+Z</span></div>
+        <div onclick="window.redo && window.redo()">Redo <span class="shortcut">Ctrl+Y</span></div>
         <hr>
-        <div data-action="cut">Cut <span class="shortcut">Ctrl+X</span></div>
-        <div data-action="copy">Copy <span class="shortcut">Ctrl+C</span></div>
-        <div data-action="paste">Paste <span class="shortcut">Ctrl+V</span></div>
-        <div data-action="duplicate">Duplicate <span class="shortcut">Ctrl+D</span></div>
-        <div data-action="deleteSelection">Delete <span class="shortcut">Del</span></div>
+        <div onclick="window.cut && window.cut()">Cut <span class="shortcut">Ctrl+X</span></div>
+        <div onclick="window.copy && window.copy()">Copy <span class="shortcut">Ctrl+C</span></div>
+        <div onclick="window.paste && window.paste()">Paste <span class="shortcut">Ctrl+V</span></div>
+        <div onclick="window.duplicate && window.duplicate()">Duplicate <span class="shortcut">Ctrl+D</span></div>
+        <div onclick="window.deleteSelection && window.deleteSelection()">Delete <span class="shortcut">Del</span></div>
         <hr>
-        <div data-action="selectAll">Select All <span class="shortcut">Ctrl+A</span></div>
-        <div data-action="deselectAll">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
+        <div onclick="window.selectAll && window.selectAll()">Select All <span class="shortcut">Ctrl+A</span></div>
+        <div onclick="window.deselectAll && window.deselectAll()">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
       </div>
     </div>
     <div>Object
       <div class="dropdown">
-        <div data-action="groupSelection">Group <span class="shortcut">Ctrl+G</span></div>
-        <div data-action="ungroupSelection">Ungroup <span class="shortcut">Ctrl+Shift+G</span></div>
+        <div onclick="window.groupSelection && window.groupSelection()">Group <span class="shortcut">Ctrl+G</span></div>
+        <div onclick="window.ungroupSelection && window.ungroupSelection()">Ungroup <span class="shortcut">Ctrl+Shift+G</span></div>
         <hr>
-        <div data-action="lockSelection">Lock <span class="shortcut">Ctrl+2</span></div>
-        <div data-action="unlockAll">Unlock All <span class="shortcut">Ctrl+Alt+2</span></div>
+        <div onclick="window.lockSelection && window.lockSelection()">Lock <span class="shortcut">Ctrl+2</span></div>
+        <div onclick="window.unlockAll && window.unlockAll()">Unlock All <span class="shortcut">Ctrl+Alt+2</span></div>
         <hr>
         <div>Arrange &darr;
           <div class="submenu">
-            <div data-action="bringToFront">Bring to Front <span class="shortcut">Ctrl+Shift+]</span></div>
-            <div data-action="sendToBack">Send to Back <span class="shortcut">Ctrl+Shift+[</span></div>
+            <div onclick="window.bringToFront && window.bringToFront()">Bring to Front <span class="shortcut">Ctrl+Shift+]</span></div>
+            <div onclick="window.sendToBack && window.sendToBack()">Send to Back <span class="shortcut">Ctrl+Shift+[</span></div>
             <hr>
-            <div data-action="bringForward">Bring Forward <span class="shortcut">Ctrl+]</span></div>
-            <div data-action="sendBackward">Send Backward <span class="shortcut">Ctrl+[</span></div>
+            <div onclick="window.bringForward && window.bringForward()">Bring Forward <span class="shortcut">Ctrl+]</span></div>
+            <div onclick="window.sendBackward && window.sendBackward()">Send Backward <span class="shortcut">Ctrl+[</span></div>
           </div>
         </div>
         <div>Transform &darr;
           <div class="submenu">
-            <div data-action="rotateSelectionCW">Rotate 90° CW</div>
-            <div data-action="rotateSelectionCCW">Rotate 90° CCW</div>
+            <div onclick="window.rotateSelection && window.rotateSelection(-90)">Rotate 90\u00b0 CW</div>
+            <div onclick="window.rotateSelection && window.rotateSelection(90)">Rotate 90\u00b0 CCW</div>
             <hr>
-            <div data-action="flipSelectionHorizontal">Flip Horizontal</div>
-            <div data-action="flipSelectionVertical">Flip Vertical</div>
+            <div onclick="window.flipSelection && window.flipSelection('horizontal')">Flip Horizontal</div>
+            <div onclick="window.flipSelection && window.flipSelection('vertical')">Flip Vertical</div>
             <hr>
-            <div data-action="showTransformDialog">Transform...</div>
+            <div onclick="window.showTransformDialog && window.showTransformDialog()">Transform...</div>
           </div>
         </div>
         <hr>
         <div>Pathfinder &darr;
           <div class="submenu">
-            <div data-action="pathfinderUnite">Unite</div>
-            <div data-action="pathfinderMinus">Minus Front</div>
-            <div data-action="pathfinderIntersect">Intersect</div>
-            <div data-action="pathfinderExclude">Exclude</div>
+            <div onclick="window.pathfinder && window.pathfinder('unite')">Unite</div>
+            <div onclick="window.pathfinder && window.pathfinder('minus')">Minus Front</div>
+            <div onclick="window.pathfinder && window.pathfinder('intersect')">Intersect</div>
+            <div onclick="window.pathfinder && window.pathfinder('exclude')">Exclude</div>
             <hr>
-            <div data-action="pathfinderDivide">Divide</div>
-            <div data-action="pathfinderTrim">Trim</div>
-            <div data-action="pathfinderMerge">Merge</div>
+            <div onclick="window.pathfinder && window.pathfinder('divide')">Divide</div>
+            <div onclick="window.pathfinder && window.pathfinder('trim')">Trim</div>
+            <div onclick="window.pathfinder && window.pathfinder('merge')">Merge</div>
             <hr>
-            <div data-action="pathfinderCrop">Crop</div>
-            <div data-action="pathfinderOutline">Outline</div>
+            <div onclick="window.pathfinder && window.pathfinder('crop')">Crop</div>
+            <div onclick="window.pathfinder && window.pathfinder('outline')">Outline</div>
           </div>
         </div>
       </div>
     </div>
     <div>Type
       <div class="dropdown">
-        <div data-action="createOutlines">Create Outlines <span class="shortcut">Ctrl+Shift+O</span></div>
-        <div data-action="findFont">Find Font...</div>
+        <div onclick="window.createOutlines && window.createOutlines()">Create Outlines <span class="shortcut">Ctrl+Shift+O</span></div>
+        <div onclick="window.findFont && window.findFont()">Find Font...</div>
       </div>
     </div>
     <div>Select
       <div class="dropdown">
-        <div data-action="selectAll">All <span class="shortcut">Ctrl+A</span></div>
-        <div data-action="deselectAll">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
+        <div onclick="window.selectAll && window.selectAll()">All <span class="shortcut">Ctrl+A</span></div>
+        <div onclick="window.deselectAll && window.deselectAll()">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
         <hr>
-        <div data-action="selectSameFill">Same Fill Color</div>
-        <div data-action="selectSameStroke">Same Stroke Color</div>
-        <div data-action="selectSameStrokeWidth">Same Stroke Width</div>
+        <div onclick="window.selectSameFill && window.selectSameFill()">Same Fill Color</div>
+        <div onclick="window.selectSameStroke && window.selectSameStroke()">Same Stroke Color</div>
+        <div onclick="window.selectSameStrokeWidth && window.selectSameStrokeWidth()">Same Stroke Width</div>
       </div>
     </div>
     <div>View
       <div class="dropdown">
-        <div data-action="zoomIn">Zoom In <span class="shortcut">Ctrl++</span></div>
-        <div data-action="zoomOut">Zoom Out <span class="shortcut">Ctrl+-</span></div>
-        <div data-action="zoomToFit">Fit to Screen <span class="shortcut">Ctrl+0</span></div>
-        <div data-action="zoomTo100">100% <span class="shortcut">Ctrl+1</span></div>
+        <div onclick="window.zoomIn && window.zoomIn()">Zoom In <span class="shortcut">Ctrl++</span></div>
+        <div onclick="window.zoomOut && window.zoomOut()">Zoom Out <span class="shortcut">Ctrl+-</span></div>
+        <div onclick="window.zoomToFit && window.zoomToFit()">Fit to Screen <span class="shortcut">Ctrl+0</span></div>
+        <div onclick="window.zoomTo100 && window.zoomTo100()">100% <span class="shortcut">Ctrl+1</span></div>
         <hr>
-        <div data-action="toggleGrid">Grid <span class="shortcut">Ctrl+'</span></div>
-        <div data-action="toggleRulers">Rulers <span class="shortcut">Ctrl+R</span></div>
-        <div data-action="toggleSnap">Snap to Grid <span class="shortcut">Ctrl+Shift+'</span></div>
+        <div onclick="window.toggleGrid && window.toggleGrid()">Grid <span class="shortcut">Ctrl+'</span></div>
+        <div onclick="window.toggleRulers && window.toggleRulers()">Rulers <span class="shortcut">Ctrl+R</span></div>
+        <div onclick="window.toggleSnap && window.toggleSnap()">Snap to Grid <span class="shortcut">Ctrl+Shift+'</span></div>
       </div>
     </div>
     <div>Window
       <div class="dropdown">
-        <div data-action="showPanelProperties">Properties</div>
-        <div data-action="showPanelLayers">Layers <span class="shortcut">F7</span></div>
-        <div data-action="showPanelAppearance">Appearance <span class="shortcut">Shift+F6</span></div>
-        <div data-action="showPanelSwatches">Swatches</div>
-        <div data-action="showPanelGradient">Gradient</div>
-        <div data-action="showPanelStroke">Stroke</div>
-        <div data-action="showPanelAlign">Align <span class="shortcut">Shift+F7</span></div>
-        <div data-action="showPanelCharacter">Character</div>
-        <div data-action="showPanelParagraph">Paragraph</div>
+        <div onclick="window.showPanel && window.showPanel('properties')">Properties</div>
+        <div onclick="window.showPanel && window.showPanel('layers')">Layers <span class="shortcut">F7</span></div>
+        <div onclick="window.showPanel && window.showPanel('appearance')">Appearance <span class="shortcut">Shift+F6</span></div>
+        <div onclick="window.showPanel && window.showPanel('swatches')">Swatches</div>
+        <div onclick="window.showPanel && window.showPanel('gradient')">Gradient</div>
+        <div onclick="window.showPanel && window.showPanel('stroke')">Stroke</div>
+        <div onclick="window.showPanel && window.showPanel('align')">Align <span class="shortcut">Shift+F7</span></div>
+        <div onclick="window.showPanel && window.showPanel('character')">Character</div>
+        <div onclick="window.showPanel && window.showPanel('paragraph')">Paragraph</div>
       </div>
     </div>
   </div>
@@ -429,7 +443,7 @@
   <div class="tool-notification" id="toolNotification"></div>
 
   <div id="canvas-container">
-    <div id="loader">Vector Editor Pro • Initializing...</div>
+    <div id="loader">Vector Editor Pro \u2022 Initializing...</div>
     
     <!-- Rulers -->
     <div class="ruler-corner" id="rulerCorner"></div>
@@ -447,50 +461,50 @@
   <!-- Left Toolbar -->
   <div id="floatingToolbar">
     <div class="tool-group">
-      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)" data-tool="select">⬚</div>
-      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)" data-tool="directSelect">↖</div>
-      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)" data-tool="select">✦</div>
+      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)">\u2b1a</div>
+      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)">\u2196</div>
+      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)">\u2726</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="penTool" title="Pen Tool (P)" data-tool="pen">✒</div>
-      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)" data-tool="pencil">✎</div>
-      <div class="tool-btn" id="brushTool" title="Brush Tool (B)" data-tool="brush">🖌</div>
+      <div class="tool-btn" id="penTool" title="Pen Tool (P)">\u2712</div>
+      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)">\u270e</div>
+      <div class="tool-btn" id="brushTool" title="Brush Tool (B)">\ud83d\udd8c</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)" data-tool="rectangle">□</div>
-      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)" data-tool="ellipse">○</div>
-      <div class="tool-btn" id="polygonTool" title="Polygon Tool" data-tool="polygon">⬡</div>
-      <div class="tool-btn" id="starTool" title="Star Tool" data-tool="star">★</div>
-      <div class="tool-btn" id="lineTool" title="Line Tool (/)" data-tool="line">╱</div>
+      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)">\u25a1</div>
+      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)">\u25cb</div>
+      <div class="tool-btn" id="polygonTool" title="Polygon Tool">\u2b21</div>
+      <div class="tool-btn" id="starTool" title="Star Tool">\u2605</div>
+      <div class="tool-btn" id="lineTool" title="Line Tool (/)">\u2571</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="typeTool" title="Type Tool (T)" data-tool="type">T</div>
-      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool" data-tool="type">↝</div>
-      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool" data-tool="type">𝓣</div>
+      <div class="tool-btn" id="typeTool" title="Type Tool (T)">T</div>
+      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool">\u219d</div>
+      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool">\ud835\udce3</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool (Shift+M)" data-tool="select">⧆</div>
-      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool" data-tool="select">▦</div>
-      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)" data-tool="select">⤡</div>
+      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool (Shift+M)">\u29c6</div>
+      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool">\u25a6</div>
+      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)">\u2921</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)" data-tool="eyedropper">💧</div>
-      <div class="tool-btn" id="measureTool" title="Measure Tool" data-tool="select">📏</div>
+      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)">\ud83d\udca7</div>
+      <div class="tool-btn" id="measureTool" title="Measure Tool">\ud83d\udccf</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="handTool" title="Hand Tool (H)" data-tool="hand">✋</div>
-      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)" data-tool="zoom">🔍</div>
+      <div class="tool-btn" id="handTool" title="Hand Tool (H)">\u270b</div>
+      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)">\ud83d\udd0d</div>
     </div>
     <div class="tool-group">
-      <div class="tool-btn" id="fillColor" title="Fill Color">◐</div>
-      <div class="tool-btn" id="strokeColor" title="Stroke Color">⭘</div>
-      <div class="tool-btn" id="defaultColors" title="Default Colors">⚬</div>
+      <div class="tool-btn" id="fillColor" title="Fill Color">\u25d0</div>
+      <div class="tool-btn" id="strokeColor" title="Stroke Color">\u2b58</div>
+      <div class="tool-btn" id="defaultColors" title="Default Colors">\u26ac</div>
     </div>
   </div>
 
   <!-- Right Panel Dock -->
   <div class="panel-dock visible" id="panelDock">
-    <button id="dockToggle">◀</button>
+    <button id="dockToggle">\u25c0</button>
     
     <div class="panel-tabs">
       <button class="panel-tab active" data-panel="properties">Properties</button>
@@ -502,7 +516,7 @@
       <button class="panel-tab" data-panel="align">Align</button>
       <button class="panel-tab" data-panel="character">Character</button>
       <button class="panel-tab" data-panel="paragraph">Paragraph</button>
-      <button class="panel-close-btn" id="panelCloseBtn" title="Close Panel">×</button>
+      <button class="panel-close-btn" id="panelCloseBtn" title="Close Panel">\u00d7</button>
     </div>
     
     <div class="panel-content">
@@ -567,16 +581,16 @@
         
         <h3>Geometry</h3>
         <div class="control-row">
-          <button class="btn btn-sm" data-action="convertToPoint">Convert to Point</button>
-          <button class="btn btn-sm" data-action="convertToCurve">Convert to Curve</button>
+          <button class="btn btn-sm" onclick="window.convertToPoint && window.convertToPoint()">Convert to Point</button>
+          <button class="btn btn-sm" onclick="window.convertToCurve && window.convertToCurve()">Convert to Curve</button>
         </div>
       </div>
 
       <!-- Layers Panel -->
       <div id="panel-layers" class="panel-section">
         <div class="control-row" style="margin-bottom: 1rem;">
-          <button class="btn btn-sm" data-action="addLayer">+ New Layer</button>
-          <button class="btn btn-sm" data-action="deleteLayer">Delete Layer</button>
+          <button class="btn btn-sm" onclick="window.addLayer && window.addLayer()">+ New Layer</button>
+          <button class="btn btn-sm" onclick="window.deleteLayer && window.deleteLayer()">Delete Layer</button>
         </div>
         <div id="layersList">
           <!-- Layers will be populated dynamically -->
@@ -586,8 +600,8 @@
       <!-- Appearance Panel -->
       <div id="panel-appearance" class="panel-section">
         <div class="control-row" style="margin-bottom: 1rem;">
-          <button class="btn btn-sm btn-primary" data-action="addFill">+ Add Fill</button>
-          <button class="btn btn-sm" data-action="addStroke">+ Add Stroke</button>
+          <button class="btn btn-sm btn-primary" onclick="window.addFill && window.addFill()">+ Add Fill</button>
+          <button class="btn btn-sm" onclick="window.addStroke && window.addStroke()">+ Add Stroke</button>
         </div>
         <div id="appearanceList">
           <!-- Appearance items will be populated dynamically -->
@@ -599,8 +613,8 @@
       <!-- Swatches Panel -->
       <div id="panel-swatches" class="panel-section">
         <div class="control-row" style="margin-bottom: 1rem;">
-          <button class="btn btn-sm" data-action="addSwatch">+ New Swatch</button>
-          <button class="btn btn-sm" data-action="clearSwatches">Clear</button>
+          <button class="btn btn-sm" onclick="window.addSwatch && window.addSwatch()">+ New Swatch</button>
+          <button class="btn btn-sm" onclick="window.clearSwatches && window.clearSwatches()">Clear</button>
         </div>
         <div class="swatch-grid" id="swatchGrid">
           <!-- Swatches will be populated dynamically -->
@@ -611,8 +625,8 @@
       <div id="panel-gradient" class="panel-section">
         <h3>Gradient Type</h3>
         <div class="btn-group" style="margin-bottom: 1rem;">
-          <button class="btn" data-action="gradientLinear">Linear</button>
-          <button class="btn" data-action="gradientRadial">Radial</button>
+          <button class="btn" onclick="window.setGradientType && window.setGradientType('linear')">Linear</button>
+          <button class="btn" onclick="window.setGradientType && window.setGradientType('radial')">Radial</button>
         </div>
         
         <h3>Gradient Stops</h3>
@@ -642,7 +656,7 @@
         <h3>Angle</h3>
         <div class="control-row">
           <input type="range" id="gradientAngle" min="0" max="360" value="0">
-          <span id="gradientAngleVal">0°</span>
+          <span id="gradientAngleVal">0\u00b0</span>
         </div>
       </div>
 
@@ -656,17 +670,17 @@
         <div class="control-group">
           <label>Cap</label>
           <div class="btn-group">
-            <button class="btn" data-action="strokeCapButt">Butt</button>
-            <button class="btn" data-action="strokeCapRound">Round</button>
-            <button class="btn" data-action="strokeCapSquare">Square</button>
+            <button class="btn" onclick="window.setStrokeCap && window.setStrokeCap('butt')">Butt</button>
+            <button class="btn" onclick="window.setStrokeCap && window.setStrokeCap('round')">Round</button>
+            <button class="btn" onclick="window.setStrokeCap && window.setStrokeCap('square')">Square</button>
           </div>
         </div>
         <div class="control-group">
           <label>Join</label>
           <div class="btn-group">
-            <button class="btn" data-action="strokeJoinMiter">Miter</button>
-            <button class="btn" data-action="strokeJoinRound">Round</button>
-            <button class="btn" data-action="strokeJoinBevel">Bevel</button>
+            <button class="btn" onclick="window.setStrokeJoin && window.setStrokeJoin('miter')">Miter</button>
+            <button class="btn" onclick="window.setStrokeJoin && window.setStrokeJoin('round')">Round</button>
+            <button class="btn" onclick="window.setStrokeJoin && window.setStrokeJoin('bevel')">Bevel</button>
           </div>
         </div>
         <div class="control-group">
@@ -683,22 +697,22 @@
       <div id="panel-align" class="panel-section">
         <h3>Align Objects</h3>
         <div class="align-grid">
-          <button class="align-btn" data-action="alignLeft" title="Align Left">⬅</button>
-          <button class="align-btn" data-action="alignCenterH" title="Align Center">⬌</button>
-          <button class="align-btn" data-action="alignRight" title="Align Right">➡</button>
-          <button class="align-btn" data-action="alignTop" title="Align Top">⬆</button>
-          <button class="align-btn" data-action="alignCenterV" title="Align Center">⬍</button>
-          <button class="align-btn" data-action="alignBottom" title="Align Bottom">⬇</button>
+          <button class="align-btn" onclick="window.align && window.align('left')" title="Align Left">\u2b05</button>
+          <button class="align-btn" onclick="window.align && window.align('center-h')" title="Align Center">\u2b0c</button>
+          <button class="align-btn" onclick="window.align && window.align('right')" title="Align Right">\u27a1</button>
+          <button class="align-btn" onclick="window.align && window.align('top')" title="Align Top">\u2b06</button>
+          <button class="align-btn" onclick="window.align && window.align('center-v')" title="Align Center">\u2b0d</button>
+          <button class="align-btn" onclick="window.align && window.align('bottom')" title="Align Bottom">\u2b07</button>
         </div>
         
         <h3>Distribute Objects</h3>
         <div class="align-grid">
-          <button class="align-btn" data-action="distributeLeft">⫷</button>
-          <button class="align-btn" data-action="distributeCenterH">⫸</button>
-          <button class="align-btn" data-action="distributeRight">⫹</button>
-          <button class="align-btn" data-action="distributeTop">⬏</button>
-          <button class="align-btn" data-action="distributeCenterV">⬎</button>
-          <button class="align-btn" data-action="distributeBottom">⬐</button>
+          <button class="align-btn" onclick="window.distribute && window.distribute('left')">\u2af7</button>
+          <button class="align-btn" onclick="window.distribute && window.distribute('center-h')">\u2af8</button>
+          <button class="align-btn" onclick="window.distribute && window.distribute('right')">\u2af9</button>
+          <button class="align-btn" onclick="window.distribute && window.distribute('top')">\u2b0f</button>
+          <button class="align-btn" onclick="window.distribute && window.distribute('center-v')">\u2b0e</button>
+          <button class="align-btn" onclick="window.distribute && window.distribute('bottom')">\u2b10</button>
         </div>
       </div>
 
@@ -734,15 +748,15 @@
           </div>
         </div>
         <div class="btn-group" style="margin-bottom: 1rem;">
-          <button class="btn" data-action="fontStyleBold">B</button>
-          <button class="btn" data-action="fontStyleItalic">I</button>
-          <button class="btn" data-action="fontStyleUnderline">U</button>
+          <button class="btn" onclick="window.setFontStyle && window.setFontStyle('bold')">B</button>
+          <button class="btn" onclick="window.setFontStyle && window.setFontStyle('italic')">I</button>
+          <button class="btn" onclick="window.setFontStyle && window.setFontStyle('underline')">U</button>
         </div>
         <div class="btn-group">
-          <button class="btn" data-action="textAlignLeft">⬅</button>
-          <button class="btn" data-action="textAlignCenter">⬌</button>
-          <button class="btn" data-action="textAlignRight">➡</button>
-          <button class="btn" data-action="textAlignJustify">≡</button>
+          <button class="btn" onclick="window.setTextAlign && window.setTextAlign('left')">\u2b05</button>
+          <button class="btn" onclick="window.setTextAlign && window.setTextAlign('center')">\u2b0c</button>
+          <button class="btn" onclick="window.setTextAlign && window.setTextAlign('right')">\u27a1</button>
+          <button class="btn" onclick="window.setTextAlign && window.setTextAlign('justify')">\u2261</button>
         </div>
       </div>
 
@@ -751,10 +765,10 @@
         <div class="control-group">
           <label>Alignment</label>
           <div class="btn-group">
-            <button class="btn" data-action="textAlignLeft">Left</button>
-            <button class="btn" data-action="textAlignCenter">Center</button>
-            <button class="btn" data-action="textAlignRight">Right</button>
-            <button class="btn" data-action="textAlignJustify">Justify</button>
+            <button class="btn" onclick="window.setTextAlign && window.setTextAlign('left')">Left</button>
+            <button class="btn" onclick="window.setTextAlign && window.setTextAlign('center')">Center</button>
+            <button class="btn" onclick="window.setTextAlign && window.setTextAlign('right')">Right</button>
+            <button class="btn" onclick="window.setTextAlign && window.setTextAlign('justify')">Justify</button>
           </div>
         </div>
         <div class="control-row">
@@ -799,18 +813,73 @@
 
 <!-- Context Menu -->
 <div class="context-menu" id="contextMenu">
-  <div data-action="copy">Copy</div>
-  <div data-action="paste">Paste</div>
-  <div data-action="duplicate">Duplicate</div>
+  <div onclick="window.copy && window.copy()">Copy</div>
+  <div onclick="window.paste && window.paste()">Paste</div>
+  <div onclick="window.duplicate && window.duplicate()">Duplicate</div>
   <hr>
-  <div data-action="bringToFront">Bring to Front</div>
-  <div data-action="sendToBack">Send to Back</div>
+  <div onclick="window.bringToFront && window.bringToFront()">Bring to Front</div>
+  <div onclick="window.sendToBack && window.sendToBack()">Send to Back</div>
   <hr>
-  <div data-action="groupSelection">Group</div>
-  <div data-action="ungroupSelection">Ungroup</div>
+  <div onclick="window.groupSelection && window.groupSelection()">Group</div>
+  <div onclick="window.ungroupSelection && window.ungroupSelection()">Ungroup</div>
   <hr>
-  <div data-action="deleteSelection">Delete</div>
+  <div onclick="window.deleteSelection && window.deleteSelection()">Delete</div>
 </div>
+
+<!-- Firebase Auth -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+    levelInfo.style.display = "none";
+    return;
+  }
+  authBtn.textContent = "Logout";
+  profilePic.src = user.photoURL || "";
+  profilePic.style.display = "block";
+
+  const ref = doc(db, "users", user.uid);
+  let snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, { xp: 10 });
+    snap = await getDoc(ref);
+  }
+  const xp = snap.data().xp || 0;
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level] ? 100 :
+    ((xp - levels[level]) / (next - levels[level])) * 100;
+
+  levelText.textContent = `Level ${level} \u2022 ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
+});
+</script>
 
 <!-- Paper.js Vector Editor -->
 <script type="text/paperscript" canvas="canvas">
@@ -1336,12 +1405,14 @@ tools.eyedropper.onMouseDown = function(event) {
     if (hit.type === 'fill' && hit.item.fillColor) {
       fillColor = hit.item.fillColor.clone();
       var colorHex = fillColor.toCSS(true);
-      document.getElementById('fillColor').style.backgroundColor = colorHex;
+      var fillBtn = document.getElementById('fillColor');
+      if (fillBtn) fillBtn.style.backgroundColor = colorHex;
     }
     if (hit.type === 'stroke' && hit.item.strokeColor) {
       strokeColor = hit.item.strokeColor.clone();
       var colorHex = strokeColor.toCSS(true);
-      document.getElementById('strokeColor').style.backgroundColor = colorHex;
+      var strokeBtn = document.getElementById('strokeColor');
+      if (strokeBtn) strokeBtn.style.backgroundColor = colorHex;
     }
   }
 };
@@ -1447,7 +1518,8 @@ function updateTransform() {
 // Update opacity
 function updateOpacity() {
   var opacity = parseFloat(document.getElementById('propOpacity').value);
-  document.getElementById('opacityVal').textContent = opacity;
+  var opacityVal = document.getElementById('opacityVal');
+  if (opacityVal) opacityVal.textContent = opacity;
   
   if (project.selectedItems.length) {
     project.selectedItems.forEach(function(item) {
@@ -1478,12 +1550,12 @@ function updateLayersList() {
     var layer = layers[i];
     var layerItem = document.createElement('div');
     layerItem.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
-    layerItem.innerHTML = `  
-      <span class="layer-icon">📄</span>
+    layerItem.innerHTML = `
+      <span class="layer-icon">\ud83d\udcc4</span>
       <span class="layer-name">${layer.name}</span>
       <div class="layer-actions">
-        <button class="btn btn-sm" data-action="toggleLayerVisibility" data-index="${i}">${layer.visible ? '👁' : '👁‍🗨'}</button>
-        <button class="btn btn-sm" data-action="toggleLayerLock" data-index="${i}">${layer.locked ? '🔒' : '🔓'}</button>
+        <button class="btn btn-sm" onclick="window.toggleLayerVisibility && window.toggleLayerVisibility(${i})">${layer.visible ? '\ud83d\udc41' : '\ud83d\udc41\u200d\ud83d\udde8'}</button>
+        <button class="btn btn-sm" onclick="window.toggleLayerLock && window.toggleLayerLock(${i})">${layer.locked ? '\ud83d\udd12' : '\ud83d\udd13'}</button>
       </div>
     `;
     layerItem.onclick = function(e) {
@@ -1723,6 +1795,10 @@ function flipSelection(direction) {
   }
 }
 
+function showTransformDialog() {
+  alert('Transform dialog - coming soon!');
+}
+
 // Pathfinder operations
 function pathfinder(operation) {
   var items = project.selectedItems.filter(function(item) {
@@ -1946,6 +2022,12 @@ function handleOpen(event) {
         }
         saveState();
         console.log('File loaded successfully');
+        
+        // Hide loader after file load
+        var loader = document.getElementById('loader');
+        if (loader) {
+          loader.style.display = 'none';
+        }
       } catch (error) {
         console.error('Error loading file:', error);
         alert('Error loading file. Please check the file format.');
@@ -1994,10 +2076,6 @@ function createOutlines() {
 
 function findFont() {
   alert('Font search feature coming soon!');
-}
-
-function showTransformDialog() {
-  alert('Transform dialog - coming soon!');
 }
 
 // Placeholder functions for other features
@@ -2189,7 +2267,7 @@ function showPanel(panelName) {
     dock.classList.add('visible');
     dock.classList.remove('hidden');
     var dockToggle = document.getElementById('dockToggle');
-    if (dockToggle) dockToggle.textContent = '◀';
+    if (dockToggle) dockToggle.textContent = '\u25c0';
   }
   
   // Show notification with panel name
@@ -2455,6 +2533,8 @@ window.convertToPoint = convertToPoint;
 window.convertToCurve = convertToCurve;
 window.addLayer = addLayer;
 window.deleteLayer = deleteLayer;
+window.toggleLayerVisibility = toggleLayerVisibility;
+window.toggleLayerLock = toggleLayerLock;
 window.addFill = addFill;
 window.addStroke = addStroke;
 window.addSwatch = addSwatch;
@@ -2485,7 +2565,7 @@ document.querySelectorAll('.panel-tab').forEach(function(tab) {
   });
 });
 
-// Dock toggle - Fixed to work properly
+// Dock toggle - Fixed to work properly on both desktop and mobile
 var dock = document.getElementById('panelDock');
 var dockToggle = document.getElementById('dockToggle');
 var panelCloseBtn = document.getElementById('panelCloseBtn');
@@ -2498,374 +2578,35 @@ function toggleDock() {
     dock.classList.toggle('hidden', !dockVisible);
   }
   if (dockToggle) {
-    dockToggle.textContent = dockVisible ? '◀' : '▶';
+    dockToggle.textContent = dockVisible ? '\u25c0' : '\u25b6';
   }
 }
 
 if (dockToggle) {
-  dockToggle.onclick = toggleDock;
+  dockToggle.addEventListener('click', toggleDock);
 }
 
 if (panelCloseBtn) {
-  panelCloseBtn.onclick = toggleDock;
+  panelCloseBtn.addEventListener('click', toggleDock);
 }
 
-// Action handler for menu items and buttons
-document.addEventListener('click', function(event) {
-  var element = event.target;
-  var action = element.dataset.action;
-  
-  // Handle click on buttons with data-action
-  if (action) {
-    console.log('Action clicked:', action);
-    
-    switch(action) {
-      // File menu actions
-      case 'newDocument':
-        if (window.newDocument) window.newDocument();
-        break;
-      case 'openFile':
-        var openInput = document.getElementById('openFile');
-        if (openInput) openInput.click();
-        break;
-      case 'saveDocument':
-        if (window.saveDocument) window.saveDocument();
-        break;
-      case 'saveDocumentAs':
-        if (window.saveDocumentAs) window.saveDocumentAs();
-        break;
-      case 'placeImage':
-        var placeInput = document.getElementById('placeImage');
-        if (placeInput) placeInput.click();
-        break;
-      case 'exportSVG':
-        if (window.exportSVG) window.exportSVG();
-        break;
-      case 'exportPNG':
-        if (window.exportPNG) window.exportPNG();
-        break;
-      case 'exportPDF':
-        if (window.exportPDF) window.exportPDF();
-        break;
-      
-      // Edit menu actions
-      case 'undo':
-        if (window.undo) window.undo();
-        break;
-      case 'redo':
-        if (window.redo) window.redo();
-        break;
-      case 'cut':
-        if (window.cut) window.cut();
-        break;
-      case 'copy':
-        if (window.copy) window.copy();
-        break;
-      case 'paste':
-        if (window.paste) window.paste();
-        break;
-      case 'duplicate':
-        if (window.duplicate) window.duplicate();
-        break;
-      case 'deleteSelection':
-        if (window.deleteSelection) window.deleteSelection();
-        break;
-      case 'selectAll':
-        if (window.selectAll) window.selectAll();
-        break;
-      case 'deselectAll':
-        if (window.deselectAll) window.deselectAll();
-        break;
-      
-      // Object menu actions
-      case 'groupSelection':
-        if (window.groupSelection) window.groupSelection();
-        break;
-      case 'ungroupSelection':
-        if (window.ungroupSelection) window.ungroupSelection();
-        break;
-      case 'lockSelection':
-        if (window.lockSelection) window.lockSelection();
-        break;
-      case 'unlockAll':
-        if (window.unlockAll) window.unlockAll();
-        break;
-      case 'bringToFront':
-        if (window.bringToFront) window.bringToFront();
-        break;
-      case 'sendToBack':
-        if (window.sendToBack) window.sendToBack();
-        break;
-      case 'bringForward':
-        if (window.bringForward) window.bringForward();
-        break;
-      case 'sendBackward':
-        if (window.sendBackward) window.sendBackward();
-        break;
-      case 'rotateSelectionCW':
-        if (window.rotateSelection) window.rotateSelection(-90);
-        break;
-      case 'rotateSelectionCCW':
-        if (window.rotateSelection) window.rotateSelection(90);
-        break;
-      case 'flipSelectionHorizontal':
-        if (window.flipSelection) window.flipSelection('horizontal');
-        break;
-      case 'flipSelectionVertical':
-        if (window.flipSelection) window.flipSelection('vertical');
-        break;
-      case 'showTransformDialog':
-        if (window.showTransformDialog) window.showTransformDialog();
-        break;
-      case 'pathfinderUnite':
-        if (window.pathfinder) window.pathfinder('unite');
-        break;
-      case 'pathfinderMinus':
-        if (window.pathfinder) window.pathfinder('minus');
-        break;
-      case 'pathfinderIntersect':
-        if (window.pathfinder) window.pathfinder('intersect');
-        break;
-      case 'pathfinderExclude':
-        if (window.pathfinder) window.pathfinder('exclude');
-        break;
-      case 'pathfinderDivide':
-        if (window.pathfinder) window.pathfinder('divide');
-        break;
-      case 'pathfinderTrim':
-        if (window.pathfinder) window.pathfinder('trim');
-        break;
-      case 'pathfinderMerge':
-        if (window.pathfinder) window.pathfinder('merge');
-        break;
-      case 'pathfinderCrop':
-        if (window.pathfinder) window.pathfinder('crop');
-        break;
-      case 'pathfinderOutline':
-        if (window.pathfinder) window.pathfinder('outline');
-        break;
-      
-      // Type menu actions
-      case 'createOutlines':
-        if (window.createOutlines) window.createOutlines();
-        break;
-      case 'findFont':
-        if (window.findFont) window.findFont();
-        break;
-      
-      // Select menu actions
-      case 'selectSameFill':
-        if (window.selectSameFill) window.selectSameFill();
-        break;
-      case 'selectSameStroke':
-        if (window.selectSameStroke) window.selectSameStroke();
-        break;
-      case 'selectSameStrokeWidth':
-        if (window.selectSameStrokeWidth) window.selectSameStrokeWidth();
-        break;
-      
-      // View menu actions
-      case 'zoomIn':
-        if (window.zoomIn) window.zoomIn();
-        break;
-      case 'zoomOut':
-        if (window.zoomOut) window.zoomOut();
-        break;
-      case 'zoomToFit':
-        if (window.zoomToFit) window.zoomToFit();
-        break;
-      case 'zoomTo100':
-        if (window.zoomTo100) window.zoomTo100();
-        break;
-      case 'toggleGrid':
-        if (window.toggleGrid) window.toggleGrid();
-        break;
-      case 'toggleRulers':
-        if (window.toggleRulers) window.toggleRulers();
-        break;
-      case 'toggleSnap':
-        if (window.toggleSnap) window.toggleSnap();
-        break;
-      
-      // Window menu actions
-      case 'showPanelProperties':
-        if (window.showPanel) window.showPanel('properties');
-        break;
-      case 'showPanelLayers':
-        if (window.showPanel) window.showPanel('layers');
-        break;
-      case 'showPanelAppearance':
-        if (window.showPanel) window.showPanel('appearance');
-        break;
-      case 'showPanelSwatches':
-        if (window.showPanel) window.showPanel('swatches');
-        break;
-      case 'showPanelGradient':
-        if (window.showPanel) window.showPanel('gradient');
-        break;
-      case 'showPanelStroke':
-        if (window.showPanel) window.showPanel('stroke');
-        break;
-      case 'showPanelAlign':
-        if (window.showPanel) window.showPanel('align');
-        break;
-      case 'showPanelCharacter':
-        if (window.showPanel) window.showPanel('character');
-        break;
-      case 'showPanelParagraph':
-        if (window.showPanel) window.showPanel('paragraph');
-        break;
-      
-      // Layer actions
-      case 'addLayer':
-        if (window.addLayer) window.addLayer();
-        break;
-      case 'deleteLayer':
-        if (window.deleteLayer) window.deleteLayer();
-        break;
-      case 'toggleLayerVisibility':
-        var index = parseInt(element.dataset.index);
-        if (!isNaN(index) && window.toggleLayerVisibility) {
-          window.toggleLayerVisibility(index);
-        }
-        break;
-      case 'toggleLayerLock':
-        var index = parseInt(element.dataset.index);
-        if (!isNaN(index) && window.toggleLayerLock) {
-          window.toggleLayerLock(index);
-        }
-        break;
-      
-      // Appearance actions
-      case 'addFill':
-        if (window.addFill) window.addFill();
-        break;
-      case 'addStroke':
-        if (window.addStroke) window.addStroke();
-        break;
-      
-      // Swatch actions
-      case 'addSwatch':
-        if (window.addSwatch) window.addSwatch();
-        break;
-      case 'clearSwatches':
-        if (window.clearSwatches) window.clearSwatches();
-        break;
-      
-      // Gradient actions
-      case 'gradientLinear':
-        if (window.setGradientType) window.setGradientType('linear');
-        break;
-      case 'gradientRadial':
-        if (window.setGradientType) window.setGradientType('radial');
-        break;
-      
-      // Stroke actions
-      case 'strokeCapButt':
-        if (window.setStrokeCap) window.setStrokeCap('butt');
-        break;
-      case 'strokeCapRound':
-        if (window.setStrokeCap) window.setStrokeCap('round');
-        break;
-      case 'strokeCapSquare':
-        if (window.setStrokeCap) window.setStrokeCap('square');
-        break;
-      case 'strokeJoinMiter':
-        if (window.setStrokeJoin) window.setStrokeJoin('miter');
-        break;
-      case 'strokeJoinRound':
-        if (window.setStrokeJoin) window.setStrokeJoin('round');
-        break;
-      case 'strokeJoinBevel':
-        if (window.setStrokeJoin) window.setStrokeJoin('bevel');
-        break;
-      
-      // Align actions
-      case 'alignLeft':
-        if (window.align) window.align('left');
-        break;
-      case 'alignRight':
-        if (window.align) window.align('right');
-        break;
-      case 'alignTop':
-        if (window.align) window.align('top');
-        break;
-      case 'alignBottom':
-        if (window.align) window.align('bottom');
-        break;
-      case 'alignCenterH':
-        if (window.align) window.align('center-h');
-        break;
-      case 'alignCenterV':
-        if (window.align) window.align('center-v');
-        break;
-      case 'distributeLeft':
-        if (window.distribute) window.distribute('left');
-        break;
-      case 'distributeRight':
-        if (window.distribute) window.distribute('right');
-        break;
-      case 'distributeTop':
-        if (window.distribute) window.distribute('top');
-        break;
-      case 'distributeBottom':
-        if (window.distribute) window.distribute('bottom');
-        break;
-      case 'distributeCenterH':
-        if (window.distribute) window.distribute('center-h');
-        break;
-      case 'distributeCenterV':
-        if (window.distribute) window.distribute('center-v');
-        break;
-      
-      // Typography actions
-      case 'fontStyleBold':
-        if (window.setFontStyle) window.setFontStyle('bold');
-        break;
-      case 'fontStyleItalic':
-        if (window.setFontStyle) window.setFontStyle('italic');
-        break;
-      case 'fontStyleUnderline':
-        if (window.setFontStyle) window.setFontStyle('underline');
-        break;
-      case 'textAlignLeft':
-        if (window.setTextAlign) window.setTextAlign('left');
-        break;
-      case 'textAlignCenter':
-        if (window.setTextAlign) window.setTextAlign('center');
-        break;
-      case 'textAlignRight':
-        if (window.setTextAlign) window.setTextAlign('right');
-        break;
-      case 'textAlignJustify':
-        if (window.setTextAlign) window.setTextAlign('justify');
-        break;
-      
-      // Transform actions
-      case 'convertToPoint':
-        if (window.convertToPoint) window.convertToPoint();
-        break;
-      case 'convertToCurve':
-        if (window.convertToCurve) window.convertToCurve();
-        break;
-    }
-  }
-  
-  // Handle tool buttons
-  var tool = element.dataset.tool;
-  if (tool && window.activateTool) {
-    window.activateTool(tool);
-  }
+// Gradient controls
+document.getElementById('gradientAngle').addEventListener('input', function() {
+  document.getElementById('gradientAngleVal').textContent = this.value + '\u00b0';
 });
 
-// Tool button click handlers
-document.querySelectorAll('.tool-btn[data-tool]').forEach(function(btn) {
-  btn.addEventListener('click', function(event) {
-    var tool = this.dataset.tool;
-    if (window.activateTool) {
-      window.activateTool(tool);
-    }
-  });
+// Stroke controls
+document.getElementById('strokeWeight').addEventListener('input', function() {
+  document.getElementById('strokeWeightVal').textContent = this.value + ' px';
+});
+document.getElementById('strokeWeight').addEventListener('input', function() {
+  if (window.updateStroke) window.updateStroke();
+});
+document.getElementById('strokeDash').addEventListener('input', function() {
+  if (window.updateStroke) window.updateStroke();
+});
+document.getElementById('strokeColorInput').addEventListener('input', function() {
+  if (window.updateStroke) window.updateStroke();
 });
 
 // Property change handlers
@@ -2894,23 +2635,6 @@ document.getElementById('propBlendMode').addEventListener('change', function() {
   if (window.updateBlendMode) window.updateBlendMode();
 });
 
-// Gradient controls
-document.getElementById('gradientAngle').addEventListener('input', function() {
-  document.getElementById('gradientAngleVal').textContent = this.value + '°';
-});
-
-// Stroke controls
-document.getElementById('strokeWeight').addEventListener('input', function() {
-  document.getElementById('strokeWeightVal').textContent = this.value + ' px';
-  if (window.updateStroke) window.updateStroke();
-});
-document.getElementById('strokeDash').addEventListener('input', function() {
-  if (window.updateStroke) window.updateStroke();
-});
-document.getElementById('strokeColorInput').addEventListener('input', function() {
-  if (window.updateStroke) window.updateStroke();
-});
-
 // Typography controls
 document.getElementById('fontFamily').addEventListener('change', function() {
   if (window.updateTypography) window.updateTypography();
@@ -2935,7 +2659,7 @@ window.addEventListener('resize', function() {
       dockVisible = true;
     }
     if (dockToggle) {
-      dockToggle.textContent = '◀';
+      dockToggle.textContent = '\u25c0';
     }
   }
 });
@@ -2978,9 +2702,8 @@ document.getElementById('placeImage').addEventListener('change', function(event)
 
 // Color pickers
 document.getElementById('fillColor').addEventListener('click', function() {
-  var fillColor = window.fillColor;
-  var colorStr = fillColor && fillColor.toCSS ? fillColor.toCSS(true) : '#ff0000';
-  var color = prompt('Enter fill color (hex):', colorStr);
+  var fillColorStr = window.fillColor && window.fillColor.toCSS ? window.fillColor.toCSS(true) : '#ff0000';
+  var color = prompt('Enter fill color (hex):', fillColorStr);
   if (color) {
     window.fillColor = new paper.Color(color);
     this.style.backgroundColor = color;
@@ -2993,9 +2716,8 @@ document.getElementById('fillColor').addEventListener('click', function() {
 });
 
 document.getElementById('strokeColor').addEventListener('click', function() {
-  var strokeColor = window.strokeColor;
-  var colorStr = strokeColor && strokeColor.toCSS ? strokeColor.toCSS(true) : '#000000';
-  var color = prompt('Enter stroke color (hex):', colorStr);
+  var strokeColorStr = window.strokeColor && window.strokeColor.toCSS ? window.strokeColor.toCSS(true) : '#000000';
+  var color = prompt('Enter stroke color (hex):', strokeColorStr);
   if (color) {
     window.strokeColor = new paper.Color(color);
     this.style.backgroundColor = color;
@@ -3016,6 +2738,7 @@ document.getElementById('defaultColors').addEventListener('click', function() {
 
 // Initialize on load
 window.addEventListener('load', function() {
+  console.log('Page loaded, initializing...');
   initSwatches();
   addFill();
   addStroke();
@@ -3055,8 +2778,71 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { passive: true });
   }
 });
+
+// Bind tool buttons
+document.getElementById('selectTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('select');
+});
+document.getElementById('directSelectTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('directSelect');
+});
+document.getElementById('magicWandTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('select');
+});
+document.getElementById('penTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('pen');
+});
+document.getElementById('pencilTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('pencil');
+});
+document.getElementById('brushTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('brush');
+});
+document.getElementById('rectangleTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('rectangle');
+});
+document.getElementById('ellipseTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('ellipse');
+});
+document.getElementById('polygonTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('polygon');
+});
+document.getElementById('starTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('star');
+});
+document.getElementById('lineTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('line');
+});
+document.getElementById('typeTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('type');
+});
+document.getElementById('typeOnPathTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('type');
+});
+document.getElementById('touchTypeTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('type');
+});
+document.getElementById('shapeBuilderTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('select');
+});
+document.getElementById('perspectiveGridTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('select');
+});
+document.getElementById('freeTransformTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('select');
+});
+document.getElementById('eyedropperTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('eyedropper');
+});
+document.getElementById('measureTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('select');
+});
+document.getElementById('handTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('hand');
+});
+document.getElementById('zoomTool').addEventListener('click', function() {
+  if (window.activateTool) window.activateTool('zoom');
+});
 </script>
 </body>
 </html>
-
-
