@@ -825,7 +825,6 @@
   <hr>
   <div onclick="window.deleteSelection && window.deleteSelection()">Delete</div>
 </div>
-
 <!-- Firebase Auth -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -1405,14 +1404,12 @@ tools.eyedropper.onMouseDown = function(event) {
     if (hit.type === 'fill' && hit.item.fillColor) {
       fillColor = hit.item.fillColor.clone();
       var colorHex = fillColor.toCSS(true);
-      var fillBtn = document.getElementById('fillColor');
-      if (fillBtn) fillBtn.style.backgroundColor = colorHex;
+      document.getElementById('fillColor').style.backgroundColor = colorHex;
     }
     if (hit.type === 'stroke' && hit.item.strokeColor) {
       strokeColor = hit.item.strokeColor.clone();
       var colorHex = strokeColor.toCSS(true);
-      var strokeBtn = document.getElementById('strokeColor');
-      if (strokeBtn) strokeBtn.style.backgroundColor = colorHex;
+      document.getElementById('strokeColor').style.backgroundColor = colorHex;
     }
   }
 };
@@ -1518,8 +1515,7 @@ function updateTransform() {
 // Update opacity
 function updateOpacity() {
   var opacity = parseFloat(document.getElementById('propOpacity').value);
-  var opacityVal = document.getElementById('opacityVal');
-  if (opacityVal) opacityVal.textContent = opacity;
+  document.getElementById('opacityVal').textContent = opacity;
   
   if (project.selectedItems.length) {
     project.selectedItems.forEach(function(item) {
@@ -1550,12 +1546,12 @@ function updateLayersList() {
     var layer = layers[i];
     var layerItem = document.createElement('div');
     layerItem.className = 'layer-item' + (i === currentLayerIndex ? ' active' : '');
-    layerItem.innerHTML = `
-      <span class="layer-icon">\ud83d\udcc4</span>
+    layerItem.innerHTML = `  
+      <span class="layer-icon">📄</span>
       <span class="layer-name">${layer.name}</span>
       <div class="layer-actions">
-        <button class="btn btn-sm" onclick="window.toggleLayerVisibility && window.toggleLayerVisibility(${i})">${layer.visible ? '\ud83d\udc41' : '\ud83d\udc41\u200d\ud83d\udde8'}</button>
-        <button class="btn btn-sm" onclick="window.toggleLayerLock && window.toggleLayerLock(${i})">${layer.locked ? '\ud83d\udd12' : '\ud83d\udd13'}</button>
+        <button class="btn btn-sm" data-action="toggleLayerVisibility" data-index="${i}">${layer.visible ? '👁' : '👁‍🗨'}</button>
+        <button class="btn btn-sm" data-action="toggleLayerLock" data-index="${i}">${layer.locked ? '🔒' : '🔓'}</button>
       </div>
     `;
     layerItem.onclick = function(e) {
@@ -1795,10 +1791,6 @@ function flipSelection(direction) {
   }
 }
 
-function showTransformDialog() {
-  alert('Transform dialog - coming soon!');
-}
-
 // Pathfinder operations
 function pathfinder(operation) {
   var items = project.selectedItems.filter(function(item) {
@@ -2022,12 +2014,6 @@ function handleOpen(event) {
         }
         saveState();
         console.log('File loaded successfully');
-        
-        // Hide loader after file load
-        var loader = document.getElementById('loader');
-        if (loader) {
-          loader.style.display = 'none';
-        }
       } catch (error) {
         console.error('Error loading file:', error);
         alert('Error loading file. Please check the file format.');
@@ -2076,6 +2062,10 @@ function createOutlines() {
 
 function findFont() {
   alert('Font search feature coming soon!');
+}
+
+function showTransformDialog() {
+  alert('Transform dialog - coming soon!');
 }
 
 // Placeholder functions for other features
@@ -2267,7 +2257,7 @@ function showPanel(panelName) {
     dock.classList.add('visible');
     dock.classList.remove('hidden');
     var dockToggle = document.getElementById('dockToggle');
-    if (dockToggle) dockToggle.textContent = '\u25c0';
+    if (dockToggle) dockToggle.textContent = '◀';
   }
   
   // Show notification with panel name
@@ -2533,8 +2523,6 @@ window.convertToPoint = convertToPoint;
 window.convertToCurve = convertToCurve;
 window.addLayer = addLayer;
 window.deleteLayer = deleteLayer;
-window.toggleLayerVisibility = toggleLayerVisibility;
-window.toggleLayerLock = toggleLayerLock;
 window.addFill = addFill;
 window.addStroke = addStroke;
 window.addSwatch = addSwatch;
@@ -2565,7 +2553,7 @@ document.querySelectorAll('.panel-tab').forEach(function(tab) {
   });
 });
 
-// Dock toggle - Fixed to work properly on both desktop and mobile
+// Dock toggle - Fixed to work properly
 var dock = document.getElementById('panelDock');
 var dockToggle = document.getElementById('dockToggle');
 var panelCloseBtn = document.getElementById('panelCloseBtn');
@@ -2578,35 +2566,374 @@ function toggleDock() {
     dock.classList.toggle('hidden', !dockVisible);
   }
   if (dockToggle) {
-    dockToggle.textContent = dockVisible ? '\u25c0' : '\u25b6';
+    dockToggle.textContent = dockVisible ? '◀' : '▶';
   }
 }
 
 if (dockToggle) {
-  dockToggle.addEventListener('click', toggleDock);
+  dockToggle.onclick = toggleDock;
 }
 
 if (panelCloseBtn) {
-  panelCloseBtn.addEventListener('click', toggleDock);
+  panelCloseBtn.onclick = toggleDock;
 }
 
-// Gradient controls
-document.getElementById('gradientAngle').addEventListener('input', function() {
-  document.getElementById('gradientAngleVal').textContent = this.value + '\u00b0';
+// Action handler for menu items and buttons
+document.addEventListener('click', function(event) {
+  var element = event.target;
+  var action = element.dataset.action;
+  
+  // Handle click on buttons with data-action
+  if (action) {
+    console.log('Action clicked:', action);
+    
+    switch(action) {
+      // File menu actions
+      case 'newDocument':
+        if (window.newDocument) window.newDocument();
+        break;
+      case 'openFile':
+        var openInput = document.getElementById('openFile');
+        if (openInput) openInput.click();
+        break;
+      case 'saveDocument':
+        if (window.saveDocument) window.saveDocument();
+        break;
+      case 'saveDocumentAs':
+        if (window.saveDocumentAs) window.saveDocumentAs();
+        break;
+      case 'placeImage':
+        var placeInput = document.getElementById('placeImage');
+        if (placeInput) placeInput.click();
+        break;
+      case 'exportSVG':
+        if (window.exportSVG) window.exportSVG();
+        break;
+      case 'exportPNG':
+        if (window.exportPNG) window.exportPNG();
+        break;
+      case 'exportPDF':
+        if (window.exportPDF) window.exportPDF();
+        break;
+      
+      // Edit menu actions
+      case 'undo':
+        if (window.undo) window.undo();
+        break;
+      case 'redo':
+        if (window.redo) window.redo();
+        break;
+      case 'cut':
+        if (window.cut) window.cut();
+        break;
+      case 'copy':
+        if (window.copy) window.copy();
+        break;
+      case 'paste':
+        if (window.paste) window.paste();
+        break;
+      case 'duplicate':
+        if (window.duplicate) window.duplicate();
+        break;
+      case 'deleteSelection':
+        if (window.deleteSelection) window.deleteSelection();
+        break;
+      case 'selectAll':
+        if (window.selectAll) window.selectAll();
+        break;
+      case 'deselectAll':
+        if (window.deselectAll) window.deselectAll();
+        break;
+      
+      // Object menu actions
+      case 'groupSelection':
+        if (window.groupSelection) window.groupSelection();
+        break;
+      case 'ungroupSelection':
+        if (window.ungroupSelection) window.ungroupSelection();
+        break;
+      case 'lockSelection':
+        if (window.lockSelection) window.lockSelection();
+        break;
+      case 'unlockAll':
+        if (window.unlockAll) window.unlockAll();
+        break;
+      case 'bringToFront':
+        if (window.bringToFront) window.bringToFront();
+        break;
+      case 'sendToBack':
+        if (window.sendToBack) window.sendToBack();
+        break;
+      case 'bringForward':
+        if (window.bringForward) window.bringForward();
+        break;
+      case 'sendBackward':
+        if (window.sendBackward) window.sendBackward();
+        break;
+      case 'rotateSelectionCW':
+        if (window.rotateSelection) window.rotateSelection(-90);
+        break;
+      case 'rotateSelectionCCW':
+        if (window.rotateSelection) window.rotateSelection(90);
+        break;
+      case 'flipSelectionHorizontal':
+        if (window.flipSelection) window.flipSelection('horizontal');
+        break;
+      case 'flipSelectionVertical':
+        if (window.flipSelection) window.flipSelection('vertical');
+        break;
+      case 'showTransformDialog':
+        if (window.showTransformDialog) window.showTransformDialog();
+        break;
+      case 'pathfinderUnite':
+        if (window.pathfinder) window.pathfinder('unite');
+        break;
+      case 'pathfinderMinus':
+        if (window.pathfinder) window.pathfinder('minus');
+        break;
+      case 'pathfinderIntersect':
+        if (window.pathfinder) window.pathfinder('intersect');
+        break;
+      case 'pathfinderExclude':
+        if (window.pathfinder) window.pathfinder('exclude');
+        break;
+      case 'pathfinderDivide':
+        if (window.pathfinder) window.pathfinder('divide');
+        break;
+      case 'pathfinderTrim':
+        if (window.pathfinder) window.pathfinder('trim');
+        break;
+      case 'pathfinderMerge':
+        if (window.pathfinder) window.pathfinder('merge');
+        break;
+      case 'pathfinderCrop':
+        if (window.pathfinder) window.pathfinder('crop');
+        break;
+      case 'pathfinderOutline':
+        if (window.pathfinder) window.pathfinder('outline');
+        break;
+      
+      // Type menu actions
+      case 'createOutlines':
+        if (window.createOutlines) window.createOutlines();
+        break;
+      case 'findFont':
+        if (window.findFont) window.findFont();
+        break;
+      
+      // Select menu actions
+      case 'selectSameFill':
+        if (window.selectSameFill) window.selectSameFill();
+        break;
+      case 'selectSameStroke':
+        if (window.selectSameStroke) window.selectSameStroke();
+        break;
+      case 'selectSameStrokeWidth':
+        if (window.selectSameStrokeWidth) window.selectSameStrokeWidth();
+        break;
+      
+      // View menu actions
+      case 'zoomIn':
+        if (window.zoomIn) window.zoomIn();
+        break;
+      case 'zoomOut':
+        if (window.zoomOut) window.zoomOut();
+        break;
+      case 'zoomToFit':
+        if (window.zoomToFit) window.zoomToFit();
+        break;
+      case 'zoomTo100':
+        if (window.zoomTo100) window.zoomTo100();
+        break;
+      case 'toggleGrid':
+        if (window.toggleGrid) window.toggleGrid();
+        break;
+      case 'toggleRulers':
+        if (window.toggleRulers) window.toggleRulers();
+        break;
+      case 'toggleSnap':
+        if (window.toggleSnap) window.toggleSnap();
+        break;
+      
+      // Window menu actions
+      case 'showPanelProperties':
+        if (window.showPanel) window.showPanel('properties');
+        break;
+      case 'showPanelLayers':
+        if (window.showPanel) window.showPanel('layers');
+        break;
+      case 'showPanelAppearance':
+        if (window.showPanel) window.showPanel('appearance');
+        break;
+      case 'showPanelSwatches':
+        if (window.showPanel) window.showPanel('swatches');
+        break;
+      case 'showPanelGradient':
+        if (window.showPanel) window.showPanel('gradient');
+        break;
+      case 'showPanelStroke':
+        if (window.showPanel) window.showPanel('stroke');
+        break;
+      case 'showPanelAlign':
+        if (window.showPanel) window.showPanel('align');
+        break;
+      case 'showPanelCharacter':
+        if (window.showPanel) window.showPanel('character');
+        break;
+      case 'showPanelParagraph':
+        if (window.showPanel) window.showPanel('paragraph');
+        break;
+      
+      // Layer actions
+      case 'addLayer':
+        if (window.addLayer) window.addLayer();
+        break;
+      case 'deleteLayer':
+        if (window.deleteLayer) window.deleteLayer();
+        break;
+      case 'toggleLayerVisibility':
+        var index = parseInt(element.dataset.index);
+        if (!isNaN(index) && window.toggleLayerVisibility) {
+          window.toggleLayerVisibility(index);
+        }
+        break;
+      case 'toggleLayerLock':
+        var index = parseInt(element.dataset.index);
+        if (!isNaN(index) && window.toggleLayerLock) {
+          window.toggleLayerLock(index);
+        }
+        break;
+      
+      // Appearance actions
+      case 'addFill':
+        if (window.addFill) window.addFill();
+        break;
+      case 'addStroke':
+        if (window.addStroke) window.addStroke();
+        break;
+      
+      // Swatch actions
+      case 'addSwatch':
+        if (window.addSwatch) window.addSwatch();
+        break;
+      case 'clearSwatches':
+        if (window.clearSwatches) window.clearSwatches();
+        break;
+      
+      // Gradient actions
+      case 'gradientLinear':
+        if (window.setGradientType) window.setGradientType('linear');
+        break;
+      case 'gradientRadial':
+        if (window.setGradientType) window.setGradientType('radial');
+        break;
+      
+      // Stroke actions
+      case 'strokeCapButt':
+        if (window.setStrokeCap) window.setStrokeCap('butt');
+        break;
+      case 'strokeCapRound':
+        if (window.setStrokeCap) window.setStrokeCap('round');
+        break;
+      case 'strokeCapSquare':
+        if (window.setStrokeCap) window.setStrokeCap('square');
+        break;
+      case 'strokeJoinMiter':
+        if (window.setStrokeJoin) window.setStrokeJoin('miter');
+        break;
+      case 'strokeJoinRound':
+        if (window.setStrokeJoin) window.setStrokeJoin('round');
+        break;
+      case 'strokeJoinBevel':
+        if (window.setStrokeJoin) window.setStrokeJoin('bevel');
+        break;
+      
+      // Align actions
+      case 'alignLeft':
+        if (window.align) window.align('left');
+        break;
+      case 'alignRight':
+        if (window.align) window.align('right');
+        break;
+      case 'alignTop':
+        if (window.align) window.align('top');
+        break;
+      case 'alignBottom':
+        if (window.align) window.align('bottom');
+        break;
+      case 'alignCenterH':
+        if (window.align) window.align('center-h');
+        break;
+      case 'alignCenterV':
+        if (window.align) window.align('center-v');
+        break;
+      case 'distributeLeft':
+        if (window.distribute) window.distribute('left');
+        break;
+      case 'distributeRight':
+        if (window.distribute) window.distribute('right');
+        break;
+      case 'distributeTop':
+        if (window.distribute) window.distribute('top');
+        break;
+      case 'distributeBottom':
+        if (window.distribute) window.distribute('bottom');
+        break;
+      case 'distributeCenterH':
+        if (window.distribute) window.distribute('center-h');
+        break;
+      case 'distributeCenterV':
+        if (window.distribute) window.distribute('center-v');
+        break;
+      
+      // Typography actions
+      case 'fontStyleBold':
+        if (window.setFontStyle) window.setFontStyle('bold');
+        break;
+      case 'fontStyleItalic':
+        if (window.setFontStyle) window.setFontStyle('italic');
+        break;
+      case 'fontStyleUnderline':
+        if (window.setFontStyle) window.setFontStyle('underline');
+        break;
+      case 'textAlignLeft':
+        if (window.setTextAlign) window.setTextAlign('left');
+        break;
+      case 'textAlignCenter':
+        if (window.setTextAlign) window.setTextAlign('center');
+        break;
+      case 'textAlignRight':
+        if (window.setTextAlign) window.setTextAlign('right');
+        break;
+      case 'textAlignJustify':
+        if (window.setTextAlign) window.setTextAlign('justify');
+        break;
+      
+      // Transform actions
+      case 'convertToPoint':
+        if (window.convertToPoint) window.convertToPoint();
+        break;
+      case 'convertToCurve':
+        if (window.convertToCurve) window.convertToCurve();
+        break;
+    }
+  }
+  
+  // Handle tool buttons
+  var tool = element.dataset.tool;
+  if (tool && window.activateTool) {
+    window.activateTool(tool);
+  }
 });
 
-// Stroke controls
-document.getElementById('strokeWeight').addEventListener('input', function() {
-  document.getElementById('strokeWeightVal').textContent = this.value + ' px';
-});
-document.getElementById('strokeWeight').addEventListener('input', function() {
-  if (window.updateStroke) window.updateStroke();
-});
-document.getElementById('strokeDash').addEventListener('input', function() {
-  if (window.updateStroke) window.updateStroke();
-});
-document.getElementById('strokeColorInput').addEventListener('input', function() {
-  if (window.updateStroke) window.updateStroke();
+// Tool button click handlers
+document.querySelectorAll('.tool-btn[data-tool]').forEach(function(btn) {
+  btn.addEventListener('click', function(event) {
+    var tool = this.dataset.tool;
+    if (window.activateTool) {
+      window.activateTool(tool);
+    }
+  });
 });
 
 // Property change handlers
@@ -2635,6 +2962,23 @@ document.getElementById('propBlendMode').addEventListener('change', function() {
   if (window.updateBlendMode) window.updateBlendMode();
 });
 
+// Gradient controls
+document.getElementById('gradientAngle').addEventListener('input', function() {
+  document.getElementById('gradientAngleVal').textContent = this.value + '°';
+});
+
+// Stroke controls
+document.getElementById('strokeWeight').addEventListener('input', function() {
+  document.getElementById('strokeWeightVal').textContent = this.value + ' px';
+  if (window.updateStroke) window.updateStroke();
+});
+document.getElementById('strokeDash').addEventListener('input', function() {
+  if (window.updateStroke) window.updateStroke();
+});
+document.getElementById('strokeColorInput').addEventListener('input', function() {
+  if (window.updateStroke) window.updateStroke();
+});
+
 // Typography controls
 document.getElementById('fontFamily').addEventListener('change', function() {
   if (window.updateTypography) window.updateTypography();
@@ -2659,7 +3003,7 @@ window.addEventListener('resize', function() {
       dockVisible = true;
     }
     if (dockToggle) {
-      dockToggle.textContent = '\u25c0';
+      dockToggle.textContent = '◀';
     }
   }
 });
@@ -2702,8 +3046,9 @@ document.getElementById('placeImage').addEventListener('change', function(event)
 
 // Color pickers
 document.getElementById('fillColor').addEventListener('click', function() {
-  var fillColorStr = window.fillColor && window.fillColor.toCSS ? window.fillColor.toCSS(true) : '#ff0000';
-  var color = prompt('Enter fill color (hex):', fillColorStr);
+  var fillColor = window.fillColor;
+  var colorStr = fillColor && fillColor.toCSS ? fillColor.toCSS(true) : '#ff0000';
+  var color = prompt('Enter fill color (hex):', colorStr);
   if (color) {
     window.fillColor = new paper.Color(color);
     this.style.backgroundColor = color;
@@ -2716,8 +3061,9 @@ document.getElementById('fillColor').addEventListener('click', function() {
 });
 
 document.getElementById('strokeColor').addEventListener('click', function() {
-  var strokeColorStr = window.strokeColor && window.strokeColor.toCSS ? window.strokeColor.toCSS(true) : '#000000';
-  var color = prompt('Enter stroke color (hex):', strokeColorStr);
+  var strokeColor = window.strokeColor;
+  var colorStr = strokeColor && strokeColor.toCSS ? strokeColor.toCSS(true) : '#000000';
+  var color = prompt('Enter stroke color (hex):', colorStr);
   if (color) {
     window.strokeColor = new paper.Color(color);
     this.style.backgroundColor = color;
@@ -2738,7 +3084,6 @@ document.getElementById('defaultColors').addEventListener('click', function() {
 
 // Initialize on load
 window.addEventListener('load', function() {
-  console.log('Page loaded, initializing...');
   initSwatches();
   addFill();
   addStroke();
@@ -2778,71 +3123,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { passive: true });
   }
 });
-
-// Bind tool buttons
-document.getElementById('selectTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('select');
-});
-document.getElementById('directSelectTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('directSelect');
-});
-document.getElementById('magicWandTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('select');
-});
-document.getElementById('penTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('pen');
-});
-document.getElementById('pencilTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('pencil');
-});
-document.getElementById('brushTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('brush');
-});
-document.getElementById('rectangleTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('rectangle');
-});
-document.getElementById('ellipseTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('ellipse');
-});
-document.getElementById('polygonTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('polygon');
-});
-document.getElementById('starTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('star');
-});
-document.getElementById('lineTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('line');
-});
-document.getElementById('typeTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('type');
-});
-document.getElementById('typeOnPathTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('type');
-});
-document.getElementById('touchTypeTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('type');
-});
-document.getElementById('shapeBuilderTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('select');
-});
-document.getElementById('perspectiveGridTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('select');
-});
-document.getElementById('freeTransformTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('select');
-});
-document.getElementById('eyedropperTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('eyedropper');
-});
-document.getElementById('measureTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('select');
-});
-document.getElementById('handTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('hand');
-});
-document.getElementById('zoomTool').addEventListener('click', function() {
-  if (window.activateTool) window.activateTool('zoom');
-});
 </script>
 </body>
 </html>
+
+
