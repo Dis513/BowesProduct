@@ -223,40 +223,38 @@ paper.setup(document.getElementById('canvas'));
 <!-- Load Paper.js -->
 <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
 <script>
-// Reliable Paper.js setup - FIXED (no random 'F')
+// Clean, working Paper.js integration (standard mode)
 paper.install(window);
 paper.setup(document.getElementById('canvas'));
 
 // Global state
 var tools = {};
 var currentTool = null;
-
 var fillColor = '#ff0000';
 var strokeColor = '#000000';
 var strokeWidth = 1;
-
 var currentPath = null;
 var startPoint = null;
 var currentShape = null;
 
-// Tool activation
+// Activate tool function
 function activateTool(name) {
   if (tools[name]) {
     currentTool = tools[name];
     currentTool.activate();
 
-    // Update toolbar buttons
+    // Update active button in toolbar
     document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
     const btn = document.getElementById(name + 'Tool');
     if (btn) btn.classList.add('active');
 
     // Update status bar
-    const statusTool = document.getElementById('statusTool');
-    if (statusTool) statusTool.textContent = name.charAt(0).toUpperCase() + name.slice(1) + ' Tool';
+    const status = document.getElementById('statusTool');
+    if (status) status.textContent = name.charAt(0).toUpperCase() + name.slice(1) + ' Tool';
   }
 }
 
-// Selection Tool (V)
+// Selection Tool
 tools.select = new Tool();
 tools.select.onMouseDown = function(event) {
   const hit = project.hitTest(event.point, { fill: true, stroke: true, tolerance: 10 });
@@ -268,12 +266,10 @@ tools.select.onMouseDown = function(event) {
   }
 };
 tools.select.onMouseDrag = function(event) {
-  if (project.selectedItems.length > 0) {
-    project.selectedItems.forEach(item => item.position += event.delta);
-  }
+  project.selectedItems.forEach(item => item.position += event.delta);
 };
 
-// Pen Tool (P)
+// Pen Tool
 tools.pen = new Tool();
 tools.pen.onMouseDown = function(event) {
   currentPath = new Path({ strokeColor: strokeColor, strokeWidth: strokeWidth });
@@ -290,7 +286,7 @@ tools.pen.onMouseUp = function() {
   currentPath = null;
 };
 
-// Rectangle Tool (M)
+// Rectangle Tool
 tools.rectangle = new Tool();
 tools.rectangle.onMouseDown = function(event) {
   startPoint = event.point;
@@ -314,22 +310,18 @@ tools.rectangle.onMouseUp = function() {
   }
 };
 
-// Hand Tool (H) - Pan
+// Hand Tool (Pan)
 tools.hand = new Tool();
 var lastPoint;
 tools.hand.onMouseDown = function(event) {
   lastPoint = event.point;
-  view.element.style.cursor = 'grabbing';
 };
 tools.hand.onMouseDrag = function(event) {
   view.center -= event.point - lastPoint;
   lastPoint = event.point;
 };
-tools.hand.onMouseUp = function() {
-  view.element.style.cursor = 'grab';
-};
 
-// Zoom Tool (Z)
+// Zoom Tool
 tools.zoom = new Tool();
 tools.zoom.onMouseDown = function(event) {
   view.zoom *= event.modifiers.alt ? 0.9 : 1.1;
@@ -343,12 +335,14 @@ document.getElementById('rectangleTool')?.addEventListener('click', () => activa
 document.getElementById('handTool')?.addEventListener('click', () => activateTool('hand'));
 document.getElementById('zoomTool')?.addEventListener('click', () => activateTool('zoom'));
 
-// Hide the loader
+// Hide loader
 document.getElementById('loader').style.display = 'none';
 
-// Start with Selection tool
+// Start with selection tool
 activateTool('select');
 </script>
+  
+
 // ==================== GLOBAL STATE ====================
 var tools = {};
 var currentTool = null;
@@ -2834,6 +2828,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
