@@ -8,7 +8,7 @@
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
   
-  /* ================= HEADER ================= */
+  /* ================= HEADER (logo + nav only) ================= */
   .site-header {
     position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
   }
@@ -37,22 +37,22 @@
   }
 
   /* ================= APPLICATION MENU BAR ================= */
-  .app-menu-bar {
-    background: rgba(15,23,42,0.98);
-    border-bottom: 1px solid #1e293b;
-    padding: 0;
-    padding-left: 150px;
-    display: flex;
-    gap: 0;
-    font-size: 0.85rem;
-    position: sticky;
-    top: 70px;
-    z-index: 999;
-    backdrop-filter: blur(10px);
-    flex-wrap: wrap;
-    height: 36px;
-    align-items: center;
-  }
+.app-menu-bar {
+  background: rgba(15,23,42,0.98);
+  border-bottom: 1px solid #1e293b;
+  padding: 0;
+  padding-left: 150px; /* Nice moderate left indent — matches left toolbar feel */
+  display: flex;
+  gap: 0;
+  font-size: 0.85rem;
+  position: sticky;
+  top: 70px;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+  height: 36px;
+  align-items: center;
+}
   .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
     position: relative; cursor: pointer; padding: 0.5rem 1rem; height: 100%; display: flex; align-items: center; user-select: none;
@@ -75,7 +75,7 @@
   
   /* ================= CANVAS AREA ================= */
   #canvas-container {
-    flex: 1; position: relative; background: #1a1a2e; overflow: hidden; display: flex; flex-direction: column;
+    flex: 1; position: relative; background: #0a0a0a; overflow: hidden; display: flex; flex-direction: column;
   }
   
   /* Rulers */
@@ -84,7 +84,7 @@
   .ruler-v { top: 20px; left: 0; width: 60px; bottom: 0; border-right: 1px solid #334155; }
   .ruler-corner { position: absolute; top: 0; left: 0; width: 60px; height: 20px; background: #1e293b; border-right: 1px solid #334155; border-bottom: 1px solid #334155; z-index: 11; }
   
-  #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; margin-top: 20px; margin-left: 60px; background: #1a1a2e; }
+  #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; margin-top: 20px; margin-left: 60px; background: #0a0a0a; }
   
   /* Artboard */
   .artboard {
@@ -169,61 +169,6 @@
   .layer-item .layer-actions { display: flex; gap: 4px; }
   .layer-item .layer-actions button { padding: 2px 6px; font-size: 0.75rem; }
 
-  /* Color Picker Panel */
-  .color-picker-wrapper {
-    background: #0f172a;
-    border-radius: 8px;
-    padding: 1rem;
-  }
-  
-  .color-preview-large {
-    width: 100%;
-    height: 60px;
-    border-radius: 6px;
-    border: 2px solid #334155;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  
-  .color-sliders {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-  
-  .color-slider-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .color-slider-row label {
-    width: 20px;
-    font-weight: 600;
-    font-size: 0.85rem;
-  }
-  
-  .color-slider-row input[type="range"] {
-    flex: 1;
-    accent-color: var(--slider-color, #60a5fa);
-  }
-  
-  .color-slider-row input[type="number"] {
-    width: 60px;
-  }
-  
-  /* Opacity slider */
-  .opacity-control {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #1e293b;
-  }
-  
   /* Appearance Panel */
   .appearance-item { 
     padding: 0.6rem; background: #0f172a; border-radius: 6px; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;
@@ -291,7 +236,7 @@
     .dropdown { z-index: 1900; }
   }
 
-  /* Panel Backdrop/Overlay */
+  /* Panel Backdrop/Overlay - DISABLED on mobile for canvas visibility */
   .panel-backdrop {
     display: none !important;
   }
@@ -325,36 +270,6 @@
     transform: translate(-50%, -50%) scale(0.9);
   }
 
-  /* Color Picker Popup */
-  .color-picker-popup {
-    position: fixed;
-    left: 70px;
-    top: 116px;
-    width: 280px;
-    background: rgba(15, 23, 42, 0.98);
-    border: 1px solid #1e293b;
-    border-radius: 12px;
-    padding: 1rem;
-    z-index: 1200;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    backdrop-filter: blur(10px);
-    display: none;
-  }
-  
-  .color-picker-popup.active {
-    display: block;
-  }
-  
-  .color-picker-popup h4 {
-    margin: 0 0 1rem 0;
-    color: #60a5fa;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid #1e293b;
-    padding-bottom: 0.5rem;
-  }
-
   #loader { 
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #60a5fa; font-size: 1.2rem; font-weight: 600; pointer-events: none; z-index: 5;
   }
@@ -366,20 +281,9 @@
   .context-menu div { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.85rem; }
   .context-menu div:hover { background: #1e293b; }
   .context-menu hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
-  
-  /* Selection Box */
-  .selection-box {
-    position: absolute;
-    border: 1px dashed #60a5fa;
-    background: rgba(96, 165, 250, 0.1);
-    pointer-events: none;
-    z-index: 100;
-    display: none;
-  }
   </style>
   <!-- Paper.js for vector editing -->
   <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -390,7 +294,7 @@
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
         <a href="retexture.html">Retexture</a>
-        <a href="editor-fixed.html" class="active">Editor</a>
+        <a href="editor.html" class="active">Editor</a>
       </nav>
     </div>
     <div class="header-right">
@@ -508,10 +412,6 @@
         <div onclick="toggleGrid()">Grid <span class="shortcut">Ctrl+'</span></div>
         <div onclick="toggleRulers()">Rulers <span class="shortcut">Ctrl+R</span></div>
         <div onclick="toggleSnap()">Snap to Grid <span class="shortcut">Ctrl+Shift+'</span></div>
-        <hr>
-        <div onclick="showArtboardOptions()">Artboard Options...</div>
-        <div onclick="rotateArtboard(90)">Rotate Artboard 90°</div>
-        <div onclick="rotateArtboard(-90)">Rotate Artboard -90°</div>
       </div>
     </div>
     <div>Window
@@ -541,64 +441,6 @@
   <!-- Tool/Panel Name Notification -->
   <div class="tool-notification" id="toolNotification"></div>
 
-  <!-- Fill Color Picker Popup -->
-  <div class="color-picker-popup" id="fillColorPicker">
-    <h4>Fill Color</h4>
-    <div class="color-preview-large" id="fillColorPreview">#FF0000</div>
-    <div class="color-sliders">
-      <div class="color-slider-row">
-        <label style="color: #ff6b6b;">R</label>
-        <input type="range" id="fillRed" min="0" max="255" value="255" oninput="updateFillColor()">
-        <input type="number" id="fillRedNum" min="0" max="255" value="255" oninput="updateFillColorFromNum()">
-      </div>
-      <div class="color-slider-row">
-        <label style="color: #4ecdc4;">G</label>
-        <input type="range" id="fillGreen" min="0" max="255" value="0" oninput="updateFillColor()">
-        <input type="number" id="fillGreenNum" min="0" max="255" value="0" oninput="updateFillColorFromNum()">
-      </div>
-      <div class="color-slider-row">
-        <label style="color: #45b7d1;">B</label>
-        <input type="range" id="fillBlue" min="0" max="255" value="0" oninput="updateFillColor()">
-        <input type="number" id="fillBlueNum" min="0" max="255" value="0" oninput="updateFillColorFromNum()">
-      </div>
-      <div class="opacity-control">
-        <label style="display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.4rem;">Opacity</label>
-        <input type="range" id="fillOpacity" min="0" max="100" value="100" oninput="updateFillColor()">
-        <span id="fillOpacityVal" style="color: #94a3b8; font-size: 0.8rem; float: right;">100%</span>
-      </div>
-    </div>
-    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="applyFillColor()">Apply</button>
-  </div>
-
-  <!-- Stroke Color Picker Popup -->
-  <div class="color-picker-popup" id="strokeColorPicker" style="top: 160px;">
-    <h4>Stroke Color</h4>
-    <div class="color-preview-large" id="strokeColorPreview">#000000</div>
-    <div class="color-sliders">
-      <div class="color-slider-row">
-        <label style="color: #ff6b6b;">R</label>
-        <input type="range" id="strokeRed" min="0" max="255" value="0" oninput="updateStrokeColor()">
-        <input type="number" id="strokeRedNum" min="0" max="255" value="0" oninput="updateStrokeColorFromNum()">
-      </div>
-      <div class="color-slider-row">
-        <label style="color: #4ecdc4;">G</label>
-        <input type="range" id="strokeGreen" min="0" max="255" value="0" oninput="updateStrokeColor()">
-        <input type="number" id="strokeGreenNum" min="0" max="255" value="0" oninput="updateStrokeColorFromNum()">
-      </div>
-      <div class="color-slider-row">
-        <label style="color: #45b7d1;">B</label>
-        <input type="range" id="strokeBlue" min="0" max="255" value="0" oninput="updateStrokeColor()">
-        <input type="number" id="strokeBlueNum" min="0" max="255" value="0" oninput="updateStrokeColorFromNum()">
-      </div>
-      <div class="opacity-control">
-        <label style="display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.4rem;">Opacity</label>
-        <input type="range" id="strokeOpacity" min="0" max="100" value="100" oninput="updateStrokeColor()">
-        <span id="strokeOpacityVal" style="color: #94a3b8; font-size: 0.8rem; float: right;">100%</span>
-      </div>
-    </div>
-    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="applyStrokeColor()">Apply</button>
-  </div>
-
   <div id="canvas-container">
     <div id="loader">Vector Editor Pro • Initializing...</div>
     
@@ -608,9 +450,6 @@
     <div class="ruler ruler-v" id="rulerV"></div>
     
     <canvas id="canvas" resize></canvas>
-    
-    <!-- Selection Box -->
-    <div class="selection-box" id="selectionBox"></div>
     
     <!-- Artboard indicator -->
     <div id="artboardIndicator" class="artboard" style="display:none">
@@ -1036,24 +875,24 @@ onAuthStateChanged(auth, async (user) => {
     ((xp - levels[level]) / (next - levels[level])) * 100;
 
   levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.width = progress + "%";
+  xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
 </script>
 
 <!-- Paper.js Vector Editor -->
 <script type="text/javascript">
-// Setup Paper.js manually
+// Setup Paper.js manually – THIS IS REQUIRED
 paper.setup(document.getElementById('canvas'));
-paper.install(window);
+paper.install(window);   // ← this line makes everything work with modern JS
 
 console.log('Paper.js script starting...');
 
 // Global state
 var tools = {};
 var currentTool;
-var fillColor = new Color(1, 0, 0); // RGBA
-var strokeColor = new Color(0, 0, 0); // RGBA
+var fillColor = new Color('#ff0000');
+var strokeColor = new Color('#000000');
 var strokeWidth = 1;
 var currentPath;
 var isDrawing = false;
@@ -1069,10 +908,6 @@ var gridSize = 20;
 var layers = [];
 var currentLayerIndex = 0;
 var zoomLevel = 1;
-var artboardRotation = 0;
-var artboardSize = { width: 595, height: 842 }; // A4 size in points (72 DPI)
-var selectionStart = null;
-var selectionBox = document.getElementById('selectionBox');
 
 console.log('Paper.js initialized, view size:', view.size);
 
@@ -1085,37 +920,27 @@ function initLayers() {
   updateLayersList();
 }
 
-// Create artboard (A4 page)
-function createArtboard() {
-  var artboard = new Path.Rectangle({
-    point: [view.center.x - artboardSize.width / 2, view.center.y - artboardSize.height / 2],
-    size: [artboardSize.width, artboardSize.height],
-    fillColor: 'white',
-    strokeColor: '#334155',
-    strokeWidth: 1
-  });
-  artboard.name = 'Artboard';
-  artboard.locked = true;
-  return artboard;
-}
-
 // Tool/Panel Notification System
 var notificationTimeout;
 
 function showToolNotification(text) {
   var notification = document.getElementById('toolNotification');
   
+  // Clear existing timeout
   if (notificationTimeout) {
     clearTimeout(notificationTimeout);
   }
   
+  // Reset animation
   notification.classList.remove('show', 'hide');
   notification.textContent = text;
   
+  // Show notification
   requestAnimationFrame(function() {
     notification.classList.add('show');
   });
   
+  // Hide after delay
   notificationTimeout = setTimeout(function() {
     notification.classList.remove('show');
     notification.classList.add('hide');
@@ -1135,7 +960,6 @@ function activateTool(name) {
     var toolNames = {
       'select': 'Selection Tool',
       'directSelect': 'Direct Selection Tool',
-      'magicWand': 'Magic Wand Tool',
       'pen': 'Pen Tool',
       'pencil': 'Pencil Tool',
       'brush': 'Brush Tool',
@@ -1161,6 +985,7 @@ function activateTool(name) {
       statusTool.textContent = toolNames[name];
     }
     
+    // Show notification popup
     if (toolNames[name]) {
       showToolNotification(toolNames[name]);
     }
@@ -1169,61 +994,34 @@ function activateTool(name) {
   }
 }
 
-// Selection Tool with dashed selection box
+// Selection Tool
 tools.select = new Tool();
-
 tools.select.onMouseDown = function(event) {
   var hit = project.hitTest(event.point, {
-    fill: true,
-    stroke: true,
-    segments: true,
-    tolerance: 10
+    fill: true, stroke: true, segments: true, tolerance: 5
   });
-
-  if (hit && hit.item && !hit.item.locked && hit.item.name !== 'Artboard') {
+  
+  if (hit && hit.item && !hit.item.locked) {
     if (!Key.modifiers.shift) {
       project.deselectAll();
     }
     hit.item.selected = true;
-    selectionStart = null;
-  } else {
-    if (!Key.modifiers.shift) {
-      project.deselectAll();
-    }
-    selectionStart = event.point;
+  } else if (!Key.modifiers.shift) {
+    project.deselectAll();
   }
-
+  
   updateProperties();
 };
 
 tools.select.onMouseDrag = function(event) {
-  if (selectionStart) {
-    // Show dashed selection box
-    var rect = new Rectangle(selectionStart, event.point);
-    var canvasRect = view.element.getBoundingClientRect();
-    
-    selectionBox.style.display = 'block';
-    selectionBox.style.left = (rect.point.x + 60) + 'px';
-    selectionBox.style.top = (rect.point.y + 20) + 'px';
-    selectionBox.style.width = rect.width + 'px';
-    selectionBox.style.height = rect.height + 'px';
-    
-    // Select items within the box
-    project.deselectAll();
-    var bounds = new Rectangle(selectionStart, event.point);
-    project.activeLayer.children.forEach(function(item) {
-      if (item.name !== 'Artboard' && !item.locked && item.bounds.intersects(bounds)) {
-        item.selected = true;
-      }
-    });
-  } else if (project.selectedItems.length) {
+  if (project.selectedItems.length) {
     var delta = event.delta;
     if (snapToGrid) {
       delta.x = Math.round(delta.x / gridSize) * gridSize;
       delta.y = Math.round(delta.y / gridSize) * gridSize;
     }
     project.selectedItems.forEach(function(item) {
-      if (!item.locked && item.name !== 'Artboard') {
+      if (!item.locked) {
         item.position += delta;
       }
     });
@@ -1232,20 +1030,14 @@ tools.select.onMouseDrag = function(event) {
 };
 
 tools.select.onMouseUp = function() {
-  selectionBox.style.display = 'none';
-  selectionStart = null;
   saveState();
 };
 
 // Direct Selection Tool
 tools.directSelect = new Tool();
-
 tools.directSelect.onMouseDown = function(event) {
   var hit = project.hitTest(event.point, {
-    segments: true, 
-    tolerance: 8,
-    fill: false,
-    stroke: false
+    segments: true, tolerance: 5
   });
   
   if (hit && hit.segment) {
@@ -1256,15 +1048,8 @@ tools.directSelect.onMouseDown = function(event) {
 };
 
 tools.directSelect.onMouseDrag = function(event) {
-  var selectedSegments = [];
-  project.activeLayer.children.forEach(function(item) {
-    if (item.segments) {
-      item.segments.forEach(function(segment) {
-        if (segment.selected) {
-          selectedSegments.push(segment);
-        }
-      });
-    }
+  var selectedSegments = project.activeLayer.segments.filter(function(s) {
+    return s.selected;
   });
   
   if (selectedSegments.length) {
@@ -1274,50 +1059,25 @@ tools.directSelect.onMouseDrag = function(event) {
   }
 };
 
-// Magic Wand Tool
-tools.magicWand = new Tool();
-
-tools.magicWand.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    fill: true,
-    stroke: true,
-    tolerance: 5
-  });
-  
-  if (hit && hit.item) {
-    var targetColor = null;
-    if (hit.type === 'fill' && hit.item.fillColor) {
-      targetColor = hit.item.fillColor;
-    } else if (hit.type === 'stroke' && hit.item.strokeColor) {
-      targetColor = hit.item.strokeColor;
-    }
-    
-    if (targetColor) {
-      if (!Key.modifiers.shift) {
-        project.deselectAll();
-      }
-      
-      project.activeLayer.children.forEach(function(item) {
-        if (item.name !== 'Artboard' && !item.locked) {
-          if (item.fillColor && item.fillColor.equals(targetColor)) {
-            item.selected = true;
-          } else if (item.strokeColor && item.strokeColor.equals(targetColor)) {
-            item.selected = true;
-          }
-        }
-      });
-      
-      showToolNotification('Selected matching colors');
-    }
-  }
-};
-
-// Pen Tool with bezier curve support (Illustrator-style)
+// Pen Tool
 tools.pen = new Tool();
 var penPoints = [];
-var currentPath = null;
 
 tools.pen.onMouseDown = function(event) {
+  if (Key.modifiers.alt) {
+    // Convert point to curve
+    var hit = project.hitTest(event.point, { segments: true, tolerance: 5 });
+    if (hit && hit.segment) {
+      if (hit.segment.hasHandles()) {
+        hit.segment.clearHandles();
+      } else {
+        hit.segment.handleIn = new Point(-20, 0);
+        hit.segment.handleOut = new Point(20, 0);
+      }
+    }
+    return;
+  }
+  
   if (currentPath && penPoints.length > 0 && event.point.isClose(penPoints[0], 5)) {
     // Close path
     currentPath.closed = true;
@@ -1343,25 +1103,21 @@ tools.pen.onMouseDown = function(event) {
   penPoints.push(event.point);
 };
 
-tools.pen.onMouseDrag = function(event) {
+tools.pen.onMouseMove = function(event) {
   if (currentPath && penPoints.length > 0) {
-    // Create bezier curve by dragging - Illustrator style
-    var lastSegment = currentPath.lastSegment;
-    if (lastSegment) {
-      var handlePoint = event.point;
-      lastSegment.handleOut = handlePoint.subtract(lastSegment.point);
-      lastSegment.handleIn = lastSegment.handleOut.rotate(180);
-    }
+    // Draw preview line
+    document.body.style.cursor = 'crosshair';
   }
 };
 
-tools.pen.onMouseUp = function(event) {
-  // Point is finalized
-};
-
-tools.pen.onMouseMove = function(event) {
+tools.pen.onMouseDrag = function(event) {
   if (currentPath && penPoints.length > 0) {
-    document.body.style.cursor = 'crosshair';
+    // Adjust handles for last point
+    var lastSegment = currentPath.lastSegment;
+    if (lastSegment) {
+      lastSegment.handleOut = event.point - lastSegment.point;
+      lastSegment.handleIn = lastSegment.handleOut.rotate(180);
+    }
   }
 };
 
@@ -1460,6 +1216,7 @@ tools.rectangle.onMouseDrag = function(event) {
   if (currentShape) {
     var rect = new Rectangle(startPoint, event.point);
     if (Key.modifiers.shift) {
+      // Constrain to square
       var size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
       rect = new Rectangle(startPoint, new Point(startPoint.x + size, startPoint.y + size));
     }
@@ -1497,6 +1254,7 @@ tools.ellipse.onMouseDrag = function(event) {
   if (currentShape) {
     var rect = new Rectangle(startPoint, event.point);
     if (Key.modifiers.shift) {
+      // Constrain to circle
       var size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
       rect = new Rectangle(startPoint, new Point(startPoint.x + size, startPoint.y + size));
     }
@@ -1594,6 +1352,7 @@ tools.line.onMouseDown = function(event) {
 tools.line.onMouseDrag = function(event) {
   if (currentShape) {
     if (Key.modifiers.shift) {
+      // Constrain to 45-degree angles
       var angle = Math.atan2(event.point.y - startPoint.y, event.point.x - startPoint.x);
       angle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
       var length = startPoint.getDistance(event.point);
@@ -1620,157 +1379,20 @@ tools.line.onMouseUp = function() {
   }
 };
 
-// Type Tool with resizable text box
+// Type Tool
 tools.type = new Tool();
-var typeStartPoint = null;
-var typeCurrentShape = null;
 
 tools.type.onMouseDown = function(event) {
-  typeStartPoint = event.point;
-  typeCurrentShape = new Path.Rectangle(typeStartPoint, typeStartPoint);
-  typeCurrentShape.strokeColor = '#60a5fa';
-  typeCurrentShape.strokeWidth = 1;
-  typeCurrentShape.dashArray = [5, 5];
-};
-
-tools.type.onMouseDrag = function(event) {
-  if (typeCurrentShape) {
-    typeCurrentShape.remove();
-    var rect = new Rectangle(typeStartPoint, event.point);
-    typeCurrentShape = new Path.Rectangle(rect);
-    typeCurrentShape.strokeColor = '#60a5fa';
-    typeCurrentShape.strokeWidth = 1;
-    typeCurrentShape.dashArray = [5, 5];
+  var text = prompt('Enter text:', 'Sample Text');
+  if (text) {
+    var pointText = new PointText(event.point);
+    pointText.content = text;
+    pointText.fillColor = fillColor;
+    pointText.fontSize = 32;
+    pointText.fontFamily = 'Arial';
+    pointText.selected = true;
+    saveState();
   }
-};
-
-tools.type.onMouseUp = function(event) {
-  if (typeCurrentShape) {
-    var bounds = typeCurrentShape.bounds;
-    typeCurrentShape.remove();
-    
-    var text = prompt('Enter text:', 'Sample Text');
-    if (text) {
-      var areaText = new PointText(bounds.topLeft);
-      areaText.content = text;
-      areaText.fillColor = fillColor;
-      areaText.fontSize = Math.min(bounds.width, bounds.height) * 0.5;
-      areaText.fontFamily = 'Arial';
-      areaText.justification = 'center';
-      areaText.position = bounds.center;
-      areaText.selected = true;
-      saveState();
-    }
-    typeCurrentShape = null;
-    typeStartPoint = null;
-  }
-};
-
-// Type on Path Tool
-tools.typeOnPath = new Tool();
-
-tools.typeOnPath.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    paths: true,
-    stroke: true,
-    tolerance: 5
-  });
-  
-  if (hit && hit.item instanceof Path) {
-    var text = prompt('Enter text:', 'Sample Text');
-    if (text) {
-      var pathText = new PointText(event.point);
-      pathText.content = text;
-      pathText.fillColor = fillColor;
-      pathText.fontSize = 24;
-      pathText.fontFamily = 'Arial';
-      pathText.selected = true;
-      
-      showToolNotification('Text created on path');
-      saveState();
-    }
-  } else {
-    showToolNotification('Select a path first');
-  }
-};
-
-// Touch Type Tool
-tools.touchType = new Tool();
-
-tools.touchType.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    fill: true,
-    tolerance: 5
-  });
-  
-  if (hit && hit.item instanceof PointText) {
-    showToolNotification('Touch Type: Click and drag characters');
-  } else {
-    showToolNotification('Select text first');
-  }
-};
-
-// Shape Builder Tool
-tools.shapeBuilder = new Tool();
-
-tools.shapeBuilder.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    fill: true,
-    tolerance: 5
-  });
-  
-  if (hit && hit.item) {
-    if (!Key.modifiers.alt) {
-      // Merge shapes
-      showToolNotification('Merging shapes...');
-    } else {
-      // Subtract shapes
-      if (hit.item.parent) {
-        hit.item.remove();
-        saveState();
-        showToolNotification('Shape removed');
-      }
-    }
-  }
-};
-
-// Perspective Grid Tool
-tools.perspectiveGrid = new Tool();
-
-tools.perspectiveGrid.onMouseDown = function(event) {
-  showToolNotification('Perspective Grid - Feature coming soon');
-};
-
-// Free Transform Tool
-tools.freeTransform = new Tool();
-
-tools.freeTransform.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    fill: true,
-    tolerance: 5
-  });
-  
-  if (hit && hit.item && !hit.item.locked) {
-    if (!Key.modifiers.shift) {
-      project.deselectAll();
-    }
-    hit.item.selected = true;
-  }
-};
-
-tools.freeTransform.onMouseDrag = function(event) {
-  if (project.selectedItems.length) {
-    project.selectedItems.forEach(function(item) {
-      if (!item.locked && item.name !== 'Artboard') {
-        item.position += event.delta;
-      }
-    });
-    updateProperties();
-  }
-};
-
-tools.freeTransform.onMouseUp = function() {
-  saveState();
 };
 
 // Eyedropper Tool
@@ -1778,50 +1400,20 @@ tools.eyedropper = new Tool();
 
 tools.eyedropper.onMouseDown = function(event) {
   var hit = project.hitTest(event.point, {
-    fill: true, 
-    stroke: true, 
-    tolerance: 5
+    fill: true, stroke: true, tolerance: 5
   });
   
   if (hit && hit.item) {
     if (hit.type === 'fill' && hit.item.fillColor) {
       fillColor = hit.item.fillColor.clone();
-      updateFillColorPreview();
+      var colorHex = fillColor.toCSS(true);
+      document.getElementById('fillColor').style.backgroundColor = colorHex;
     }
     if (hit.type === 'stroke' && hit.item.strokeColor) {
       strokeColor = hit.item.strokeColor.clone();
-      updateStrokeColorPreview();
+      var colorHex = strokeColor.toCSS(true);
+      document.getElementById('strokeColor').style.backgroundColor = colorHex;
     }
-    showToolNotification('Color picked');
-  }
-};
-
-// Measure Tool
-tools.measure = new Tool();
-var measureStart = null;
-var measureLine = null;
-
-tools.measure.onMouseDown = function(event) {
-  measureStart = event.point;
-};
-
-tools.measure.onMouseDrag = function(event) {
-  if (measureLine) {
-    measureLine.remove();
-  }
-  measureLine = new Path.Line(measureStart, event.point);
-  measureLine.strokeColor = '#60a5fa';
-  measureLine.strokeWidth = 1;
-  measureLine.dashArray = [5, 5];
-};
-
-tools.measure.onMouseUp = function(event) {
-  if (measureLine && measureStart) {
-    var distance = measureStart.getDistance(event.point);
-    showToolNotification('Distance: ' + distance.toFixed(2) + 'px');
-    measureLine.remove();
-    measureLine = null;
-    measureStart = null;
   }
 };
 
@@ -1856,7 +1448,7 @@ tools.zoom.onMouseDown = function(event) {
 // Bind tool buttons
 document.getElementById('selectTool').onclick = function() { activateTool('select'); };
 document.getElementById('directSelectTool').onclick = function() { activateTool('directSelect'); };
-document.getElementById('magicWandTool').onclick = function() { activateTool('magicWand'); };
+document.getElementById('magicWandTool').onclick = function() { activateTool('select'); };
 document.getElementById('penTool').onclick = function() { activateTool('pen'); };
 document.getElementById('pencilTool').onclick = function() { activateTool('pencil'); };
 document.getElementById('brushTool').onclick = function() { activateTool('brush'); };
@@ -1866,163 +1458,45 @@ document.getElementById('polygonTool').onclick = function() { activateTool('poly
 document.getElementById('starTool').onclick = function() { activateTool('star'); };
 document.getElementById('lineTool').onclick = function() { activateTool('line'); };
 document.getElementById('typeTool').onclick = function() { activateTool('type'); };
-document.getElementById('typeOnPathTool').onclick = function() { activateTool('typeOnPath'); };
-document.getElementById('touchTypeTool').onclick = function() { activateTool('touchType'); };
-document.getElementById('shapeBuilderTool').onclick = function() { activateTool('shapeBuilder'); };
-document.getElementById('perspectiveGridTool').onclick = function() { activateTool('perspectiveGrid'); };
-document.getElementById('freeTransformTool').onclick = function() { activateTool('freeTransform'); };
 document.getElementById('eyedropperTool').onclick = function() { activateTool('eyedropper'); };
-document.getElementById('measureTool').onclick = function() { activateTool('measure'); };
 document.getElementById('handTool').onclick = function() { activateTool('hand'); };
 document.getElementById('zoomTool').onclick = function() { activateTool('zoom'); };
 
-// Color picker buttons
+// Color pickers
 document.getElementById('fillColor').onclick = function() {
-  var popup = document.getElementById('fillColorPicker');
-  popup.classList.toggle('active');
-  document.getElementById('strokeColorPicker').classList.remove('active');
+  var colorStr = fillColor.toCSS ? fillColor.toCSS(true) : fillColor;
+  var color = prompt('Enter fill color (hex):', colorStr);
+  if (color) {
+    fillColor = new Color(color);
+    this.style.backgroundColor = color;
+    if (project.selectedItems.length) {
+      project.selectedItems.forEach(function(item) {
+        item.fillColor = new Color(color);
+      });
+    }
+  }
 };
 
 document.getElementById('strokeColor').onclick = function() {
-  var popup = document.getElementById('strokeColorPicker');
-  popup.classList.toggle('active');
-  document.getElementById('fillColorPicker').classList.remove('active');
+  var colorStr = strokeColor.toCSS ? strokeColor.toCSS(true) : strokeColor;
+  var color = prompt('Enter stroke color (hex):', colorStr);
+  if (color) {
+    strokeColor = new Color(color);
+    this.style.backgroundColor = color;
+    if (project.selectedItems.length) {
+      project.selectedItems.forEach(function(item) {
+        item.strokeColor = new Color(color);
+      });
+    }
+  }
 };
 
 document.getElementById('defaultColors').onclick = function() {
-  fillColor = new Color(1, 0, 0, 1);
-  strokeColor = new Color(0, 0, 0, 1);
-  updateFillColorPreview();
-  updateStrokeColorPreview();
-  
-  // Reset sliders
-  document.getElementById('fillRed').value = 255;
-  document.getElementById('fillGreen').value = 0;
-  document.getElementById('fillBlue').value = 0;
-  document.getElementById('fillOpacity').value = 100;
-  document.getElementById('strokeRed').value = 0;
-  document.getElementById('strokeGreen').value = 0;
-  document.getElementById('strokeBlue').value = 0;
-  document.getElementById('strokeOpacity').value = 100;
-  
-  // Apply to selected items
-  if (project.selectedItems.length) {
-    project.selectedItems.forEach(function(item) {
-      item.fillColor = fillColor;
-      item.strokeColor = strokeColor;
-    });
-  }
-  
-  showToolNotification('Default colors applied');
+  fillColor = new Color('#ff0000');
+  strokeColor = new Color('#000000');
+  document.getElementById('fillColor').style.backgroundColor = '#ff0000';
+  document.getElementById('strokeColor').style.backgroundColor = '#000000';
 };
-
-// Update fill color from sliders
-function updateFillColor() {
-  var r = parseInt(document.getElementById('fillRed').value);
-  var g = parseInt(document.getElementById('fillGreen').value);
-  var b = parseInt(document.getElementById('fillBlue').value);
-  var a = parseInt(document.getElementById('fillOpacity').value) / 100;
-  
-  document.getElementById('fillRedNum').value = r;
-  document.getElementById('fillGreenNum').value = g;
-  document.getElementById('fillBlueNum').value = b;
-  document.getElementById('fillOpacityVal').textContent = Math.round(a * 100) + '%';
-  
-  fillColor = new Color(r / 255, g / 255, b / 255, a);
-  updateFillColorPreview();
-}
-
-function updateFillColorFromNum() {
-  var r = parseInt(document.getElementById('fillRedNum').value);
-  var g = parseInt(document.getElementById('fillGreenNum').value);
-  var b = parseInt(document.getElementById('fillBlueNum').value);
-  var a = parseInt(document.getElementById('fillOpacity').value) / 100;
-  
-  document.getElementById('fillRed').value = r;
-  document.getElementById('fillGreen').value = g;
-  document.getElementById('fillBlue').value = b;
-  document.getElementById('fillOpacityVal').textContent = Math.round(a * 100) + '%';
-  
-  fillColor = new Color(r / 255, g / 255, b / 255, a);
-  updateFillColorPreview();
-}
-
-function updateFillColorPreview() {
-  var preview = document.getElementById('fillColorPreview');
-  if (preview) {
-    var css = fillColor.toCSS ? fillColor.toCSS(true) : 'rgb(255,0,0)';
-    if (fillColor.alpha !== undefined && fillColor.alpha < 1) {
-      css = 'rgba(' + Math.round(fillColor.red * 255) + ',' + Math.round(fillColor.green * 255) + ',' + Math.round(fillColor.blue * 255) + ',' + fillColor.alpha + ')';
-    }
-    preview.textContent = css;
-    preview.style.backgroundColor = css;
-  }
-}
-
-function applyFillColor() {
-  if (project.selectedItems.length) {
-    project.selectedItems.forEach(function(item) {
-      item.fillColor = fillColor.clone();
-    });
-    saveState();
-    showToolNotification('Fill color applied');
-  }
-  document.getElementById('fillColorPicker').classList.remove('active');
-}
-
-// Update stroke color from sliders
-function updateStrokeColor() {
-  var r = parseInt(document.getElementById('strokeRed').value);
-  var g = parseInt(document.getElementById('strokeGreen').value);
-  var b = parseInt(document.getElementById('strokeBlue').value);
-  var a = parseInt(document.getElementById('strokeOpacity').value) / 100;
-  
-  document.getElementById('strokeRedNum').value = r;
-  document.getElementById('strokeGreenNum').value = g;
-  document.getElementById('strokeBlueNum').value = b;
-  document.getElementById('strokeOpacityVal').textContent = Math.round(a * 100) + '%';
-  
-  strokeColor = new Color(r / 255, g / 255, b / 255, a);
-  updateStrokeColorPreview();
-}
-
-function updateStrokeColorFromNum() {
-  var r = parseInt(document.getElementById('strokeRedNum').value);
-  var g = parseInt(document.getElementById('strokeGreenNum').value);
-  var b = parseInt(document.getElementById('strokeBlueNum').value);
-  var a = parseInt(document.getElementById('strokeOpacity').value) / 100;
-  
-  document.getElementById('strokeRed').value = r;
-  document.getElementById('strokeGreen').value = g;
-  document.getElementById('strokeBlue').value = b;
-  document.getElementById('strokeOpacityVal').textContent = Math.round(a * 100) + '%';
-  
-  strokeColor = new Color(r / 255, g / 255, b / 255, a);
-  updateStrokeColorPreview();
-}
-
-function updateStrokeColorPreview() {
-  var preview = document.getElementById('strokeColorPreview');
-  if (preview) {
-    var css = strokeColor.toCSS ? strokeColor.toCSS(true) : 'rgb(0,0,0)';
-    if (strokeColor.alpha !== undefined && strokeColor.alpha < 1) {
-      css = 'rgba(' + Math.round(strokeColor.red * 255) + ',' + Math.round(strokeColor.green * 255) + ',' + Math.round(strokeColor.blue * 255) + ',' + strokeColor.alpha + ')';
-    }
-    preview.textContent = css;
-    preview.style.backgroundColor = css;
-  }
-}
-
-function applyStrokeColor() {
-  if (project.selectedItems.length) {
-    project.selectedItems.forEach(function(item) {
-      item.strokeColor = strokeColor.clone();
-    });
-    saveState();
-    showToolNotification('Stroke color applied');
-  }
-  document.getElementById('strokeColorPicker').classList.remove('active');
-}
 
 // Update properties panel
 function updateProperties() {
@@ -2255,9 +1729,7 @@ function duplicate() {
 function deleteSelection() {
   if (project.selectedItems.length) {
     project.selectedItems.forEach(function(item) {
-      if (item.name !== 'Artboard') {
-        item.remove();
-      }
+      item.remove();
     });
     saveState();
     updateProperties();
@@ -2266,9 +1738,7 @@ function deleteSelection() {
 
 function selectAll() {
   project.activeLayer.children.forEach(function(item) {
-    if (item.name !== 'Artboard' && !item.locked) {
-      item.selected = true;
-    }
+    item.selected = true;
   });
   updateProperties();
 }
@@ -2326,17 +1796,8 @@ function sendBackward() {
 // Group/Ungroup
 function groupSelection() {
   if (project.selectedItems.length > 1) {
-    var selected = Array.from(project.selectedItems);
-    var group = new Group(selected);
-    
-    project.deselectAll();
-    group.selected = true;
-    
+    var group = new Group(project.selectedItems);
     saveState();
-    updateProperties();
-    console.log('Grouped', selected.length, 'objects');
-  } else {
-    alert('Select 2 or more objects to group');
   }
 }
 
@@ -2347,22 +1808,6 @@ function ungroupSelection() {
     }
   });
   saveState();
-}
-
-// Lock/Unlock
-function lockSelection() {
-  project.selectedItems.forEach(function(item) {
-    item.locked = true;
-  });
-  project.deselectAll();
-}
-
-function unlockAll() {
-  project.activeLayer.children.forEach(function(item) {
-    if (item.name !== 'Artboard') {
-      item.locked = false;
-    }
-  });
 }
 
 // Transform
@@ -2431,7 +1876,7 @@ function selectSameFill() {
   project.deselectAll();
   
   project.activeLayer.children.forEach(function(item) {
-    if (item.fillColor && item.fillColor.equals(targetColor)) {
+    if (item.fillColor && item.fillColor.toCSS() === targetColor.toCSS()) {
       item.selected = true;
     }
   });
@@ -2444,7 +1889,7 @@ function selectSameStroke() {
   project.deselectAll();
   
   project.activeLayer.children.forEach(function(item) {
-    if (item.strokeColor && item.strokeColor.equals(targetColor)) {
+    if (item.strokeColor && item.strokeColor.toCSS() === targetColor.toCSS()) {
       item.selected = true;
     }
   });
@@ -2516,41 +1961,6 @@ function toggleSnap() {
   snapToGrid = !snapToGrid;
 }
 
-// Artboard options
-function showArtboardOptions() {
-  var width = prompt('Enter artboard width (points):', artboardSize.width);
-  var height = prompt('Enter artboard height (points):', artboardSize.height);
-  
-  if (width && height) {
-    artboardSize.width = parseInt(width);
-    artboardSize.height = parseInt(height);
-    
-    // Remove existing artboard
-    project.activeLayer.children.forEach(function(item) {
-      if (item.name === 'Artboard') {
-        item.remove();
-      }
-    });
-    
-    // Create new artboard
-    createArtboard();
-    saveState();
-    showToolNotification('Artboard resized');
-  }
-}
-
-function rotateArtboard(angle) {
-  artboardRotation += angle;
-  
-  project.activeLayer.children.forEach(function(item) {
-    if (item.name === 'Artboard') {
-      item.rotate(angle);
-    }
-  });
-  
-  showToolNotification('Artboard rotated ' + angle + '°');
-}
-
 // Draw grid
 function onFrame(event) {
   if (showGrid) {
@@ -2596,20 +2006,25 @@ function exportPDF() {
 // File operations
 function newDocument() {
   if (confirm('Create new document? All unsaved changes will be lost.')) {
+    // Clear the project properly
     project.activeLayer.removeChildren();
     undoStack = [];
     redoStack = [];
     layers = [];
     initLayers();
-    createArtboard();
     saveState();
     updateLayersList();
     updateProperties();
     console.log('New document created');
     
+    // Make sure the canvas is visible
     var loader = document.getElementById('loader');
     if (loader) {
       loader.style.display = 'none';
+  var loader = document.getElementById('loader');
+    if (loader) loader.style.display = 'none';
+
+    console.log('New document created');
     }
   }
 }
@@ -2695,40 +2110,6 @@ function findFont() {
   alert('Font search feature coming soon!');
 }
 
-// Transform dialog
-function showTransformDialog() {
-  var item = project.selectedItems[0];
-  if (!item) {
-    alert('Select an object first');
-    return;
-  }
-  
-  var width = prompt('Width:', Math.round(item.bounds.width));
-  var height = prompt('Height:', Math.round(item.bounds.height));
-  var rotation = prompt('Rotation:', Math.round(item.rotation));
-  
-  if (width && height && rotation) {
-    item.bounds.width = parseFloat(width);
-    item.bounds.height = parseFloat(height);
-    item.rotation = parseFloat(rotation);
-    saveState();
-  }
-}
-
-// Geometry conversions
-function convertToPoint() {
-  alert('Convert to point - Feature coming soon');
-}
-
-function convertToCurve() {
-  project.selectedItems.forEach(function(item) {
-    if (item instanceof Path) {
-      item.smooth();
-    }
-  });
-  saveState();
-}
-
 // Context menu
 document.addEventListener('contextmenu', function(event) {
   event.preventDefault();
@@ -2744,12 +2125,6 @@ document.addEventListener('click', function(event) {
   var contextMenu = document.getElementById('contextMenu');
   if (contextMenu) {
     contextMenu.style.display = 'none';
-  }
-  
-  // Close color pickers when clicking outside
-  if (!event.target.closest('.color-picker-popup') && !event.target.closest('#fillColor') && !event.target.closest('#strokeColor')) {
-    document.getElementById('fillColorPicker').classList.remove('active');
-    document.getElementById('strokeColorPicker').classList.remove('active');
   }
 });
 
@@ -2784,9 +2159,6 @@ document.addEventListener('keydown', function(event) {
   }
   if (event.key === 'a' || event.key === 'A') {
     if (!event.ctrlKey && !event.metaKey) activateTool('directSelect');
-  }
-  if (event.key === 'y' || event.key === 'Y') {
-    if (!event.ctrlKey && !event.metaKey) activateTool('magicWand');
   }
   if (event.key === 'p' || event.key === 'P') {
     if (!event.ctrlKey && !event.metaKey) activateTool('pen');
@@ -2916,8 +2288,6 @@ project.on('selectionchanged', updateProperties);
 // Initialize
 console.log('Initializing layers...');
 initLayers();
-console.log('Creating artboard...');
-createArtboard();
 console.log('Activating selection tool...');
 activateTool('select');
 console.log('Saving initial state...');
@@ -2998,14 +2368,6 @@ window.distribute = distribute;
 window.updateTypography = updateTypography;
 window.setFontStyle = setFontStyle;
 window.setTextAlign = setTextAlign;
-window.showArtboardOptions = showArtboardOptions;
-window.rotateArtboard = rotateArtboard;
-window.updateFillColor = updateFillColor;
-window.updateFillColorFromNum = updateFillColorFromNum;
-window.applyFillColor = applyFillColor;
-window.updateStrokeColor = updateStrokeColor;
-window.updateStrokeColorFromNum = updateStrokeColorFromNum;
-window.applyStrokeColor = applyStrokeColor;
 
 </script>
 
@@ -3059,6 +2421,7 @@ function showPanel(panelName) {
     dockToggle.textContent = '◀';
   }
   
+  // Show notification with panel name
   var panelNames = {
     'properties': 'Properties Panel',
     'layers': 'Layers Panel',
@@ -3089,6 +2452,7 @@ document.getElementById('strokeWeight').addEventListener('input', function() {
 // Window resize handler
 window.addEventListener('resize', function() {
   if (window.innerWidth > 900) {
+    // On desktop, always show dock
     dock.classList.add('visible');
     dock.classList.remove('hidden');
     dockVisible = true;
@@ -3124,6 +2488,7 @@ function initSwatches() {
 
 // Appearance panel functions
 function addFill() {
+  // Add new fill appearance item
   const appearanceList = document.getElementById('appearanceList');
   if (appearanceList) {
     const item = document.createElement('div');
@@ -3220,6 +2585,7 @@ function distribute(distribution) {
   if (!project || !project.selectedItems || project.selectedItems.length < 3) return;
   
   const items = project.selectedItems;
+  // Simplified distribution - would need more complex calculation for proper distribution
   alert('Distribute feature - arrange items evenly');
 }
 
@@ -3237,6 +2603,7 @@ function updateTypography() {
       item.fontFamily = fontFamily;
       item.fontSize = fontSize;
       item.leading = lineHeight;
+      // item.letterSpacing = letterSpacing; // May need different property name
     }
   });
 }
@@ -3254,6 +2621,7 @@ function setFontStyle(style) {
           item.fontStyle = 'italic';
           break;
         case 'underline':
+          // Text decoration not directly available in Paper.js
           break;
       }
     }
@@ -3281,14 +2649,20 @@ function addSwatch() {
 
 function clearSwatches() {
   if (confirm('Clear all custom swatches?')) {
-    defaultSwatches.length = 8;
+    defaultSwatches.length = 8; // Keep original 8
     initSwatches();
   }
 }
 
 // Gradient functions
 function setGradientType(type) {
+  // Would implement gradient application to selected items
   alert('Gradient type: ' + type);
+}
+
+// Transform dialog
+function showTransformDialog() {
+  alert('Transform dialog - coming soon!');
 }
 
 // Initialize swatches on load
@@ -3301,10 +2675,6 @@ window.onload = function() {
   if (window.innerWidth <= 900 && dockVisible) {
     panelBackdrop.classList.add('visible');
   }
-  
-  // Update color previews
-  updateFillColorPreview();
-  updateStrokeColorPreview();
 };
 
 // Mobile touch support for position tracking
@@ -3328,10 +2698,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Mobile touch support
 document.addEventListener('touchstart', function(e) {
+  // Prevent default touch behaviors that might interfere with drawing
   if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
-    // Allow default behavior for scrolling
+    // e.preventDefault(); // Commented out to allow scrolling
   }
 }, { passive: false });
 </script>
 </body>
 </html>
+
+
+
+
+
+
