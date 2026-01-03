@@ -24,7 +24,7 @@
 
   /* ================= APPLICATION MENU BAR ================= */
   .app-menu-bar {
-    background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0; padding-left: 150px; display: flex; gap: 0; font-size: 0.85rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap; height: 36px; align-items: center;
+    background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0; display: flex; gap: 0; font-size: 0.85rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap; height: 36px; align-items: center;
   }
   .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
@@ -68,22 +68,9 @@
   }
 
   /* ================= LEFT TOOLBAR ================= */
-#floatingToolbar {
-  position: fixed;
-  left: 20px;
-  top: 116px;
-  background: rgba(30, 41, 59, 0.95);
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #1e293b;
-  backdrop-filter: blur(8px);
-  z-index: 1150;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: calc(100vh - 180px);
-  overflow-y: auto;
-}
+  #floatingToolbar {
+    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
+  }
   .tool-group { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-bottom: 1px solid #1e293b; }
   .tool-group:last-child { border-bottom: none; }
   .tool-btn {
@@ -197,7 +184,7 @@
     .ruler-h { left: 50px; }
     .ruler-v { display: none; }
     #canvas { margin-left: 50px; }
-    .app-menu-bar { gap: 1rem; padding-left: 60px; }
+    .app-menu-bar { gap: 1rem; }
     .menu-bar > div { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
   }
 
@@ -212,125 +199,539 @@
   .context-menu div { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.85rem; }
   .context-menu div:hover { background: #1e293b; }
   .context-menu hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
-    
   </style>
-<!-- Load Paper.js -->
-<script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
-<script>
-  
-<script>
-// Clean working Paper.js setup - final version
-paper.install(window);
-paper.setup(document.getElementById('canvas'));
+  <!-- Paper.js for vector editing -->
+  <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="models.html">Models</a>
+        <a href="retexture.html">Retexture</a>
+        <a href="editor.html" class="active">Editor</a>
+      </nav>
+    </div>
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+      <button id="authBtn" class="login-btn">Login</button>
+    </div>
+  </div>
+</header>
 
-// Basic state
-var tools = {};
-var currentTool = null;
-var fillColor = '#ff0000';
-var strokeColor = '#000000';
-var strokeWidth = 1;
-var currentPath = null;
-var startPoint = null;
-var currentShape = null;
+<!-- Application Menu Bar -->
+<div class="app-menu-bar">
+  <div class="menu-bar">
+    <div>File
+      <div class="dropdown">
+        <div onclick="newDocument()">New <span class="shortcut">Ctrl+Shift+N</span></div>
+        <div onclick="document.getElementById('openFile').click()">Open... <span class="shortcut">Ctrl+Shift+O</span></div>
+        <div onclick="saveDocument()">Save <span class="shortcut">Ctrl+Shift+S</span></div>
+        <div onclick="saveDocumentAs()">Save As... <span class="shortcut">Ctrl+Shift+A</span></div>
+        <hr>
+        <div onclick="document.getElementById('placeImage').click()">Place... <span class="shortcut">Ctrl+Shift+I</span></div>
+        <hr>
+        <div onclick="exportSVG()">Export As SVG <span class="shortcut">Ctrl+Alt+S</span></div>
+        <div onclick="exportPNG()">Export As PNG <span class="shortcut">Ctrl+Alt+P</span></div>
+        <div onclick="exportPDF()">Export As PDF <span class="shortcut">Ctrl+Alt+E</span></div>
+      </div>
+    </div>
+    <div>Edit
+      <div class="dropdown">
+        <div onclick="undo()">Undo <span class="shortcut">Ctrl+Z</span></div>
+        <div onclick="redo()">Redo <span class="shortcut">Ctrl+Y</span></div>
+        <hr>
+        <div onclick="cut()">Cut <span class="shortcut">Ctrl+X</span></div>
+        <div onclick="copy()">Copy <span class="shortcut">Ctrl+C</span></div>
+        <div onclick="paste()">Paste <span class="shortcut">Ctrl+V</span></div>
+        <div onclick="duplicate()">Duplicate <span class="shortcut">Ctrl+D</span></div>
+        <div onclick="deleteSelection()">Delete <span class="shortcut">Del</span></div>
+        <hr>
+        <div onclick="selectAll()">Select All <span class="shortcut">Ctrl+A</span></div>
+        <div onclick="deselectAll()">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
+      </div>
+    </div>
+    <div>Object
+      <div class="dropdown">
+        <div onclick="groupSelection()">Group <span class="shortcut">Ctrl+G</span></div>
+        <div onclick="ungroupSelection()">Ungroup <span class="shortcut">Ctrl+Shift+G</span></div>
+        <hr>
+        <div onclick="lockSelection()">Lock <span class="shortcut">Ctrl+2</span></div>
+        <div onclick="unlockAll()">Unlock All <span class="shortcut">Ctrl+Alt+2</span></div>
+        <hr>
+        <div>Arrange &darr;
+          <div class="submenu">
+            <div onclick="bringToFront()">Bring to Front <span class="shortcut">Ctrl+Shift+]</span></div>
+            <div onclick="sendToBack()">Send to Back <span class="shortcut">Ctrl+Shift+[</span></div>
+            <hr>
+            <div onclick="bringForward()">Bring Forward <span class="shortcut">Ctrl+]</span></div>
+            <div onclick="sendBackward()">Send Backward <span class="shortcut">Ctrl+[</span></div>
+          </div>
+        </div>
+        <div>Transform &darr;
+          <div class="submenu">
+            <div onclick="rotateSelection(-90)">Rotate 90° CW</div>
+            <div onclick="rotateSelection(90)">Rotate 90° CCW</div>
+            <hr>
+            <div onclick="flipSelection('horizontal')">Flip Horizontal</div>
+            <div onclick="flipSelection('vertical')">Flip Vertical</div>
+            <hr>
+            <div onclick="showTransformDialog()">Transform...</div>
+          </div>
+        </div>
+        <hr>
+        <div>Pathfinder &darr;
+          <div class="submenu">
+            <div onclick="pathfinder('unite')">Unite</div>
+            <div onclick="pathfinder('minus')">Minus Front</div>
+            <div onclick="pathfinder('intersect')">Intersect</div>
+            <div onclick="pathfinder('exclude')">Exclude</div>
+            <hr>
+            <div onclick="pathfinder('divide')">Divide</div>
+            <div onclick="pathfinder('trim')">Trim</div>
+            <div onclick="pathfinder('merge')">Merge</div>
+            <hr>
+            <div onclick="pathfinder('crop')">Crop</div>
+            <div onclick="pathfinder('outline')">Outline</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>Type
+      <div class="dropdown">
+        <div onclick="createOutlines()">Create Outlines <span class="shortcut">Ctrl+Shift+O</span></div>
+        <div onclick="findFont()">Find Font...</div>
+      </div>
+    </div>
+    <div>Select
+      <div class="dropdown">
+        <div onclick="selectAll()">All <span class="shortcut">Ctrl+A</span></div>
+        <div onclick="deselectAll()">Deselect <span class="shortcut">Ctrl+Shift+A</span></div>
+        <hr>
+        <div onclick="selectSameFill()">Same Fill Color</div>
+        <div onclick="selectSameStroke()">Same Stroke Color</div>
+        <div onclick="selectSameStrokeWidth()">Same Stroke Width</div>
+      </div>
+    </div>
+    <div>View
+      <div class="dropdown">
+        <div onclick="zoomIn()">Zoom In <span class="shortcut">Ctrl++</span></div>
+        <div onclick="zoomOut()">Zoom Out <span class="shortcut">Ctrl+-</span></div>
+        <div onclick="zoomToFit()">Fit to Screen <span class="shortcut">Ctrl+0</span></div>
+        <div onclick="zoomTo100()">100% <span class="shortcut">Ctrl+1</span></div>
+        <hr>
+        <div onclick="toggleGrid()">Grid <span class="shortcut">Ctrl+'</span></div>
+        <div onclick="toggleRulers()">Rulers <span class="shortcut">Ctrl+R</span></div>
+        <div onclick="toggleSnap()">Snap to Grid <span class="shortcut">Ctrl+Shift+'</span></div>
+      </div>
+    </div>
+    <div>Window
+      <div class="dropdown">
+        <div onclick="showPanel('properties')">Properties</div>
+        <div onclick="showPanel('layers')">Layers <span class="shortcut">F7</span></div>
+        <div onclick="showPanel('appearance')">Appearance <span class="shortcut">Shift+F6</span></div>
+        <div onclick="showPanel('swatches')">Swatches</div>
+        <div onclick="showPanel('gradient')">Gradient</div>
+        <div onclick="showPanel('stroke')">Stroke</div>
+        <div onclick="showPanel('align')">Align <span class="shortcut">Shift+F7</span></div>
+        <div onclick="showPanel('character')">Character</div>
+        <div onclick="showPanel('paragraph')">Paragraph</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-// Activate tool
-function activateTool(name) {
-  if (tools[name]) {
-    currentTool = tools[name];
-    currentTool.activate();
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    const btn = document.getElementById(name + 'Tool');
-    if (btn) btn.classList.add('active');
-    const status = document.getElementById('statusTool');
-    if (status) status.textContent = name.charAt(0).toUpperCase() + name.slice(1) + ' Tool';
-  }
-}
+<div id="container">
+  <!-- Hidden file inputs -->
+  <input type="file" id="openFile" accept=".svg,.json" style="display:none" onchange="handleOpen(event)">
+  <input type="file" id="placeImage" accept="image/*" style="display:none" onchange="handlePlace(event)">
 
-// Selection Tool
-tools.select = new Tool();
-tools.select.onMouseDown = function(event) {
-  const hit = project.hitTest(event.point, { fill: true, stroke: true, tolerance: 10 });
-  if (hit && hit.item) {
-    if (!event.modifiers.shift) project.deselectAll();
-    hit.item.selected = true;
-  } else if (!event.modifiers.shift) {
-    project.deselectAll();
-  }
-};
-tools.select.onMouseDrag = function(event) {
-  project.selectedItems.forEach(item => item.position += event.delta);
-};
+  <div id="canvas-container">
+    <div id="loader">Vector Editor Pro • Initializing...</div>
+    
+    <!-- Rulers -->
+    <div class="ruler-corner" id="rulerCorner"></div>
+    <div class="ruler ruler-h" id="rulerH"></div>
+    <div class="ruler ruler-v" id="rulerV"></div>
+    
+    <canvas id="canvas" resize></canvas>
+    
+    <!-- Artboard indicator -->
+    <div id="artboardIndicator" class="artboard" style="display:none">
+      <div class="artboard-label">Artboard 1</div>
+    </div>
+  </div>
 
-// Pen Tool
-tools.pen = new Tool();
-tools.pen.onMouseDown = function(event) {
-  currentPath = new Path({ strokeColor: strokeColor, strokeWidth: strokeWidth });
-  currentPath.add(event.point);
-};
-tools.pen.onMouseDrag = function(event) {
-  currentPath.add(event.point);
-  currentPath.smooth();
-};
-tools.pen.onMouseUp = function() {
-  currentPath.simplify();
-  currentPath.fillColor = fillColor;
-  currentPath.selected = true;
-  currentPath = null;
-};
+  <!-- Left Toolbar -->
+  <div id="floatingToolbar">
+    <div class="tool-group">
+      <div class="tool-btn active" id="selectTool" title="Selection Tool (V)">⬚<span class="tooltip">Selection (V)</span></div>
+      <div class="tool-btn" id="directSelectTool" title="Direct Selection Tool (A)">↖<span class="tooltip">Direct Selection (A)</span></div>
+      <div class="tool-btn" id="magicWandTool" title="Magic Wand Tool (Y)">✦<span class="tooltip">Magic Wand (Y)</span></div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-btn" id="penTool" title="Pen Tool (P)">✒<span class="tooltip">Pen (P)</span></div>
+      <div class="tool-btn" id="pencilTool" title="Pencil Tool (N)">✎<span class="tooltip">Pencil (N)</span></div>
+      <div class="tool-btn" id="brushTool" title="Brush Tool (B)">🖌<span class="tooltip">Brush (B)</span></div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)">□<span class="tooltip">Rectangle (M)</span></div>
+      <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)">○<span class="tooltip">Ellipse (L)</span></div>
+      <div class="tool-btn" id="polygonTool" title="Polygon Tool">⬡<span class="tooltip">Polygon</span></div>
+      <div class="tool-btn" id="starTool" title="Star Tool">★<span class="tooltip">Star</span></div>
+      <div class="tool-btn" id="lineTool" title="Line Tool (/)">╱<span class="tooltip">Line (/)</span></div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-btn" id="typeTool" title="Type Tool (T)">T<span class="tooltip">Type (T)</span></div>
+      <div class="tool-btn" id="typeOnPathTool" title="Type on Path Tool">↝<span class="tooltip">Type on Path</span></div>
+      <div class="tool-btn" id="touchTypeTool" title="Touch Type Tool">𝓣<span class="tooltip">Touch Type</span></div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-btn" id="shapeBuilderTool" title="Shape Builder Tool (Shift+M)">⧆<span class="tooltip">Shape Builder</span></div>
+      <div class="tool-btn" id="perspectiveGridTool" title="Perspective Grid Tool">▦<span class="tooltip">Perspective Grid</span></div>
+      <div class="tool-btn" id="freeTransformTool" title="Free Transform Tool (E)">⤡<span class="tooltip">Free Transform (E)</span></div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-btn" id="eyedropperTool" title="Eyedropper Tool (I)">💧<span class="tooltip">Eyedropper (I)</span></div>
+      <div class="tool-btn" id="measureTool" title="Measure Tool">📏<span class="tooltip">Measure</span></div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-btn" id="handTool" title="Hand Tool (H)">✋<span class="tooltip">Hand (H)</span></div>
+      <div class="tool-btn" id="zoomTool" title="Zoom Tool (Z)">🔍<span class="tooltip">Zoom (Z)</span></div>
+    </div>
+    <div class="tool-group">
+      <div class="tool-btn" id="fillColor" title="Fill Color">◐<span class="tooltip">Fill</span></div>
+      <div class="tool-btn" id="strokeColor" title="Stroke Color">⭘<span class="tooltip">Stroke</span></div>
+      <div class="tool-btn" id="defaultColors" title="Default Colors">⚬<span class="tooltip">Default Colors</span></div>
+    </div>
+  </div>
 
-// Rectangle Tool
-tools.rectangle = new Tool();
-tools.rectangle.onMouseDown = function(event) {
-  startPoint = event.point;
-};
-tools.rectangle.onMouseDrag = function(event) {
-  if (currentShape) currentShape.remove();
-  let rect = new Rectangle(startPoint, event.point);
-  if (event.modifiers.shift) {
-    const size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
-    rect = new Rectangle(startPoint, startPoint.add(size * Math.sign(rect.width), size * Math.sign(rect.height)));
-  }
-  currentShape = new Path.Rectangle(rect);
-  currentShape.fillColor = fillColor;
-  currentShape.strokeColor = strokeColor;
-  currentShape.strokeWidth = strokeWidth;
-};
-tools.rectangle.onMouseUp = function() {
-  if (currentShape) {
-    currentShape.selected = true;
-    currentShape = null;
-  }
-};
+  <!-- Right Panel Dock -->
+  <div class="panel-dock visible" id="panelDock">
+    <button id="dockToggle">◀</button>
+    
+    <div class="panel-tabs">
+      <button class="panel-tab active" data-panel="properties">Properties</button>
+      <button class="panel-tab" data-panel="layers">Layers</button>
+      <button class="panel-tab" data-panel="appearance">Appearance</button>
+      <button class="panel-tab" data-panel="swatches">Swatches</button>
+      <button class="panel-tab" data-panel="gradient">Gradient</button>
+      <button class="panel-tab" data-panel="stroke">Stroke</button>
+      <button class="panel-tab" data-panel="align">Align</button>
+      <button class="panel-tab" data-panel="character">Character</button>
+      <button class="panel-tab" data-panel="paragraph">Paragraph</button>
+    </div>
+    
+    <div class="panel-content">
+      <!-- Properties Panel -->
+      <div id="panel-properties" class="panel-section active">
+        <h3>Transform</h3>
+        <div class="control-row">
+          <div class="control-group" style="flex:1">
+            <label>X</label>
+            <input type="number" id="propX" onchange="updateTransform()">
+          </div>
+          <div class="control-group" style="flex:1">
+            <label>Y</label>
+            <input type="number" id="propY" onchange="updateTransform()">
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="control-group" style="flex:1">
+            <label>W</label>
+            <input type="number" id="propW" onchange="updateTransform()">
+          </div>
+          <div class="control-group" style="flex:1">
+            <label>H</label>
+            <input type="number" id="propH" onchange="updateTransform()">
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="control-group" style="flex:1">
+            <label>Rotation</label>
+            <input type="number" id="propRotation" onchange="updateTransform()">
+          </div>
+          <div class="control-group" style="flex:1">
+            <label>Shear</label>
+            <input type="number" id="propShear" onchange="updateTransform()">
+          </div>
+        </div>
+        <div class="control-group">
+          <label>Opacity <span id="opacityVal">100</span>%</label>
+          <input type="range" id="propOpacity" min="0" max="100" value="100" oninput="updateOpacity()">
+        </div>
+        <div class="control-group">
+          <label>Blend Mode</label>
+          <select id="propBlendMode" onchange="updateBlendMode()">
+            <option value="normal">Normal</option>
+            <option value="multiply">Multiply</option>
+            <option value="screen">Screen</option>
+            <option value="overlay">Overlay</option>
+            <option value="darken">Darken</option>
+            <option value="lighten">Lighten</option>
+            <option value="color-dodge">Color Dodge</option>
+            <option value="color-burn">Color Burn</option>
+            <option value="hard-light">Hard Light</option>
+            <option value="soft-light">Soft Light</option>
+            <option value="difference">Difference</option>
+            <option value="exclusion">Exclusion</option>
+            <option value="hue">Hue</option>
+            <option value="saturation">Saturation</option>
+            <option value="color">Color</option>
+            <option value="luminosity">Luminosity</option>
+          </select>
+        </div>
+        
+        <h3>Geometry</h3>
+        <div class="control-row">
+          <button class="btn btn-sm" onclick="convertToPoint()">Convert to Point</button>
+          <button class="btn btn-sm" onclick="convertToCurve()">Convert to Curve</button>
+        </div>
+      </div>
 
-// Hand Tool
-tools.hand = new Tool();
-var lastPoint;
-tools.hand.onMouseDown = function(event) {
-  lastPoint = event.point;
-};
-tools.hand.onMouseDrag = function(event) {
-  view.center -= event.point - lastPoint;
-  lastPoint = event.point;
-};
+      <!-- Layers Panel -->
+      <div id="panel-layers" class="panel-section">
+        <div class="control-row" style="margin-bottom: 1rem;">
+          <button class="btn btn-sm" onclick="addLayer()">+ New Layer</button>
+          <button class="btn btn-sm" onclick="deleteLayer()">Delete Layer</button>
+        </div>
+        <div id="layersList">
+          <!-- Layers will be populated dynamically -->
+        </div>
+      </div>
 
-// Zoom Tool
-tools.zoom = new Tool();
-tools.zoom.onMouseDown = function(event) {
-  view.zoom *= event.modifiers.alt ? 0.9 : 1.1;
-  view.center = event.point;
-};
+      <!-- Appearance Panel -->
+      <div id="panel-appearance" class="panel-section">
+        <div class="control-row" style="margin-bottom: 1rem;">
+          <button class="btn btn-sm btn-primary" onclick="addFill()">+ Add Fill</button>
+          <button class="btn btn-sm" onclick="addStroke()">+ Add Stroke</button>
+        </div>
+        <div id="appearanceList">
+          <!-- Appearance items will be populated dynamically -->
+        </div>
+        <h3>Effects</h3>
+        <button class="btn btn-sm" style="width:100%">+ Add Effect</button>
+      </div>
 
-// Connect buttons
-document.getElementById('selectTool')?.addEventListener('click', () => activateTool('select'));
-document.getElementById('penTool')?.addEventListener('click', () => activateTool('pen'));
-document.getElementById('rectangleTool')?.addEventListener('click', () => activateTool('rectangle'));
-document.getElementById('handTool')?.addEventListener('click', () => activateTool('hand'));
-document.getElementById('zoomTool')?.addEventListener('click', () => activateTool('zoom'));
+      <!-- Swatches Panel -->
+      <div id="panel-swatches" class="panel-section">
+        <div class="control-row" style="margin-bottom: 1rem;">
+          <button class="btn btn-sm" onclick="addSwatch()">+ New Swatch</button>
+          <button class="btn btn-sm" onclick="clearSwatches()">Clear</button>
+        </div>
+        <div class="swatch-grid" id="swatchGrid">
+          <!-- Swatches will be populated dynamically -->
+        </div>
+      </div>
 
-// Hide loader and start
-document.getElementById('loader').style.display = 'none';
-activateTool('select');
-</script>
+      <!-- Gradient Panel -->
+      <div id="panel-gradient" class="panel-section">
+        <h3>Gradient Type</h3>
+        <div class="btn-group" style="margin-bottom: 1rem;">
+          <button class="btn" onclick="setGradientType('linear')">Linear</button>
+          <button class="btn" onclick="setGradientType('radial')">Radial</button>
+        </div>
+        
+        <h3>Gradient Stops</h3>
+        <div id="gradientStops">
+          <div class="control-row">
+            <div class="control-group" style="flex:1">
+              <label>Stop 1</label>
+              <input type="color" id="gradientStop1" value="#60a5fa">
+            </div>
+            <div class="control-group" style="flex:1">
+              <label>Position</label>
+              <input type="range" id="gradientPos1" min="0" max="100" value="0">
+            </div>
+          </div>
+          <div class="control-row">
+            <div class="control-group" style="flex:1">
+              <label>Stop 2</label>
+              <input type="color" id="gradientStop2" value="#020617">
+            </div>
+            <div class="control-group" style="flex:1">
+              <label>Position</label>
+              <input type="range" id="gradientPos2" min="0" max="100" value="100">
+            </div>
+          </div>
+        </div>
+        
+        <h3>Angle</h3>
+        <div class="control-row">
+          <input type="range" id="gradientAngle" min="0" max="360" value="0">
+          <span id="gradientAngleVal">0°</span>
+        </div>
+      </div>
+
+      <!-- Stroke Panel -->
+      <div id="panel-stroke" class="panel-section">
+        <div class="control-group">
+          <label>Weight</label>
+          <input type="range" id="strokeWeight" min="0" max="100" value="1" oninput="updateStroke()">
+          <span id="strokeWeightVal">1 px</span>
+        </div>
+        <div class="control-group">
+          <label>Cap</label>
+          <div class="btn-group">
+            <button class="btn" onclick="setStrokeCap('butt')">Butt</button>
+            <button class="btn" onclick="setStrokeCap('round')">Round</button>
+            <button class="btn" onclick="setStrokeCap('square')">Square</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label>Join</label>
+          <div class="btn-group">
+            <button class="btn" onclick="setStrokeJoin('miter')">Miter</button>
+            <button class="btn" onclick="setStrokeJoin('round')">Round</button>
+            <button class="btn" onclick="setStrokeJoin('bevel')">Bevel</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label>Dash Array</label>
+          <input type="text" id="strokeDash" placeholder="5,5" oninput="updateStroke()">
+        </div>
+        <div class="control-group">
+          <label>Color</label>
+          <input type="color" id="strokeColorInput" value="#000000" oninput="updateStroke()">
+        </div>
+      </div>
+
+      <!-- Align Panel -->
+      <div id="panel-align" class="panel-section">
+        <h3>Align Objects</h3>
+        <div class="align-grid">
+          <button class="align-btn" onclick="align('left')" title="Align Left">⬅</button>
+          <button class="align-btn" onclick="align('center-h')" title="Align Center">⬌</button>
+          <button class="align-btn" onclick="align('right')" title="Align Right">➡</button>
+          <button class="align-btn" onclick="align('top')" title="Align Top">⬆</button>
+          <button class="align-btn" onclick="align('center-v')" title="Align Center">⬍</button>
+          <button class="align-btn" onclick="align('bottom')" title="Align Bottom">⬇</button>
+        </div>
+        
+        <h3>Distribute Objects</h3>
+        <div class="align-grid">
+          <button class="align-btn" onclick="distribute('left')">⫷</button>
+          <button class="align-btn" onclick="distribute('center-h')">⫸</button>
+          <button class="align-btn" onclick="distribute('right')">⫹</button>
+          <button class="align-btn" onclick="distribute('top')">⬏</button>
+          <button class="align-btn" onclick="distribute('center-v')">⬎</button>
+          <button class="align-btn" onclick="distribute('bottom')">⬐</button>
+        </div>
+      </div>
+
+      <!-- Character Panel -->
+      <div id="panel-character" class="panel-section">
+        <div class="control-group">
+          <label>Font Family</label>
+          <select id="fontFamily" onchange="updateTypography()">
+            <option value="Arial">Arial</option>
+            <option value="Helvetica">Helvetica</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Impact">Impact</option>
+            <option value="Comic Sans MS">Comic Sans MS</option>
+          </select>
+        </div>
+        <div class="control-row">
+          <div class="control-group" style="flex:1">
+            <label>Font Size</label>
+            <input type="number" id="fontSize" value="32" onchange="updateTypography()">
+          </div>
+          <div class="control-group" style="flex:1">
+            <label>Leading</label>
+            <input type="number" id="lineHeight" value="40" onchange="updateTypography()">
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="control-group" style="flex:1">
+            <label>Tracking</label>
+            <input type="number" id="letterSpacing" value="0" onchange="updateTypography()">
+          </div>
+        </div>
+        <div class="btn-group" style="margin-bottom: 1rem;">
+          <button class="btn" onclick="setFontStyle('bold')">B</button>
+          <button class="btn" onclick="setFontStyle('italic')">I</button>
+          <button class="btn" onclick="setFontStyle('underline')">U</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="setTextAlign('left')">⬅</button>
+          <button class="btn" onclick="setTextAlign('center')">⬌</button>
+          <button class="btn" onclick="setTextAlign('right')">➡</button>
+          <button class="btn" onclick="setTextAlign('justify')">≡</button>
+        </div>
+      </div>
+
+      <!-- Paragraph Panel -->
+      <div id="panel-paragraph" class="panel-section">
+        <div class="control-group">
+          <label>Alignment</label>
+          <div class="btn-group">
+            <button class="btn" onclick="setTextAlign('left')">Left</button>
+            <button class="btn" onclick="setTextAlign('center')">Center</button>
+            <button class="btn" onclick="setTextAlign('right')">Right</button>
+            <button class="btn" onclick="setTextAlign('justify')">Justify</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="control-group" style="flex:1">
+            <label>Left Indent</label>
+            <input type="number" id="indentLeft" value="0" onchange="updateTypography()">
+          </div>
+          <div class="control-group" style="flex:1">
+            <label>Right Indent</label>
+            <input type="number" id="indentRight" value="0" onchange="updateTypography()">
+          </div>
+        </div>
+        <div class="control-group">
+          <label>First Line Indent</label>
+          <input type="number" id="indentFirst" value="0" onchange="updateTypography()">
+        </div>
+        <div class="control-group">
+          <label>Space Before</label>
+          <input type="number" id="spaceBefore" value="0" onchange="updateTypography()">
+        </div>
+        <div class="control-group">
+          <label>Space After</label>
+          <input type="number" id="spaceAfter" value="0" onchange="updateTypography()">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <div class="left">
+    <span id="statusTool">Selection Tool</span>
+    <span id="statusZoom">100%</span>
+    <span id="statusPosition">X: 0 Y: 0</span>
+  </div>
+  <div class="right">
+    <span id="statusSelection">No selection</span>
+    <span id="statusMemory">Document: Untitled</span>
+  </div>
+</div>
+
+<!-- Context Menu -->
+<div class="context-menu" id="contextMenu">
+  <div onclick="copy()">Copy</div>
+  <div onclick="paste()">Paste</div>
+  <div onclick="duplicate()">Duplicate</div>
+  <hr>
+  <div onclick="bringToFront()">Bring to Front</div>
+  <div onclick="sendToBack()">Send to Back</div>
+  <hr>
+  <div onclick="groupSelection()">Group</div>
+  <div onclick="ungroupSelection()">Ungroup</div>
+  <hr>
+  <div onclick="deleteSelection()">Delete</div>
+</div>
 
 <!-- Firebase Auth -->
 <script type="module">
@@ -2003,9 +2404,3 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
-
-
-
-
-
-
