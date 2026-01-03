@@ -24,26 +24,27 @@
 
   /* ================= APPLICATION MENU BAR ================= */
   .app-menu-bar {
-    background: rgba(15,23,42,0.95); border-bottom: 1px solid #1e293b; padding: 4px 1rem; display: flex; gap: 2rem; font-size: 0.9rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap;
+    background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0; display: flex; gap: 0; font-size: 0.85rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap; height: 36px; align-items: center;
   }
+  .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
-    position: relative; cursor: pointer; padding: 0.4rem 0.8rem;
+    position: relative; cursor: pointer; padding: 0.5rem 1rem; height: 100%; display: flex; align-items: center; user-select: none;
   }
-  .menu-bar > div:hover { color: #60a5fa; }
+  .menu-bar > div:hover { color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
   .dropdown {
-    position: absolute; top: 100%; left: 0; background: #0f172a; border: 1px solid #1e293b; min-width: 240px; display: none; flex-direction: column; box-shadow: 0 8px 20px rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden; z-index: 1000;
+    position: absolute; top: 100%; left: 0; background: #0f172a; border: 1px solid #1e293b; min-width: 260px; display: none; flex-direction: column; box-shadow: 0 8px 25px rgba(0,0,0,0.6); border-radius: 6px; overflow: hidden; z-index: 10000; margin-top: 2px;
   }
-  .dropdown div { padding: 0.6rem 1rem; text-align: left; white-space: nowrap; transition: background 0.2s; font-size: 0.85rem; }
+  .dropdown div { padding: 0.6rem 1.2rem; text-align: left; white-space: nowrap; transition: background 0.15s; font-size: 0.85rem; cursor: pointer; }
   .dropdown div:hover { background: #1e293b; }
   .dropdown div:active { background: #334155; }
   .dropdown .shortcut { float: right; color: #64748b; font-size: 0.75rem; margin-left: 2rem; }
-  .dropdown hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
-  .dropdown .submenu { position: absolute; left: 100%; top: 0; min-width: 200px; display: none; }
+  .dropdown hr { border: none; border-top: 1px solid #1e293b; margin: 0.4rem 0; }
+  .dropdown .submenu { position: absolute; left: 100%; top: 0; min-width: 220px; display: none; }
   .dropdown div:hover .submenu { display: flex; }
-  .menu-bar > div:hover .dropdown { display: flex; }
+  .menu-bar > div:hover .dropdown, .dropdown:hover { display: flex; }
 
   /* ================= MAIN LAYOUT ================= */
-  #container { position: relative; width: 100%; height: 100%; padding-top: 110px; padding-bottom: 0; display: flex; }
+  #container { position: relative; width: 100%; height: 100%; padding-top: 106px; padding-bottom: 0; display: flex; }
   
   /* ================= CANVAS AREA ================= */
   #canvas-container {
@@ -68,7 +69,7 @@
 
   /* ================= LEFT TOOLBAR ================= */
   #floatingToolbar {
-    position: fixed; left: 20px; top: 120px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 200px); overflow-y: auto;
+    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
   }
   .tool-group { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-bottom: 1px solid #1e293b; }
   .tool-group:last-child { border-bottom: none; }
@@ -84,7 +85,7 @@
 
   /* ================= RIGHT PANEL DOCK ================= */
   .panel-dock {
-    position: fixed; right: 20px; top: 120px; width: 320px; max-height: calc(100vh - 160px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; z-index: 20; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column;
+    position: fixed; right: 20px; top: 116px; width: 320px; max-height: calc(100vh - 140px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; z-index: 20; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column;
   }
   
   #dockToggle { 
@@ -172,7 +173,7 @@
   /* Mobile */
   @media (max-width: 900px) {
     #floatingToolbar { 
-      left: 10px; top: 115px; padding: 6px; max-height: calc(100vh - 180px);
+      left: 10px; top: 111px; padding: 6px; max-height: calc(100vh - 160px);
     }
     .tool-btn { width: 38px; height: 38px; font-size: 1.1rem; }
     .panel-dock { 
@@ -227,12 +228,12 @@
   <div class="menu-bar">
     <div>File
       <div class="dropdown">
-        <div onclick="newDocument()">New <span class="shortcut">Ctrl+N</span></div>
-        <div onclick="document.getElementById('openFile').click()">Open... <span class="shortcut">Ctrl+O</span></div>
-        <div onclick="saveDocument()">Save <span class="shortcut">Ctrl+S</span></div>
-        <div onclick="saveDocumentAs()">Save As... <span class="shortcut">Ctrl+Shift+S</span></div>
+        <div onclick="newDocument()">New <span class="shortcut">Ctrl+Shift+N</span></div>
+        <div onclick="document.getElementById('openFile').click()">Open... <span class="shortcut">Ctrl+Shift+O</span></div>
+        <div onclick="saveDocument()">Save <span class="shortcut">Ctrl+Shift+S</span></div>
+        <div onclick="saveDocumentAs()">Save As... <span class="shortcut">Ctrl+Shift+A</span></div>
         <hr>
-        <div onclick="document.getElementById('placeImage').click()">Place... <span class="shortcut">Ctrl+Shift+P</span></div>
+        <div onclick="document.getElementById('placeImage').click()">Place... <span class="shortcut">Ctrl+Shift+I</span></div>
         <hr>
         <div onclick="exportSVG()">Export As SVG <span class="shortcut">Ctrl+Alt+S</span></div>
         <div onclick="exportPNG()">Export As PNG <span class="shortcut">Ctrl+Alt+P</span></div>
@@ -1928,19 +1929,61 @@ document.addEventListener('click', function(event) {
 document.addEventListener('keydown', function(event) {
   if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
   
+  // File shortcuts
+  if ((event.ctrlKey || event.metaKey) && (event.key === 'n' || event.key === 'N')) {
+    if (event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+      newDocument();
+    }
+  }
+  if ((event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S')) {
+    if (event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+      saveDocument();
+    }
+  }
+  if ((event.ctrlKey || event.metaKey) && (event.key === 'o' || event.key === 'O')) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('openFile').click();
+  }
+  
   // Tool shortcuts
-  if (event.key === 'v' || event.key === 'V') activateTool('select');
-  if (event.key === 'a' || event.key === 'A') activateTool('directSelect');
-  if (event.key === 'p' || event.key === 'P') activateTool('pen');
-  if (event.key === 'n' || event.key === 'N') activateTool('pencil');
-  if (event.key === 'b' || event.key === 'B') activateTool('brush');
-  if (event.key === 'm' || event.key === 'M') activateTool('rectangle');
-  if (event.key === 'l' || event.key === 'L') activateTool('ellipse');
-  if (event.key === 't' || event.key === 'T') activateTool('type');
-  if (event.key === 'i' || event.key === 'I') activateTool('eyedropper');
-  if (event.key === 'h' || event.key === 'H') activateTool('hand');
+  if (event.key === 'v' || event.key === 'V') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('select');
+  }
+  if (event.key === 'a' || event.key === 'A') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('directSelect');
+  }
+  if (event.key === 'p' || event.key === 'P') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('pen');
+  }
+  if (event.key === 'n' || event.key === 'N') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('pencil');
+  }
+  if (event.key === 'b' || event.key === 'B') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('brush');
+  }
+  if (event.key === 'm' || event.key === 'M') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('rectangle');
+  }
+  if (event.key === 'l' || event.key === 'L') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('ellipse');
+  }
+  if (event.key === 't' || event.key === 'T') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('type');
+  }
+  if (event.key === 'i' || event.key === 'I') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('eyedropper');
+  }
+  if (event.key === 'h' || event.key === 'H') {
+    if (!event.ctrlKey && !event.metaKey) activateTool('hand');
+  }
   if (event.key === 'z' || event.key === 'Z') {
     if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
       if (event.shiftKey) {
         redo();
       } else {
@@ -1954,7 +1997,9 @@ document.addEventListener('keydown', function(event) {
   // Edit shortcuts
   if ((event.ctrlKey || event.metaKey) && event.key === 'c') copy();
   if ((event.ctrlKey || event.metaKey) && event.key === 'x') cut();
-  if ((event.ctrlKey || event.metaKey) && event.key === 'v') paste();
+  if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+    if (!event.shiftKey) paste();
+  }
   if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
     event.preventDefault();
     duplicate();
@@ -2153,9 +2198,8 @@ function initSwatches() {
     swatch.className = 'swatch';
     swatch.style.backgroundColor = color;
     swatch.onclick = function() {
-      fillColor = color;
-      if (project && project.selectedItems && project.selectedItems.length) {
-        project.selectedItems.forEach(item => {
+      if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
+        window.project.selectedItems.forEach(item => {
           item.fillColor = color;
         });
       }
@@ -2173,8 +2217,8 @@ function addFill() {
     item.className = 'appearance-item';
     item.innerHTML = `
       <span class="type">Fill</span>
-      <div class="color-preview" style="background-color: ${fillColor}"></div>
-      <span class="value">${fillColor}</span>
+      <div class="color-preview" style="background-color: #ff0000"></div>
+      <span class="value">#ff0000</span>
     `;
     appearanceList.appendChild(item);
   }
@@ -2187,8 +2231,8 @@ function addStroke() {
     item.className = 'appearance-item';
     item.innerHTML = `
       <span class="type">Stroke</span>
-      <div class="color-preview" style="background-color: ${strokeColor}"></div>
-      <span class="value">${strokeColor}</span>
+      <div class="color-preview" style="background-color: #000000"></div>
+      <span class="value">#000000</span>
     `;
     appearanceList.appendChild(item);
   }
@@ -2196,16 +2240,16 @@ function addStroke() {
 
 // Stroke panel functions
 function setStrokeCap(cap) {
-  if (project && project.selectedItems && project.selectedItems.length) {
-    project.selectedItems.forEach(item => {
+  if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
+    window.project.selectedItems.forEach(item => {
       item.strokeCap = cap;
     });
   }
 }
 
 function setStrokeJoin(join) {
-  if (project && project.selectedItems && project.selectedItems.length) {
-    project.selectedItems.forEach(item => {
+  if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
+    window.project.selectedItems.forEach(item => {
       item.strokeJoin = join;
     });
   }
@@ -2216,8 +2260,8 @@ function updateStroke() {
   const dash = document.getElementById('strokeDash').value;
   const color = document.getElementById('strokeColorInput').value;
   
-  if (project && project.selectedItems && project.selectedItems.length) {
-    project.selectedItems.forEach(item => {
+  if (window.project && window.project.selectedItems && window.project.selectedItems.length) {
+    window.project.selectedItems.forEach(item => {
       item.strokeWidth = weight;
       if (dash) {
         const dashArray = dash.split(',').map(d => parseFloat(d.trim()));
@@ -2232,9 +2276,9 @@ function updateStroke() {
 
 // Align functions
 function align(alignment) {
-  if (!project || !project.selectedItems || project.selectedItems.length < 2) return;
+  if (!window.project || !window.project.selectedItems || window.project.selectedItems.length < 2) return;
   
-  const items = project.selectedItems;
+  const items = window.project.selectedItems;
   const bounds = items.map(item => item.bounds);
   
   switch(alignment) {
@@ -2269,14 +2313,14 @@ function distribute(distribution) {
 
 // Typography functions
 function updateTypography() {
-  if (!project || !project.selectedItems || project.selectedItems.length === 0) return;
+  if (!window.project || !window.project.selectedItems || window.project.selectedItems.length === 0) return;
   
   const fontFamily = document.getElementById('fontFamily').value;
   const fontSize = parseInt(document.getElementById('fontSize').value);
   const lineHeight = parseInt(document.getElementById('lineHeight').value);
   const letterSpacing = parseInt(document.getElementById('letterSpacing').value);
   
-  project.selectedItems.forEach(item => {
+  window.project.selectedItems.forEach(item => {
     if (item instanceof PointText) {
       item.fontFamily = fontFamily;
       item.fontSize = fontSize;
@@ -2287,9 +2331,9 @@ function updateTypography() {
 }
 
 function setFontStyle(style) {
-  if (!project || !project.selectedItems || project.selectedItems.length === 0) return;
+  if (!window.project || !window.project.selectedItems || window.project.selectedItems.length === 0) return;
   
-  project.selectedItems.forEach(item => {
+  window.project.selectedItems.forEach(item => {
     if (item instanceof PointText) {
       switch(style) {
         case 'bold':
@@ -2307,9 +2351,9 @@ function setFontStyle(style) {
 }
 
 function setTextAlign(align) {
-  if (!project || !project.selectedItems || project.selectedItems.length === 0) return;
+  if (!window.project || !window.project.selectedItems || window.project.selectedItems.length === 0) return;
   
-  project.selectedItems.forEach(item => {
+  window.project.selectedItems.forEach(item => {
     if (item instanceof PointText) {
       item.justification = align;
     }
