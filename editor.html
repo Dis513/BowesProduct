@@ -24,7 +24,7 @@
 
   /* ================= APPLICATION MENU BAR ================= */
   .app-menu-bar {
-    background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0; padding-left: 80px; display: flex; gap: 0; font-size: 0.85rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap; height: 36px; align-items: center;
+    background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0; padding-left: 150px; display: flex; gap: 0; font-size: 0.85rem; position: sticky; top: 70px; z-index: 999; backdrop-filter: blur(10px); flex-wrap: wrap; height: 36px; align-items: center;
   }
   .menu-bar { display: flex; height: 100%; }
   .menu-bar > div {
@@ -222,12 +222,133 @@ paper.setup(document.getElementById('canvas'));
 
 <!-- Load Paper.js -->
 <script src="https://cdn.jsdelivr.net/npm/paper@0.12.17/dist/paper-full.min.js"></script>
-
-<!-- Your Vector Editor Script (Standard Paper.js Mode) -->
 <script>
-// Install Paper.js into the global window scope and setup the canvas
+// Reliable Paper.js setup - FIXED (no random 'F')
 paper.install(window);
-paper.setup(document.getElementById('canvas'));F
+paper.setup(document.getElementById('canvas'));
+
+// Global state
+var tools = {};
+var currentTool = null;
+
+var fillColor = '#ff0000';
+var strokeColor = '#000000';
+var strokeWidth = 1;
+
+var currentPath = null;
+var startPoint = null;
+var currentShape = null;
+
+// Tool activation
+function activateTool(name) {
+  if (tools[name]) {
+    currentTool = tools[name];
+    currentTool.activate();
+
+    // Update toolbar buttons
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById(name + 'Tool');
+    if (btn) btn.classList.add('active');
+
+    // Update status bar
+    const statusTool = document.getElementById('statusTool');
+    if (statusTool) statusTool.textContent = name.charAt(0).toUpperCase() + name.slice(1) + ' Tool';
+  }
+}
+
+// Selection Tool (V)
+tools.select = new Tool();
+tools.select.onMouseDown = function(event) {
+  const hit = project.hitTest(event.point, { fill: true, stroke: true, tolerance: 10 });
+  if (hit && hit.item) {
+    if (!event.modifiers.shift) project.deselectAll();
+    hit.item.selected = true;
+  } else if (!event.modifiers.shift) {
+    project.deselectAll();
+  }
+};
+tools.select.onMouseDrag = function(event) {
+  if (project.selectedItems.length > 0) {
+    project.selectedItems.forEach(item => item.position += event.delta);
+  }
+};
+
+// Pen Tool (P)
+tools.pen = new Tool();
+tools.pen.onMouseDown = function(event) {
+  currentPath = new Path({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+  currentPath.add(event.point);
+};
+tools.pen.onMouseDrag = function(event) {
+  currentPath.add(event.point);
+  currentPath.smooth();
+};
+tools.pen.onMouseUp = function() {
+  currentPath.simplify();
+  currentPath.fillColor = fillColor;
+  currentPath.selected = true;
+  currentPath = null;
+};
+
+// Rectangle Tool (M)
+tools.rectangle = new Tool();
+tools.rectangle.onMouseDown = function(event) {
+  startPoint = event.point;
+};
+tools.rectangle.onMouseDrag = function(event) {
+  if (currentShape) currentShape.remove();
+  let rect = new Rectangle(startPoint, event.point);
+  if (event.modifiers.shift) {
+    const size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
+    rect = new Rectangle(startPoint, startPoint.add(size * Math.sign(rect.width), size * Math.sign(rect.height)));
+  }
+  currentShape = new Path.Rectangle(rect);
+  currentShape.fillColor = fillColor;
+  currentShape.strokeColor = strokeColor;
+  currentShape.strokeWidth = strokeWidth;
+};
+tools.rectangle.onMouseUp = function() {
+  if (currentShape) {
+    currentShape.selected = true;
+    currentShape = null;
+  }
+};
+
+// Hand Tool (H) - Pan
+tools.hand = new Tool();
+var lastPoint;
+tools.hand.onMouseDown = function(event) {
+  lastPoint = event.point;
+  view.element.style.cursor = 'grabbing';
+};
+tools.hand.onMouseDrag = function(event) {
+  view.center -= event.point - lastPoint;
+  lastPoint = event.point;
+};
+tools.hand.onMouseUp = function() {
+  view.element.style.cursor = 'grab';
+};
+
+// Zoom Tool (Z)
+tools.zoom = new Tool();
+tools.zoom.onMouseDown = function(event) {
+  view.zoom *= event.modifiers.alt ? 0.9 : 1.1;
+  view.center = event.point;
+};
+
+// Connect toolbar buttons
+document.getElementById('selectTool')?.addEventListener('click', () => activateTool('select'));
+document.getElementById('penTool')?.addEventListener('click', () => activateTool('pen'));
+document.getElementById('rectangleTool')?.addEventListener('click', () => activateTool('rectangle'));
+document.getElementById('handTool')?.addEventListener('click', () => activateTool('hand'));
+document.getElementById('zoomTool')?.addEventListener('click', () => activateTool('zoom'));
+
+// Hide the loader
+document.getElementById('loader').style.display = 'none';
+
+// Start with Selection tool
+activateTool('select');
+</script>
 // ==================== GLOBAL STATE ====================
 var tools = {};
 var currentTool = null;
@@ -2713,6 +2834,7 @@ document.addEventListener('touchstart', function(e) {
 </script>
 </body>
 </html>
+
 
 
 
