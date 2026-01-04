@@ -1893,7 +1893,15 @@ async function showSceneLoader() {
     const snapshot = await getDocs(scenesRef);
     const scenes = [];
     snapshot.forEach(doc => {
-      scenes.push({ id: doc.id, ...doc.data() });
+    snapshot.forEach(doc => {
+  scenes.push(
+    Object.assign(
+      { id: doc.id },
+      doc.data()
+    )
+  );
+});
+
     });
     if (scenes.length === 0) {
       showNotification('No saved scenes');
@@ -2162,6 +2170,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
