@@ -302,6 +302,14 @@
     .dropdown { z-index: 1900; }
   }
   </style>
+  <script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -2117,29 +2125,29 @@ window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
 
 </script>
-<!-- THREE.JS MODULE LOADER – PUT THIS LAST -->
-  <script type="module">
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
-    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js';
-    import { TransformControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/TransformControls.js';
-    import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/GLTFLoader.js';
-    import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/OBJLoader.js';
-    import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/STLLoader.js';
-    import { GLTFExporter } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/exporters/GLTFExporter.js';
+<script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { TransformControls } from 'three/addons/controls/TransformControls.js';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+  import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+  import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
-    window.THREE = THREE;
-    THREE.OrbitControls = OrbitControls;
-    THREE.TransformControls = TransformControls;
-    THREE.GLTFLoader = GLTFLoader;
-    THREE.OBJLoader = OBJLoader;
-    THREE.STLLoader = STLLoader;
-    THREE.GLTFExporter = GLTFExporter;
+  // Attach to global so your existing code works unchanged
+  window.THREE = THREE;
+  THREE.OrbitControls = OrbitControls;
+  THREE.TransformControls = TransformControls;
+  THREE.GLTFLoader = GLTFLoader;
+  THREE.OBJLoader = OBJLoader;
+  THREE.STLLoader = STLLoader;
+  THREE.GLTFExporter = GLTFExporter;
 
-    // Now safe to start
-    init();
-  </script>
+  init();
+</script>
 </body>
 </html>
+
 
 
 
