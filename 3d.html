@@ -764,24 +764,25 @@ function init() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
  
+<script>
   // Orbit Controls
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = true;
   controls.minDistance = 0.1;
   controls.maxDistance = 500;
- 
+
   // Transform Controls
-  transformControls = new THREE.TransformControls(camera, renderer.domElement);
+  transformControls = new TransformControls(camera, renderer.domElement);
   transformControls.addEventListener('dragging-changed', (event) => {
     controls.enabled = !event.value;
   });
-  transformControls.addEventListener('change', () => {
-    updateProperties();
-  });
+  transformControls.addEventListener('change', updateProperties);
+
   scene.add(transformControls);
- 
+</script>
+
   // Raycaster
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
@@ -2148,6 +2149,7 @@ window.GLTFExporter = GLTFExporter;
 </script>
 </body>
 </html>
+
 
 
 
