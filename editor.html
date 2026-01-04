@@ -3310,15 +3310,25 @@ view.onMouseMove = function(event) {
 // Selection changed handler
 project.on('selectionchanged', updateProperties);
 
-// Initialize
-console.log('Initializing layers...');
-initLayers();
-console.log('Creating artboard...');
-createArtboard();
-console.log('Activating selection tool...');
-activateTool('select');
-console.log('Saving initial state...');
-saveState();
+// Proper initialization after Paper.js is fully ready
+view.onFrame = function(event) {
+    if (event.count === 5) {  // Wait a few frames for everything to settle
+        console.log('Paper.js ready - initializing editor...');
+        
+        initLayers();           // Creates background + Layer 1
+        createArtboard();       // Puts white artboard in background
+        activateTool('select'); // Activate selection tool
+        saveState();            // Save initial state for undo
+        
+        // Hide loader
+        var loader = document.getElementById('loader');
+        if (loader) {
+            loader.style.display = 'none';
+        }
+        
+        console.log('Editor fully initialized!');
+    }
+};
 console.log('Paper.js setup complete!');
 
 view.onFrame = function(event) {
@@ -3771,6 +3781,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
 
 
 
