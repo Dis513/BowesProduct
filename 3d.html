@@ -306,23 +306,16 @@
 <!-- Three.js core -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
 
-<!-- New addons paths (jsm = JS Module) -->
-<script type="module">
-  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js';
-  import { TransformControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/TransformControls.js';
-  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/GLTFLoader.js';
-  import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/OBJLoader.js';
-  import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/STLLoader.js';
-  import { GLTFExporter } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/exporters/GLTFExporter.js';
+<!-- Three.js core (non-module, global THREE) -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
 
-  // Attach them to the global THREE namespace so your existing code works without changes
-  window.THREE.OrbitControls = OrbitControls;
-  window.THREE.TransformControls = TransformControls;
-  window.THREE.GLTFLoader = GLTFLoader;
-  window.THREE.OBJLoader = OBJLoader;
-  window.THREE.STLLoader = STLLoader;
-  window.THREE.GLTFExporter = GLTFExporter;
-</script>
+<!-- Classic controls/loaders/exporters (automatically add to THREE) -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/TransformControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/OBJLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/exporters/GLTFExporter.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -2091,6 +2084,7 @@ window.addEventListener('load', function() {
 </script>
 </body>
 </html>
+
 
 
 
