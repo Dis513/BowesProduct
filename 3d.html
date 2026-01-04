@@ -1887,20 +1887,37 @@ async function showSceneLoader() {
     showNotification('Login to load scenes');
     return;
   }
+
   showNotification('Loading scenes from Firebase...');
+
   try {
     const scenesRef = collection(db, `users/${auth.currentUser.uid}/scenes`);
     const snapshot = await getDocs(scenesRef);
+
     const scenes = [];
+
     snapshot.forEach(doc => {
-    snapshot.forEach(doc => {
-  scenes.push(
-    Object.assign(
-      { id: doc.id },
-      doc.data()
-    )
-  );
-});
+      scenes.push(
+        Object.assign(
+          { id: doc.id },
+          doc.data()
+        )
+      );
+    });
+
+    if (scenes.length === 0) {
+      showNotification('No saved scenes');
+    } else {
+      showNotification(`Found ${scenes.length} saved scenes`);
+      console.log("Saved scenes:", scenes);
+    }
+
+  } catch (error) {
+    console.error("Error loading scenes:", error);
+    showNotification('Failed to load scenes');
+  }
+}
+
 
     });
     if (scenes.length === 0) {
@@ -2170,6 +2187,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
