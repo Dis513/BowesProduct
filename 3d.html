@@ -777,7 +777,7 @@ function init() {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
  
   // Orbit Controls
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = true;
@@ -1681,7 +1681,7 @@ function handleImport(event) {
     const contents = e.target.result;
    
     if (file.name.endsWith('.gltf') || file.name.endsWith('.glb')) {
-      const loader = new THREE.GLTFLoader();
+      const loader = new  GLTFLoader();
       loader.parse(contents, '', (gltf) => {
         const model = gltf.scene;
         model.name = file.name;
@@ -2090,6 +2090,7 @@ window.addEventListener('load', function() {
 </script>
 </body>
 </html>
+
 
 
 
