@@ -2135,18 +2135,20 @@ window.addArmature = addArmature;
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
   // Attach to global so your existing code works unchanged
-  window.THREE = THREE;
-  THREE.OrbitControls = OrbitControls;
-  THREE.TransformControls = TransformControls;
-  THREE.GLTFLoader = GLTFLoader;
-  THREE.OBJLoader = OBJLoader;
-  THREE.STLLoader = STLLoader;
-  THREE.GLTFExporter = GLTFExporter;
+ window.THREE = THREE;
+window.OrbitControls = OrbitControls;
+window.TransformControls = TransformControls;
+window.GLTFLoader = GLTFLoader;
+window.OBJLoader = OBJLoader;
+window.STLLoader = STLLoader;
+window.GLTFExporter = GLTFExporter;
+
 
   init();
 </script>
 </body>
 </html>
+
 
 
 
