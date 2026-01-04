@@ -1931,84 +1931,50 @@ async function saveSceneToFirebase() {
   }
 }
 window.saveSceneToFirebase = async function() {
-  if (!window.db || !window.auth?.currentUser) {
-    console.warn("Firebase not ready or user not logged in");
+  // Safety checks
+  if (!window.firebaseApp || !window.auth) {
+    console.warn('Firebase not initialized yet');
+    alert('Please wait for login and Firebase to load.');
+    return;
+  }
+
+  const user = window.auth.currentUser;
+  if (!user) {
+    alert('You must be logged in to save.');
+    return;
+  }
+
+  if (!window.db) {
+    console.error('Firestore not available');
     return;
   }
 
   try {
-    const json = paper.project.exportJSON();
-    const scenesRef = collection(window.db, "scenes");
-    
-    await addDoc(scenesRef, {
-      uid: window.auth.currentUser.uid,
-      displayName: window.auth.currentUser.displayName || "Anonymous",
-      photoURL: window.auth.currentUser.photoURL || "",
-      data: json,
-      name: prompt("Scene name?", "My Design") || "Untitled",
-      timestamp: serverTimestamp()
+    const sceneData = paper.project.exportJSON();
+    const scenesCollection = collection(window.db, 'scenes');
+
+    const docRef = await addDoc(scenesCollection, {
+      uid: user.uid,
+      displayName: user.displayName || 'Anonymous',
+      photoURL: user.photoURL || '',
+      sceneName: prompt('Name your scene (optional):', 'My Design') || 'Untitled',
+      data: sceneData,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
     });
 
-    alert("Scene saved to cloud! ☁️");
-    // Optional: award XP
-    if (typeof window.awardXP === 'function') window.awardXP(50);
+    console.log('Scene saved with ID:', docRef.id);
+    alert('Scene saved to cloud successfully! ☁️');
+
+    // Award XP if function exists
+    if (typeof window.awardXP === 'function') {
+      window.awardXP(50);
+    }
   } catch (error) {
-    console.error("Save failed:", error);
-    alert("Failed to save: " + error.message);
+    console.error('Error saving scene:', error);
+    alert('Save failed: ' + error.message);
   }
 };
-  const sceneData = {
-    timestamp: Date.now(),
-    objectCount: scene.children.length
-  };
- 
-  const scenesRef = collection(window.db, `users/${window.auth.currentUser.uid}/scenes`);
-  await addDoc(scenesRef, sceneData);
-}
-async function showSceneLoader() {
-  if (!window.auth || !window.auth.currentUser) {
-    showNotification('Login to load scenes');
-    return;
-  }
- 
-  showNotification('Loading scenes from Firebase...');
- 
-  const scenesRef = collection(window.db, `users/${window.auth.currentUser.uid}/scenes`);
-  const snapshot = await getDocs(scenesRef);
- 
-  const scenes = [];
-  snapshot.forEach(doc => {
-    scenes.push({ id: doc.id, ...doc.data() });
-  });
- 
-  if (scenes.length === 0) {
-    showNotification('No saved scenes');
-  } else {
-    showNotification(`Found ${scenes.length} scenes`);
-  }
-}
-function newScene() {
-  if (confirm('Create new scene? All unsaved changes will be lost.')) {
-    const toRemove = [];
-    scene.children.forEach(obj => {
-      if (obj.isMesh) {
-        toRemove.push(obj);
-      }
-    });
-    toRemove.forEach(obj => {
-      scene.remove(obj);
-      if (obj.geometry) obj.geometry.dispose();
-      if (obj.material) obj.material.dispose();
-    });
-   
-    selectedObjects = [];
-    transformControls.detach();
-    updateOutliner();
-    saveState();
-   
-    showNotification('New Scene');
-  }
-}
 // ==================== UI UPDATES ====================
 function updateProperties() {
   if (selectedObjects.length === 0) {
@@ -2232,6 +2198,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
