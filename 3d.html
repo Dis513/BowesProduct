@@ -1473,19 +1473,15 @@ function addModifierToObject(obj, type) {
   showNotification(`Added ${type} modifier`);
 }
 function applyModifierEffect(obj, modifier) {
-  switch(modifier.type) {
+  switch (modifier.type) {
     case 'subdivision':
       if (obj.geometry) {
         obj.geometry.computeVertexNormals();
       }
       break;
-    case 'mirror':
-    case 'array':
-    case 'bevel':
-    case 'boolean':
-      break;
   }
 }
+
 function removeModifier(obj, index) {
   if (obj.userData.modifiers) {
     obj.userData.modifiers.splice(index, 1);
@@ -2132,6 +2128,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
