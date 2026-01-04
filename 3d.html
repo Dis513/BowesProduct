@@ -2134,11 +2134,9 @@ window.addArmature = addArmature;
   import { STLLoader } from 'three/addons/loaders/STLLoader.js';
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
-  // Critical fix: make THREE extensible
+  // Make THREE extensible and global
   window.THREE = {};
   Object.assign(window.THREE, THREE);
-
-  // Now safely add the addons
   window.THREE.OrbitControls = OrbitControls;
   window.THREE.TransformControls = TransformControls;
   window.THREE.GLTFLoader = GLTFLoader;
@@ -2146,11 +2144,18 @@ window.addArmature = addArmature;
   window.THREE.STLLoader = STLLoader;
   window.THREE.GLTFExporter = GLTFExporter;
 
-  // Start the app
-  init();
+  // Wait until the page and main script are fully loaded before calling init()
+  window.addEventListener('load', () => {
+    if (typeof init === 'function') {
+      init();
+    } else {
+      console.error('init function not found');
+    }
+  });
 </script>
 </body>
 </html>
+
 
 
 
