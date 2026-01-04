@@ -727,135 +727,121 @@ setInterval(async () => {
 }, 30000);
 </script>
 <script>
-// ==================== GLOBAL STATE ====================
-let scene, camera, renderer, controls, transformControls;
-let selectedObjects = [];
-let currentMode = 'object';
-let currentTool = 'select';
-let currentBrush = 'draw';
-let brushSize = 0.5;
-let brushStrength = 0.5;
-let symmetryEnabled = false;
-let sculpting = false;
-let raycaster, mouse;
-let gridHelper, axesHelper;
-let ambientLight, directionalLight, hemisphereLight;
-let undoStack = [];
-let redoStack = [];
-let objectCounter = 0;
-let materials = [];
-let modifiers = {};
-let lastTime = performance.now();
-let frameCount = 0;
-let fps = 60;
-// ==================== INITIALIZATION ====================
-function init() {
-  console.log('Initializing Blender Pro 2026...');
- 
-  const canvas = document.getElementById('canvas');
-  const container = document.getElementById('canvas-container');
- 
-  // Scene
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x1a1a2e);
- 
-  // Camera
-  camera = new THREE.PerspectiveCamera(
-    75,
-    canvas.clientWidth / canvas.clientHeight,
-    0.1,
-    1000
-  );
-  camera.position.set(5, 5, 5);
-  camera.lookAt(0, 0, 0);
- 
-  // Renderer
-  renderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    antialias: true,
-    preserveDrawingBuffer: true
-  });
-  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
- 
-  // Orbit Controls
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.screenSpacePanning = true;
-  controls.minDistance = 0.1;
-  controls.maxDistance = 500;
- 
-  // Transform Controls
-  transformControls = new THREE.TransformControls(camera, renderer.domElement);
-  transformControls.addEventListener('dragging-changed', (event) => {
-    controls.enabled = !event.value;
-  });
-  transformControls.addEventListener('change', () => {
-    updateProperties();
-  });
-  scene.add(transformControls);
- 
-  // Raycaster
-  raycaster = new THREE.Raycaster();
-  mouse = new THREE.Vector2();
- 
-  // Grid Helper
-  gridHelper = new THREE.GridHelper(20, 20, 0x60a5fa, 0x334155);
-  scene.add(gridHelper);
- 
-  // Axes Helper
-  axesHelper = new THREE.AxesHelper(5);
-  scene.add(axesHelper);
- 
-  // Lighting
-  ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-  scene.add(ambientLight);
- 
-  hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
-  scene.add(hemisphereLight);
- 
-  directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set(5, 10, 7);
-  directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.width = 2048;
-  directionalLight.shadow.mapSize.height = 2048;
-  directionalLight.shadow.camera.near = 0.5;
-  directionalLight.shadow.camera.far = 500;
-  scene.add(directionalLight);
- 
-  // Event Listeners
-  window.addEventListener('resize', onWindowResize);
-  canvas.addEventListener('mousedown', onMouseDown);
-  canvas.addEventListener('mousemove', onMouseMove);
-  canvas.addEventListener('mouseup', onMouseUp);
-  canvas.addEventListener('wheel', onMouseWheel, { passive: false });
-  canvas.addEventListener('contextmenu', onContextMenu);
-  document.addEventListener('keydown', onKeyDown);
-  document.addEventListener('keyup', onKeyUp);
- 
-  // Touch support
-  canvas.addEventListener('touchstart', onTouchStart, { passive: false });
-  canvas.addEventListener('touchmove', onTouchMove, { passive: false });
-  canvas.addEventListener('touchend', onTouchEnd);
- 
-  // Initialize panels
-  initPanelTabs();
-  updateOutliner();
- 
-  // Start animation loop
-  animate();
- 
-  // Hide loader
-  setTimeout(() => {
-    document.getElementById('loader').style.display = 'none';
-    console.log('Blender Pro 2026 initialized successfully!');
-  }, 1000);
- 
-  saveState();
-}
+<script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
+  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js';
+  import { TransformControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/TransformControls.js';
+  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/GLTFLoader.js';
+  import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/OBJLoader.js';
+  import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/STLLoader.js';
+  import { GLTFExporter } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/exporters/GLTFExporter.js';
+
+  // ==================== GLOBAL STATE ====================
+  let scene, camera, renderer, controls, transformControls;
+  let selectedObjects = [];
+  let currentMode = 'object';
+  let currentTool = 'select';
+  let currentBrush = 'draw';
+  let brushSize = 0.5;
+  let brushStrength = 0.5;
+  let symmetryEnabled = false;
+  let sculpting = false;
+  let raycaster, mouse;
+  let gridHelper, axesHelper;
+  let ambientLight, directionalLight, hemisphereLight;
+  let undoStack = [];
+  let redoStack = [];
+  let objectCounter = 0;
+  let materials = [];
+  let lastTime = performance.now();
+  let frameCount = 0;
+  let fps = 60;
+
+  // ==================== INITIALIZATION ====================
+  function init() {
+    console.log('Initializing Blender Pro 2026...');
+    const canvas = document.getElementById('canvas');
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1a2e);
+
+    camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    camera.position.set(5, 5, 5);
+
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.screenSpacePanning = true;
+    controls.minDistance = 0.1;
+    controls.maxDistance = 500;
+
+    transformControls = new TransformControls(camera, renderer.domElement);
+    transformControls.addEventListener('dragging-changed', (event) => {
+      controls.enabled = !event.value;
+    });
+    transformControls.addEventListener('change', updateProperties);
+    scene.add(transformControls);
+
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+
+    gridHelper = new THREE.GridHelper(20, 20, 0x60a5fa, 0x334155);
+    scene.add(gridHelper);
+
+    axesHelper = new THREE.AxesHelper(5);
+    scene.add(axesHelper);
+
+    ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+    scene.add(hemisphereLight);
+    directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 10, 7);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 2048;
+    directionalLight.shadow.mapSize.height = 2048;
+    scene.add(directionalLight);
+
+    window.addEventListener('resize', onWindowResize);
+    canvas.addEventListener('mousedown', onMouseDown);
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('wheel', onMouseWheel, { passive: false });
+    canvas.addEventListener('contextmenu', onContextMenu);
+    document.addEventListener('keydown', onKeyDown);
+
+    initPanelTabs();
+    updateOutliner();
+
+    animate();
+
+    setTimeout(() => {
+      document.getElementById('loader').style.display = 'none';
+      console.log('Blender Pro 2026 initialized successfully!');
+    }, 1000);
+
+    saveState();
+  }
+
+  // ... [Paste ALL your other functions here exactly as they were:
+  // animate, onWindowResize, onMouseDown, addPrimitive, handleImport, etc.
+  // Just make sure in handleImport and exportModel you use:
+  //   new GLTFLoader()   (not THREE.GLTFLoader)
+  //   new OBJLoader()
+  //   new STLLoader()
+  //   new GLTFExporter()
+  // ]
+
+  // At the very end:
+  init();
+  addPrimitive('cube');
+</script>
 // ==================== ANIMATION LOOP ====================
 function animate() {
   requestAnimationFrame(animate);
@@ -2089,6 +2075,7 @@ window.addArmature = addArmature;
 
 </body>
 </html>
+
 
 
 
