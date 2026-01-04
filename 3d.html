@@ -2070,17 +2070,16 @@ window.updateTransform = updateTransform;
 window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
 // ==================== INITIALIZE ====================
-// Force initialization first
-init();
-
-// Add a default cube after everything is set up
-addPrimitive('cube');
-
-// Also keep the event listener in case it fires later
-window.addEventListener('DOMContentLoaded', init);
+// Wait for EVERYTHING (including all external scripts) to load before initializing
+window.addEventListener('load', function() {
+  init();
+  addPrimitive('cube');  // Add default cube
+  console.log('Blender Pro 2026 fully initialized!');
+});
 </script>
 </body>
 </html>
+
 
 
 
