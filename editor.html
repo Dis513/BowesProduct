@@ -1267,35 +1267,41 @@ function activateTool(name) {
 // Selection Tool with FIXED selection box and proper movement
 tools.select = new Tool();
 
-tools.select = new Tool();
+var longPressTimeout = null;
+var isLongPress = false;
+var moveStartPoint = null;  // for arrow keys & middle click
 
 tools.select.onMouseDown = function(event) {
+    // Reset long-press state
+    isLongPress = false;
+    if (longPressTimeout) clearTimeout(longPressTimeout);
+
     var hit = project.hitTest(event.point, {
         fill: true,
         stroke: true,
         segments: true,
-        tolerance: 10
+        tolerance: 12
     });
 
     if (hit && hit.item && !hit.item.locked && hit.item.name !== 'Artboard') {
+        // Clicked on an object
         if (!Key.modifiers.shift) {
             project.deselectAll();
         }
         hit.item.selected = true;
 
-        // Start long-press timer for moving
-        isLongPress = false;
-        dragStartPoint = event.point;
+        // Start long-press timer for mobile move
         longPressTimeout = setTimeout(() => {
             isLongPress = true;
-        }, 400);  // 400ms hold required to start move
+        }, 400);  // 400ms hold → allow move on mobile
+
+        moveStartPoint = event.point;
     } else {
+        // Clicked on empty space → start marquee
         if (!Key.modifiers.shift) {
             project.deselectAll();
         }
         selectionStart = event.point;
-        dragStartPoint = null;
-        if (longPressTimeout) clearTimeout(longPressTimeout);
     }
 
     updateProperties();
@@ -1303,32 +1309,34 @@ tools.select.onMouseDown = function(event) {
 
 tools.select.onMouseDrag = function(event) {
     if (selectionStart) {
-        // Marquee selection (immediate, no hold needed)
+        // Marquee selection - always immediate
         var rect = new Rectangle(selectionStart, event.point);
         var screenStart = view.projectToView(selectionStart);
         var screenEnd = view.projectToView(event.point);
 
         selectionBox.style.display = 'block';
-        selectionBox.style.left = Math.min(screenStart.x, screenEnd.x) + 60 + 'px';
-        selectionBox.style.top = Math.min(screenStart.y, screenEnd.y) + 20 + 'px';
+        selectionBox.style.left = (Math.min(screenStart.x, screenEnd.x) + 60) + 'px';
+        selectionBox.style.top = (Math.min(screenStart.y, screenEnd.y) + 20) + 'px';
         selectionBox.style.width = Math.abs(screenEnd.x - screenStart.x) + 'px';
         selectionBox.style.height = Math.abs(screenEnd.y - screenStart.y) + 'px';
 
+        // Select items inside marquee
         project.deselectAll();
-        var bounds = new Rectangle(selectionStart, event.point);
-        project.activeLayer.children.forEach(function(item) {
-            if (item.name !== 'Artboard' && !item.locked && item.bounds.intersects(bounds)) {
+        project.activeLayer.children.forEach(item => {
+            if (item.name !== 'Artboard' && !item.locked && item.bounds.intersects(rect)) {
                 item.selected = true;
             }
         });
-    } else if (project.selectedItems.length > 0 && isLongPress && dragStartPoint) {
-        // Object movement only after long press
+    } else if (project.selectedItems.length > 0 && (isLongPress || !event.event.touches)) {
+        // Move selected objects
+        // On desktop: move immediately
+        // On mobile: move only after long press (isLongPress = true)
         var delta = event.delta;
         if (snapToGrid) {
             delta.x = Math.round(delta.x / gridSize) * gridSize;
             delta.y = Math.round(delta.y / gridSize) * gridSize;
         }
-        project.selectedItems.forEach(function(item) {
+        project.selectedItems.forEach(item => {
             if (!item.locked && item.name !== 'Artboard') {
                 item.position += delta;
             }
@@ -1337,30 +1345,12 @@ tools.select.onMouseDrag = function(event) {
     }
 };
 
-tools.select.onMouseUp = function() {
+tools.select.onMouseUp = function(event) {
     selectionBox.style.display = 'none';
     selectionStart = null;
     if (longPressTimeout) clearTimeout(longPressTimeout);
     isLongPress = false;
-    dragStartPoint = null;
     saveState();
-};
-// Direct Selection Tool
-tools.directSelect = new Tool();
-
-tools.directSelect.onMouseDown = function(event) {
-  var hit = project.hitTest(event.point, {
-    segments: true, 
-    tolerance: 8,
-    fill: false,
-    stroke: false
-  });
-  
-  if (hit && hit.segment) {
-    hit.segment.selected = true;
-  } else {
-    project.deselectAll();
-  }
 };
 
 tools.directSelect.onMouseDrag = function(event) {
@@ -3256,6 +3246,34 @@ document.addEventListener('keydown', function(event) {
   }
 });
 
+  // Arrow key nudging (1px or 10px with Shift)
+document.addEventListener('keydown', function(event) {
+    if (project.selectedItems.length === 0) return;
+    if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return;
+
+    var deltaX = 0, deltaY = 0;
+    var step = event.shiftKey ? 10 : 1;
+
+    switch (event.key) {
+        case 'ArrowUp':    deltaY = -step; break;
+        case 'ArrowDown':  deltaY = step;  break;
+        case 'ArrowLeft':  deltaX = -step; break;
+        case 'ArrowRight': deltaX = step;  break;
+        default: return;
+    }
+
+    if (deltaX !== 0 || deltaY !== 0) {
+        event.preventDefault();
+        project.selectedItems.forEach(item => {
+            if (!item.locked && item.name !== 'Artboard') {
+                item.position += new Point(deltaX, deltaY);
+            }
+        });
+        updateProperties();
+        saveState();
+    }
+});
+
 // Mouse and Touch position tracking
 view.onMouseMove = function(event) {
   var statusPosition = document.getElementById('statusPosition');
@@ -3728,4 +3746,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
 
