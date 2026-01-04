@@ -640,76 +640,126 @@
 <!-- Firebase Integration -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+import { 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+import { 
+  getStorage 
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct"
+  projectId: "bowesproduct",
+  storageBucket: "bowesproduct.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // optional - can leave as is
+  appId: "YOUR_APP_ID" // optional - can leave as is
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const provider = new GoogleAuthProvider();
 
+// === Expose globally so other scripts can use ===
+window.auth = auth;
+window.db = db;
+window.storage = storage;
+window.firebaseProvider = provider;
+
+// === UI Elements ===
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
 const levelText = document.getElementById("levelText");
 const xpBar = document.getElementById("xpBar");
 
-authBtn.onclick = () => auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+// === Login / Logout ===
+if (authBtn) {
+  authBtn.onclick = () => {
+    if (auth.currentUser) {
+      signOut(auth);
+    } else {
+      signInWithPopup(auth, provider);
+    }
+  };
+}
 
+// === Auth State Listener ===
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    authBtn.textContent = "Login";
-    profilePic.style.display = "none";
-    levelInfo.style.display = "none";
+    // Not logged in
+    if (authBtn) authBtn.textContent = "Login";
+    if (profilePic) profilePic.style.display = "none";
+    if (levelInfo) levelInfo.style.display = "none";
     return;
   }
-  authBtn.textContent = "Logout";
-  profilePic.src = user.photoURL || "";
-  profilePic.style.display = "block";
-  const userRef = doc(db, "users", user.uid);
-  let snap = await getDoc(userRef);
-  if (!snap.exists()) {
-    await setDoc(userRef, { xp: 0, level: 1, createdAt: serverTimestamp() });
-    snap = await getDoc(userRef);
+
+  // Logged in
+  if (authBtn) authBtn.textContent = "Logout";
+  if (profilePic) {
+    profilePic.src = user.photoURL || "";
+    profilePic.style.display = "block";
   }
-  const data = snap.data();
-  let xp = data.xp || 0;
-  const levels = [0, 200, 500, 1000, 2000, 3500, 5000];
-  let level = levels.findIndex(l => xp < l);
-  if (level === -1) level = levels.length;
-  let prev = levels[level - 1] || 0;
-  let next = levels[level] || prev + 1000;
-  let progress = ((xp - prev) / (next - prev)) * 100;
-  levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.style.width = progress + "%";
-  levelInfo.style.display = "block";
+
+  // === XP & Level System ===
+  const userRef = doc(db, "users", user.uid);
+  let userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    // New user - create profile
+    await setDoc(userRef, {
+      displayName: user.displayName || "Anonymous",
+      photoURL: user.photoURL || "",
+      xp: 0,
+      level: 1,
+      createdAt: serverTimestamp()
+    });
+    userSnap = await getDoc(userRef);
+  }
+
+  const userData = userSnap.data();
+  let xp = userData.xp || 0;
+
+  // Level thresholds (customize as needed)
+  const levels = [0, 200, 500, 1000, 2000, 3500, 5000, 7500, 10000];
+  let level = levels.findIndex(threshold => xp < threshold);
+  if (level === -1) level = levels.length; // Max level
+
+  const prevXP = levels[level - 1] || 0;
+  const nextXP = levels[level] || prevXP + 2000;
+  const progress = ((xp - prevXP) / (nextXP - prevXP)) * 100;
+
+  // Update UI
+  if (levelText) levelText.textContent = `Level ${level} • ${xp.toLocaleString()} XP`;
+  if (xpBar) xpBar.style.width = `${Math.min(progress, 100)}%`;
+  if (levelInfo) levelInfo.style.display = "flex"; // or "block" depending on your CSS
 });
 
-// XP System
-window.addXP = async (amount) => {
+// Optional: Helper to award XP
+window.awardXP = async function(points = 50) {
   if (!auth.currentUser) return;
   const userRef = doc(db, "users", auth.currentUser.uid);
   const snap = await getDoc(userRef);
   if (snap.exists()) {
-    const data = snap.data();
-    const newXP = (data.xp || 0) + amount;
-    await setDoc(userRef, { xp: newXP }, { merge: true });
+    const currentXP = snap.data().xp || 0;
+    await setDoc(userRef, { xp: currentXP + points }, { merge: true });
   }
 };
-
-// Auto-save every 30 seconds
-setInterval(async () => {
-  if (auth.currentUser && window.saveSceneToFirebase) {
-    await window.saveSceneToFirebase();
-  }
-}, 30000);
 </script>
 <script>
 // ==================== GLOBAL STATE ====================
@@ -2158,6 +2208,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
