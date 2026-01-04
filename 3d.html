@@ -1841,14 +1841,44 @@ function redo() {
   showNotification('Redo');
 }
 // ==================== FIREBASE SCENE MANAGEMENT ====================
-async function saveScene() {
-  if (!window.auth || !window.auth.currentUser) {
-    showNotification('Login to save scenes');
+async function saveSceneToFirebase() {
+  // Safety checks
+  if (!window.firebaseApp || !window.auth) {
+    console.warn('Firebase not initialized yet');
+    alert('Please wait for login and Firebase to load.');
     return;
   }
- 
-  await window.saveSceneToFirebase();
-  showNotification('Scene Saved');
+
+  const user = window.auth.currentUser;
+  if (!user) {
+    alert('You must be logged in to save.');
+    return;
+  }
+
+  if (!window.db) {
+    console.error('Firestore not available');
+    return;
+  }
+
+  try {
+    const json = paper.project.exportJSON();
+    const docRef = window.db.collection('scenes').doc(); // or .doc(user.uid + '_scene')
+
+    await docRef.set({
+      uid: user.uid,
+      displayName: user.displayName || 'Anonymous',
+      photoURL: user.photoURL,
+      data: json,
+      createdAt: new Date(),
+      name: 'My Scene - ' + new Date().toLocaleDateString()
+    });
+
+    console.log('Scene saved successfully!');
+    alert('Scene saved to cloud!');
+  } catch (error) {
+    console.error('Error saving scene:', error);
+    alert('Failed to save: ' + error.message);
+  }
 }
 async function window.saveSceneToFirebase() {
   if (!window.db || !window.auth.currentUser) return;
@@ -2128,6 +2158,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
