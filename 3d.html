@@ -2125,36 +2125,70 @@ window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
 
 </script>
-<script type="module">
-  import * as THREE from 'three';
-  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-  import { TransformControls } from 'three/addons/controls/TransformControls.js';
-  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-  import { STLLoader } from 'three/addons/loaders/STLLoader.js';
-  import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+<script>
+let scene, camera, renderer, controls, transformControls;
 
-  // Make global THREE extensible
-  window.THREE = {};
-  Object.assign(window.THREE, THREE);
-  window.THREE.OrbitControls = OrbitControls;
-  window.THREE.TransformControls = TransformControls;
-  window.THREE.GLTFLoader = GLTFLoader;
-  window.THREE.OBJLoader = OBJLoader;
-  window.THREE.STLLoader = STLLoader;
-  window.THREE.GLTFExporter = GLTFExporter;
+function init() {
+  const canvas = document.getElementById('canvas');
 
-  // Wait for the page and main script to load
-  window.addEventListener('load', () => {
-    if (typeof init === 'function') {
-      init();
-    } else {
-      console.error('init function still not found - check script order');
-    }
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x1a1a2e);
+
+  camera = new THREE.PerspectiveCamera(
+    75,
+    canvas.clientWidth / canvas.clientHeight,
+    0.1,
+    1000
+  );
+  camera.position.set(5, 5, 5);
+
+  renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true
   });
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  // ✅ UPDATED CONTROLS (modern + correct)
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.screenSpacePanning = true;
+  controls.minDistance = 0.1;
+  controls.maxDistance = 500;
+
+  transformControls = new TransformControls(camera, renderer.domElement);
+  transformControls.addEventListener('dragging-changed', e => {
+    controls.enabled = !e.value;
+  });
+  transformControls.addEventListener('change', updateProperties);
+  scene.add(transformControls);
+
+  window.addEventListener('resize', onResize);
+
+  animate();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+function onResize() {
+  const canvas = renderer.domElement;
+  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+}
+
+// expose init globally
+window.init = init;
 </script>
+
 </body>
 </html>
+
 
 
 
