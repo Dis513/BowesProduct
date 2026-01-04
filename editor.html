@@ -104,7 +104,13 @@
     width: 42px; height: 42px; border-radius: 6px; border: 1px solid transparent; background: transparent; color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; font-size: 1.3rem; position: relative;
   }
   .tool-btn:hover { background: rgba(51, 65, 85, 1); color: white; }
-  .tool-btn.active { color: #60a5fa; background: rgba(96, 165, 250, 0.1); border-color: #60a5fa; }
+  .tool-btn.active { color: #22c55e; background: rgba(34, 197, 94, 0.1); border-color: #22c55e; }
+  .tool-btn.deactivated { border: 1px solid #ef4444 !important; color: #ef4444; opacity: 0.6; }
+  .tool-btn.panel-open { box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.5); }
+  .tool-panel-indicator {
+    position: absolute; top: 2px; right: 2px; font-size: 8px; background: #22c55e; color: #020617; padding: 1px 3px; border-radius: 2px; display: none;
+  }
+  .tool-btn.panel-open .tool-panel-indicator { display: block; }
 
   /* ================= RIGHT PANEL DOCK ================= */
   .panel-dock {
@@ -157,6 +163,46 @@
   .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
   .btn-group { display: flex; gap: 0.25rem; }
   .btn-group .btn { flex: 1; }
+
+  /* Tool-specific Control Panels */
+  .tool-panel {
+    display: none;
+    position: fixed;
+    left: 80px;
+    top: 116px;
+    width: 260px;
+    background: rgba(15, 23, 42, 0.98);
+    border: 1px solid #22c55e;
+    border-radius: 12px;
+    padding: 1rem;
+    z-index: 1200;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+  }
+  .tool-panel.active {
+    display: block;
+  }
+  .tool-panel h4 {
+    margin: 0 0 1rem 0;
+    color: #22c55e;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #22c55e;
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tool-panel-close {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #94a3b8;
+    transition: color 0.2s;
+  }
+  .tool-panel-close:hover {
+    color: #ef4444;
+  }
 
   /* Layers Panel */
   .layer-item { 
@@ -258,6 +304,16 @@
       left: 10px; top: 111px; padding: 6px; max-height: calc(100vh - 160px);
     }
     .tool-btn { width: 38px; height: 38px; font-size: 1.1rem; }
+    .tool-panel {
+      left: 10px;
+      top: auto;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      max-height: 50vh;
+      border-radius: 12px 12px 0 0;
+      z-index: 2100;
+    }
     .panel-dock { 
       top: auto; 
       bottom: 0; 
@@ -958,6 +1014,135 @@
   </div>
 </div>
 
+<!-- Tool-specific Control Panels -->
+<!-- Text Tool Panel -->
+<div class="tool-panel" id="textToolPanel">
+  <h4>
+    Text Options
+    <span class="tool-panel-close" onclick="toggleToolPanel('textToolPanel')">×</span>
+  </h4>
+  <div class="control-group">
+    <label>Font Size</label>
+    <input type="range" id="textFontSize" min="8" max="200" value="32" oninput="updateTextToolSettings()">
+    <span id="textFontSizeVal">32px</span>
+  </div>
+  <div class="control-group">
+    <label>Font Family</label>
+    <select id="textFontFamily" onchange="updateTextToolSettings()">
+      <option value="Arial">Arial</option>
+      <option value="Helvetica">Helvetica</option>
+      <option value="Times New Roman">Times New Roman</option>
+      <option value="Georgia">Georgia</option>
+      <option value="Verdana">Verdana</option>
+      <option value="Courier New">Courier New</option>
+      <option value="Impact">Impact</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Alignment</label>
+    <div class="btn-group">
+      <button class="btn" onclick="setTextToolAlign('left')">⬅</button>
+      <button class="btn" onclick="setTextToolAlign('center')">⬌</button>
+      <button class="btn" onclick="setTextToolAlign('right')">➡</button>
+    </div>
+  </div>
+</div>
+
+<!-- Brush Tool Panel -->
+<div class="tool-panel" id="brushToolPanel">
+  <h4>
+    Brush Options
+    <span class="tool-panel-close" onclick="toggleToolPanel('brushToolPanel')">×</span>
+  </h4>
+  <div class="control-group">
+    <label>Brush Size</label>
+    <input type="range" id="brushSize" min="1" max="100" value="5" oninput="updateBrushToolSettings()">
+    <span id="brushSizeVal">5px</span>
+  </div>
+  <div class="control-group">
+    <label>Smoothing</label>
+    <input type="range" id="brushSmoothing" min="0" max="10" value="5" oninput="updateBrushToolSettings()">
+    <span id="brushSmoothingVal">5</span>
+  </div>
+  <div class="control-group">
+    <label>Brush Style</label>
+    <select id="brushStyle" onchange="updateBrushToolSettings()">
+      <option value="round">Round</option>
+      <option value="square">Square</option>
+      <option value="bevel">Bevel</option>
+    </select>
+  </div>
+</div>
+
+<!-- Shape Tool Panel -->
+<div class="tool-panel" id="shapeToolPanel">
+  <h4>
+    Shape Options
+    <span class="tool-panel-close" onclick="toggleToolPanel('shapeToolPanel')">×</span>
+  </h4>
+  <div class="control-group">
+    <label>Shape Type</label>
+    <select id="shapeType" onchange="updateShapeToolSettings()">
+      <option value="rectangle">Rectangle</option>
+      <option value="ellipse">Ellipse</option>
+      <option value="polygon">Polygon</option>
+      <option value="star">Star</option>
+      <option value="line">Line</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Polygon Sides</label>
+    <input type="number" id="polygonSides" min="3" max="20" value="6" onchange="updateShapeToolSettings()">
+  </div>
+  <div class="control-group">
+    <label>Star Points</label>
+    <input type="number" id="starPoints" min="3" max="30" value="5" onchange="updateShapeToolSettings()">
+  </div>
+  <div class="control-group">
+    <label>Star Inner Radius %</label>
+    <input type="range" id="starInnerRadius" min="10" max="90" value="40" oninput="updateShapeToolSettings()">
+    <span id="starInnerRadiusVal">40%</span>
+  </div>
+</div>
+
+<!-- Pen Tool Panel -->
+<div class="tool-panel" id="penToolPanel">
+  <h4>
+    Pen Options
+    <span class="tool-panel-close" onclick="toggleToolPanel('penToolPanel')">×</span>
+  </h4>
+  <div class="control-group">
+    <label>Stroke Width</label>
+    <input type="range" id="penStrokeWidth" min="1" max="50" value="1" oninput="updatePenToolSettings()">
+    <span id="penStrokeWidthVal">1px</span>
+  </div>
+  <div class="control-group">
+    <label>Auto-close Path</label>
+    <label class="switch">
+      <input type="checkbox" id="penAutoClose">
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
+
+<!-- Zoom/Pan Control Panel -->
+<div class="tool-panel" id="zoomToolPanel">
+  <h4>
+    Zoom Options
+    <span class="tool-panel-close" onclick="toggleToolPanel('zoomToolPanel')">×</span>
+  </h4>
+  <div class="control-group">
+    <label>Zoom Level</label>
+    <input type="range" id="zoomSlider" min="10" max="400" value="100" oninput="updateZoomFromSlider()">
+    <span id="zoomSliderVal">100%</span>
+  </div>
+  <div class="btn-group" style="margin-top: 0.5rem;">
+    <button class="btn" onclick="zoomOut()">−</button>
+    <button class="btn" onclick="zoomToFit()">Fit</button>
+    <button class="btn" onclick="zoomIn()">+</button>
+  </div>
+</div>
+
 <!-- Status Bar -->
 <div class="status-bar">
   <div class="left">
@@ -1036,7 +1221,7 @@ onAuthStateChanged(auth, async (user) => {
     ((xp - levels[level]) / (next - levels[level])) * 100;
 
   levelText.textContent = `Level ${level} • ${xp} XP`;
-  xpBar.width = progress + "%";
+  xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
 </script>
@@ -1052,8 +1237,8 @@ console.log('Paper.js script starting...');
 // Global state
 var tools = {};
 var currentTool;
-var fillColor = new Color(1, 0, 0); // RGBA
-var strokeColor = new Color(0, 0, 0); // RGBA
+var fillColor = new Color(1, 0, 0);
+var strokeColor = new Color(0, 0, 0);
 var strokeWidth = 1;
 var currentPath;
 var isDrawing = false;
@@ -1070,9 +1255,22 @@ var layers = [];
 var currentLayerIndex = 0;
 var zoomLevel = 1;
 var artboardRotation = 0;
-var artboardSize = { width: 595, height: 842 }; // A4 size in points (72 DPI)
+var artboardSize = { width: 595, height: 842 };
 var selectionStart = null;
 var selectionBox = document.getElementById('selectionBox');
+var isPanning = false;
+var panStart = null;
+var scrollWheelLocked = false;
+
+// Tool settings
+var brushSize = 5;
+var brushSmoothing = 5;
+var polygonSides = 6;
+var starPoints = 5;
+var starInnerRadius = 40;
+var textFontSize = 32;
+var textFontFamily = 'Arial';
+var textAlignment = 'left';
 
 console.log('Paper.js initialized, view size:', view.size);
 
@@ -1122,15 +1320,49 @@ function showToolNotification(text) {
   }, 1500);
 }
 
+// Toggle tool panel
+function toggleToolPanel(panelId) {
+  var panel = document.getElementById(panelId);
+  if (panel) {
+    panel.classList.toggle('active');
+    
+    // Find the tool button and update its state
+    var toolName = panelId.replace('ToolPanel', '');
+    var toolBtn = document.getElementById(toolName + 'Tool');
+    if (toolBtn) {
+      toolBtn.classList.toggle('panel-open', panel.classList.contains('active'));
+    }
+  }
+}
+
 // Tool activation
 function activateTool(name) {
   if (tools[name]) {
     currentTool = tools[name];
     currentTool.activate();
     console.log('Tool activated:', name);
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    
+    // Update all tool buttons
+    document.querySelectorAll('.tool-btn').forEach(function(btn) {
+      btn.classList.remove('active', 'deactivated', 'panel-open');
+    });
+    
     var btn = document.getElementById(name + 'Tool');
-    if (btn) btn.classList.add('active');
+    if (btn) {
+      btn.classList.add('active');
+    }
+    
+    // Close all tool panels
+    document.querySelectorAll('.tool-panel').forEach(function(panel) {
+      panel.classList.remove('active');
+    });
+    
+    // Open the corresponding tool panel
+    var panel = document.getElementById(name + 'ToolPanel');
+    if (panel) {
+      panel.classList.add('active');
+      if (btn) btn.classList.add('panel-open');
+    }
     
     var toolNames = {
       'select': 'Selection Tool',
@@ -1169,7 +1401,7 @@ function activateTool(name) {
   }
 }
 
-// Selection Tool with dashed selection box
+// Selection Tool with fixed selection and movement
 tools.select = new Tool();
 
 tools.select.onMouseDown = function(event) {
@@ -1312,7 +1544,7 @@ tools.magicWand.onMouseDown = function(event) {
   }
 };
 
-// Pen Tool with bezier curve support (Illustrator-style)
+// Pen Tool with bezier curve support
 tools.pen = new Tool();
 var penPoints = [];
 var currentPath = null;
@@ -1323,7 +1555,7 @@ tools.pen.onMouseDown = function(event) {
     currentPath.closed = true;
     currentPath.fillColor = fillColor;
     currentPath.strokeColor = strokeColor;
-    currentPath.strokeWidth = strokeWidth;
+    currentPath.strokeWidth = parseFloat(document.getElementById('penStrokeWidth').value);
     currentPath.simplify();
     currentPath.selected = true;
     penPoints = [];
@@ -1335,7 +1567,7 @@ tools.pen.onMouseDown = function(event) {
   if (!currentPath) {
     currentPath = new Path();
     currentPath.strokeColor = strokeColor;
-    currentPath.strokeWidth = strokeWidth;
+    currentPath.strokeWidth = parseFloat(document.getElementById('penStrokeWidth').value);
     penPoints = [];
   }
   
@@ -1345,7 +1577,6 @@ tools.pen.onMouseDown = function(event) {
 
 tools.pen.onMouseDrag = function(event) {
   if (currentPath && penPoints.length > 0) {
-    // Create bezier curve by dragging - Illustrator style
     var lastSegment = currentPath.lastSegment;
     if (lastSegment) {
       var handlePoint = event.point;
@@ -1383,7 +1614,7 @@ tools.pen.onKeyDown = function(event) {
       currentPath.closed = true;
       currentPath.fillColor = fillColor;
       currentPath.strokeColor = strokeColor;
-      currentPath.strokeWidth = strokeWidth;
+      currentPath.strokeWidth = parseFloat(document.getElementById('penStrokeWidth').value);
       currentPath.simplify();
       currentPath.selected = true;
       currentPath = null;
@@ -1418,16 +1649,16 @@ tools.pencil.onMouseUp = function(event) {
   }
 };
 
-// Brush Tool
+// Brush Tool with settings
 tools.brush = new Tool();
 tools.brush.minDistance = 2;
 
 tools.brush.onMouseDown = function(event) {
   currentPath = new Path();
   currentPath.strokeColor = strokeColor;
-  currentPath.strokeWidth = strokeWidth;
-  currentPath.strokeCap = 'round';
-  currentPath.strokeJoin = 'round';
+  currentPath.strokeWidth = brushSize;
+  currentPath.strokeCap = document.getElementById('brushStyle').value;
+  currentPath.strokeJoin = document.getElementById('brushStyle').value;
   currentPath.add(event.point);
 };
 
@@ -1437,7 +1668,9 @@ tools.brush.onMouseDrag = function(event) {
 
 tools.brush.onMouseUp = function(event) {
   if (currentPath) {
-    currentPath.smooth();
+    for (var i = 0; i < brushSmoothing; i++) {
+      currentPath.smooth();
+    }
     currentPath.fillColor = fillColor;
     currentPath.selected = true;
     saveState();
@@ -1445,7 +1678,7 @@ tools.brush.onMouseUp = function(event) {
   }
 };
 
-// Rectangle Tool
+// Rectangle Tool with fixed behavior
 tools.rectangle = new Tool();
 
 tools.rectangle.onMouseDown = function(event) {
@@ -1479,7 +1712,7 @@ tools.rectangle.onMouseUp = function() {
   }
 };
 
-// Ellipse Tool
+// Ellipse Tool with fixed behavior
 tools.ellipse = new Tool();
 
 tools.ellipse.onMouseDown = function(event) {
@@ -1516,13 +1749,12 @@ tools.ellipse.onMouseUp = function() {
   }
 };
 
-// Polygon Tool
+// Polygon Tool with sides control
 tools.polygon = new Tool();
 
 tools.polygon.onMouseDown = function(event) {
   startPoint = event.point;
-  var sides = 6;
-  currentShape = new Path.RegularPolygon(startPoint, 0, sides);
+  currentShape = new Path.RegularPolygon(startPoint, 0, polygonSides);
   currentShape.fillColor = fillColor;
   currentShape.strokeColor = strokeColor;
   currentShape.strokeWidth = strokeWidth;
@@ -1531,9 +1763,8 @@ tools.polygon.onMouseDown = function(event) {
 tools.polygon.onMouseDrag = function(event) {
   if (currentShape) {
     var radius = startPoint.getDistance(event.point);
-    var sides = 6;
     currentShape.remove();
-    currentShape = new Path.RegularPolygon(startPoint, radius, sides);
+    currentShape = new Path.RegularPolygon(startPoint, radius, polygonSides);
     currentShape.fillColor = fillColor;
     currentShape.strokeColor = strokeColor;
     currentShape.strokeWidth = strokeWidth;
@@ -1548,13 +1779,12 @@ tools.polygon.onMouseUp = function() {
   }
 };
 
-// Star Tool
+// Star Tool with points control
 tools.star = new Tool();
 
 tools.star.onMouseDown = function(event) {
   startPoint = event.point;
-  var points = 5;
-  currentShape = new Path.Star(startPoint, 0, 0, 0, points);
+  currentShape = new Path.Star(startPoint, 0, 0, 0, starPoints);
   currentShape.fillColor = fillColor;
   currentShape.strokeColor = strokeColor;
   currentShape.strokeWidth = strokeWidth;
@@ -1563,10 +1793,9 @@ tools.star.onMouseDown = function(event) {
 tools.star.onMouseDrag = function(event) {
   if (currentShape) {
     var outerRadius = startPoint.getDistance(event.point);
-    var innerRadius = outerRadius * 0.4;
-    var points = 5;
+    var innerRadius = outerRadius * (starInnerRadius / 100);
     currentShape.remove();
-    currentShape = new Path.Star(startPoint, innerRadius, outerRadius, points);
+    currentShape = new Path.Star(startPoint, innerRadius, outerRadius, starPoints);
     currentShape.fillColor = fillColor;
     currentShape.strokeColor = strokeColor;
     currentShape.strokeWidth = strokeWidth;
@@ -1581,7 +1810,7 @@ tools.star.onMouseUp = function() {
   }
 };
 
-// Line Tool
+// Line Tool with fixed behavior
 tools.line = new Tool();
 
 tools.line.onMouseDown = function(event) {
@@ -1620,7 +1849,7 @@ tools.line.onMouseUp = function() {
   }
 };
 
-// Type Tool with resizable text box
+// Type Tool with improved UI
 tools.type = new Tool();
 var typeStartPoint = null;
 var typeCurrentShape = null;
@@ -1628,7 +1857,7 @@ var typeCurrentShape = null;
 tools.type.onMouseDown = function(event) {
   typeStartPoint = event.point;
   typeCurrentShape = new Path.Rectangle(typeStartPoint, typeStartPoint);
-  typeCurrentShape.strokeColor = '#60a5fa';
+  typeCurrentShape.strokeColor = '#22c55e';
   typeCurrentShape.strokeWidth = 1;
   typeCurrentShape.dashArray = [5, 5];
 };
@@ -1638,7 +1867,7 @@ tools.type.onMouseDrag = function(event) {
     typeCurrentShape.remove();
     var rect = new Rectangle(typeStartPoint, event.point);
     typeCurrentShape = new Path.Rectangle(rect);
-    typeCurrentShape.strokeColor = '#60a5fa';
+    typeCurrentShape.strokeColor = '#22c55e';
     typeCurrentShape.strokeWidth = 1;
     typeCurrentShape.dashArray = [5, 5];
   }
@@ -1654,9 +1883,9 @@ tools.type.onMouseUp = function(event) {
       var areaText = new PointText(bounds.topLeft);
       areaText.content = text;
       areaText.fillColor = fillColor;
-      areaText.fontSize = Math.min(bounds.width, bounds.height) * 0.5;
-      areaText.fontFamily = 'Arial';
-      areaText.justification = 'center';
+      areaText.fontSize = textFontSize;
+      areaText.fontFamily = textFontFamily;
+      areaText.justification = textAlignment;
       areaText.position = bounds.center;
       areaText.selected = true;
       saveState();
@@ -1682,8 +1911,8 @@ tools.typeOnPath.onMouseDown = function(event) {
       var pathText = new PointText(event.point);
       pathText.content = text;
       pathText.fillColor = fillColor;
-      pathText.fontSize = 24;
-      pathText.fontFamily = 'Arial';
+      pathText.fontSize = textFontSize;
+      pathText.fontFamily = textFontFamily;
       pathText.selected = true;
       
       showToolNotification('Text created on path');
@@ -1721,10 +1950,8 @@ tools.shapeBuilder.onMouseDown = function(event) {
   
   if (hit && hit.item) {
     if (!Key.modifiers.alt) {
-      // Merge shapes
       showToolNotification('Merging shapes...');
     } else {
-      // Subtract shapes
       if (hit.item.parent) {
         hit.item.remove();
         saveState();
@@ -1825,7 +2052,7 @@ tools.measure.onMouseUp = function(event) {
   }
 };
 
-// Hand Tool (Pan)
+// Hand Tool (Pan) with improved controls
 tools.hand = new Tool();
 var handStart;
 
@@ -1895,7 +2122,6 @@ document.getElementById('defaultColors').onclick = function() {
   updateFillColorPreview();
   updateStrokeColorPreview();
   
-  // Reset sliders
   document.getElementById('fillRed').value = 255;
   document.getElementById('fillGreen').value = 0;
   document.getElementById('fillBlue').value = 0;
@@ -1905,7 +2131,6 @@ document.getElementById('defaultColors').onclick = function() {
   document.getElementById('strokeBlue').value = 0;
   document.getElementById('strokeOpacity').value = 100;
   
-  // Apply to selected items
   if (project.selectedItems.length) {
     project.selectedItems.forEach(function(item) {
       item.fillColor = fillColor;
@@ -2022,6 +2247,42 @@ function applyStrokeColor() {
     showToolNotification('Stroke color applied');
   }
   document.getElementById('strokeColorPicker').classList.remove('active');
+}
+
+// Tool settings update functions
+function updateTextToolSettings() {
+  textFontSize = parseInt(document.getElementById('textFontSize').value);
+  textFontFamily = document.getElementById('textFontFamily').value;
+  document.getElementById('textFontSizeVal').textContent = textFontSize + 'px';
+}
+
+function setTextToolAlign(align) {
+  textAlignment = align;
+}
+
+function updateBrushToolSettings() {
+  brushSize = parseInt(document.getElementById('brushSize').value);
+  brushSmoothing = parseInt(document.getElementById('brushSmoothing').value);
+  document.getElementById('brushSizeVal').textContent = brushSize + 'px';
+  document.getElementById('brushSmoothingVal').textContent = brushSmoothing;
+}
+
+function updateShapeToolSettings() {
+  polygonSides = parseInt(document.getElementById('polygonSides').value);
+  starPoints = parseInt(document.getElementById('starPoints').value);
+  starInnerRadius = parseInt(document.getElementById('starInnerRadius').value);
+  document.getElementById('starInnerRadiusVal').textContent = starInnerRadius + '%';
+}
+
+function updatePenToolSettings() {
+  document.getElementById('penStrokeWidthVal').textContent = document.getElementById('penStrokeWidth').value + 'px';
+}
+
+function updateZoomFromSlider() {
+  var zoomValue = parseInt(document.getElementById('zoomSlider').value);
+  view.zoom = zoomValue / 100;
+  document.getElementById('zoomSliderVal').textContent = zoomValue + '%';
+  updateZoomDisplay();
 }
 
 // Update properties panel
@@ -2494,6 +2755,12 @@ function updateZoomDisplay() {
   if (statusZoom) {
     statusZoom.textContent = zoomPercent + '%';
   }
+  
+  var zoomSlider = document.getElementById('zoomSlider');
+  if (zoomSlider) {
+    zoomSlider.value = zoomPercent;
+    document.getElementById('zoomSliderVal').textContent = zoomPercent + '%';
+  }
 }
 
 // View options
@@ -2525,14 +2792,12 @@ function showArtboardOptions() {
     artboardSize.width = parseInt(width);
     artboardSize.height = parseInt(height);
     
-    // Remove existing artboard
     project.activeLayer.children.forEach(function(item) {
       if (item.name === 'Artboard') {
         item.remove();
       }
     });
     
-    // Create new artboard
     createArtboard();
     saveState();
     showToolNotification('Artboard resized');
@@ -2746,18 +3011,95 @@ document.addEventListener('click', function(event) {
     contextMenu.style.display = 'none';
   }
   
-  // Close color pickers when clicking outside
   if (!event.target.closest('.color-picker-popup') && !event.target.closest('#fillColor') && !event.target.closest('#strokeColor')) {
     document.getElementById('fillColorPicker').classList.remove('active');
     document.getElementById('strokeColorPicker').classList.remove('active');
   }
 });
 
+// Desktop scroll wheel zoom and pan
+var canvasElement = document.getElementById('canvas');
+canvasElement.addEventListener('wheel', function(event) {
+  event.preventDefault();
+  
+  if (event.buttons === 4) {
+    // Middle mouse button - Pan
+    var delta = new Point(event.deltaX, event.deltaY);
+    view.center = view.center.subtract(delta);
+  } else {
+    // Regular scroll - Zoom (inverted for natural feel)
+    var zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+    var mousePoint = new Point(event.offsetX, event.offsetY);
+    
+    view.zoom = view.zoom * zoomFactor;
+    updateZoomDisplay();
+  }
+}, { passive: false });
+
+// Mobile touch zoom and pan
+var lastTouchDistance = 0;
+var lastTouchCenter = null;
+
+canvasElement.addEventListener('touchstart', function(event) {
+  if (event.touches.length === 2) {
+    // Pinch to zoom
+    lastTouchDistance = getTouchDistance(event.touches);
+    lastTouchCenter = getTouchCenter(event.touches);
+  } else if (event.touches.length === 1) {
+    // Single touch - potential pan
+    isPanning = true;
+    panStart = new Point(event.touches[0].clientX, event.touches[0].clientY);
+  }
+}, { passive: true });
+
+canvasElement.addEventListener('touchmove', function(event) {
+  if (event.touches.length === 2) {
+    // Pinch to zoom (opposite of desktop scroll)
+    var currentDistance = getTouchDistance(event.touches);
+    var zoomFactor = lastTouchDistance / currentDistance;
+    
+    var currentCenter = getTouchCenter(event.touches);
+    var rect = canvasElement.getBoundingClientRect();
+    var paperPoint = view.viewToProject(currentCenter.subtract(rect.topLeft));
+    
+    view.zoom = view.zoom * zoomFactor;
+    updateZoomDisplay();
+    
+    lastTouchDistance = currentDistance;
+    lastTouchCenter = currentCenter;
+  } else if (event.touches.length === 1 && isPanning) {
+    // Single finger pan
+    var currentPoint = new Point(event.touches[0].clientX, event.touches[0].clientY);
+    var delta = currentPoint.subtract(panStart);
+    view.center = view.center.subtract(delta);
+    panStart = currentPoint;
+  }
+}, { passive: false });
+
+canvasElement.addEventListener('touchend', function(event) {
+  isPanning = false;
+  panStart = null;
+  lastTouchDistance = 0;
+  lastTouchCenter = null;
+});
+
+function getTouchDistance(touches) {
+  var dx = touches[0].clientX - touches[1].clientX;
+  var dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function getTouchCenter(touches) {
+  return new Point(
+    (touches[0].clientX + touches[1].clientX) / 2,
+    (touches[0].clientY + touches[1].clientY) / 2
+  );
+}
+
 // Keyboard shortcuts
 document.addEventListener('keydown', function(event) {
   if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
   
-  // File shortcuts
   if ((event.ctrlKey || event.metaKey) && (event.key === 'n' || event.key === 'N')) {
     if (event.shiftKey) {
       event.preventDefault();
@@ -2825,7 +3167,6 @@ document.addEventListener('keydown', function(event) {
     }
   }
   
-  // Edit shortcuts
   if ((event.ctrlKey || event.metaKey) && event.key === 'c') copy();
   if ((event.ctrlKey || event.metaKey) && event.key === 'x') cut();
   if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
@@ -2857,7 +3198,6 @@ document.addEventListener('keydown', function(event) {
     }
   }
   
-  // Arrange shortcuts
   if ((event.ctrlKey || event.metaKey) && event.key === ']') {
     if (event.shiftKey) {
       bringToFront();
@@ -2873,7 +3213,6 @@ document.addEventListener('keydown', function(event) {
     }
   }
   
-  // Zoom shortcuts
   if ((event.ctrlKey || event.metaKey) && (event.key === '=' || event.key === '+')) {
     event.preventDefault();
     zoomIn();
@@ -2891,7 +3230,6 @@ document.addEventListener('keydown', function(event) {
     zoomTo100();
   }
   
-  // Escape key
   if (event.key === 'Escape') {
     deselectAll();
     if (currentPath) {
@@ -2924,7 +3262,6 @@ console.log('Saving initial state...');
 saveState();
 console.log('Paper.js setup complete!');
 
-// Hide loader after a short delay
 view.onFrame = function(event) {
   if (event.count === 10) {
     var loader = document.getElementById('loader');
@@ -3006,7 +3343,13 @@ window.applyFillColor = applyFillColor;
 window.updateStrokeColor = updateStrokeColor;
 window.updateStrokeColorFromNum = updateStrokeColorFromNum;
 window.applyStrokeColor = applyStrokeColor;
-
+window.toggleToolPanel = toggleToolPanel;
+window.updateTextToolSettings = updateTextToolSettings;
+window.setTextToolAlign = setTextToolAlign;
+window.updateBrushToolSettings = updateBrushToolSettings;
+window.updateShapeToolSettings = updateShapeToolSettings;
+window.updatePenToolSettings = updatePenToolSettings;
+window.updateZoomFromSlider = updateZoomFromSlider;
 </script>
 
 <script>
@@ -3025,7 +3368,6 @@ document.querySelectorAll('.panel-tab').forEach(tab => {
 const dock = document.getElementById('panelDock');
 const dockToggle = document.getElementById('dockToggle');
 const panelCloseBtn = document.getElementById('panelCloseBtn');
-const panelBackdrop = document.getElementById('panelBackdrop');
 let dockVisible = true;
 
 function toggleDock() {
@@ -3051,7 +3393,6 @@ function showPanel(panelName) {
   var section = document.getElementById('panel-' + panelName);
   if (section) section.classList.add('active');
   
-  // Show dock if hidden
   if (!dockVisible) {
     dock.classList.add('visible');
     dock.classList.remove('hidden');
@@ -3291,20 +3632,22 @@ function setGradientType(type) {
   alert('Gradient type: ' + type);
 }
 
-// Initialize swatches on load
+// Initialize on load
 window.onload = function() {
   initSwatches();
   addFill();
   addStroke();
   
-  // Set initial backdrop state on mobile
-  if (window.innerWidth <= 900 && dockVisible) {
-    panelBackdrop.classList.add('visible');
-  }
-  
   // Update color previews
   updateFillColorPreview();
   updateStrokeColorPreview();
+  
+  // Initialize zoom slider
+  var zoomSlider = document.getElementById('zoomSlider');
+  if (zoomSlider) {
+    zoomSlider.value = Math.round(view.zoom * 100);
+    document.getElementById('zoomSliderVal').textContent = Math.round(view.zoom * 100) + '%';
+  }
 };
 
 // Mobile touch support for position tracking
@@ -3325,13 +3668,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { passive: true });
   }
 });
-
-// Mobile touch support
-document.addEventListener('touchstart', function(e) {
-  if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
-    // Allow default behavior for scrolling
-  }
-}, { passive: false });
 </script>
 </body>
 </html>
