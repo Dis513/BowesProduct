@@ -1768,24 +1768,20 @@ function renderScene() {
 // ==================== VIEW CONTROLS ====================
 function frameSelected() {
   if (selectedObjects.length === 0) return;
- 
   const box = new THREE.Box3();
   selectedObjects.forEach(obj => {
     box.expandByObject(obj);
   });
- 
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
   const maxDim = Math.max(size.x, size.y, size.z);
- 
   controls.target.copy(center);
   camera.position.set(
     center.x + maxDim,
     center.y + maxDim,
-    center.z + maxDim,
+    center.z + maxDim
   );
   camera.lookAt(center);
- 
   showNotification('Framed Selection');
 }
 function toggleCameraMode() {
@@ -2136,6 +2132,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
