@@ -2134,20 +2134,24 @@ window.addArmature = addArmature;
   import { STLLoader } from 'three/addons/loaders/STLLoader.js';
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
-  // Attach to global so your existing code works unchanged
- window.THREE = THREE;
-window.OrbitControls = OrbitControls;
-window.TransformControls = TransformControls;
-window.GLTFLoader = GLTFLoader;
-window.OBJLoader = OBJLoader;
-window.STLLoader = STLLoader;
-window.GLTFExporter = GLTFExporter;
+  // Critical fix: make THREE extensible
+  window.THREE = {};
+  Object.assign(window.THREE, THREE);
 
+  // Now safely add the addons
+  window.THREE.OrbitControls = OrbitControls;
+  window.THREE.TransformControls = TransformControls;
+  window.THREE.GLTFLoader = GLTFLoader;
+  window.THREE.OBJLoader = OBJLoader;
+  window.THREE.STLLoader = STLLoader;
+  window.THREE.GLTFExporter = GLTFExporter;
 
+  // Start the app
   init();
 </script>
 </body>
 </html>
+
 
 
 
