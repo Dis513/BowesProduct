@@ -663,7 +663,7 @@
     <div class="ruler ruler-h" id="rulerH"></div>
     <div class="ruler ruler-v" id="rulerV"></div>
     
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas" resize></canvas>
     
     <!-- Selection Box -->
     <div class="selection-box" id="selectionBox"></div>
@@ -1233,19 +1233,6 @@ paper.setup(document.getElementById('canvas'));
 paper.install(window);
 
 console.log('Paper.js script starting...');
-  // Handle resize manually for better control with margins/rulers
-window.addEventListener('resize', function() {
-  view.viewSize = new Size(
-    view.element.parentNode.clientWidth,
-    view.element.parentNode.clientHeight
-  );
-});
-
-// Initial size
-view.viewSize = new Size(
-  view.element.parentNode.clientWidth,
-  view.element.parentNode.clientHeight
-);
 
 // Global state
 var tools = {};
@@ -1414,8 +1401,9 @@ function activateTool(name) {
   }
 }
 
-/ Selection Tool - FIXED selection box positioning + better multi-shape support
+// Selection Tool with fixed selection and movement
 tools.select = new Tool();
+
 tools.select.onMouseDown = function(event) {
   var hit = project.hitTest(event.point, {
     fill: true,
@@ -1423,6 +1411,7 @@ tools.select.onMouseDown = function(event) {
     segments: true,
     tolerance: 10
   });
+
   if (hit && hit.item && !hit.item.locked && hit.item.name !== 'Artboard') {
     if (!Key.modifiers.shift) {
       project.deselectAll();
@@ -1435,44 +1424,31 @@ tools.select.onMouseDown = function(event) {
     }
     selectionStart = event.point;
   }
+
   updateProperties();
 };
+
 tools.select.onMouseDrag = function(event) {
   if (selectionStart) {
-    // Proper marquee selection box using projectToView + canvas margin offset
-    var minX = Math.min(selectionStart.x, event.point.x);
-    var minY = Math.min(selectionStart.y, event.point.y);
-    var maxX = Math.max(selectionStart.x, event.point.x);
-    var maxY = Math.max(selectionStart.y, event.point.y);
-
-    var topLeftProj = new Point(minX, minY);
-    var bottomRightProj = new Point(maxX, maxY);
-
-    var topLeftView = view.projectToView(topLeftProj);
-    var bottomRightView = view.projectToView(bottomRightProj);
-
-    // Account for canvas margins (rulers)
-    var canvasStyle = getComputedStyle(view.element);
-    var offsetX = parseFloat(canvasStyle.marginLeft) || 0;
-    var offsetY = parseFloat(canvasStyle.marginTop) || 0;
-
+    // Show dashed selection box
+    var rect = new Rectangle(selectionStart, event.point);
+    var canvasRect = view.element.getBoundingClientRect();
+    
     selectionBox.style.display = 'block';
-    selectionBox.style.left = (topLeftView.x + offsetX) + 'px';
-    selectionBox.style.top = (topLeftView.y + offsetY) + 'px';
-    selectionBox.style.width = (bottomRightView.x - topLeftView.x) + 'px';
-    selectionBox.style.height = (bottomRightView.y - topLeftView.y) + 'px';
-
-    // Select items that intersect the marquee (works with Paths, CompoundPaths, Groups, Rasters, etc.)
+    selectionBox.style.left = (rect.point.x + 60) + 'px';
+    selectionBox.style.top = (rect.point.y + 20) + 'px';
+    selectionBox.style.width = rect.width + 'px';
+    selectionBox.style.height = rect.height + 'px';
+    
+    // Select items within the box
     project.deselectAll();
-    var bounds = new Rectangle(topLeftProj, bottomRightProj);
+    var bounds = new Rectangle(selectionStart, event.point);
     project.activeLayer.children.forEach(function(item) {
       if (item.name !== 'Artboard' && !item.locked && item.bounds.intersects(bounds)) {
         item.selected = true;
       }
     });
-    updateProperties();
-  } else if (project.selectedItems.length > 0) {
-    // Move selected objects (works on desktop + mobile touch drag)
+  } else if (project.selectedItems.length) {
     var delta = event.delta;
     if (snapToGrid) {
       delta.x = Math.round(delta.x / gridSize) * gridSize;
@@ -1486,6 +1462,7 @@ tools.select.onMouseDrag = function(event) {
     updateProperties();
   }
 };
+
 tools.select.onMouseUp = function() {
   selectionBox.style.display = 'none';
   selectionStart = null;
@@ -2672,62 +2649,39 @@ function flipSelection(direction) {
   }
 }
 
-// IMPROVED Pathfinder - now supports multiple shapes + correct boolean ops
+// Pathfinder operations
 function pathfinder(operation) {
-  var selected = Array.from(project.selectedItems);
-  var paths = selected.filter(function(item) {
-    return (item instanceof Path || item instanceof CompoundPath) && !item.locked;
+  var items = project.selectedItems.filter(function(item) {
+    return item instanceof Path && item.selected;
   });
-
-  if (paths.length < 2) {
-    showToolNotification('Select at least 2 paths');
-    return;
+  
+  if (items.length < 2) return;
+  
+  var result;
+  switch(operation) {
+    case 'unite':
+      result = items[0].unite(items[1]);
+      break;
+    case 'minus':
+      result = items[0].exclude(items[1]);
+      break;
+    case 'intersect':
+      result = items[0].intersect(items[1]);
+      break;
+    case 'exclude':
+      result = items[0].exclude(items[1]);
+      break;
   }
-
-  var opMethod;
-  switch (operation) {
-    case 'unite': opMethod = 'unite'; break;
-    case 'minus': opMethod = 'subtract'; break; // Minus Front = subtract subsequent from first
-    case 'intersect': opMethod = 'intersect'; break;
-    case 'exclude': opMethod = 'exclude'; break;
-    case 'divide':
-    case 'trim':
-    case 'merge':
-    case 'crop':
-    case 'outline':
-      showToolNotification('Advanced Pathfinder operation coming soon');
-      return;
-    default:
-      return;
+  
+  if (result) {
+    items.forEach(function(item) {
+      if (item !== result) item.remove();
+    });
+    result.fillColor = fillColor;
+    result.strokeColor = strokeColor;
+    result.strokeWidth = strokeWidth;
+    saveState();
   }
-
-  // Start with clone of first path
-  var result = paths[0].clone();
-  result.selected = false;
-
-  for (var i = 1; i < paths.length; i++) {
-    var next = result[opMethod](paths[i]);
-    if (next && ((next.children && next.children.length > 0) || !next.empty)) {
-      result.remove();
-      result = next;
-    } else {
-      result.remove();
-      showToolNotification('No overlapping area - empty result');
-      return;
-    }
-  }
-
-  // Remove original paths
-  paths.forEach(function(p) { p.remove(); });
-
-  // Apply current fill/stroke
-  if (result.fillColor !== null) result.fillColor = fillColor;
-  if (result.strokeColor !== null) result.strokeColor = strokeColor;
-  result.strokeWidth = strokeWidth;
-
-  result.selected = true;
-  saveState();
-  showToolNotification('Pathfinder: ' + operation.charAt(0).toUpperCase() + operation.slice(1) + ' applied');
 }
 
 // Select same
@@ -3717,5 +3671,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-
-
