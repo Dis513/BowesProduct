@@ -1848,112 +1848,7 @@ function redo() {
   undoStack.push(redoStack.pop());
   showNotification('Redo');
 }
-<script>
-// Correctly define the function on the window object
-window.saveSceneToFirebase = async function() {
-  if (!db || !auth.currentUser) return;
-  
-  // For a real save, you would serialize the entire scene (objects, positions, etc.)
-  // This is a simplified placeholder that just saves metadata
-  const sceneData = {
-    name: "My Scene",
-    timestamp: serverTimestamp(),
-    objectCount: scene.children.filter(obj => obj.isMesh).length,
-    // In a full implementation you would serialize geometries, materials, hierarchy, etc.
-  };
-  
-  try {
-    const scenesRef = collection(db, `users/${auth.currentUser.uid}/scenes`);
-    await addDoc(scenesRef, sceneData);
-    console.log("Scene saved to Firebase");
-  } catch (error) {
-    console.error("Error saving scene:", error);
-    showNotification("Failed to save scene");
-  }
-};
 
-async function saveScene() {
-  if (!auth.currentUser) {
-    showNotification('Login to save scenes');
-    return;
-  }
-  await window.saveSceneToFirebase();
-  showNotification('Scene Saved');
-}
-
-async function showSceneLoader() {
-  if (!auth.currentUser) {
-    showNotification('Login to load scenes');
-    return;
-  }
-
-  showNotification('Loading scenes from Firebase...');
-
-  try {
-    const scenesRef = collection(db, `users/${auth.currentUser.uid}/scenes`);
-    const snapshot = await getDocs(scenesRef);
-
-    const scenes = [];
-
-    snapshot.forEach(doc => {
-      scenes.push(
-        Object.assign(
-          { id: doc.id },
-          doc.data()
-        )
-      );
-    });
-
-    if (scenes.length === 0) {
-      showNotification('No saved scenes');
-    } else {
-      showNotification(`Found ${scenes.length} saved scenes`);
-      console.log("Saved scenes:", scenes);
-    }
-
-  } catch (error) {
-    console.error("Error loading scenes:", error);
-    showNotification('Failed to load scenes');
-  }
-}
-
-
-    });
-    if (scenes.length === 0) {
-      showNotification('No saved scenes');
-    } else {
-      showNotification(`Found ${scenes.length} saved scenes`);
-      console.log("Saved scenes:", scenes);
-      // In a full version you would show a list and allow loading one
-    }
-  } catch (error) {
-    console.error("Error loading scenes:", error);
-    showNotification('Failed to load scenes');
-  }
-}
-
-function newScene() {
-  if (confirm('Create new scene? All unsaved changes will be lost.')) {
-    // Remove all meshes
-    const toRemove = [];
-    scene.traverse(obj => {
-      if (obj.isMesh && obj !== gridHelper && obj !== axesHelper) {
-        toRemove.push(obj);
-      }
-    });
-    toRemove.forEach(obj => {
-      scene.remove(obj);
-      if (obj.geometry) obj.geometry.dispose();
-      if (obj.material) obj.material.dispose();
-    });
-
-    selectedObjects = [];
-    transformControls.detach();
-    updateOutliner();
-    saveState();
-    showNotification('New Scene');
-  }
-}
 
 // ==================== FINAL INITIALIZATION ====================
 // Remove the old init() call and DOMContentLoaded listener
@@ -2186,6 +2081,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
