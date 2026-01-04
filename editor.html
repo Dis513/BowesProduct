@@ -663,7 +663,7 @@
     <div class="ruler ruler-h" id="rulerH"></div>
     <div class="ruler ruler-v" id="rulerV"></div>
     
-    <canvas id="canvas" resize></canvas>
+    <canvas id="canvas"></canvas>
     
     <!-- Selection Box -->
     <div class="selection-box" id="selectionBox"></div>
@@ -1233,6 +1233,19 @@ paper.setup(document.getElementById('canvas'));
 paper.install(window);
 
 console.log('Paper.js script starting...');
+  // Handle resize manually for better control with margins/rulers
+window.addEventListener('resize', function() {
+  view.viewSize = new Size(
+    view.element.parentNode.clientWidth,
+    view.element.parentNode.clientHeight
+  );
+});
+
+// Initial size
+view.viewSize = new Size(
+  view.element.parentNode.clientWidth,
+  view.element.parentNode.clientHeight
+);
 
 // Global state
 var tools = {};
@@ -3704,4 +3717,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
 
