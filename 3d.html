@@ -2127,8 +2127,13 @@ window.addArmature = addArmature;
 // ==================== INITIALIZE ====================
 // Add a default cube so the scene isn't empty
 addPrimitive('cube');
+// Force initialization immediately (safe fallback)
+init();
+
+// Also keep the event listener in case it fires later
 window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
