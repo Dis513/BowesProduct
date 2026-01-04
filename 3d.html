@@ -303,13 +303,26 @@
   }
   </style>
  
-<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/OrbitControls.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/TransformControls.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/OBJLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/STLLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/exporters/GLTFExporter.js"></script>
+<script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
+  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js';
+  import { TransformControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/TransformControls.js';
+  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/GLTFLoader.js';
+  import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/OBJLoader.js';
+  import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/STLLoader.js';
+  import { GLTFExporter } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/exporters/GLTFExporter.js';
 
+  // Now paste ALL your existing code here (global state, init(), functions, etc.)
+  // The constructors will now work: new THREE.OrbitControls(...), new GLTFLoader(), etc.
+
+  // In handleImport and exportModel:
+  // Change to:
+  // const loader = new GLTFLoader();  // no THREE. prefix needed since imported directly
+  // const exporter = new GLTFExporter();
+
+  // At the very end:
+  init();
+  addPrimitive('cube');
 </script>
 
 </head>
@@ -2076,6 +2089,7 @@ window.addArmature = addArmature;
 
 </body>
 </html>
+
 
 
 
