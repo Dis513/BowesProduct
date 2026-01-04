@@ -1848,7 +1848,6 @@ function redo() {
   undoStack.push(redoStack.pop());
   showNotification('Redo');
 }
-<!-- ==================== FIREBASE SCENE MANAGEMENT ==================== -->
 <script>
 // Correctly define the function on the window object
 window.saveSceneToFirebase = async function() {
@@ -2104,7 +2103,7 @@ function showContextMenu(x, y) {
     document.addEventListener('click', closeMenu);
   }, 0);
 }
-// ==================== PANEL TABS ====================
+/ ==================== PANEL TABS ====================
 function initPanelTabs() {
   document.querySelectorAll('.panel-tab').forEach(tab => {
     tab.addEventListener('click', function() {
@@ -2187,6 +2186,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
