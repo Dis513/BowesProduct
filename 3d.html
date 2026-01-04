@@ -2134,7 +2134,7 @@ window.addArmature = addArmature;
   import { STLLoader } from 'three/addons/loaders/STLLoader.js';
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
-  // Make THREE extensible and global
+  // Make global THREE extensible
   window.THREE = {};
   Object.assign(window.THREE, THREE);
   window.THREE.OrbitControls = OrbitControls;
@@ -2144,17 +2144,18 @@ window.addArmature = addArmature;
   window.THREE.STLLoader = STLLoader;
   window.THREE.GLTFExporter = GLTFExporter;
 
-  // Wait until the page and main script are fully loaded before calling init()
+  // Wait for the page and main script to load
   window.addEventListener('load', () => {
     if (typeof init === 'function') {
       init();
     } else {
-      console.error('init function not found');
+      console.error('init function still not found - check script order');
     }
   });
 </script>
 </body>
 </html>
+
 
 
 
