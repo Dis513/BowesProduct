@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -609,6 +610,7 @@
           UV Editor - Select a mesh to edit UVs
         </div>
       </div>
+      
       <!-- Timeline Panel -->
       <div id="panel-timeline" class="panel-section">
         <h3>Timeline</h3>
@@ -625,6 +627,37 @@
     </div>
   </div>
 </div>
+  <!-- Cloud Save Button -->
+<button 
+  onclick="saveSceneToFirebase()" 
+  id="saveCloudBtn" 
+  style="
+    position: fixed; 
+    bottom: 70px; 
+    right: 20px; 
+    z-index: 9999; 
+    padding: 14px 28px; 
+    background: #60a5fa; 
+    color: white; 
+    border: none; 
+    border-radius: 16px; 
+    font-weight: bold; 
+    font-size: 15px; 
+    cursor: pointer; 
+    box-shadow: 0 8px 25px rgba(96, 165, 250, 0.4);
+    transition: all 0.3s ease;
+    display: none; /* Hidden until logged in */
+  "
+  onmouseover="this.style.background='#3b82f6'; this.style.transform='translateY(-2px)'"
+  onmouseout="this.style.background='#60a5fa'; this.style.transform='translateY(0)'"
+>
+  ☁️ Save to Cloud
+</button>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  ...
+</div>
 <!-- Status Bar -->
 <div class="status-bar">
   <div class="left">
@@ -638,57 +671,51 @@
   </div>
 </div>
 <!-- Firebase Integration -->
+<!-- Firebase Integration -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { 
-  getAuth, 
-  GoogleAuthProvider, 
-  signInWithPopup, 
-  signOut, 
-  onAuthStateChanged 
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-import { 
-  getFirestore, 
-  doc, 
-  getDoc, 
-  setDoc, 
-  serverTimestamp 
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  addDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-import { 
-  getStorage 
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
   authDomain: "bowesproduct.firebaseapp.com",
   projectId: "bowesproduct",
   storageBucket: "bowesproduct.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // optional - can leave as is
-  appId: "YOUR_APP_ID" // optional - can leave as is
+  messagingSenderId: "YOUR_SENDER_ID", // optional
+  appId: "YOUR_APP_ID" // optional
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 const provider = new GoogleAuthProvider();
 
-// === Expose globally so other scripts can use ===
+// Expose globally so other scripts can use them
 window.auth = auth;
 window.db = db;
-window.storage = storage;
 window.firebaseProvider = provider;
 
-// === UI Elements ===
+// UI Elements
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
-const levelInfo = document.getElementById("levelInfo");
-const levelText = document.getElementById("levelText");
-const xpBar = document.getElementById("xpBar");
+const saveCloudBtn = document.getElementById("saveCloudBtn"); // if you added the button
 
-// === Login / Logout ===
+// Login / Logout button
 if (authBtn) {
   authBtn.onclick = () => {
     if (auth.currentUser) {
@@ -699,13 +726,13 @@ if (authBtn) {
   };
 }
 
-// === Auth State Listener ===
+// Auth state listener - updates UI and shows/hides save button
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     // Not logged in
     if (authBtn) authBtn.textContent = "Login";
     if (profilePic) profilePic.style.display = "none";
-    if (levelInfo) levelInfo.style.display = "none";
+    if (saveCloudBtn) saveCloudBtn.style.display = "none";
     return;
   }
 
@@ -716,50 +743,20 @@ onAuthStateChanged(auth, async (user) => {
     profilePic.style.display = "block";
   }
 
-  // === XP & Level System ===
-  const userRef = doc(db, "users", user.uid);
-  let userSnap = await getDoc(userRef);
+  // Show cloud save button
+  if (saveCloudBtn) saveCloudBtn.style.display = "block";
 
+  // Optional: Create user profile if new
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
   if (!userSnap.exists()) {
-    // New user - create profile
     await setDoc(userRef, {
       displayName: user.displayName || "Anonymous",
       photoURL: user.photoURL || "",
-      xp: 0,
-      level: 1,
       createdAt: serverTimestamp()
     });
-    userSnap = await getDoc(userRef);
   }
-
-  const userData = userSnap.data();
-  let xp = userData.xp || 0;
-
-  // Level thresholds (customize as needed)
-  const levels = [0, 200, 500, 1000, 2000, 3500, 5000, 7500, 10000];
-  let level = levels.findIndex(threshold => xp < threshold);
-  if (level === -1) level = levels.length; // Max level
-
-  const prevXP = levels[level - 1] || 0;
-  const nextXP = levels[level] || prevXP + 2000;
-  const progress = ((xp - prevXP) / (nextXP - prevXP)) * 100;
-
-  // Update UI
-  if (levelText) levelText.textContent = `Level ${level} • ${xp.toLocaleString()} XP`;
-  if (xpBar) xpBar.style.width = `${Math.min(progress, 100)}%`;
-  if (levelInfo) levelInfo.style.display = "flex"; // or "block" depending on your CSS
 });
-
-// Optional: Helper to award XP
-window.awardXP = async function(points = 50) {
-  if (!auth.currentUser) return;
-  const userRef = doc(db, "users", auth.currentUser.uid);
-  const snap = await getDoc(userRef);
-  if (snap.exists()) {
-    const currentXP = snap.data().xp || 0;
-    await setDoc(userRef, { xp: currentXP + points }, { merge: true });
-  }
-};
 </script>
 <script>
 // ==================== GLOBAL STATE ====================
@@ -2198,6 +2195,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
