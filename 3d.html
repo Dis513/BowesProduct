@@ -302,14 +302,15 @@
     .dropdown { z-index: 1900; }
   }
   </style>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
-  }
-}
-</script>
+ 
+  <!-- Three.js and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/TransformControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/STLLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/exporters/GLTFExporter.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -763,25 +764,25 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
+ 
   // Orbit Controls
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = true;
   controls.minDistance = 0.1;
   controls.maxDistance = 500;
-
+ 
   // Transform Controls
-  transformControls = new TransformControls(camera, renderer.domElement);
+  transformControls = new THREE.TransformControls(camera, renderer.domElement);
   transformControls.addEventListener('dragging-changed', (event) => {
     controls.enabled = !event.value;
   });
-  transformControls.addEventListener('change', updateProperties);
-
+  transformControls.addEventListener('change', () => {
+    updateProperties();
+  });
   scene.add(transformControls);
-
-
+ 
   // Raycaster
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
@@ -2123,42 +2124,18 @@ window.newScene = newScene;
 window.updateTransform = updateTransform;
 window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
+// ==================== INITIALIZE ====================
+// Force initialization first
+init();
 
-</script>
-<script type="module">
-  import * as THREE from 'three';
-  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-  import { TransformControls } from 'three/addons/controls/TransformControls.js';
-  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-  import { STLLoader } from 'three/addons/loaders/STLLoader.js';
-  import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+// Add a default cube after everything is set up
+addPrimitive('cube');
 
-  // Critical fix: make THREE extensible
-  window.THREE = {};
-  Object.assign(window.THREE, THREE);
-
-  // Now safely add the addons
-  window.THREE.OrbitControls = OrbitControls;
-  window.THREE.TransformControls = TransformControls;
-  window.THREE.GLTFLoader = GLTFLoader;
-  window.THREE.OBJLoader = OBJLoader;
-  window.THREE.STLLoader = STLLoader;
-  window.THREE.GLTFExporter = GLTFExporter;
-
-  // Start the app
-  init();
+// Also keep the event listener in case it fires later
+window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
 
 
 
