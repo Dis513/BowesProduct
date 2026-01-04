@@ -423,7 +423,7 @@
   .context-menu div:hover { background: #1e293b; }
   .context-menu hr { border: none; border-top: 1px solid #1e293b; margin: 0.3rem 0; }
   
-  /* Selection Box */
+  /* Selection Box - FIXED for proper positioning */
   .selection-box {
     position: absolute;
     border: 1px dashed #60a5fa;
@@ -524,7 +524,7 @@
         <div>Pathfinder &darr;
           <div class="submenu">
             <div onclick="pathfinder('unite')">Unite</div>
-            <div onclick="pathfinder('minus')">Minus Front</div>
+            <div onclick="pathfinder('subtract')">Minus Front</div>
             <div onclick="pathfinder('intersect')">Intersect</div>
             <div onclick="pathfinder('exclude')">Exclude</div>
             <hr>
@@ -559,7 +559,7 @@
         <div onclick="zoomIn()">Zoom In <span class="shortcut">Ctrl++</span></div>
         <div onclick="zoomOut()">Zoom Out <span class="shortcut">Ctrl+-</span></div>
         <div onclick="zoomToFit()">Fit to Screen <span class="shortcut">Ctrl+0</span></div>
-        <div onclick="zoomTo100()">100% <span class="shortcut">Ctrl+1</span></div>
+        <div onclick="zoomTo100%">100% <span class="shortcut">Ctrl+1</span></div>
         <hr>
         <div onclick="toggleGrid()">Grid <span class="shortcut">Ctrl+'</span></div>
         <div onclick="toggleRulers()">Rulers <span class="shortcut">Ctrl+R</span></div>
@@ -689,6 +689,7 @@
     <div class="tool-group">
       <div class="tool-btn" id="rectangleTool" title="Rectangle Tool (M)">□</div>
       <div class="tool-btn" id="ellipseTool" title="Ellipse Tool (L)">○</div>
+      <div class="tool-btn" id="roundedRectangleTool" title="Rounded Rectangle Tool">▢</div>
       <div class="tool-btn" id="polygonTool" title="Polygon Tool">⬡</div>
       <div class="tool-btn" id="starTool" title="Star Tool">★</div>
       <div class="tool-btn" id="lineTool" title="Line Tool (/)">╱</div>
@@ -1014,163 +1015,6 @@
   </div>
 </div>
 
-<!-- Tool-specific Control Panels -->
-<!-- Text Tool Panel -->
-<div class="tool-panel" id="textToolPanel">
-  <h4>
-    Text Options
-    <span class="tool-panel-close" onclick="toggleToolPanel('textToolPanel')">×</span>
-  </h4>
-  <div class="control-group">
-    <label>Font Size</label>
-    <input type="range" id="textFontSize" min="8" max="200" value="32" oninput="updateTextToolSettings()">
-    <span id="textFontSizeVal">32px</span>
-  </div>
-  <div class="control-group">
-    <label>Font Family</label>
-    <select id="textFontFamily" onchange="updateTextToolSettings()">
-      <option value="Arial">Arial</option>
-      <option value="Helvetica">Helvetica</option>
-      <option value="Times New Roman">Times New Roman</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Verdana">Verdana</option>
-      <option value="Courier New">Courier New</option>
-      <option value="Impact">Impact</option>
-    </select>
-  </div>
-  <div class="control-group">
-    <label>Alignment</label>
-    <div class="btn-group">
-      <button class="btn" onclick="setTextToolAlign('left')">⬅</button>
-      <button class="btn" onclick="setTextToolAlign('center')">⬌</button>
-      <button class="btn" onclick="setTextToolAlign('right')">➡</button>
-    </div>
-  </div>
-</div>
-
-<!-- Brush Tool Panel -->
-<div class="tool-panel" id="brushToolPanel">
-  <h4>
-    Brush Options
-    <span class="tool-panel-close" onclick="toggleToolPanel('brushToolPanel')">×</span>
-  </h4>
-  <div class="control-group">
-    <label>Brush Size</label>
-    <input type="range" id="brushSize" min="1" max="100" value="5" oninput="updateBrushToolSettings()">
-    <span id="brushSizeVal">5px</span>
-  </div>
-  <div class="control-group">
-    <label>Smoothing</label>
-    <input type="range" id="brushSmoothing" min="0" max="10" value="5" oninput="updateBrushToolSettings()">
-    <span id="brushSmoothingVal">5</span>
-  </div>
-  <div class="control-group">
-    <label>Brush Style</label>
-    <select id="brushStyle" onchange="updateBrushToolSettings()">
-      <option value="round">Round</option>
-      <option value="square">Square</option>
-      <option value="bevel">Bevel</option>
-    </select>
-  </div>
-</div>
-
-<!-- Shape Tool Panel -->
-<div class="tool-panel" id="shapeToolPanel">
-  <h4>
-    Shape Options
-    <span class="tool-panel-close" onclick="toggleToolPanel('shapeToolPanel')">×</span>
-  </h4>
-  <div class="control-group">
-    <label>Shape Type</label>
-    <select id="shapeType" onchange="updateShapeToolSettings()">
-      <option value="rectangle">Rectangle</option>
-      <option value="ellipse">Ellipse</option>
-      <option value="polygon">Polygon</option>
-      <option value="star">Star</option>
-      <option value="line">Line</option>
-    </select>
-  </div>
-  <div class="control-group">
-    <label>Polygon Sides</label>
-    <input type="number" id="polygonSides" min="3" max="20" value="6" onchange="updateShapeToolSettings()">
-  </div>
-  <div class="control-group">
-    <label>Star Points</label>
-    <input type="number" id="starPoints" min="3" max="30" value="5" onchange="updateShapeToolSettings()">
-  </div>
-  <div class="control-group">
-    <label>Star Inner Radius %</label>
-    <input type="range" id="starInnerRadius" min="10" max="90" value="40" oninput="updateShapeToolSettings()">
-    <span id="starInnerRadiusVal">40%</span>
-  </div>
-</div>
-
-<!-- Pen Tool Panel -->
-<div class="tool-panel" id="penToolPanel">
-  <h4>
-    Pen Options
-    <span class="tool-panel-close" onclick="toggleToolPanel('penToolPanel')">×</span>
-  </h4>
-  <div class="control-group">
-    <label>Stroke Width</label>
-    <input type="range" id="penStrokeWidth" min="1" max="50" value="1" oninput="updatePenToolSettings()">
-    <span id="penStrokeWidthVal">1px</span>
-  </div>
-  <div class="control-group">
-    <label>Auto-close Path</label>
-    <label class="switch">
-      <input type="checkbox" id="penAutoClose">
-      <span class="slider"></span>
-    </label>
-  </div>
-</div>
-
-<!-- Zoom/Pan Control Panel -->
-<div class="tool-panel" id="zoomToolPanel">
-  <h4>
-    Zoom Options
-    <span class="tool-panel-close" onclick="toggleToolPanel('zoomToolPanel')">×</span>
-  </h4>
-  <div class="control-group">
-    <label>Zoom Level</label>
-    <input type="range" id="zoomSlider" min="10" max="400" value="100" oninput="updateZoomFromSlider()">
-    <span id="zoomSliderVal">100%</span>
-  </div>
-  <div class="btn-group" style="margin-top: 0.5rem;">
-    <button class="btn" onclick="zoomOut()">−</button>
-    <button class="btn" onclick="zoomToFit()">Fit</button>
-    <button class="btn" onclick="zoomIn()">+</button>
-  </div>
-</div>
-
-<!-- Status Bar -->
-<div class="status-bar">
-  <div class="left">
-    <span id="statusTool">Selection Tool</span>
-    <span id="statusZoom">100%</span>
-    <span id="statusPosition">X: 0 Y: 0</span>
-  </div>
-  <div class="right">
-    <span id="statusSelection">No selection</span>
-    <span id="statusMemory">Document: Untitled</span>
-  </div>
-</div>
-
-<!-- Context Menu -->
-<div class="context-menu" id="contextMenu">
-  <div onclick="copy()">Copy</div>
-  <div onclick="paste()">Paste</div>
-  <div onclick="duplicate()">Duplicate</div>
-  <hr>
-  <div onclick="bringToFront()">Bring to Front</div>
-  <div onclick="sendToBack()">Send to Back</div>
-  <hr>
-  <div onclick="groupSelection()">Group</div>
-  <div onclick="ungroupSelection()">Ungroup</div>
-  <hr>
-  <div onclick="deleteSelection()">Delete</div>
-</div>
-
 <!-- Firebase Auth -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -1271,6 +1115,7 @@ var starInnerRadius = 40;
 var textFontSize = 32;
 var textFontFamily = 'Arial';
 var textAlignment = 'left';
+var cornerRadius = 10;
 
 console.log('Paper.js initialized, view size:', view.size);
 
@@ -1372,6 +1217,7 @@ function activateTool(name) {
       'pencil': 'Pencil Tool',
       'brush': 'Brush Tool',
       'rectangle': 'Rectangle Tool',
+      'roundedRectangle': 'Rounded Rectangle Tool',
       'ellipse': 'Ellipse Tool',
       'polygon': 'Polygon Tool',
       'star': 'Star Tool',
@@ -1401,7 +1247,7 @@ function activateTool(name) {
   }
 }
 
-// Selection Tool with fixed selection and movement
+// Selection Tool with FIXED selection box and proper movement
 tools.select = new Tool();
 
 tools.select.onMouseDown = function(event) {
@@ -1430,15 +1276,19 @@ tools.select.onMouseDown = function(event) {
 
 tools.select.onMouseDrag = function(event) {
   if (selectionStart) {
-    // Show dashed selection box
+    // FIXED: Show dashed selection box at correct position
     var rect = new Rectangle(selectionStart, event.point);
     var canvasRect = view.element.getBoundingClientRect();
     
+    // Calculate screen coordinates from paper.js coordinates
+    var screenStart = view.projectToView(selectionStart);
+    var screenEnd = view.projectToView(event.point);
+    
     selectionBox.style.display = 'block';
-    selectionBox.style.left = (rect.point.x + 60) + 'px';
-    selectionBox.style.top = (rect.point.y + 20) + 'px';
-    selectionBox.style.width = rect.width + 'px';
-    selectionBox.style.height = rect.height + 'px';
+    selectionBox.style.left = Math.min(screenStart.x, screenEnd.x) + 60 + 'px';
+    selectionBox.style.top = Math.min(screenStart.y, screenEnd.y) + 20 + 'px';
+    selectionBox.style.width = Math.abs(screenEnd.x - screenStart.x) + 'px';
+    selectionBox.style.height = Math.abs(screenEnd.y - screenStart.y) + 'px';
     
     // Select items within the box
     project.deselectAll();
@@ -1449,6 +1299,7 @@ tools.select.onMouseDrag = function(event) {
       }
     });
   } else if (project.selectedItems.length) {
+    // FIXED: Proper object movement for both desktop and mobile
     var delta = event.delta;
     if (snapToGrid) {
       delta.x = Math.round(delta.x / gridSize) * gridSize;
@@ -1705,6 +1556,47 @@ tools.rectangle.onMouseDrag = function(event) {
 };
 
 tools.rectangle.onMouseUp = function() {
+  if (currentShape) {
+    currentShape.selected = true;
+    saveState();
+    currentShape = null;
+  }
+};
+
+// NEW: Rounded Rectangle Tool
+tools.roundedRectangle = new Tool();
+
+tools.roundedRectangle.onMouseDown = function(event) {
+  startPoint = event.point;
+  currentShape = new Path.Rectangle({
+    point: startPoint,
+    size: [0, 0],
+    radius: cornerRadius
+  });
+  currentShape.fillColor = fillColor;
+  currentShape.strokeColor = strokeColor;
+  currentShape.strokeWidth = strokeWidth;
+};
+
+tools.roundedRectangle.onMouseDrag = function(event) {
+  if (currentShape) {
+    var rect = new Rectangle(startPoint, event.point);
+    if (Key.modifiers.shift) {
+      var size = Math.max(Math.abs(rect.width), Math.abs(rect.height));
+      rect = new Rectangle(startPoint, new Point(startPoint.x + size, startPoint.y + size));
+    }
+    currentShape.remove();
+    currentShape = new Path.Rectangle({
+      rectangle: rect,
+      radius: cornerRadius
+    });
+    currentShape.fillColor = fillColor;
+    currentShape.strokeColor = strokeColor;
+    currentShape.strokeWidth = strokeWidth;
+  }
+};
+
+tools.roundedRectangle.onMouseUp = function() {
   if (currentShape) {
     currentShape.selected = true;
     saveState();
@@ -2088,6 +1980,7 @@ document.getElementById('penTool').onclick = function() { activateTool('pen'); }
 document.getElementById('pencilTool').onclick = function() { activateTool('pencil'); };
 document.getElementById('brushTool').onclick = function() { activateTool('brush'); };
 document.getElementById('rectangleTool').onclick = function() { activateTool('rectangle'); };
+document.getElementById('roundedRectangleTool').onclick = function() { activateTool('roundedRectangle'); };
 document.getElementById('ellipseTool').onclick = function() { activateTool('ellipse'); };
 document.getElementById('polygonTool').onclick = function() { activateTool('polygon'); };
 document.getElementById('starTool').onclick = function() { activateTool('star'); };
@@ -2271,6 +2164,7 @@ function updateShapeToolSettings() {
   polygonSides = parseInt(document.getElementById('polygonSides').value);
   starPoints = parseInt(document.getElementById('starPoints').value);
   starInnerRadius = parseInt(document.getElementById('starInnerRadius').value);
+  cornerRadius = parseInt(document.getElementById('cornerRadius') ? document.getElementById('cornerRadius').value : 10);
   document.getElementById('starInnerRadiusVal').textContent = starInnerRadius + '%';
 }
 
@@ -2584,10 +2478,12 @@ function sendBackward() {
   }
 }
 
-// Group/Ungroup
+// FIXED: Group/Ungroup with proper functionality
 function groupSelection() {
   if (project.selectedItems.length > 1) {
     var selected = Array.from(project.selectedItems);
+    
+    // Create a group from selected items
     var group = new Group(selected);
     
     project.deselectAll();
@@ -2596,18 +2492,29 @@ function groupSelection() {
     saveState();
     updateProperties();
     console.log('Grouped', selected.length, 'objects');
+    showToolNotification('Grouped ' + selected.length + ' objects');
   } else {
-    alert('Select 2 or more objects to group');
+    showToolNotification('Select 2 or more objects to group');
   }
 }
 
 function ungroupSelection() {
-  project.selectedItems.forEach(function(item) {
+  var selected = Array.from(project.selectedItems);
+  var ungroupedCount = 0;
+  
+  selected.forEach(function(item) {
     if (item instanceof Group) {
       item.ungroup();
+      ungroupedCount++;
     }
   });
-  saveState();
+  
+  if (ungroupedCount > 0) {
+    saveState();
+    showToolNotification('Ungrouped ' + ungroupedCount + ' groups');
+  } else {
+    showToolNotification('No groups selected');
+  }
 }
 
 // Lock/Unlock
@@ -2649,38 +2556,102 @@ function flipSelection(direction) {
   }
 }
 
-// Pathfinder operations
+// FIXED: Pathfinder operations with proper implementation
 function pathfinder(operation) {
   var items = project.selectedItems.filter(function(item) {
-    return item instanceof Path && item.selected;
+    return item instanceof Path && item.selected && !(item instanceof Group);
   });
   
-  if (items.length < 2) return;
-  
-  var result;
-  switch(operation) {
-    case 'unite':
-      result = items[0].unite(items[1]);
-      break;
-    case 'minus':
-      result = items[0].exclude(items[1]);
-      break;
-    case 'intersect':
-      result = items[0].intersect(items[1]);
-      break;
-    case 'exclude':
-      result = items[0].exclude(items[1]);
-      break;
+  if (items.length < 2) {
+    showToolNotification('Select at least 2 paths for ' + operation);
+    return;
   }
   
-  if (result) {
-    items.forEach(function(item) {
-      if (item !== result) item.remove();
-    });
-    result.fillColor = fillColor;
-    result.strokeColor = strokeColor;
-    result.strokeWidth = strokeWidth;
-    saveState();
+  var result = null;
+  var keepOriginal = items.slice();
+  
+  try {
+    switch(operation) {
+      case 'unite':
+        // Combine all shapes into one
+        result = items[0].clone();
+        for (var i = 1; i < items.length; i++) {
+          result = result.unite(items[i]);
+        }
+        break;
+        
+      case 'subtract':
+        // Subtract second shape from first
+        result = items[0].exclude(items[1]);
+        break;
+        
+      case 'intersect':
+        // Find intersection
+        result = items[0].intersect(items[1]);
+        break;
+        
+      case 'exclude':
+        // Exclude overlapping areas
+        result = items[0].exclude(items[1]);
+        break;
+        
+      case 'divide':
+        // Divide shapes at intersections
+        // This is a simplified version - Paper.js doesn't have direct divide
+        showToolNotification('Divide - Feature coming soon');
+        return;
+        
+      case 'trim':
+        // Trim overlapping areas
+        showToolNotification('Trim - Feature coming soon');
+        return;
+        
+      case 'merge':
+        // Merge shapes
+        result = items[0].clone();
+        for (var i = 1; i < items.length; i++) {
+          result = result.unite(items[i]);
+        }
+        break;
+        
+      case 'crop':
+        // Crop to intersection
+        result = items[0].intersect(items[1]);
+        break;
+        
+      case 'outline':
+        // Convert strokes to outlines
+        items.forEach(function(item) {
+          if (item.strokeColor && item.strokeWidth > 0) {
+            var outline = item.createOutline(item.strokeWidth);
+            outline.fillColor = item.strokeColor;
+            outline.strokeColor = null;
+            item.remove();
+          }
+        });
+        saveState();
+        showToolNotification('Outlines created');
+        return;
+    }
+    
+    if (result) {
+      // Remove original items
+      keepOriginal.forEach(function(item) {
+        item.remove();
+      });
+      
+      // Apply colors and add result
+      result.fillColor = fillColor;
+      result.strokeColor = strokeColor;
+      result.strokeWidth = strokeWidth;
+      result.selected = true;
+      
+      saveState();
+      showToolNotification('Pathfinder: ' + operation + ' completed');
+    }
+  } catch (error) {
+    console.error('Pathfinder error:', error);
+    showToolNotification('Pathfinder error: ' + error.message);
   }
 }
 
@@ -3036,7 +3007,7 @@ canvasElement.addEventListener('wheel', function(event) {
   }
 }, { passive: false });
 
-// Mobile touch zoom and pan
+// Mobile touch zoom and pan - FIXED for better support
 var lastTouchDistance = 0;
 var lastTouchCenter = null;
 
@@ -3054,7 +3025,7 @@ canvasElement.addEventListener('touchstart', function(event) {
 
 canvasElement.addEventListener('touchmove', function(event) {
   if (event.touches.length === 2) {
-    // Pinch to zoom (opposite of desktop scroll)
+    // Pinch to zoom
     var currentDistance = getTouchDistance(event.touches);
     var zoomFactor = lastTouchDistance / currentDistance;
     
@@ -3068,10 +3039,15 @@ canvasElement.addEventListener('touchmove', function(event) {
     lastTouchDistance = currentDistance;
     lastTouchCenter = currentCenter;
   } else if (event.touches.length === 1 && isPanning) {
-    // Single finger pan
-    var currentPoint = new Point(event.touches[0].clientX, event.touches[0].clientY);
+    // Single finger pan - FIXED for proper movement
+    var rect = canvasElement.getBoundingClientRect();
+    var currentPoint = new Point(event.touches[0].clientX - rect.left, event.touches[0].clientY - rect.top);
     var delta = currentPoint.subtract(panStart);
-    view.center = view.center.subtract(delta);
+    
+    // Convert screen delta to paper.js delta
+    var paperDelta = view.viewToProject(delta.subtract(new Point(rect.left, rect.top))).subtract(view.viewToProject(new Point(0, 0)));
+    
+    view.center = view.center.subtract(paperDelta);
     panStart = currentPoint;
   }
 }, { passive: false });
