@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Modeler Pro – BowesProduct</title>
+  <title>Modeler Pro – 3D Editor</title>
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.182.0/build/three.module.js",
-      "three/addons/": "https://unpkg.com/three@0.182.0/examples/jsm/"
-    }
+<script type="importmap">
+{
+  "imports": {
+    "three": "<https://unpkg.com/three@0.160.0/build/three.module.js>",
+    "three/addons/": "<https://unpkg.com/three@0.160.0/examples/jsm/>"
   }
-  </script>
+}
+</script>
   <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
   .site-header {
-  position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
   }
   .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
   .header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
@@ -47,7 +47,7 @@
   position: absolute;
   top: 90px;
   right: 20px;
-  width: 400px;
+  width: 380px;
   max-height: calc(100vh - 220px);
   background: rgba(2, 6, 23, 0.95);
   border: 1px solid #1e293b;
@@ -59,7 +59,7 @@
   transition: transform 0.3s ease;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   }
-  .panel.hidden { transform: translateX(440px); }
+  .panel.hidden { transform: translateX(420px); }
   .panel::-webkit-scrollbar { width: 6px; }
   .panel::-webkit-scrollbar-track { background: #0f172a; }
   .panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
@@ -89,22 +89,21 @@
   #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
   @media (max-width: 900px) {
   .panel {
-  position: absolute;
-  top: auto;
-  right: 0;
-  left: 0;
+  position: fixed;
   bottom: 0;
-  width: 100%;
-  height: 85vh;
+  left: 0;
+  right: 0;
+  top: auto;
+  height: 70vh;
   max-height: none;
   border-radius: 20px 20px 0 0;
-  transform: translateY(calc(100% - 60px));
+  transform: translateY(100%);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   padding-top: 20px;
   padding-bottom: 120px;
   z-index: 1100;
   overflow-y: auto;
-  background: rgba(2, 6, 23, 0.95);
+  background: rgba(2, 6, 23, 0.98);
   border: 1px solid #1e293b;
   border-bottom: none;
   box-shadow: 0 -5px 25px rgba(0,0,0,0.5);
@@ -206,7 +205,6 @@
   .layer-item.active { background: #1e293b; border-color: #60a5fa; }
   .layer-item.group { background: #162032; }
   .layer-item.locked { opacity: 0.5; }
-  .layer-item.group > .layer-name::before { content: "📁 "; }
   .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
   .layer-lock { font-size: 1.1rem; cursor: pointer; width: 24px; text-align: center; }
   .layer-name { flex: 1; font-size: 0.95rem; }
@@ -283,6 +281,7 @@
   overflow-y: auto;
   backdrop-filter: blur(12px);
   box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  position: relative;
   }
   .modal h2 { color: #60a5fa; margin-top: 0; }
   .modal-close {
@@ -452,23 +451,19 @@
   }
   #autoSaveIndicator.visible { display: block; }
   </style>
-  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
-  <!-- Firebase SDK for cloud saving -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 <header class="site-header">
   <div class="header-inner">
   <div class="header-left">
-  <div class="logo"><a href="index.html">BowesProduct</a></div>
+  <div class="logo"><a href="#" onclick="event.preventDefault();">Modeler Pro</a></div>
   <nav class="main-nav">
-  <a href="index.html">Home</a>
-  <a href="models.html">Models</a>
-  <a href="retexture.html">Retexture</a>
-    <a href="editor.html">Editor</a>
-    <a href="3d.html" class="active">3D</a>
+  <a href="#" onclick="event.preventDefault();">Home</a>
+  <a href="#" onclick="event.preventDefault();">Models</a>
+  <a href="#" onclick="event.preventDefault();">Retexture</a>
+    <a href="#" onclick="event.preventDefault();">Editor</a>
+    <a href="#" class="active">3D Editor</a>
   </nav>
   </div>
   <div class="header-right">
@@ -491,7 +486,7 @@
     <div class="floater" id="floaterScale" title="Scale (S)">⤢</div>
     <div class="floater" id="floaterFocus" title="Focus on Selected (F)">🎯</div>
   </div>
-  <div class="panel visible" id="panel">
+  <div class="panel" id="panel">
   <button id="panelToggle">←</button>
  
   <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
@@ -508,8 +503,6 @@
   <h2>Scene Management</h2>
   <button id="saveLocalBtn" class="secondary">💾 Save Local</button>
   <button id="loadLocalBtn" class="secondary">📂 Load Local</button>
-  <button id="saveCloudBtn" class="success">☁️ Save to Cloud</button>
-  <button id="loadCloudBtn" class="secondary">☁️ Load from Cloud</button>
   <div id="autoSaveIndicator">Auto-saved ✓</div>
 
   <h2>Add Objects</h2>
@@ -627,7 +620,6 @@
   <button id="camFront" class="secondary">Front</button>
   <button id="camRight" class="secondary">Right</button>
   <button id="camPerspective" class="active">Persp</button>
-  <button id="camOrtho" class="secondary">Ortho</button>
   <button id="camReset" class="secondary">Reset</button>
   </div>
 
@@ -657,9 +649,9 @@
   <label for="envPreset">Environment</label>
   <select id="envPreset">
   <option value="neutral">Neutral</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
+  <option value="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/royal_esplanade_1k.hdr">Royal Esplanade</option>
+  <option value="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/spruit_sunrise_1k.hdr">Sunrise</option>
+  <option value="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/moonless_golf_1k.hdr">Night</option>
   </select>
   </div>
 
@@ -679,14 +671,14 @@
 <footer class="site-footer">
   <div class="footer-inner">
   <nav class="footer-nav">
-  <a href="about.html">About</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="terms.html">Terms</a>
-  <a href="license.html">License</a>
-  <a href="refund.html">Refund</a>
-  <a href="rewards.html">Rewards</a>
+  <a href="#" onclick="event.preventDefault();">About</a>
+  <a href="#" onclick="event.preventDefault();">Privacy</a>
+  <a href="#" onclick="event.preventDefault();">Terms</a>
+  <a href="#" onclick="event.preventDefault();">License</a>
+  <a href="#" onclick="event.preventDefault();">Refund</a>
+  <a href="#" onclick="event.preventDefault();">Rewards</a>
   </nav>
-  <p>© 2026 BowesProduct</p>
+  <p>© 2026 Modeler Pro</p>
   </div>
 </footer>
 <div id="mobilePanelToggle"><span>▲ Controls</span></div>
@@ -773,30 +765,14 @@
   import { Shape } from 'three/addons/geometries/Shape.js';
   import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
-  // Initialize Firebase (placeholder - replace with your config)
-  const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-  };
-  
-  // Firebase initialization
-  let db = null;
-  let auth = null;
-  try {
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.firestore();
-  auth = firebase.auth();
-  } catch(e) {
-  console.log('Firebase not configured');
-  }
+  // Make functions globally accessible
+  window.loadFromLocal = loadFromLocal;
+  window.deleteLocalScene = deleteLocalScene;
+  window.loadFromCloud = loadFromCloud;
 
   // Main canvas setup
   const canvas = document.getElementById('canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -857,15 +833,17 @@
   tex.dispose();
   if (currentEnvMap) currentEnvMap.dispose();
   currentEnvMap = envMap;
+  }, undefined, (error) => {
+  console.warn('Failed to load environment:', error);
+  showToast('Failed to load environment', 'error');
   });
   }
   loadEnvironment('neutral');
 
   // Object & Group Management
-  const rootObjects = []; // Top-level objects and groups
-  let selectedObjects = []; // Multiple selection
+  const rootObjects = [];
+  let selectedObjects = [];
   let objectCounter = 0;
-  let lockedObjects = new Set();
   let snappingEnabled = false;
   let snapIncrement = 0.5;
   let snapToSurfaceEnabled = false;
@@ -901,6 +879,7 @@
   const redoBtn = document.getElementById('redoBtn');
 
   function saveState() {
+  try {
   const state = rootObjects.map(obj => serializeObject(obj));
   undoStack.push(state);
   if (undoStack.length > MAX_UNDO) undoStack.shift();
@@ -908,6 +887,9 @@
   undoBtn.disabled = false;
   redoBtn.disabled = true;
   triggerAutoSave();
+  } catch(e) {
+  console.error('Save state error:', e);
+  }
   }
 
   function serializeObject(obj) {
@@ -922,7 +904,7 @@
   scale: obj.scale.toArray(),
   children: obj.children.map(child => serializeObject(child))
   };
-  } else {
+  } else if (obj.isMesh) {
   return {
   type: 'mesh',
   name: obj.userData.name,
@@ -932,11 +914,12 @@
   position: obj.position.toArray(),
   rotation: obj.rotation.toArray(),
   scale: obj.scale.toArray(),
-  color: obj.material.color.getHex(),
-  metallic: obj.material.metalness,
-  roughness: obj.material.roughness
+  color: obj.material.color ? obj.material.color.getHex() : 0x60a5fa,
+  metallic: obj.material.metalness || 0,
+  roughness: obj.material.roughness || 0.5
   };
   }
+  return null;
   }
 
   function deserializeObject(data, parent = null) {
@@ -946,9 +929,9 @@
   obj.userData.isGroup = true;
   data.children.forEach(childData => {
   const child = deserializeObject(childData, obj);
-  obj.add(child);
+  if (child) obj.add(child);
   });
-  } else {
+  } else if (data.type === 'mesh') {
   const geometry = createGeometryForName(data.geometry);
   const material = new THREE.MeshStandardMaterial({
   color: data.color,
@@ -960,6 +943,8 @@
   obj.castShadow = true;
   obj.receiveShadow = true;
   }
+  
+  if (obj) {
   obj.userData.name = data.name;
   obj.userData.id = objectCounter++;
   obj.userData.locked = data.locked || false;
@@ -968,6 +953,7 @@
   obj.rotation.fromArray(data.rotation);
   obj.scale.fromArray(data.scale);
   if (parent) parent.add(obj);
+  }
   return obj;
   }
 
@@ -976,8 +962,10 @@
   rootObjects.length = 0;
   state.forEach(data => {
   const obj = deserializeObject(data);
+  if (obj) {
   scene.add(obj);
   rootObjects.push(obj);
+  }
   });
   selectedObjects = [];
   updateSelectedObjectUI();
@@ -1009,67 +997,50 @@
 
   // Local Storage Save/Load
   function saveToLocal(name) {
+  try {
   const sceneData = {
   name: name || 'Untitled',
   timestamp: Date.now(),
-  objects: rootObjects.map(obj => serializeObject(obj))
+  objects: rootObjects.map(obj => serializeObject(obj)).filter(o => o !== null)
   };
   const savedScenes = JSON.parse(localStorage.getItem('savedScenes') || '[]');
   savedScenes.push(sceneData);
   localStorage.setItem('savedScenes', JSON.stringify(savedScenes));
   showToast(`Scene "${name}" saved locally`, 'success');
+  } catch(e) {
+  console.error('Save error:', e);
+  showToast('Failed to save scene', 'error');
+  }
   }
 
   function loadFromLocal(name) {
+  try {
   const savedScenes = JSON.parse(localStorage.getItem('savedScenes') || '[]');
   const sceneData = savedScenes.find(s => s.name === name);
-  if (sceneData) {
+  if (sceneData && sceneData.objects) {
   saveState();
   restoreState(sceneData.objects);
   showToast(`Scene "${name}" loaded`, 'success');
+  } else {
+  showToast('Scene not found', 'error');
+  }
+  } catch(e) {
+  console.error('Load error:', e);
+  showToast('Failed to load scene', 'error');
   }
   }
 
   function deleteLocalScene(name) {
+  try {
   const savedScenes = JSON.parse(localStorage.getItem('savedScenes') || '[]');
   const filtered = savedScenes.filter(s => s.name !== name);
   localStorage.setItem('savedScenes', JSON.stringify(filtered));
   showSceneList();
+  showToast(`Scene "${name}" deleted`, 'info');
+  } catch(e) {
+  console.error('Delete error:', e);
+  showToast('Failed to delete scene', 'error');
   }
-
-  // Cloud Save/Load (Firebase)
-  async function saveToCloud(name) {
-  if (!auth || !auth.currentUser) {
-  showToast('Please login first', 'error');
-  return;
-  }
-  const sceneData = {
-  name: name,
-  userId: auth.currentUser.uid,
-  timestamp: Date.now(),
-  objects: rootObjects.map(obj => serializeObject(obj))
-  };
-  await db.collection('scenes').add(sceneData);
-  showToast(`Scene "${name}" saved to cloud`, 'success');
-  }
-
-  async function loadFromCloud(sceneId) {
-  if (!auth || !auth.currentUser) {
-  showToast('Please login first', 'error');
-  return;
-  }
-  const doc = await db.collection('scenes').doc(sceneId).get();
-  if (doc.exists) {
-  saveState();
-  restoreState(doc.data().objects);
-  showToast('Scene loaded from cloud', 'success');
-  }
-  }
-
-  async function loadCloudScenes() {
-  if (!auth || !auth.currentUser) return [];
-  const snapshot = await db.collection('scenes').where('userId', '==', auth.currentUser.uid).get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
 
   function showSceneList(type = 'local') {
@@ -1084,25 +1055,22 @@
   item.innerHTML = `
   <span class="scene-name">${scene.name}</span>
   <div class="scene-actions">
-  <button class="scene-btn secondary" onclick="loadFromLocal('${scene.name}')">Load</button>
-  <button class="scene-btn danger" onclick="deleteLocalScene('${scene.name}')">Delete</button>
+  <button class="scene-btn secondary" data-action="load" data-name="${scene.name}">Load</button>
+  <button class="scene-btn danger" data-action="delete" data-name="${scene.name}">Delete</button>
   </div>
   `;
   list.appendChild(item);
   });
-  } else {
-  loadCloudScenes().then(scenes => {
-  scenes.forEach(scene => {
-  const item = document.createElement('div');
-  item.className = 'scene-item';
-  item.innerHTML = `
-  <span class="scene-name">${scene.name}</span>
-  <div class="scene-actions">
-  <button class="scene-btn secondary" onclick="loadFromCloud('${scene.id}')">Load</button>
-  </div>
-  `;
-  list.appendChild(item);
-  });
+  
+  // Add event listeners
+  list.querySelectorAll('.scene-btn').forEach(btn => {
+  btn.onclick = (e) => {
+  e.stopPropagation();
+  const action = btn.dataset.action;
+  const name = btn.dataset.name;
+  if (action === 'load') loadFromLocal(name);
+  if (action === 'delete') deleteLocalScene(name);
+  };
   });
   }
   }
@@ -1123,23 +1091,6 @@
   document.getElementById('modalTitle').textContent = 'Load Scene';
   document.getElementById('modalConfirmBtn').style.display = 'none';
   showSceneList('local');
-  document.getElementById('saveLoadModal').style.display = 'flex';
-  };
-
-  document.getElementById('saveCloudBtn').onclick = () => {
-  document.getElementById('modalTitle').textContent = 'Save to Cloud';
-  document.getElementById('modalConfirmBtn').onclick = () => {
-  const name = document.getElementById('sceneNameInput').value || 'Untitled';
-  saveToCloud(name);
-  document.getElementById('saveLoadModal').style.display = 'none';
-  };
-  document.getElementById('saveLoadModal').style.display = 'flex';
-  };
-
-  document.getElementById('loadCloudBtn').onclick = () => {
-  document.getElementById('modalTitle').textContent = 'Load from Cloud';
-  document.getElementById('modalConfirmBtn').style.display = 'none';
-  showSceneList('cloud');
   document.getElementById('saveLoadModal').style.display = 'flex';
   };
 
@@ -1191,6 +1142,9 @@
   new THREE.Vector3(0.5, -1, 0),
   new THREE.Vector3(1, 0, 0)
   ]), 64, 0.1, 8, false);
+  case 'Text': return null;
+  case 'Lathe': return null;
+  case 'Extrude': return null;
   default: return new THREE.BoxGeometry(1, 1, 1);
   }
   }
@@ -1198,6 +1152,10 @@
   function addPrimitive(name) {
   saveState();
   const geometry = createGeometryForName(name);
+  if (!geometry) {
+  showToast('Failed to create geometry', 'error');
+  return;
+  }
   const material = new THREE.MeshStandardMaterial({ color: 0x60a5fa, metalness: 0, roughness: 0.5 });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.y = 0.5;
@@ -1221,7 +1179,7 @@
   if (!text) return;
   saveState();
   const fontLoader = new FontLoader();
-  fontLoader.load('https://unpkg.com/three@0.182.0/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+  fontLoader.load('https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_regular.typeface.json', (font) => {
   const geometry = new TextGeometry(text, {
   font: font,
   size: 0.5,
@@ -1249,6 +1207,9 @@
   updateLayersList();
   document.getElementById('loader').style.display = 'none';
   showToast(`Added text: ${text}`, 'success');
+  }, undefined, (error) => {
+  console.error('Font load error:', error);
+  showToast('Failed to load font', 'error');
   });
   }
 
@@ -1327,24 +1288,24 @@
   // Template loading
   const templates = {
   furniture: () => {
-  addPrimitive('Box'); // Table
-  addPrimitive('Box'); // Chair
-  addPrimitive('Sphere'); // Lamp
+  addPrimitive('Box');
+  addPrimitive('Box');
+  addPrimitive('Sphere');
   },
   vehicle: () => {
-  addPrimitive('Box'); // Body
-  addPrimitive('Cylinder'); // Wheels
-  addPrimitive('Box'); // Wheels
+  addPrimitive('Box');
+  addPrimitive('Cylinder');
+  addPrimitive('Box');
   },
   architecture: () => {
-  addPrimitive('Box'); // Wall
-  addPrimitive('Box'); // Floor
-  addPrimitive('Plane'); // Window
+  addPrimitive('Box');
+  addPrimitive('Box');
+  addPrimitive('Plane');
   },
   character: () => {
-  addPrimitive('Sphere'); // Head
-  addPrimitive('Cylinder'); // Body
-  addPrimitive('Cylinder'); // Arms
+  addPrimitive('Sphere');
+  addPrimitive('Cylinder');
+  addPrimitive('Cylinder');
   }
   };
 
@@ -1461,9 +1422,6 @@
   case 'perspective':
   camera.position.set(target.x + distance * 0.7, target.y + distance * 0.5, target.z + distance * 0.7);
   break;
-  case 'ortho':
-  camera.position.set(target.x + distance * 0.7, target.y + distance * 0.5, target.z + distance * 0.7);
-  break;
   }
   controls.update();
   showToast(`Camera: ${view} view`, 'info');
@@ -1473,7 +1431,6 @@
   document.getElementById('camFront').onclick = () => setCameraView('front');
   document.getElementById('camRight').onclick = () => setCameraView('right');
   document.getElementById('camPerspective').onclick = () => setCameraView('perspective');
-  document.getElementById('camOrtho').onclick = () => { camera.isOrthographicCamera = true; setCameraView('ortho'); };
   document.getElementById('camReset').onclick = () => { camera.position.set(5, 4, 5); controls.target.set(0, 0, 0); controls.update(); };
   document.getElementById('floaterFocus').onclick = focusOnSelected;
 
@@ -1549,11 +1506,15 @@
   const obj = selectedObjects[0];
   html += `<p>Type: ${obj.userData.name || 'Mesh'}</p><p>ID: ${obj.userData.id}</p>`;
   if (obj.userData.locked) html += `<p>🔒 Locked</p>`;
+  if (obj.material && obj.material.color) {
   document.getElementById('materialColor').value = '#' + obj.material.color.getHexString();
-  document.getElementById('metallicSlider').value = obj.material.metalness;
-  document.getElementById('metallicVal').textContent = obj.material.metalness.toFixed(2);
-  document.getElementById('roughnessSlider').value = obj.material.roughness;
-  document.getElementById('roughnessVal').textContent = obj.material.roughness.toFixed(2);
+  }
+  if (obj.material) {
+  document.getElementById('metallicSlider').value = obj.material.metalness || 0;
+  document.getElementById('metallicVal').textContent = (obj.material.metalness || 0).toFixed(2);
+  document.getElementById('roughnessSlider').value = obj.material.roughness || 0.5;
+  document.getElementById('roughnessVal').textContent = (obj.material.roughness || 0.5).toFixed(2);
+  }
   } else {
   html += `<p>Multi-selection active</p>`;
   }
@@ -1640,6 +1601,9 @@
   selectedObjects[0].material.map = texture;
   selectedObjects[0].material.needsUpdate = true;
   showToast('Texture applied', 'success');
+  }, undefined, (error) => {
+  console.error('Texture load error:', error);
+  showToast('Failed to load texture', 'error');
   });
   }
   });
@@ -1649,7 +1613,6 @@
   let altDragObject = null;
   transformControl.addEventListener('dragging-changed', (event) => {
   if (!event.value && altDragStartPos && altDragObject) {
-  // Check if position changed significantly
   const moved = altDragObject.position.distanceTo(altDragStartPos) > 0.1;
   if (moved) {
   saveState();
@@ -1783,13 +1746,11 @@
   const objA = selectedObjects[0];
   const objB = selectedObjects[1];
   
-  // Convert to CSG (simplified version using BufferGeometryUtils)
   try {
   let resultGeometry;
   const geomA = objA.geometry.clone();
   const geomB = objB.geometry.clone();
   
-  // Transform geometries to world space
   geomA.applyMatrix4(objA.matrixWorld);
   geomB.applyMatrix4(objB.matrixWorld);
   
@@ -1798,11 +1759,9 @@
   resultGeometry = BufferGeometryUtils.mergeGeometries([geomA, geomB]);
   break;
   case 'subtract':
-  // Simplified: Just keep geomA (real CSG would require library)
   resultGeometry = geomA;
   break;
   case 'intersect':
-  // Simplified: Create bounding box intersection
   const boxA = new THREE.Box3().setFromObject(objA);
   const boxB = new THREE.Box3().setFromObject(objB);
   boxA.intersect(boxB);
@@ -1863,9 +1822,8 @@
   const li = document.createElement('li');
   li.className = 'layer-item' + (selectedObjects.includes(obj) ? ' active' : '') + (obj.userData.isGroup ? ' group' : '') + (obj.userData.locked ? ' locked' : '');
   
-  // Object color indicator
   let colorIndicator = '';
-  if (obj.isMesh && obj.material) {
+  if (obj.isMesh && obj.material && obj.material.color) {
   const color = '#' + obj.material.color.getHexString();
   colorIndicator = `<div class="layer-color" style="background:${color}"></div>`;
   }
@@ -1915,7 +1873,6 @@
   updateSelectedObjectUI();
   };
 
-  // Double click to rename
   li.querySelector('.layer-name').ondblclick = (e) => {
   const nameSpan = li.querySelector('.layer-name');
   const currentName = obj.userData.name;
@@ -1989,7 +1946,6 @@
   }
   });
   
-  // Center and scale model
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
@@ -2005,6 +1961,10 @@
   updateLayersList();
   document.getElementById('loader').style.display = 'none';
   showToast(`Loaded ${file.name}`, 'success');
+  }, undefined, (error) => {
+  console.error('Model load error:', error);
+  document.getElementById('loader').style.display = 'none';
+  showToast('Failed to load model', 'error');
   });
   } else if (extension === 'obj') {
   const loader = new OBJLoader();
@@ -2021,7 +1981,6 @@
   }
   });
   
-  // Center and scale model
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
@@ -2037,6 +1996,10 @@
   updateLayersList();
   document.getElementById('loader').style.display = 'none';
   showToast(`Loaded ${file.name}`, 'success');
+  }, undefined, (error) => {
+  console.error('Model load error:', error);
+  document.getElementById('loader').style.display = 'none';
+  showToast('Failed to load model', 'error');
   });
   } else if (extension === 'fbx') {
   const loader = new FBXLoader();
@@ -2055,7 +2018,6 @@
   }
   });
   
-  // Center and scale model
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
@@ -2071,6 +2033,10 @@
   updateLayersList();
   document.getElementById('loader').style.display = 'none';
   showToast(`Loaded ${file.name}`, 'success');
+  }, undefined, (error) => {
+  console.error('Model load error:', error);
+  document.getElementById('loader').style.display = 'none';
+  showToast('Failed to load model', 'error');
   });
   }
   });
@@ -2095,8 +2061,13 @@
   link.click();
   exportStatus.textContent = 'GLB Exported!';
   exportStatus.style.color = '#4ade80';
-  }, { binary: true });
   showToast('GLB exported', 'success');
+  }, { binary: true }, (error) => {
+  console.error('Export error:', error);
+  exportStatus.textContent = 'Export failed';
+  exportStatus.style.color = '#ef4444';
+  showToast('Export failed', 'error');
+  });
   };
 
   document.getElementById('exportOBJ').onclick = () => {
@@ -2141,12 +2112,11 @@
 
   document.getElementById('exportPNG').onclick = () => {
   const transparent = document.getElementById('transparentBG').checked;
-  const prevAlpha = renderer.getClearColor().a;
   const prevBackground = scene.background;
   
   if (transparent) {
-  renderer.setClearColor(0x000000, 0);
   scene.background = null;
+  renderer.setClearColor(0x000000, 0);
   }
   
   renderer.render(scene, camera);
@@ -2156,8 +2126,8 @@
   link.click();
   
   if (transparent) {
-  renderer.setClearColor(0x020617, 1);
   scene.background = prevBackground;
+  renderer.setClearColor(0x020617, 1);
   }
   
   showToast('Screenshot saved', 'success');
@@ -2246,7 +2216,6 @@
   const timeValue = progress * 100;
   document.getElementById('timelineSlider').value = timeValue;
   
-  // Simple interpolation between keyframes
   const sortedKeyframes = [...keyframes].sort((a, b) => a.time - b.time);
   const currentKf = sortedKeyframes.find(kf => kf.time >= timeValue);
   const prevKf = sortedKeyframes[sortedKeyframes.indexOf(currentKf) - 1];
@@ -2281,19 +2250,19 @@
   const file = e.dataTransfer.files[0];
   if (file && (file.name.endsWith('.glb') || file.name.endsWith('.gltf') || file.name.endsWith('.obj') || file.name.endsWith('.fbx'))) {
   const url = URL.createObjectURL(file);
-  // Trigger file input change
   const dataTransfer = new DataTransfer();
   dataTransfer.items.add(file);
   document.getElementById('uploadModel').files = dataTransfer.files;
   document.getElementById('uploadModel').dispatchEvent(new Event('change'));
   } else if (file && file.type.startsWith('image/')) {
-  // Drop image as texture
   if (selectedObjects.length === 1 && selectedObjects[0].isMesh) {
   const textureLoader = new THREE.TextureLoader();
   textureLoader.load(URL.createObjectURL(file), (texture) => {
   selectedObjects[0].material.map = texture;
   selectedObjects[0].material.needsUpdate = true;
   showToast('Texture applied', 'success');
+  }, undefined, (error) => {
+  showToast('Failed to load texture', 'error');
   });
   } else {
   showToast('Select an object to apply texture', 'error');
@@ -2352,7 +2321,7 @@
   window.addEventListener('beforeunload', () => {
   const sceneData = {
   timestamp: Date.now(),
-  objects: rootObjects.map(obj => serializeObject(obj))
+  objects: rootObjects.map(obj => serializeObject(obj)).filter(o => o !== null)
   };
   localStorage.setItem('autoSaveScene', JSON.stringify(sceneData));
   });
@@ -2362,11 +2331,11 @@
   setInterval(() => {
   const sceneData = {
   timestamp: Date.now(),
-  objects: rootObjects.map(obj => serializeObject(obj))
+  objects: rootObjects.map(obj => serializeObject(obj)).filter(o => o !== null)
   };
   localStorage.setItem('autoSaveScene', JSON.stringify(sceneData));
   triggerAutoSave();
-  }, 60000); // Auto-save every minute
+  }, 60000);
 </script>
 </body>
 </html>
