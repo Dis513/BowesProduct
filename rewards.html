@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rewards – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.95);
+  border-bottom: 1px solid #1e293b;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.logo a {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.main-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.main-nav a.active,
+.main-nav a:hover { color:#60a5fa; }
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 44px;
+}
+
+/* PROFILE */
+#profilePic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  display: none;
+}
+
+/* LOGIN */
+.login-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* XP */
+#levelInfo {
+  display: none;
+  width: 140px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+#levelText { white-space: nowrap; }
+#xpOuter {
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+#xpBar {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo { width: 100%; }
+}
+
+/* ================= PAGE ================= */
+.page {
+  max-width: 1100px;
+  margin: 4rem auto;
+  padding: 0 1.5rem;
+}
+
+h1 { color:#60a5fa; }
+
+/* ================= REWARDS ================= */
+.rewards-progress {
+  margin-top: 1rem;
+}
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background: #1e293b;
+  border-radius: 6px;
+}
+#xpProgress {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.reward-card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+}
+.reward-card.locked { opacity: 0.45; }
+
+.reward-icon { font-size: 2.4rem; }
+.reward-title { margin-top: 0.8rem; font-weight: 600; }
+.reward-desc {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin: 0.6rem 0;
+}
+.claim-btn {
+  margin-top: 0.8rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: #60a5fa;
+  color: #020617;
+}
+.claim-btn:disabled {
+  background: #1e293b;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+/* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+.footer-nav a:hover { color:#60a5fa; }
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="models.html">Models</a>
+          <a href="retexture.html">Retexture</a>
+        <a href="editor.html">Editor</a>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+
+      <button id="authBtn" class="login-btn">Login</button>
+    </div>
+
+  </div>
+</header>
+
+<!-- PAGE -->
+<div class="page">
+  <h1>Your Rewards</h1>
+  <p id="currentLevelText">Log in to see your rewards.</p>
+
+  <div class="rewards-progress">
+    <div class="progress-track">
+      <div id="xpProgress"></div>
+    </div>
+    <p id="xpText" style="margin-top:0.5rem;color:#94a3b8;"></p>
+  </div>
+
+  <div id="rewardsGrid" class="rewards-grid"></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+authBtn.onclick = () =>
+  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+    levelInfo.style.display = "none";
+    
+    // Optional: hide rewards page elements when logged out
+    const rewardsSection = document.getElementById("rewardsSection");
+    if (rewardsSection) rewardsSection.style.display = "none";
+    
+    return;
+  }
+
+  // Logged in
+  authBtn.textContent = "Logout";
+  profilePic.src = user.photoURL || "";
+  profilePic.style.display = "block";
+
+  const ref = doc(db, "users", user.uid);
+  let snap = await getDoc(ref);
+
+  // Give new users 10 XP on first login
+  if (!snap.exists()) {
+    await setDoc(ref, { xp: 10 });
+    snap = await getDoc(ref);
+  }
+
+  const xp = snap.data().xp || 0;
+
+  // Level thresholds and titles
+  const thresholds = [0, 200, 500, 1000, 2000, 4000];
+  const titles = ["Starter", "Explorer", "Builder", "Artist", "Creator", "Master"];
+
+  const level = thresholds.filter(v => xp >= v).length - 1;
+  const next = thresholds[level + 1] ?? thresholds[level];
+  const progress = next === thresholds[level] 
+    ? 100 
+    : ((xp - thresholds[level]) / (next - thresholds[level])) * 100;
+
+  // Update header (used on all pages)
+  if (levelText && xpBar && levelInfo) {
+    levelText.textContent = `Level ${level} • ${xp} XP`;
+    xpBar.style.width = progress + "%";
+    levelInfo.style.display = "block";
+  }
+
+  // Update rewards page specific elements (only if they exist)
+  const currentLevelText = document.getElementById("currentLevelText");
+  const xpText = document.getElementById("xpText");
+  const xpProgress = document.getElementById("xpProgress");
+
+  if (currentLevelText) currentLevelText.textContent = `Level ${level} – ${titles[level]}`;
+  if (xpText) xpText.textContent = `${xp} XP`;
+  if (xpProgress) xpProgress.style.width = progress + "%";
+
+  // Rewards grid (only run if on the rewards page)
+  const grid = document.getElementById("rewardsGrid");
+  if (grid) {
+    const rewards = [
+      { level: 1, icon: "📦", title: "Free Prop Pack", desc: "Starter props", msg: "Unlocked Free Prop Pack!" },
+      { level: 2, icon: "🎟️", title: "15% Discount", desc: "Next purchase", msg: "Use code: REWARD15" },
+      { level: 3, icon: "🗿", title: "Free Model", desc: "Any model under €5", msg: "Choose any model under €5 for free!" },
+      { level: 4, icon: "✨", title: "Exclusive Model", desc: "Early access model", msg: "Exclusive model unlocked!" },
+      { level: 5, icon: "👑", title: "Permanent 20% Off", desc: "All future purchases", msg: "Use code: MASTER20 forever!" }
+    ];
+
+    grid.innerHTML = "";
+    rewards.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "reward-card" + (level >= r.level ? " unlocked" : " locked");
+      card.innerHTML = `
+        <div class="reward-icon">${r.icon}</div>
+        <h3>${r.title}</h3>
+        <p>${r.desc}</p>
+        <button class="claim-btn" ${level >= r.level ? "" : "disabled"}>
+          ${level >= r.level ? "Claim" : "Locked (Lvl ${r.level})"}
+        </button>
+      `;
+      if (level >= r.level) {
+        card.querySelector(".claim-btn").onclick = () => alert(r.msg);
+      }
+      grid.appendChild(card);
+    });
+  }
+
+  // Optional: show rewards section when logged in
+  const rewardsSection = document.getElementById("rewardsSection");
+  if (rewardsSection) rewardsSection.style.display = "block";
+});
+</script>
+
+</body>
+</html>
+
+
+
+

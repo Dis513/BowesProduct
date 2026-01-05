@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Refund Policy – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.95);
+  border-bottom: 1px solid #1e293b;
+}
+.site-header.scrolled {
+  box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.logo a {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.main-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.main-nav a:hover { color:#60a5fa; }
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 44px;
+}
+
+/* PROFILE */
+#profilePic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  display: none;
+}
+
+/* LOGIN */
+.login-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* XP */
+#levelInfo {
+  display: none;
+  width: 140px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+#levelText { white-space: nowrap; }
+#xpOuter {
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+#xpBar {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+/* MOBILE HEADER */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo { width: 100%; }
+}
+
+/* ================= CONTENT ================= */
+.content {
+  max-width: 900px;
+  margin: 5rem auto;
+  padding: 0 1.5rem;
+  line-height: 1.8;
+}
+h1, h2 { color:#60a5fa; }
+p, li { color:#cbd5e1; }
+
+/* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+.footer-nav a:hover { color:#60a5fa; }
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="models.html">Models</a>
+        <a href="retexture.html">Retexture</a>
+        <a href="editor.html">Editor</a>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+
+      <button id="authBtn" class="login-btn">Login</button>
+    </div>
+
+  </div>
+</header>
+
+<!-- CONTENT -->
+<div class="content">
+  <h1>Refund Policy</h1>
+
+  <p>This Refund Policy outlines the conditions under which refunds may be issued for purchases made on BowesProduct.</p>
+
+  <h2>1. Digital Products</h2>
+  <p>All products sold on BowesProduct are digital downloads.</p>
+
+  <h2>2. No Automatic Refunds</h2>
+  <p>All sales are generally <strong>final and non-refundable</strong>.</p>
+
+  <h2>3. Eligible Refund Exceptions</h2>
+  <ul>
+    <li>Corrupted or unusable files</li>
+    <li>Accidental purchase without download</li>
+    <li>Duplicate purchases</li>
+  </ul>
+
+  <h2>4. Non-Refundable Situations</h2>
+  <ul>
+    <li>Change of mind</li>
+    <li>Software incompatibility</li>
+    <li>Failure to review license terms</li>
+  </ul>
+
+  <h2>5. Requesting a Refund</h2>
+  <p>Refund requests must include order details.</p>
+
+  <h2>6. Chargebacks</h2>
+  <p>Unauthorized chargebacks may revoke access.</p>
+
+  <h2>7. Policy Changes</h2>
+  <p>This policy may change at any time.</p>
+
+  <p><em>Last updated: December 29, 2025</em></p>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
+
+<script>
+window.addEventListener("scroll", () => {
+  document.querySelector(".site-header")
+    .classList.toggle("scrolled", window.scrollY > 40);
+});
+</script>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+authBtn.onclick = () =>
+  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+
+onAuthStateChanged(auth, async (user) => {
+ if (!user) {
+  authBtn.textContent = "Login";
+  profilePic.style.display = "none";
+  levelInfo.style.display = "none";
+  return;
+ }
+
+ authBtn.textContent = "Logout";
+ profilePic.src = user.photoURL || "";
+ profilePic.style.display = "block";
+
+ const ref = doc(db, "users", user.uid);
+ let snap = await getDoc(ref);
+
+ if (!snap.exists()) {
+  await setDoc(ref, { xp: 10 });  // ← New users start with 10 XP
+  snap = await getDoc(ref);
+ }
+
+ const xp = snap.data().xp || 0;
+ const levels = [0, 200, 500, 1000, 2000];
+ let level = levels.filter(v => xp >= v).length - 1;
+ let next = levels[level + 1] ?? levels[level];
+ let progress = next === levels[level] ? 100 :
+  ((xp - levels[level]) / (next - levels[level])) * 100;
+
+ levelText.textContent = `Level ${level} • ${xp} XP`;
+ xpBar.style.width = progress + "%";
+ levelInfo.style.display = "block";
+});
+</script>
+
+</body>
+</html>
+
+
+
