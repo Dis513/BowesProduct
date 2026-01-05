@@ -2,180 +2,741 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEON NIGHTMARE - Local Rhythm Game</title>
-    <link rel="stylesheet" href="styles.css">
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Neon Nightmare</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Floating Neon Particles */
+        #particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+        @keyframes float {
+            from { transform: translateY(100vh); opacity: 0; }
+            10% { opacity: 1; }
+            to { transform: translateY(-100px); opacity: 0; }
+        }
+
+        /* Menus */
+        #mainMenu, #gameContainer, #pauseMenu, #settingsMenu, #songCompleteMenu {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.95);
+            z-index: 10;
+        }
+        .hidden { display: none !important; }
+        #pauseMenu.active, #settingsMenu.active, #songCompleteMenu.active { display: flex !important; }
+
+        h1 { font-size: 4.5rem; color: #9d00ff; text-shadow: 0 0 30px #9d00ff; margin-bottom: 2rem; }
+        button {
+            background: transparent;
+            border: 3px solid #00ffff;
+            color: #00ffff;
+            padding: 1rem 2.5rem;
+            font-size: 1.8rem;
+            margin: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 10px;
+        }
+        button:hover {
+            background: #00ffff;
+            color: #000;
+            box-shadow: 0 0 40px #00ffff;
+        }
+
+        /* HUD */
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+        }
+        .hud-item {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px;
+        }
+        #scoreValue { color: #00ff00; }
+        #levelValue { color: #ffaa00; }
+        #multiplierValue { color: #ffff00; }
+        #comboValue { color: #ff00ff; }
+
+        /* Note Highway */
+        #noteHighway {
+            position: absolute;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 700px;
+            background: rgba(20,0,40,0.7);
+            border: 4px solid #9d00ff;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 0 50px #9d00ff;
+        }
+        .fret-lane {
+            flex: 1;
+            position: relative;
+            border-right: 2px solid rgba(157,0,255,0.4);
+        }
+        .fret-lane:last-child { border-right: none; }
+
+        #targetLine {
+            position: absolute;
+            bottom: 120px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: #ffff00;
+            box-shadow: 0 0 40px #ffff00;
+            z-index: 10;
+        }
+
+        /* Fret Buttons */
+        #fretButtons {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            display: flex;
+            z-index: 15;
+        }
+        .fret-button {
+            flex: 1;
+            height: 120px;
+            border: 6px solid;
+            background: rgba(255,255,255,0.05);
+            transition: 0.1s;
+            border-radius: 15px;
+            margin: 0 5px;
+        }
+        .fret-button.green { border-color: #00ff00; }
+        .fret-button.red { border-color: #ff0000; }
+        .fret-button.yellow { border-color: #ffff00; }
+        .fret-button.blue { border-color: #0000ff; }
+        .fret-button.orange { border-color: #ff8800; }
+        .fret-button.pressed {
+            transform: scale(0.9);
+            box-shadow: 0 0 60px inset;
+        }
+
+        /* Notes */
+        .note {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            left: 50%;
+            margin-left: -40px;
+            border-radius: 50%;
+            border: 5px solid;
+            box-shadow: 0 0 30px;
+        }
+        .note.green { background: #003300; border-color: #00ff00; }
+        .note.red { background: #330000; border-color: #ff0000; }
+        .note.yellow { background: #333300; border-color: #ffff00; }
+        .note.blue { background: #000033; border-color: #0000ff; }
+        .note.orange { background: #332200; border-color: #ff8800; }
+        .note.hit { animation: explode 0.4s forwards; }
+        .note.miss { opacity: 0.3; animation: fade 0.5s forwards; }
+        @keyframes explode { to { transform: scale(2.5); opacity: 0; } }
+        @keyframes fade { to { opacity: 0; } }
+
+        /* Hit Feedback */
+        .hit-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 30;
+            animation: pop 0.8s ease-out forwards;
+        }
+        .hit-feedback.perfect { color: #00ffff; text-shadow: 0 0 40px #00ffff; }
+        .hit-feedback.great { color: #00ff00; text-shadow: 0 0 40px #00ff00; }
+        .hit-feedback.good { color: #ffff00; text-shadow: 0 0 40px #ffff00; }
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.4); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        /* Progress Bar */
+        #progressBar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 16px;
+            background: #111;
+            border: 3px solid #9d00ff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px #9d00ff;
+        }
+        #progressFill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #9d00ff);
+            box-shadow: 0 0 30px #ff00ff;
+            transition: width 0.1s;
+        }
+
+        /* Song Info */
+        #songInfo {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 1.5rem;
+            color: #aaa;
+        }
+
+        @media (max-width: 768px) {
+            #noteHighway, #fretButtons, #progressBar { width: 90vw; }
+            h1 { font-size: 3rem; }
+            button { font-size: 1.5rem; padding: 1rem 2rem; }
+            .hud-item { font-size: 1.4rem; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Background Effects -->
-    <div class="void-background"></div>
-    <div class="fog-layer"></div>
-    <div class="particles" id="particles"></div>
-    
-    <!-- Decorative Elements -->
-    <div class="crooked-tree left"></div>
-    <div class="crooked-tree right"></div>
+
+    <div id="particles"></div>
 
     <!-- Main Menu -->
-    <div class="menu-container" id="mainMenu">
-        <h1 class="game-title">NEON NIGHTMARE</h1>
-        <p class="game-subtitle">A Local File Rhythm Experience</p>
-        
-        <div class="menu-options">
-            <div class="file-upload-container">
-                <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
-                <button class="menu-button" id="uploadButton">
-                    🎵 Upload Audio File
-                </button>
-                <p class="upload-info" id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
-            </div>
-            <button class="menu-button" id="playDemo">
-                🎮 Play Demo Mode
-            </button>
-            <button class="menu-button" id="viewLeaderboards">
-                🏆 High Scores
-            </button>
-            <button class="menu-button" id="openSettings">
-                ⚙️ Settings
-            </button>
-        </div>
+    <div id="mainMenu">
+        <h1>NEON NIGHTMARE</h1>
+        <button id="uploadButton">🎵 Upload Audio File</button>
+        <p id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
+        <input type="file" id="audioFileInput" accept="audio/*" style="display:none">
+        <button id="openSettings">Settings</button>
     </div>
 
-    <!-- Game Container -->
-    <div class="game-container" id="gameContainer">
-        <!-- Top HUD -->
-        <div class="hud-top">
-            <div class="score-display">
-                SCORE: <span id="scoreValue">0</span>
-            </div>
-            <div class="multiplier-display">
-                <span id="multiplierValue">1</span>x
-            </div>
+    <!-- Game Screen -->
+    <div id="gameContainer" class="hidden">
+        <div id="hud">
+            <div class="hud-item">SCORE: <span id="scoreValue">0</span></div>
+            <div class="hud-item">LEVEL: <span id="levelValue">1</span></div>
+            <div class="hud-item">MULTIPLIER: <span id="multiplierValue">1</span>x</div>
+            <div class="hud-item">COMBO: <span id="comboValue">0</span></div>
         </div>
 
-        <!-- Song Info -->
-        <div class="song-info">
-            <h2 class="song-title" id="songTitle">No Track Loaded</h2>
-            <p class="song-artist" id="songArtist">Upload an audio file to begin</p>
+        <div id="noteHighway">
+            <div class="fret-lane" data-fret="green"></div>
+            <div class="fret-lane" data-fret="red"></div>
+            <div class="fret-lane" data-fret="yellow"></div>
+            <div class="fret-lane" data-fret="blue"></div>
+            <div class="fret-lane" data-fret="orange"></div>
+            <div id="targetLine"></div>
         </div>
 
-        <!-- Note Highway -->
-        <div class="note-highway" id="noteHighway">
-            <div class="fret-lanes">
-                <div class="fret-lane" data-fret="green"></div>
-                <div class="fret-lane" data-fret="red"></div>
-                <div class="fret-lane" data-fret="yellow"></div>
-                <div class="fret-lane" data-fret="blue"></div>
-                <div class="fret-lane" data-fret="orange"></div>
-            </div>
-            <div class="target-line" id="targetLine"></div>
+        <div id="fretButtons">
+            <div class="fret-button green"></div>
+            <div class="fret-button red"></div>
+            <div class="fret-button yellow"></div>
+            <div class="fret-button blue"></div>
+            <div class="fret-button orange"></div>
         </div>
 
-        <!-- Fret Buttons -->
-        <div class="fret-buttons">
-            <div class="fret-button green" data-fret="green">
-                <span>A</span>
-                <span class="fret-button-key">Green</span>
-            </div>
-            <div class="fret-button red" data-fret="red">
-                <span>S</span>
-                <span class="fret-button-key">Red</span>
-            </div>
-            <div class="fret-button yellow" data-fret="yellow">
-                <span>D</span>
-                <span class="fret-button-key">Yellow</span>
-            </div>
-            <div class="fret-button blue" data-fret="blue">
-                <span>F</span>
-                <span class="fret-button-key">Blue</span>
-            </div>
-            <div class="fret-button orange" data-fret="orange">
-                <span>G</span>
-                <span class="fret-button-key">Orange</span>
-            </div>
-        </div>
-
-        <!-- Bottom HUD -->
-        <div class="hud-bottom">
-            <div class="combo-display" id="comboDisplay">
-                <span id="comboValue">0</span> COMBO
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-        </div>
+        <div id="progressBar"><div id="progressFill"></div></div>
+        <div id="songInfo">Song: <span id="songTitle">Unknown</span> - <span id="songArtist">Local File</span></div>
     </div>
 
     <!-- Pause Menu -->
-    <div class="pause-menu" id="pauseMenu">
-        <h2 class="pause-title">⏸️ PAUSED</h2>
-        <div class="menu-options">
-            <button class="menu-button" id="resumeGame">
-                ▶️ Resume
-            </button>
-            <button class="menu-button" id="restartSong">
-                🔄 Restart
-            </button>
-            <button class="menu-button" id="changeDifficulty">
-                📊 Change Difficulty
-            </button>
-            <button class="menu-button" id="returnToMenu">
-                🏠 Main Menu
-            </button>
-        </div>
+    <div id="pauseMenu">
+        <h1>PAUSED</h1>
+        <button id="resumeGame">Resume</button>
+        <button id="restartSong">Restart Song</button>
+        <button id="returnToMenu">Main Menu</button>
     </div>
 
-    <!-- Settings Modal -->
-    <div class="pause-menu" id="settingsMenu">
-        <h2 class="pause-title">⚙️ SETTINGS</h2>
-        <div class="menu-options">
-            <button class="menu-button" id="setDifficultyEasy">
-                🟢 Easy
-            </button>
-            <button class="menu-button" id="setDifficultyMedium">
-                🟡 Medium
-            </button>
-            <button class="menu-button" id="setDifficultyHard">
-                🟠 Hard
-            </button>
-            <button class="menu-button" id="setDifficultyExpert">
-                🔴 Expert
-            </button>
-            <button class="menu-button" id="closeSettings">
-                ← Back
-            </button>
-        </div>
+    <!-- Settings Menu -->
+    <div id="settingsMenu">
+        <h1>SETTINGS</h1>
+        <button id="setDifficultyEasy">Easy</button>
+        <button id="setDifficultyMedium">Medium</button>
+        <button id="setDifficultyHard">Hard</button>
+        <button id="setDifficultyExpert">Expert</button>
+        <button id="closeSettings">Back</button>
     </div>
 
-    <!-- Song Complete Modal -->
-    <div class="pause-menu" id="songCompleteMenu">
-        <h2 class="pause-title">🎵 SONG COMPLETE!</h2>
-        <div class="menu-options">
-            <div class="final-score">
-                <p class="score-label">Final Score</p>
-                <p class="score-value" id="finalScoreValue">0</p>
-            </div>
-            <div class="final-stats">
-                <p>Perfect: <span id="perfectCount">0</span></p>
-                <p>Great: <span id="greatCount">0</span></p>
-                <p>Good: <span id="goodCount">0</span></p>
-                <p>Miss: <span id="missCount">0</span></p>
-                <p>Max Combo: <span id="maxComboValue">0</span></p>
-            </div>
-            <button class="menu-button" id="playAgain">
-                🔄 Play Again
-            </button>
-            <button class="menu-button" id="uploadNewSong">
-                📁 Upload New Song
-            </button>
-            <button class="menu-button" id="mainMenuFromComplete">
-                🏠 Main Menu
-            </button>
-        </div>
+    <!-- Song Complete -->
+    <div id="songCompleteMenu">
+        <h1>SONG COMPLETE</h1>
+        <p>Final Score: <span id="finalScoreValue">0</span></p>
+        <p>Level Reached: <span id="levelValueComplete">1</span></p>
+        <p>Max Combo: <span id="maxComboValue">0</span></p>
+        <p>Perfect: <span id="perfectCount">0</span> | Great: <span id="greatCount">0</span> | Good: <span id="goodCount">0</span> | Miss: <span id="missCount">0</span></p>
+        <button id="playAgain">Play Again</button>
+        <button id="uploadNewSong">New Song</button>
     </div>
 
-    <!-- Scripts -->
-    <script src="game.js"></script>
+    <script>
+        class NeonNightmare {
+            constructor() {
+                this.isPlaying = false;
+                this.isPaused = false;
+                this.score = 0;
+                this.combo = 0;
+                this.maxCombo = 0;
+                this.multiplier = 1;
+                this.level = 1; // Level starts at 1
+                this.difficulty = 'medium';
+
+                this.audioContext = null;
+                this.audioBuffer = null;
+                this.audioSource = null;
+                this.startTime = 0;
+                this.duration = 0;
+
+                this.notes = [];
+                this.activeNotes = [];
+
+                this.frets = ['green', 'red', 'yellow', 'blue', 'orange'];
+                this.fretKeys = ['a', 's', 'd', 'f', 'g'];
+                this.fretButtons = {};
+
+                this.perfectHits = 0;
+                this.greatHits = 0;
+                this.goodHits = 0;
+                this.misses = 0;
+
+                this.timingWindows = {
+                    easy: { perfect: 120, great: 240, good: 360 },
+                    medium: { perfect: 80, great: 160, good: 240 },
+                    hard: { perfect: 50, great: 100, good: 150 },
+                    expert: { perfect: 30, great: 60, good: 90 }
+                };
+
+                this.initializeElements();
+                this.setupEventListeners();
+                this.createParticles();
+            }
+
+            initializeElements() {
+                this.mainMenu = document.getElementById('mainMenu');
+                this.gameContainer = document.getElementById('gameContainer');
+                this.pauseMenu = document.getElementById('pauseMenu');
+                this.settingsMenu = document.getElementById('settingsMenu');
+                this.songCompleteMenu = document.getElementById('songCompleteMenu');
+
+                this.audioFileInput = document.getElementById('audioFileInput');
+                this.uploadButton = document.getElementById('uploadButton');
+
+                this.scoreValue = document.getElementById('scoreValue');
+                this.levelValue = document.getElementById('levelValue');
+                this.multiplierValue = document.getElementById('multiplierValue');
+                this.comboValue = document.getElementById('comboValue');
+                this.progressFill = document.getElementById('progressFill');
+                this.songTitle = document.getElementById('songTitle');
+                this.songArtist = document.getElementById('songArtist');
+
+                this.noteHighway = document.getElementById('noteHighway');
+
+                this.frets.forEach(fret => {
+                    this.fretButtons[fret] = document.querySelector(`.fret-button.${fret}`);
+                });
+            }
+
+            setupEventListeners() {
+                this.uploadButton.addEventListener('click', () => this.audioFileInput.click());
+                this.audioFileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+
+                document.getElementById('openSettings').addEventListener('click', () => this.settingsMenu.classList.add('active'));
+                document.getElementById('closeSettings').addEventListener('click', () => this.settingsMenu.classList.remove('active'));
+
+                document.getElementById('setDifficultyEasy').addEventListener('click', () => this.setDifficulty('easy'));
+                document.getElementById('setDifficultyMedium').addEventListener('click', () => this.setDifficulty('medium'));
+                document.getElementById('setDifficultyHard').addEventListener('click', () => this.setDifficulty('hard'));
+                document.getElementById('setDifficultyExpert').addEventListener('click', () => this.setDifficulty('expert'));
+
+                document.getElementById('resumeGame').addEventListener('click', () => this.togglePause());
+                document.getElementById('restartSong').addEventListener('click', () => this.restartSong());
+                document.getElementById('returnToMenu').addEventListener('click', () => this.returnToMenu());
+                document.getElementById('playAgain').addEventListener('click', () => this.restartSong());
+                document.getElementById('uploadNewSong').addEventListener('click', () => this.returnToMenu());
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.isPlaying) this.togglePause();
+                    this.handleKeyDown(e);
+                });
+                document.addEventListener('keyup', (e) => this.handleKeyUp(e));
+
+                this.frets.forEach(fret => {
+                    const btn = this.fretButtons[fret];
+                    btn.addEventListener('mousedown', () => this.handleFretPress(fret));
+                    btn.addEventListener('touchstart', (e) => { e.preventDefault(); this.handleFretPress(fret); });
+                });
+            }
+
+            createParticles() {
+                const container = document.getElementById('particles');
+                const colors = ['#00ffff', '#9d00ff', '#39ff14', '#ff1493'];
+                for (let i = 0; i < 60; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'particle';
+                    p.style.left = Math.random() * 100 + 'vw';
+                    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    p.style.animationDuration = (8 + Math.random() * 10) + 's';
+                    p.style.animationDelay = Math.random() * 10 + 's';
+                    container.appendChild(p);
+                }
+            }
+
+            async handleFileUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                this.uploadButton.textContent = 'Processing...';
+                this.uploadButton.disabled = true;
+
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const arrayBuffer = await file.arrayBuffer();
+                    this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+                    this.duration = this.audioBuffer.duration;
+
+                    this.songTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
+                    this.songArtist.textContent = 'Local File';
+
+                    await this.analyzeAudioAndGenerateNotes();
+                    this.startGame();
+                } catch (err) {
+                    alert('Error loading audio file. Try another format.');
+                    this.uploadButton.textContent = '🎵 Upload Audio File';
+                    this.uploadButton.disabled = false;
+                }
+            }
+
+            async analyzeAudioAndGenerateNotes() {
+                const channelData = this.audioBuffer.getChannelData(0);
+                const sampleRate = this.audioBuffer.sampleRate;
+                this.notes = this.generateNotesFromAudio(channelData, sampleRate);
+            }
+
+            generateNotesFromAudio(channelData, sampleRate) {
+                const notes = [];
+                const windowSize = Math.floor(sampleRate * 0.1);
+                const hopSize = Math.floor(sampleRate * 0.05);
+                const energies = [];
+
+                for (let i = 0; i < channelData.length - windowSize; i += hopSize) {
+                    let sum = 0;
+                    for (let j = 0; j < windowSize; j++) sum += Math.abs(channelData[i + j]);
+                    energies.push(sum / windowSize);
+                }
+
+                const mean = energies.reduce((a,b) => a+b, 0) / energies.length;
+                const stdDev = Math.sqrt(energies.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / energies.length);
+                const threshold = mean + stdDev * 0.6;
+
+                const beats = [];
+                for (let i = 1; i < energies.length - 1; i++) {
+                    if (energies[i] > threshold && energies[i] > energies[i-1] && energies[i] > energies[i+1]) {
+                        beats.push({ time: (i * hopSize) / sampleRate, energy: energies[i] });
+                    }
+                }
+
+                const minInterval = { easy: 0.45, medium: 0.3, hard: 0.2, expert: 0.15 }[this.difficulty];
+                let lastTime = -minInterval;
+                beats.forEach(beat => {
+                    if (beat.time - lastTime >= minInterval) {
+                        const fretIndex = Math.floor((beat.energy * 10 + beats.indexOf(beat)) % 5);
+                        notes.push({
+                            id: notes.length,
+                            time: beat.time,
+                            fret: this.frets[fretIndex],
+                            hit: false,
+                            missed: false
+                        });
+                        lastTime = beat.time;
+                    }
+                });
+
+                return notes;
+            }
+
+            startGame() {
+                this.isPlaying = true;
+                this.isPaused = false;
+                this.score = 0;
+                this.combo = 0;
+                this.maxCombo = 0;
+                this.multiplier = 1;
+                this.level = 1;
+                this.perfectHits = this.greatHits = this.goodHits = this.misses = 0;
+                this.activeNotes = [];
+
+                this.notes.forEach(n => { n.hit = false; n.missed = false; });
+
+                this.updateHUD();
+                this.mainMenu.classList.add('hidden');
+                this.gameContainer.classList.remove('hidden');
+
+                this.playAudio();
+                this.gameLoop();
+            }
+
+            playAudio() {
+                this.audioSource = this.audioContext.createBufferSource();
+                this.audioSource.buffer = this.audioBuffer;
+                this.audioSource.connect(this.audioContext.destination);
+                this.startTime = this.audioContext.currentTime;
+                this.audioSource.start(0);
+                this.audioSource.onended = () => this.endGame();
+            }
+
+            gameLoop() {
+                if (!this.isPlaying || this.isPaused) return;
+
+                const currentTime = this.audioContext.currentTime - this.startTime;
+
+                this.spawnNotes(currentTime);
+                this.updateNotes(currentTime);
+                this.updateProgress(currentTime);
+                this.render();
+
+                requestAnimationFrame(() => this.gameLoop());
+            }
+
+            spawnNotes(currentTime) {
+                const leadTime = 2.5;
+                this.notes.forEach(note => {
+                    if (!note.hit && !note.missed && !this.activeNotes.includes(note) &&
+                        note.time <= currentTime + leadTime && note.time > currentTime - 0.5) {
+                        this.activeNotes.push(note);
+                        this.createNoteElement(note);
+                    }
+                });
+            }
+
+            createNoteElement(note) {
+                const el = document.createElement('div');
+                el.className = `note ${note.fret}`;
+                el.style.top = '-100px';
+                const lane = document.querySelector(`.fret-lane[data-fret="${note.fret}"]`);
+                const rect = lane.getBoundingClientRect();
+                const highwayRect = this.noteHighway.getBoundingClientRect();
+                el.style.left = (rect.left - highwayRect.left + rect.width / 2 - 40) + 'px';
+                note.element = el;
+                this.noteHighway.appendChild(el);
+            }
+
+            render() {
+                const currentTime = this.audioContext.currentTime - this.startTime;
+                const leadTime = 2.5;
+                const highwayHeight = this.noteHighway.offsetHeight;
+
+                this.activeNotes.forEach(note => {
+                    if (!note.element) return;
+                    const timeDiff = note.time - currentTime;
+                    const progress = 1 - (timeDiff / leadTime);
+                    const y = -100 + progress * (highwayHeight + 100);
+                    note.element.style.top = y + 'px';
+                });
+            }
+
+            updateNotes(currentTime) {
+                const windows = this.timingWindows[this.difficulty];
+                this.activeNotes.forEach(note => {
+                    if (note.hit || note.missed) return;
+                    const diff = (note.time - currentTime) * 1000;
+                    if (diff < -windows.good) {
+                        this.missNote(note);
+                    }
+                });
+            }
+
+            handleKeyDown(e) {
+                const idx = this.fretKeys.indexOf(e.key.toLowerCase());
+                if (idx !== -1) {
+                    this.handleFretPress(this.frets[idx]);
+                    this.fretButtons[this.frets[idx]].classList.add('pressed');
+                }
+            }
+
+            handleKeyUp(e) {
+                const idx = this.fretKeys.indexOf(e.key.toLowerCase());
+                if (idx !== -1) this.fretButtons[this.frets[idx]].classList.remove('pressed');
+            }
+
+            handleFretPress(fret) {
+                if (!this.isPlaying || this.isPaused) return;
+                const currentTime = this.audioContext.currentTime - this.startTime;
+                const windows = this.timingWindows[this.difficulty];
+
+                const candidates = this.activeNotes.filter(n => n.fret === fret && !n.hit && !n.missed);
+                if (candidates.length === 0) return;
+
+                const closest = candidates.reduce((best, n) => 
+                    Math.abs(n.time - currentTime) < Math.abs(best.time - currentTime) ? n : best
+                );
+
+                const diff = Math.abs(closest.time - currentTime) * 1000;
+
+                if (diff <= windows.good) {
+                    let type = diff <= windows.perfect ? 'perfect' : diff <= windows.great ? 'great' : 'good';
+                    this.hitNote(closest, type);
+                }
+            }
+
+            hitNote(note, type) {
+                note.hit = true;
+                const points = { perfect: 100, great: 75, good: 50 }[type];
+                this.score += points * this.multiplier;
+                this.combo++;
+                this.maxCombo = Math.max(this.maxCombo, this.combo);
+                this.updateMultiplier();
+
+                if (type === 'perfect') this.perfectHits++;
+                else if (type === 'great') this.greatHits++;
+                else this.goodHits++;
+
+                // Level up every 8000 points
+                const newLevel = Math.floor(this.score / 8000) + 1;
+                if (newLevel > this.level) {
+                    this.level = newLevel;
+                }
+
+                this.showHitFeedback(type);
+                if (note.element) note.element.classList.add('hit');
+
+                this.updateHUD();
+
+                setTimeout(() => {
+                    if (note.element && note.element.parentNode) note.element.parentNode.removeChild(note.element);
+                }, 400);
+            }
+
+            missNote(note) {
+                note.missed = true;
+                this.combo = 0;
+                this.multiplier = 1;
+                this.misses++;
+                this.updateHUD();
+                if (note.element) note.element.classList.add('miss');
+                setTimeout(() => {
+                    if (note.element && note.element.parentNode) note.element.parentNode.removeChild(note.element);
+                }, 500);
+            }
+
+            updateMultiplier() {
+                if (this.combo >= 40) this.multiplier = 4;
+                else if (this.combo >= 20) this.multiplier = 3;
+                else if (this.combo >= 10) this.multiplier = 2;
+                else this.multiplier = 1;
+            }
+
+            updateHUD() {
+                this.scoreValue.textContent = this.score.toLocaleString();
+                this.levelValue.textContent = this.level;
+                this.multiplierValue.textContent = this.multiplier;
+                this.comboValue.textContent = this.combo;
+            }
+
+            updateProgress(currentTime) {
+                const progress = Math.min(currentTime / this.duration, 1);
+                this.progressFill.style.width = (progress * 100) + '%';
+            }
+
+            showHitFeedback(type) {
+                const el = document.createElement('div');
+                el.className = `hit-feedback ${type}`;
+                el.textContent = type.toUpperCase();
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 800);
+            }
+
+            togglePause() {
+                this.isPaused = !this.isPaused;
+                if (this.isPaused) {
+                    this.audioContext.suspend();
+                    this.pauseMenu.classList.add('active');
+                } else {
+                    this.audioContext.resume();
+                    this.pauseMenu.classList.remove('active');
+                    this.gameLoop();
+                }
+            }
+
+            setDifficulty(level) {
+                this.difficulty = level;
+                this.settingsMenu.classList.remove('active');
+                alert(`Difficulty: ${level.toUpperCase()}`);
+            }
+
+            restartSong() {
+                this.cleanup();
+                this.pauseMenu.classList.remove('active');
+                this.songCompleteMenu.classList.remove('active');
+                this.startGame();
+            }
+
+            endGame() {
+                this.isPlaying = false;
+                this.cleanup();
+                document.getElementById('finalScoreValue').textContent = this.score.toLocaleString();
+                document.getElementById('levelValueComplete').textContent = this.level;
+                document.getElementById('maxComboValue').textContent = this.maxCombo;
+                document.getElementById('perfectCount').textContent = this.perfectHits;
+                document.getElementById('greatCount').textContent = this.greatHits;
+                document.getElementById('goodCount').textContent = this.goodHits;
+                document.getElementById('missCount').textContent = this.misses;
+                this.songCompleteMenu.classList.add('active');
+            }
+
+            returnToMenu() {
+                this.cleanup();
+                this.gameContainer.classList.add('hidden');
+                this.mainMenu.classList.remove('hidden');
+                this.uploadButton.textContent = '🎵 Upload Audio File';
+                this.uploadButton.disabled = false;
+            }
+
+            cleanup() {
+                if (this.audioSource) {
+                    this.audioSource.stop();
+                    this.audioSource = null;
+                }
+                document.querySelectorAll('.note').forEach(n => n.remove());
+                this.activeNotes = [];
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.game = new NeonNightmare();
+        });
+    </script>
 </body>
 </html>
