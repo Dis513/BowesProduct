@@ -8,7 +8,7 @@
   <!-- ES Module Shims -->
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
 
-  <!-- Three.js Import Map (stable version) -->
+  <!-- Three.js Import Map -->
   <script type="importmap">
   {
     "imports": {
@@ -32,8 +32,6 @@
     .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.9rem; white-space: nowrap; }
     .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
     .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; flex-wrap: wrap; }
-    #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
-    .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
 
     #container { position: relative; width: 100%; height: calc(100vh - 70px); overflow: hidden; }
     #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; position: absolute; top: 0; left: 0; z-index: 1; }
@@ -108,15 +106,12 @@
     .layer-name input { width: 100%; background: transparent; border: 1px solid transparent; padding: 2px 6px; }
     .layer-name input:focus { border-color: #60a5fa; outline: none; }
     .layer-name input.editing { background: #1e293b; }
-    .layer-toggle { cursor: pointer; font-size: 1rem; width: 20px; }
 
     .site-footer {
       position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b;
       padding: 1rem; z-index: 1000; backdrop-filter: blur(10px);
     }
     .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
-    .footer-nav a { color: #cbd5e1; text-decoration: none; }
-    .footer-nav a:hover { color: #60a5fa; }
 
     #toastContainer {
       position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
@@ -138,6 +133,11 @@
 
     #booleanPanel { display: none; margin-top: 1rem; }
     #booleanPanel.visible { display: block; }
+
+    #animationPanel { display: none; margin-top: 1rem; }
+    #animationPanel.visible { display: block; }
+    .timeline-track { height: 60px; background: #1e293b; border-radius: 4px; margin-bottom: 0.5rem; position: relative; overflow: hidden; }
+    .keyframe { position: absolute; width: 12px; height: 12px; background: #60a5fa; border-radius: 50%; top: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid white; }
   </style>
 </head>
 <body>
@@ -180,9 +180,9 @@
         • Right click + drag: Pan<br>
         • Scroll: Zoom<br>
         • Click object: Select • Ctrl/Cmd + click: Multi-select<br>
-        • G/R/S/V: Move/Rotate/Scale/Select<br>
+        • G/R/S: Move/Rotate/Scale<br>
         • Delete: Delete • Ctrl+D: Duplicate • Ctrl+Z/Y: Undo/Redo<br>
-        • F: Focus • ?: Shortcuts • Alt+Drag: Duplicate
+        • F: Focus • Alt+Drag: Duplicate
       </div>
 
       <h2>Scene Management</h2>
@@ -232,7 +232,7 @@
       <button id="toggleBoolean" class="secondary">Toggle Boolean Panel</button>
 
       <h2>Model Import</h2>
-      <input type="file" id="uploadModel" accept=".glb,.gltf">
+      <input type="file" id="uploadModel" accept=".glb,.gltf,.obj,.fbx">
 
       <h2>Selected Object(s)</h2>
       <div id="selectedObjectInfo"><p style="color:#94a3b8;">No object selected</p></div>
@@ -265,10 +265,11 @@
 
       <h2>Material</h2>
       <input type="color" id="materialColor" value="#60a5fa">
+      <label>Metallic <span id="metallicVal">0.00</span></label>
       <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
-      <span id="metallicVal">0.00</span>
+      <label>Roughness <span id="roughnessVal">0.50</span></label>
       <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
-      <span id="roughnessVal">0.50</span>
+      <label>Texture</label>
       <input type="file" id="textureUpload" accept="image/*">
 
       <h2>Snapping & Grid</h2>
@@ -290,7 +291,7 @@
 
       <h2>Animation</h2>
       <button id="toggleAnimation" class="secondary">Toggle Animation Panel</button>
-      <div id="animationPanel" style="display:none;">
+      <div id="animationPanel">
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
           <button id="addKeyframe" class="secondary">Add Keyframe</button>
           <button id="playAnimation" class="secondary">▶ Play</button>
@@ -312,7 +313,7 @@
       <button id="exportOBJ" class="secondary">Export OBJ</button>
       <button id="exportSTL" class="secondary">Export STL</button>
       <button id="exportPNG" class="secondary">📷 Screenshot</button>
-      <label><input type="checkbox" id="transparentBG"> Transparent BG</label>
+      <label><input type="checkbox" id="transparentBG"> Transparent Background</label>
       <div id="exportStatus"></div>
 
       <div id="undoRedoGroup">
@@ -624,10 +625,19 @@
       const info = document.getElementById('selectedObjectInfo');
       info.innerHTML = selectedObjects.length ? `<p>${selectedObjects.length} object${selectedObjects.length > 1 ? 's' : ''} selected</p>` : '<p style="color:#94a3b8;">No object selected</p>';
       document.getElementById('transformControls').style.display = selectedObjects.length === 1 ? 'block' : 'none';
-      if (selectedObjects.length === 1) updateTransformInputs();
+      if (selectedObjects.length === 1) {
+        const o = selectedObjects[0];
+        document.getElementById('materialColor').value = '#' + o.material.color.getHexString();
+        document.getElementById('metallicSlider').value = o.material.metalness;
+        document.getElementById('metallicVal').textContent = o.material.metalness.toFixed(2);
+        document.getElementById('roughnessSlider').value = o.material.roughness;
+        document.getElementById('roughnessVal').textContent = o.material.roughness.toFixed(2);
+        updateTransformInputs();
+      }
     }
 
     function updateTransformInputs() {
+      if (selectedObjects.length !== 1) return;
       const o = selectedObjects[0];
       document.getElementById('posX').value = o.position.x.toFixed(2);
       document.getElementById('posY').value = o.position.y.toFixed(2);
@@ -637,4 +647,292 @@
       document.getElementById('rotZ').value = THREE.MathUtils.radToDeg(o.rotation.z).toFixed(1);
       document.getElementById('scaleX').value = o.scale.x.toFixed(2);
       document.getElementById('scaleY').value = o.scale.y.toFixed(2);
-      document.getElement
+      document.getElementById('scaleZ').value = o.scale.z.toFixed(2);
+    }
+
+    ['posX','posY','posZ','rotX','rotY','rotZ','scaleX','scaleY','scaleZ'].forEach(id => {
+      document.getElementById(id).onchange = () => {
+        if (selectedObjects.length === 0) return;
+        saveState();
+        const o = selectedObjects[0];
+        o.position.set(+document.getElementById('posX').value, +document.getElementById('posY').value, +document.getElementById('posZ').value);
+        o.rotation.set(THREE.MathUtils.degToRad(+document.getElementById('rotX').value), THREE.MathUtils.degToRad(+document.getElementById('rotY').value), THREE.MathUtils.degToRad(+document.getElementById('rotZ').value));
+        o.scale.set(+document.getElementById('scaleX').value, +document.getElementById('scaleY').value, +document.getElementById('scaleZ').value);
+      };
+    });
+
+    document.getElementById('materialColor').addEventListener('input', e => {
+      if (selectedObjects.length === 1) {
+        selectedObjects[0].material.color.set(e.target.value);
+        saveState();
+      }
+    });
+
+    document.getElementById('metallicSlider').addEventListener('input', e => {
+      const v = parseFloat(e.target.value);
+      document.getElementById('metallicVal').textContent = v.toFixed(2);
+      if (selectedObjects.length === 1) {
+        selectedObjects[0].material.metalness = v;
+        saveState();
+      }
+    });
+
+    document.getElementById('roughnessSlider').addEventListener('input', e => {
+      const v = parseFloat(e.target.value);
+      document.getElementById('roughnessVal').textContent = v.toFixed(2);
+      if (selectedObjects.length === 1) {
+        selectedObjects[0].material.roughness = v;
+        saveState();
+      }
+    });
+
+    document.getElementById('textureUpload').addEventListener('change', e => {
+      if (selectedObjects.length === 1 && e.target.files[0]) {
+        new THREE.TextureLoader().load(URL.createObjectURL(e.target.files[0]), tex => {
+          selectedObjects[0].material.map = tex;
+          selectedObjects[0].material.needsUpdate = true;
+          showToast('Texture applied', 'success');
+        });
+      }
+    });
+
+    document.getElementById('duplicateBtn').onclick = () => {
+      if (selectedObjects.length === 0) return;
+      saveState();
+      const clones = selectedObjects.map(o => {
+        const clone = o.clone();
+        clone.material = o.material.clone();
+        clone.position.x += 1;
+        clone.userData.id = objectCounter++;
+        scene.add(clone);
+        rootObjects.push(clone);
+        return clone;
+      });
+      selectedObjects = clones;
+      updateLayersList();
+      showToast('Duplicated', 'success');
+    };
+
+    document.getElementById('deleteBtn').onclick = () => {
+      if (selectedObjects.length === 0) return;
+      saveState();
+      selectedObjects.forEach(o => {
+        scene.remove(o);
+        const idx = rootObjects.indexOf(o);
+        if (idx > -1) rootObjects.splice(idx, 1);
+      });
+      selectedObjects = [];
+      transformControl.detach();
+      updateLayersList();
+      updateSelectedObjectUI();
+      showToast('Deleted', 'success');
+    };
+
+    document.getElementById('createGroup').onclick = () => {
+      if (selectedObjects.length < 2) return;
+      saveState();
+      const group = new THREE.Group();
+      group.userData.isGroup = true;
+      group.userData.name = `Group ${rootObjects.filter(o => o.userData.isGroup).length + 1}`;
+      group.userData.id = objectCounter++;
+      selectedObjects.forEach(o => {
+        const worldPos = new THREE.Vector3();
+        o.getWorldPosition(worldPos);
+        o.parent.remove(o);
+        group.add(o);
+        o.position.copy(worldPos.sub(group.position));
+      });
+      scene.add(group);
+      rootObjects.push(group);
+      selectedObjects = [group];
+      updateLayersList();
+      updateSelectedObjectUI();
+      showToast('Group created', 'success');
+    };
+
+    document.getElementById('ungroup').onclick = () => {
+      const groups = selectedObjects.filter(o => o.userData.isGroup);
+      if (groups.length === 0) return;
+      saveState();
+      groups.forEach(g => {
+        g.children.forEach(child => {
+          const worldPos = new THREE.Vector3();
+          child.getWorldPosition(worldPos);
+          g.remove(child);
+          scene.add(child);
+          child.position.copy(worldPos);
+          rootObjects.push(child);
+        });
+        scene.remove(g);
+        rootObjects.splice(rootObjects.indexOf(g), 1);
+      });
+      selectedObjects = [];
+      updateLayersList();
+      updateSelectedObjectUI();
+      showToast('Ungrouped', 'success');
+    };
+
+    document.getElementById('toggleBoolean').onclick = () => {
+      document.getElementById('booleanPanel').classList.toggle('visible');
+    };
+
+    function performBoolean(op) {
+      if (selectedObjects.length !== 2) return showToast('Select exactly 2 objects', 'error');
+      saveState();
+      const a = selectedObjects[0];
+      const b = selectedObjects[1];
+      let resultGeo;
+      const geoA = a.geometry.clone().applyMatrix4(a.matrixWorld);
+      const geoB = b.geometry.clone().applyMatrix4(b.matrixWorld);
+      if (op === 'union') resultGeo = BufferGeometryUtils.mergeGeometries([geoA, geoB]);
+      if (op === 'subtract') resultGeo = geoA;
+      if (op === 'intersect') resultGeo = geoA; // simplified
+      if (resultGeo) {
+        const mesh = new THREE.Mesh(resultGeo, new THREE.MeshStandardMaterial({ color: a.material.color }));
+        mesh.userData.name = `${op} Result`;
+        mesh.userData.id = objectCounter++;
+        scene.remove(a); scene.remove(b);
+        rootObjects = rootObjects.filter(o => o !== a && o !== b);
+        scene.add(mesh);
+        rootObjects.push(mesh);
+        selectedObjects = [mesh];
+        updateLayersList();
+        showToast(`Boolean ${op} done`, 'success');
+      }
+    }
+
+    document.getElementById('boolUnion').onclick = () => performBoolean('union');
+    document.getElementById('boolSubtract').onclick = () => performBoolean('subtract');
+    document.getElementById('boolIntersect').onclick = () => performBoolean('intersect');
+
+    function updateLayersList() {
+      const list = document.getElementById('layersList');
+      list.innerHTML = '';
+      rootObjects.slice().reverse().forEach(o => {
+        const li = document.createElement('li');
+        li.className = 'layer-item' + (selectedObjects.includes(o) ? ' active' : '');
+        li.innerHTML = `<span class="layer-visibility">👁</span><span class="layer-name">${o.userData.name}</span><span class="layer-delete">×</span>`;
+        li.onclick = e => {
+          if (e.target.classList.contains('layer-delete')) {
+            saveState();
+            scene.remove(o);
+            rootObjects.splice(rootObjects.indexOf(o), 1);
+            selectedObjects = selectedObjects.filter(s => s !== o);
+            updateLayersList();
+          } else {
+            selectObject(o, e.ctrlKey || e.metaKey);
+          }
+        };
+        list.appendChild(li);
+      });
+    }
+
+    function showToast(msg, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = msg;
+      document.getElementById('toastContainer').appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function triggerAutoSave() {
+      const ind = document.getElementById('autoSaveIndicator');
+      ind.classList.add('visible');
+      setTimeout(() => ind.classList.remove('visible'), 2000);
+    }
+
+    // Local save/load
+    document.getElementById('saveLocalBtn').onclick = () => {
+      const name = prompt('Scene name:', 'My Scene') || 'Untitled';
+      localStorage.setItem('savedScene', JSON.stringify({ name, objects: rootObjects.map(serializeObject) }));
+      showToast(`Saved as ${name}`, 'success');
+    };
+
+    document.getElementById('loadLocalBtn').onclick = () => {
+      const data = localStorage.getItem('savedScene');
+      if (data) {
+        const parsed = JSON.parse(data);
+        restoreState(parsed.objects);
+        showToast(`Loaded ${parsed.name}`, 'success');
+      }
+    };
+
+    // Export
+    document.getElementById('exportGLB').onclick = () => {
+      new GLTFExporter().parse(scene, glb => {
+        const blob = new Blob([glb], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'scene.glb';
+        a.click();
+      }, { binary: true });
+    };
+
+    document.getElementById('exportOBJ').onclick = () => {
+      const result = new OBJExporter().parse(scene);
+      const blob = new Blob([result], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'scene.obj';
+      a.click();
+    };
+
+    document.getElementById('exportSTL').onclick = () => {
+      const result = new STLExporter().parse(scene, { binary: true });
+      const blob = new Blob([result], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'scene.stl';
+      a.click();
+    };
+
+    document.getElementById('exportPNG').onclick = () => {
+      const transparent = document.getElementById('transparentBG').checked;
+      if (transparent) scene.background = null;
+      renderer.render(scene, camera);
+      const url = renderer.domElement.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'screenshot.png';
+      a.click();
+      if (transparent) scene.background = new THREE.Color(0x020617);
+    };
+
+    // Panel toggle
+    document.getElementById('panelToggle').onclick = () => {
+      document.getElementById('panel').classList.toggle('hidden');
+    };
+
+    document.getElementById('mobilePanelToggle').onclick = () => {
+      document.getElementById('panel').classList.toggle('visible');
+    };
+
+    // Animation panel
+    document.getElementById('toggleAnimation').onclick = () => {
+      document.getElementById('animationPanel').classList.toggle('visible');
+    };
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Initialize
+    saveState();
+    addPrimitive('Box');
+    document.getElementById('loader').style.display = 'none';
+  </script>
+</body>
+</html>
