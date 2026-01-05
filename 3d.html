@@ -838,19 +838,6 @@ import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
     saveState();
   }
 
-  // ... [Paste ALL your other functions here exactly as they were:
-  // animate, onWindowResize, onMouseDown, addPrimitive, handleImport, etc.
-  // Just make sure in handleImport and exportModel you use:
-  //   new GLTFLoader()   (not THREE.GLTFLoader)
-  //   new OBJLoader()
-  //   new STLLoader()
-  //   new GLTFExporter()
-  // ]
-
-  // At the very end:
-  init();
-  addPrimitive('cube');
-</script>
 // ==================== ANIMATION LOOP ====================
 function animate() {
   requestAnimationFrame(animate);
@@ -2079,6 +2066,7 @@ window.newScene = newScene;
 window.updateTransform = updateTransform;
 window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
+    
   
   // At the very end:
   init();
@@ -2086,6 +2074,7 @@ window.addArmature = addArmature;
 
 </body>
 </html>
+
 
 
 
