@@ -709,27 +709,22 @@ function selectObject(object, multi = false) {
     }
   });
 
-  if (!multi) {
-    selectedObjects = [];
-  }
+  if (!multi) selectedObjects = [];
 
   if (object) {
-    if (!selectedObjects.includes(object)) {
-      selectedObjects.push(object);
+    if (!selectedObjects.includes(object)) selectedObjects.push(object);
 
-      // Save original material and apply green glow
-      if (object.isMesh && object.material) {
-        object.userData.originalMaterial = object.material.clone();
-
-        const highlightMat = object.material.clone();
-        highlightMat.emissive = new THREE.Color(0x22c55e); // Green
-        highlightMat.emissiveIntensity = 0.5;
-        object.material = highlightMat;
-      }
+    // Green glow highlight
+    if (object.isMesh && object.material) {
+      object.userData.originalMaterial = object.material.clone();
+      const glowMat = object.material.clone();
+      glowMat.emissive = new THREE.Color(0x22c55e);
+      glowMat.emissiveIntensity = 0.5;
+      object.material = glowMat;
     }
   }
 
-  // Attach gizmo only if exactly one object selected
+  // Attach gizmo only for single selection
   if (selectedObjects.length === 1) {
     transformControl.attach(selectedObjects[0]);
   } else {
@@ -1358,6 +1353,7 @@ function selectObject(object, multi = false) {
 </script>
 </body>
 </html>
+
 
 
 
