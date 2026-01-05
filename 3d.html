@@ -254,7 +254,6 @@
   </div>
   <div class="panel visible" id="panel">
   <button id="panelToggle">←</button>
- 
   <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
   <strong style="color:#60a5fa">Controls:</strong><br>
   • Left click + drag: Rotate view<br>
@@ -283,19 +282,16 @@
   <button id="createGroup">Create Group from Selected</button>
   <button id="ungroup">Ungroup Selected</button>
   <div class="hint">Hold Ctrl/Cmd and click objects to multi-select</div>
-
-  <h2>Model</h2>
+  <h2>Model Import</h2>
   <div class="control-group">
-  <label for="uploadModel">Upload GLB/GLTF</label>
-  <input type="file" id="uploadModel" accept=".glb,.gltf">
-  <div class="hint">Supports GLB/GLTF. Auto-centers model.</div>
+  <label for="uploadModel">Upload Model (GLB/GLTF/OBJ/FBX)</label>
+  <input type="file" id="uploadModel" accept=".glb,.gltf,.obj,.fbx">
+  <div class="hint">Supports GLB/GLTF (binary preferred), OBJ, FBX. Auto-centers and scales model.</div>
   </div>
-
   <h2>Selected Object(s)</h2>
   <div id="selectedObjectInfo">
   <p style="color:#94a3b8;font-size:0.85rem;">No object selected</p>
   </div>
-
   <div id="transformControls" style="display:none;">
   <div class="control-group"><label>Position</label><div class="transform-controls">
   <div class="transform-input"><label>X</label><input type="number" id="posX" step="0.1"></div>
@@ -315,7 +311,6 @@
   <button id="duplicateBtn">Duplicate (Ctrl+D)</button>
   <button id="deleteBtn" style="background:#ef4444;">Delete Selected</button>
   </div>
-
   <h2>Material (applies to single mesh)</h2>
   <div class="control-group">
   <label for="materialColor">Color</label>
@@ -329,14 +324,12 @@
   <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
   <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
   </div>
-
   <h2>Layers / Objects</h2>
   <ol id="layersList"></ol>
   <div id="undoRedoGroup">
   <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
   <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
   </div>
-
   <h2>Lighting</h2>
   <div class="control-group">
   <label for="envPreset">Environment</label>
@@ -347,7 +340,6 @@
   <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
   </select>
   </div>
-
   <h2>Export</h2>
   <button id="exportBtn">Export Scene as GLB</button>
   <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
@@ -367,11 +359,12 @@
   </div>
 </footer>
 <div id="mobilePanelToggle"><span>▲ Controls</span></div>
-
 <script type="module">
   import * as THREE from 'three';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+  import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
   import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
   import { TransformControls } from 'three/addons/controls/TransformControls.js';
@@ -388,10 +381,8 @@
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020617);
-
   const gridHelper = new THREE.GridHelper(20, 20, 0x1e293b, 0x0f172a);
   scene.add(gridHelper);
-
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
   const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
   dirLight.position.set(5, 10, 7);
@@ -407,8 +398,10 @@
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
 
-  const transformControl = new TransformControls(camera, renderer.domElement);
-  transformControl.addEventListener('dragging-changed', (event) => controls.enabled = !event.value);
+  const transformControl = new TransformControls(camera, canvas);
+  transformControl.addEventListener('dragging-changed', (event) => {
+    controls.enabled = !event.value;
+  });
   transformControl.addEventListener('change', updateTransformInputs);
   scene.add(transformControl);
 
@@ -433,8 +426,8 @@
   loadEnvironment('neutral');
 
   // Object & Group Management
-  const rootObjects = []; // Top-level objects and groups
-  let selectedObjects = []; // Multiple selection
+  const rootObjects = [];
+  let selectedObjects = [];
   let objectCounter = 0;
 
   // Undo/Redo
@@ -454,7 +447,7 @@
   }
 
   function serializeObject(obj) {
-    if (obj.isGroup) {
+    if (obj.userData.isGroup) {
       return {
         type: 'group',
         name: obj.userData.name,
@@ -468,7 +461,7 @@
       return {
         type: 'mesh',
         name: obj.userData.name,
-        geometry: obj.userData.geometryName,
+        geometry: obj.userData.geometryName || 'imported',
         visible: obj.visible,
         position: obj.position.toArray(),
         rotation: obj.rotation.toArray(),
@@ -480,17 +473,17 @@
     }
   }
 
-  function deserializeObject(data, parent = null) {
+  function deserializeObject(data) {
     let obj;
     if (data.type === 'group') {
       obj = new THREE.Group();
       obj.userData.isGroup = true;
       data.children.forEach(childData => {
-        const child = deserializeObject(childData, obj);
+        const child = deserializeObject(childData);
         obj.add(child);
       });
     } else {
-      const geometry = createGeometryForName(data.geometry);
+      const geometry = data.geometry !== 'imported' ? createGeometryForName(data.geometry) : new THREE.BoxGeometry(1,1,1); // fallback
       const material = new THREE.MeshStandardMaterial({
         color: data.color,
         metalness: data.metallic,
@@ -507,7 +500,6 @@
     obj.position.fromArray(data.position);
     obj.rotation.fromArray(data.rotation);
     obj.scale.fromArray(data.scale);
-    if (parent) parent.add(obj);
     return obj;
   }
 
@@ -586,7 +578,7 @@
     mesh.userData.id = objectCounter++;
     scene.add(mesh);
     rootObjects.push(mesh);
-    selectObject(mesh, e => e.ctrlKey || e.metaKey);
+    selectObject(mesh);
     updateLayersList();
     document.getElementById('loader').style.display = 'none';
   }
@@ -617,7 +609,6 @@
     updateSelectedObjectUI();
     updateFloaterActiveState();
     updateLayersList();
-
     if (selectedObjects.length === 1) {
       transformControl.attach(selectedObjects[0]);
     } else {
@@ -627,6 +618,7 @@
 
   canvas.addEventListener('pointerdown', (e) => {
     if (transformControl.dragging) return;
+    if (e.button !== 0) return; // left click only for selection
     const rect = canvas.getBoundingClientRect();
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -636,7 +628,7 @@
     const intersects = raycaster.intersectObjects(allMeshes, false);
     if (intersects.length > 0) {
       selectObject(intersects[0].object, e.ctrlKey || e.metaKey);
-    } else if (!e.ctrlKey && !e.metaKey) {
+    } else if (! (e.ctrlKey || e.metaKey)) {
       selectedObjects = [];
       transformControl.detach();
       updateSelectedObjectUI();
@@ -656,11 +648,13 @@
     if (selectedObjects.length === 1) {
       const obj = selectedObjects[0];
       html += `<p>Type: ${obj.userData.name || 'Mesh'}</p><p>ID: ${obj.userData.id}</p>`;
-      document.getElementById('materialColor').value = '#' + obj.material.color.getHexString();
-      document.getElementById('metallicSlider').value = obj.material.metalness;
-      document.getElementById('metallicVal').textContent = obj.material.metalness.toFixed(2);
-      document.getElementById('roughnessSlider').value = obj.material.roughness;
-      document.getElementById('roughnessVal').textContent = obj.material.roughness.toFixed(2);
+      if (obj.isMesh) {
+        document.getElementById('materialColor').value = '#' + obj.material.color.getHexString();
+        document.getElementById('metallicSlider').value = obj.material.metalness;
+        document.getElementById('metallicVal').textContent = obj.material.metalness.toFixed(2);
+        document.getElementById('roughnessSlider').value = obj.material.roughness;
+        document.getElementById('roughnessVal').textContent = obj.material.roughness.toFixed(2);
+      }
     } else {
       html += `<p>Multi-selection active</p>`;
     }
@@ -671,7 +665,7 @@
   }
 
   function updateTransformInputs() {
-    if (selectedObjects.length === 0) return;
+    if (selectedObjects.length !== 1) return;
     const obj = selectedObjects[0];
     document.getElementById('posX').value = obj.position.x.toFixed(2);
     document.getElementById('posY').value = obj.position.y.toFixed(2);
@@ -744,7 +738,7 @@
     saveState();
     const clones = [];
     selectedObjects.forEach(obj => {
-      const clone = obj.clone();
+      const clone = obj.clone(true);
       if (obj.isMesh) clone.material = obj.material.clone();
       clone.position.x += 1;
       clone.userData.id = objectCounter++;
@@ -761,7 +755,7 @@
     if (selectedObjects.length === 0) return;
     saveState();
     selectedObjects.forEach(obj => {
-      if (obj.parent && obj.parent.isGroup) {
+      if (obj.parent && obj.parent.userData.isGroup) {
         obj.parent.remove(obj);
       } else {
         scene.remove(obj);
@@ -783,15 +777,10 @@
     group.userData.isGroup = true;
     group.userData.name = `Group ${rootObjects.filter(o => o.userData.isGroup).length + 1}`;
     group.userData.id = objectCounter++;
-
     selectedObjects.forEach(obj => {
-      const worldPos = new THREE.Vector3();
-      obj.getWorldPosition(worldPos);
       obj.parent.remove(obj);
       group.add(obj);
-      obj.position.copy(worldPos).sub(group.position);
     });
-
     scene.add(group);
     rootObjects.push(group);
     selectedObjects = [group];
@@ -800,17 +789,14 @@
   };
 
   document.getElementById('ungroup').onclick = () => {
-    const groupsToUngroup = selectedObjects.filter(o => o.isGroup);
+    const groupsToUngroup = selectedObjects.filter(o => o.userData.isGroup);
     if (groupsToUngroup.length === 0) return;
     saveState();
     groupsToUngroup.forEach(group => {
       const children = [...group.children];
       children.forEach(child => {
-        const worldPos = new THREE.Vector3();
-        child.getWorldPosition(worldPos);
         group.remove(child);
         scene.add(child);
-        child.position.copy(worldPos);
         rootObjects.push(child);
       });
       scene.remove(group);
@@ -839,7 +825,6 @@
       <span class="layer-delete">×</span>
     `;
     parentList.appendChild(li);
-
     li.querySelector('.layer-visibility').onclick = (e) => {
       e.stopPropagation();
       obj.visible = !obj.visible;
@@ -847,7 +832,6 @@
       obj.traverse(child => child.visible = obj.visible);
       saveState();
     };
-
     li.querySelector('.layer-delete').onclick = (e) => {
       e.stopPropagation();
       saveState();
@@ -858,12 +842,10 @@
       updateLayersList();
       updateSelectedObjectUI();
     };
-
     li.onclick = (e) => {
       if (e.target.classList.contains('layer-delete') || e.target.classList.contains('layer-visibility') || e.target.classList.contains('layer-toggle')) return;
       selectObject(obj, e.ctrlKey || e.metaKey);
     };
-
     if (obj.userData.isGroup) {
       const childList = document.createElement('ol');
       childList.style.marginLeft = '20px';
@@ -878,11 +860,53 @@
     }
   }
 
-  // Model Import/Export, Environment, Panel Toggle, Resize, etc. (same as before)
-  // ... [rest of the original code for import/export, env, panel, etc. remains unchanged]
+  // Model Import
+  function loadModel(object) {
+    saveState();
+    // Auto center and scale
+    const box = new THREE.Box3().setFromObject(object);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = 5 / maxDim; // fit to ~5 units
+    object.scale.multiplyScalar(scale);
+    object.position.sub(center.multiplyScalar(scale));
+    object.position.y -= size.y * scale / 2;
 
+    object.traverse(child => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+        child.userData.name = child.name || 'Imported Mesh';
+        child.userData.id = objectCounter++;
+      }
+    });
+
+    scene.add(object);
+    rootObjects.push(object);
+    document.getElementById('loader').style.display = 'none';
+    updateLayersList();
+  }
+
+  document.getElementById('uploadModel').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const filename = file.name.toLowerCase();
+    const url = URL.createObjectURL(file);
+
+    if (filename.endsWith('.glb') || filename.endsWith('.gltf')) {
+      new GLTFLoader().load(url, (gltf) => loadModel(gltf.scene));
+    } else if (filename.endsWith('.obj')) {
+      new OBJLoader().load(url, (obj) => loadModel(obj));
+    } else if (filename.endsWith('.fbx')) {
+      new FBXLoader().load(url, (fbx) => loadModel(fbx));
+    }
+  });
+
+  // Environment
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
+  // Export
   const exportStatus = document.getElementById('exportStatus');
   document.getElementById('exportBtn').onclick = () => {
     if (rootObjects.length === 0) {
@@ -904,11 +928,53 @@
     }, { binary: true });
   };
 
-  // Panel toggle (same as original)
+  // Transform mode floaters
+  const floaters = {
+    select: document.getElementById('floaterSelect'),
+    move: document.getElementById('floaterMove'),
+    rotate: document.getElementById('floaterRotate'),
+    scale: document.getElementById('floaterScale')
+  };
+
+  function setTransformMode(mode) {
+    transformControl.setMode(mode);
+    Object.values(floaters).forEach(f => f.classList.remove('active'));
+    if (mode === 'translate') floaters.move.classList.add('active');
+    else if (mode === 'rotate') floaters.rotate.classList.add('active');
+    else if (mode === 'scale') floaters.scale.classList.add('active');
+  }
+
+  function updateFloaterActiveState() {
+    Object.values(floaters).forEach(f => f.classList.remove('active'));
+    floaters.select.classList.add('active'); // default select
+    if (transformControl.object) {
+      const mode = transformControl.getMode();
+      if (mode === 'translate') floaters.move.classList.add('active');
+      else if (mode === 'rotate') floaters.rotate.classList.add('active');
+      else if (mode === 'scale') floaters.scale.classList.add('active');
+    }
+  }
+
+  floaters.move.onclick = () => setTransformMode('translate');
+  floaters.rotate.onclick = () => setTransformMode('rotate');
+  floaters.scale.onclick = () => setTransformMode('scale');
+
+  // Keyboard shortcuts for transform
+  window.addEventListener('keydown', (e) => {
+    if (selectedObjects.length === 0) return;
+    switch (e.key.toLowerCase()) {
+      case 'g': setTransformMode('translate'); break;
+      case 'r': setTransformMode('rotate'); break;
+      case 's': setTransformMode('scale'); break;
+    }
+  });
+
+  // Panel toggle
   const panel = document.getElementById('panel');
   const panelToggle = document.getElementById('panelToggle');
   const mobilePanelToggle = document.getElementById('mobilePanelToggle');
   let panelVisible = true;
+
   function togglePanel() {
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
@@ -917,33 +983,24 @@
     const span = mobilePanelToggle.querySelector('span');
     if (span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
   }
+
   panelToggle.onclick = togglePanel;
   mobilePanelToggle.onclick = togglePanel;
 
+  // Resize
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
+  // Animate
   function animate() {
     requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
   }
   animate();
-
-  // Drag & drop import
-  window.addEventListener('dragover', e => e.preventDefault());
-  window.addEventListener('drop', e => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && (file.name.endsWith('.glb') || file.name.endsWith('.gltf'))) {
-      const url = URL.createObjectURL(file);
-      // You can extend this to support imported model grouping if desired
-      alert("Drag & drop import not fully implemented in this version – use the upload button.");
-    }
-  });
 </script>
 </body>
 </html>
