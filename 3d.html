@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Modeler Pro – BowesProduct</title>
+  <title>Modeler Pro \u2013 BowesProduct</title>
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
   <script type="importmap">
   {
@@ -150,39 +151,6 @@
   }
   @media (min-width: 901px) { #mobilePanelToggle { display: none; } }
   @media (max-width: 900px) { #mobilePanelToggle { display: flex; } }
-  #floatingControls {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  gap: 10px;
-  z-index: 1150;
-  pointer-events: none;
-  }
-  .floater {
-  pointer-events: auto;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid #475569;
-  background: rgba(30, 41, 59, 0.9);
-  backdrop-filter: blur(8px);
-  color: #94a3b8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  transition: all 0.2s;
-  font-size: 1.2rem;
-  }
-  .floater:hover { background: rgba(51, 65, 85, 1); color: white; transform: translateY(-2px); }
-  .floater.active { color: #60a5fa; border-color: #60a5fa; background: rgba(2, 6, 23, 1); }
-  @media (min-width: 901px) { #floatingControls { display: flex !important; } }
-  @media (max-width: 900px) {
-    .panel.visible ~ #floatingControls { display: none !important; }
-    .panel.hidden ~ #floatingControls { display: flex !important; }
-  }
   .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
   .control-group { margin-bottom: 1.2rem; }
   label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
@@ -192,16 +160,69 @@
   button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; transition: background 0.2s; }
   button:hover { background: #3b82f6; }
   button:disabled { background: #475569; cursor: not-allowed; }
-  button.mode-btn { margin-top: 0.2rem; padding: 0.4rem 0.6rem; font-size: 0.85rem; }
-  button.mode-btn.active { background: #22c55e; border-color: #22c55e; }
-  button.mode-btn.sculpt-active { background: #f59e0b; border-color: #f59e0b; }
+  #modeIndicator {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  background: rgba(2, 6, 23, 0.9);
+  border: 2px solid #60a5fa;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #60a5fa;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: none;
+  }
+  #modeIndicator.visible { display: block; }
+  #transformStatus {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(2, 6, 23, 0.95);
+  border: 2px solid #f59e0b;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  color: #f59e0b;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: none;
+  }
+  #transformStatus.visible { display: block; }
+  #axisIndicator {
+  position: fixed;
+  bottom: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+  }
+  .axis-btn {
+  background: rgba(2, 6, 23, 0.95);
+  border: 2px solid #475569;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+  }
+  .axis-btn.active { border-color: #f59e0b; color: #f59e0b; }
+  .axis-btn:hover { border-color: #60a5fa; color: #60a5fa; }
   #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
   .layer-item {
   display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent;
   }
   .layer-item.active { background: #1e293b; border-color: #60a5fa; }
   .layer-item.group { background: #162032; }
-  .layer-item.group > .layer-name::before { content: "📁 "; }
+  .layer-item.group > .layer-name::before { content: "\ud83d\udcc1 "; }
   .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
   .layer-name { flex: 1; font-size: 0.95rem; }
   .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 24px; text-align: center; }
@@ -224,7 +245,18 @@
   #sculptingControls.visible { display: block; }
   .sculpt-tool-btn { width: auto; display: inline-block; margin: 2px; font-size: 0.8rem; }
   .sculpt-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.8rem; }
-  . sculpt-row button { flex: 1; min-width: 60px; }
+  .sculpt-row button { flex: 1; min-width: 60px; }
+  .mode-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  }
+  .mode-badge.object { background: #60a5fa; color: white; }
+  .mode-badge.edit { background: #f59e0b; color: white; }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -254,32 +286,40 @@
 <div id="container">
   <div id="loader">Add objects or upload a model to start</div>
   <canvas id="canvas"></canvas>
-  <div id="floatingControls">
-    <div class="floater" id="floaterSelect" title="Select Mode (Q)">👆</div>
-    <div class="floater" id="floaterMove" title="Move (G)">✥</div>
-    <div class="floater" id="floaterRotate" title="Rotate (R)">↻</div>
-    <div class="floater" id="floaterScale" title="Scale (S)">⤢</div>
-    <div class="floater" id="floaterSculpt" title="Sculpt Mode (E)">🎨</div>
+  
+  <div id="modeIndicator">
+    <span class="mode-badge object" id="modeBadge">Object Mode</span>
   </div>
+  
+  <div id="transformStatus">
+    <span id="transformText">Move</span>
+  </div>
+  
+  <div id="axisIndicator">
+    <button class="axis-btn" id="axisX">X</button>
+    <button class="axis-btn" id="axisY">Y</button>
+    <button class="axis-btn" id="axisZ">Z</button>
+  </div>
+
   <div class="panel visible" id="panel">
-  <button id="panelToggle">←</button>
+  <button id="panelToggle">\u2190</button>
  
   <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
-  <strong style="color:#60a5fa">Controls:</strong><br>
-  • Q: Select Mode • G: Move • R: Rotate • S: Scale • E: Sculpt<br>
-  • Left click + drag: Rotate view<br>
-  • Right click + drag: Pan<br>
-  • Scroll: Zoom<br>
-  • Click object: Select • Ctrl/Cmd + click: Multi-select<br>
-  • Delete: Delete • Ctrl+D: Duplicate • Ctrl+Z/Y: Undo/Redo
+  <strong style="color:#60a5fa">Blender-Style Controls:</strong><br>
+  \u2022 Tab: Switch Object/Edit Mode<br>
+  \u2022 G: Move \u2022 R: Rotate \u2022 S: Scale<br>
+  \u2022 X/Y/Z: Constrain to axis<br>
+  \u2022 Middle mouse: Orbit view<br>
+  \u2022 Shift+Middle: Pan view<br>
+  \u2022 Scroll: Zoom<br>
+  \u2022 Left click/Enter: Confirm \u2022 Esc/Right click: Cancel<br>
+  \u2022 Click object: Select \u2022 Shift+Click: Multi-select
   </div>
-  <h2>Mode</h2>
-  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:1rem;">
-    <button id="modeSelect" class="mode-btn active">Select (Q)</button>
-    <button id="modeMove" class="mode-btn">Move (G)</button>
-    <button id="modeRotate" class="mode-btn">Rotate (R)</button>
-    <button id="modeScale" class="mode-btn">Scale (S)</button>
-    <button id="modeSculpt" class="mode-btn">Sculpt (E)</button>
+
+  <h2>Current Mode</h2>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem;">
+    <button id="modeObject" class="mode-btn active">Object Mode (Tab)</button>
+    <button id="modeEdit" class="mode-btn">Edit Mode (Tab)</button>
   </div>
 
   <h2 id="sculptingHeader" style="display:none;">Sculpting Tools</h2>
@@ -320,7 +360,7 @@
   <h2>Group</h2>
   <button id="createGroup">Create Group from Selected</button>
   <button id="ungroup">Ungroup Selected</button>
-  <div class="hint">Hold Ctrl/Cmd and click objects to multi-select</div>
+  <div class="hint">Hold Shift and click objects to multi-select</div>
 
   <h2>Model</h2>
   <div class="control-group">
@@ -350,7 +390,7 @@
   <div class="transform-input"><label>Y</label><input type="number" id="scaleY" step="0.1" min="0.01"></div>
   <div class="transform-input"><label>Z</label><input type="number" id="scaleZ" step="0.1" min="0.01"></div>
   </div></div>
-  <button id="duplicateBtn">Duplicate (Ctrl+D)</button>
+  <button id="duplicateBtn">Duplicate (Shift+D)</button>
   <button id="deleteBtn" style="background:#ef4444;">Delete Selected</button>
   </div>
 
@@ -401,10 +441,10 @@
   <a href="refund.html">Refund</a>
   <a href="rewards.html">Rewards</a>
   </nav>
-  <p>© 2026 BowesProduct</p>
+  <p>\u00a9 2026 BowesProduct</p>
   </div>
 </footer>
-<div id="mobilePanelToggle"><span>▲ Controls</span></div>
+<div id="mobilePanelToggle"><span>\u25b2 Controls</span></div>
 
 <script type="module">
   import * as THREE from 'three';
@@ -412,7 +452,6 @@
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
   import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
-  import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
   const canvas = document.getElementById('canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
@@ -441,17 +480,183 @@
   const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.set(5, 4, 5);
 
+  // Blender-style view controls
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
-
-  // Transform controls - properly initialized
-  const transformControl = new TransformControls(camera, renderer.domElement);
-  transformControl.addEventListener('dragging-changed', (event) => {
-    controls.enabled = !event.value;
+  controls.mouseButtons = {
+    LEFT: null, // Left mouse for selection
+    MIDDLE: THREE.MOUSE.ROTATE, // Middle mouse for orbit
+    RIGHT: THREE.MOUSE.PAN // Right mouse for pan (but we'll use shift+middle for pan)
+  };
+  
+  // Custom mouse handling for Blender-style navigation
+  let isMiddleMouseDown = false;
+  let isShiftPressed = false;
+  let isDragging = false;
+  
+  canvas.addEventListener('pointerdown', (e) => {
+    if (e.button === 1) { // Middle mouse
+      isMiddleMouseDown = true;
+      isDragging = true;
+      e.preventDefault();
+    }
   });
-  transformControl.addEventListener('change', updateTransformInputs);
-  scene.add(transformControl);
+
+  canvas.addEventListener('pointerup', (e) => {
+    if (e.button === 1) {
+      isMiddleMouseDown = false;
+      isDragging = false;
+    }
+  });
+
+  canvas.addEventListener('pointerleave', () => {
+    isMiddleMouseDown = false;
+    isDragging = false;
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Shift') isShiftPressed = true;
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (e.key === 'Shift') isShiftPressed = false;
+  });
+
+  // Modify controls for Blender-style pan with shift+middle
+  const originalPan = controls.pan;
+  controls.pan = function(deltaX, deltaY) {
+    if (isShiftPressed && isMiddleMouseDown) {
+      originalPan.call(this, deltaX, deltaY);
+    }
+  };
+
+  // Mode management
+  let currentMode = 'object'; // 'object' or 'edit'
+  let transformMode = null; // 'move', 'rotate', 'scale', or null
+  let axisConstraint = null; // 'x', 'y', 'z', or null
+
+  function setEditMode(mode) {
+    currentMode = mode;
+    const modeBadge = document.getElementById('modeBadge');
+    const modeIndicator = document.getElementById('modeIndicator');
+    
+    if (mode === 'object') {
+      modeBadge.textContent = 'Object Mode';
+      modeBadge.className = 'mode-badge object';
+      document.getElementById('modeObject').classList.add('active');
+      document.getElementById('modeEdit').classList.remove('active');
+      document.getElementById('sculptingHeader').style.display = 'none';
+      document.getElementById('sculptingControls').classList.remove('visible');
+    } else {
+      modeBadge.textContent = 'Edit Mode';
+      modeBadge.className = 'mode-badge edit';
+      document.getElementById('modeObject').classList.remove('active');
+      document.getElementById('modeEdit').classList.add('active');
+      // Show sculpting in edit mode
+      document.getElementById('sculptingHeader').style.display = 'block';
+      document.getElementById('sculptingControls').classList.add('visible');
+    }
+    
+    modeIndicator.classList.add('visible');
+    setTimeout(() => modeIndicator.classList.remove('visible'), 1500);
+  }
+
+  document.getElementById('modeObject').onclick = () => setEditMode('object');
+  document.getElementById('modeEdit').onclick = () => setEditMode('edit');
+
+  // Modal transform system
+  let isTransforming = false;
+  let initialMouse = new THREE.Vector2();
+  let initialTransform = {
+    position: new THREE.Vector3(),
+    rotation: new THREE.Euler(),
+    scale: new THREE.Vector3()
+  };
+
+  function enterTransformMode(mode) {
+    if (selectedObjects.length === 0) return;
+    
+    transformMode = mode;
+    axisConstraint = null;
+    isTransforming = false;
+    
+    const transformStatus = document.getElementById('transformStatus');
+    const transformText = document.getElementById('transformText');
+    
+    transformText.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+    transformStatus.classList.add('visible');
+    
+    // Store initial transform values
+    const obj = selectedObjects[0];
+    initialTransform.position.copy(obj.position);
+    initialTransform.rotation.copy(obj.rotation);
+    initialTransform.scale.copy(obj.scale);
+    
+    // Disable camera controls during transform
+    controls.enabled = false;
+    
+    // Reset axis buttons
+    ['axisX', 'axisY', 'axisZ'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+  }
+
+  function exitTransformMode(confirm = false) {
+    if (!transformMode) return;
+    
+    const transformStatus = document.getElementById('transformStatus');
+    transformStatus.classList.remove('visible');
+    
+    // Reset axis buttons
+    ['axisX', 'axisY', 'axisZ'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+    
+    if (confirm) {
+      saveState();
+    } else {
+      // Restore initial values if cancelled
+      selectedObjects.forEach(obj => {
+        obj.position.copy(initialTransform.position);
+        obj.rotation.copy(initialTransform.rotation);
+        obj.scale.copy(initialTransform.scale);
+        
+        // Update outline
+        const outline = selectionOutlines.get(obj);
+        if (outline) {
+          outline.position.copy(obj.position);
+          outline.rotation.copy(obj.rotation);
+          outline.scale.copy(obj.scale).multiplyScalar(1.02);
+        }
+      });
+      updateSelectedObjectUI();
+    }
+    
+    transformMode = null;
+    axisConstraint = null;
+    isTransforming = false;
+    controls.enabled = true;
+  }
+
+  function setAxisConstraint(axis) {
+    axisConstraint = axis;
+    
+    // Update UI
+    ['axisX', 'axisY', 'axisZ'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+    document.getElementById(`axis${axis.toUpperCase()}`).classList.add('active');
+    
+    // Update status text
+    const transformText = document.getElementById('transformText');
+    const axisName = axis.toUpperCase();
+    transformText.textContent = `${transformMode.charAt(0).toUpperCase() + transformMode.slice(1)} [${axisName}]`;
+  }
+
+  document.getElementById('axisX').onclick = () => setAxisConstraint('x');
+  document.getElementById('axisY').onclick = () => setAxisConstraint('y');
+  document.getElementById('axisZ').onclick = () => setAxisConstraint('z');
 
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
@@ -473,134 +678,6 @@
   }
   loadEnvironment('neutral');
 
-  // Mode management
-  let currentMode = 'select'; // select, move, rotate, scale, sculpt
-  const modes = ['select', 'move', 'rotate', 'scale', 'sculpt'];
-
-  function setMode(mode) {
-    currentMode = mode;
-    
-    // Update UI buttons
-    modes.forEach(m => {
-      const btn = document.getElementById(`mode${m.charAt(0).toUpperCase() + m.slice(1)}`);
-      if (btn) btn.classList.remove('active', 'sculpt-active');
-    });
-    const activeBtn = document.getElementById(`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
-    if (activeBtn) {
-      activeBtn.classList.add('active');
-      if (mode === 'sculpt') activeBtn.classList.add('sculpt-active');
-    }
-
-    // Update floater buttons
-    const floaters = {
-      'floaterSelect': 'select',
-      'floaterMove': 'move',
-      'floaterRotate': 'rotate',
-      'floaterScale': 'scale',
-      'floaterSculpt': 'sculpt'
-    };
-    Object.entries(floaters).forEach(([id, m]) => {
-      const el = document.getElementById(id);
-      el.classList.toggle('active', m === mode);
-    });
-
-    // Update transform controls
-    if (selectedObjects.length > 0) {
-      if (mode === 'select') {
-        transformControl.detach();
-      } else if (mode === 'move') {
-        transformControl.setMode('translate');
-        transformControl.attach(selectedObjects[0]);
-      } else if (mode === 'rotate') {
-        transformControl.setMode('rotate');
-        transformControl.attach(selectedObjects[0]);
-      } else if (mode === 'scale') {
-        transformControl.setMode('scale');
-        transformControl.attach(selectedObjects[0]);
-      } else if (mode === 'sculpt') {
-        transformControl.detach();
-      }
-    }
-
-    // Show/hide sculpting controls
-    const sculptingControls = document.getElementById('sculptingControls');
-    const sculptingHeader = document.getElementById('sculptingHeader');
-    if (mode === 'sculpt') {
-      sculptingControls.classList.add('visible');
-      sculptingHeader.style.display = 'block';
-    } else {
-      sculptingControls.classList.remove('visible');
-      sculptingHeader.style.display = 'none';
-    }
-  }
-
-  // Mode buttons
-  modes.forEach(mode => {
-    const btn = document.getElementById(`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
-    if (btn) {
-      btn.onclick = () => setMode(mode);
-    }
-  });
-
-  // Floater buttons
-  document.getElementById('floaterSelect').onclick = () => setMode('select');
-  document.getElementById('floaterMove').onclick = () => setMode('move');
-  document.getElementById('floaterRotate').onclick = () => setMode('rotate');
-  document.getElementById('floaterScale').onclick = () => setMode('scale');
-  document.getElementById('floaterSculpt').onclick = () => setMode('sculpt');
-
-  // Keyboard shortcuts for modes
-  window.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    switch(e.key.toLowerCase()) {
-      case 'q': setMode('select'); break;
-      case 'g': setMode('move'); break;
-      case 'r': setMode('rotate'); break;
-      case 's': setMode('scale'); break;
-      case 'e': setMode('sculpt'); break;
-      case 'delete':
-      case 'backspace':
-        document.getElementById('deleteBtn').click();
-        break;
-      case 'd':
-        if (e.ctrlKey || e.metaKey) {
-          e.preventDefault();
-          document.getElementById('duplicateBtn').click();
-        }
-        break;
-      case 'z':
-        if (e.ctrlKey || e.metaKey) {
-          e.preventDefault();
-          if (e.shiftKey) {
-            redo();
-          } else {
-            undo();
-          }
-        }
-        break;
-      case 'y':
-        if (e.ctrlKey || e.metaKey) {
-          e.preventDefault();
-          redo();
-        }
-        break;
-    }
-  });
-
-  function updateFloaterActiveState() {
-    const floaters = {
-      'floaterSelect': 'select',
-      'floaterMove': 'move',
-      'floaterRotate': 'rotate',
-      'floaterScale': 'scale',
-      'floaterSculpt': 'sculpt'
-    };
-    Object.entries(floaters).forEach(([id, m]) => {
-      const el = document.getElementById(id);
-      el.classList.toggle('active', m === currentMode);
-    });
-  }
-
   // Object & Group Management
   const rootObjects = [];
   let selectedObjects = [];
@@ -620,7 +697,6 @@
   const selectionOutlines = new Map();
 
   function updateSelectionHighlight() {
-    // Remove old outlines
     selectionOutlines.forEach((outline, obj) => {
       scene.remove(outline);
       outline.geometry.dispose();
@@ -628,7 +704,6 @@
     });
     selectionOutlines.clear();
 
-    // Add new outlines
     selectedObjects.forEach(obj => {
       if (obj.isMesh) {
         const outline = obj.clone();
@@ -824,31 +899,15 @@
     updateSelectedObjectUI();
     updateSelectionHighlight();
     updateLayersList();
-
-    // Update transform control based on mode
-    if (selectedObjects.length === 1) {
-      if (currentMode === 'move') {
-        transformControl.setMode('translate');
-        transformControl.attach(selectedObjects[0]);
-      } else if (currentMode === 'rotate') {
-        transformControl.setMode('rotate');
-        transformControl.attach(selectedObjects[0]);
-      } else if (currentMode === 'scale') {
-        transformControl.setMode('scale');
-        transformControl.attach(selectedObjects[0]);
-      } else {
-        transformControl.detach();
-      }
-    } else {
-      transformControl.detach();
-    }
   }
 
-  canvas.addEventListener('pointerdown', (e) => {
-    // Skip if in sculpting mode
-    if (currentMode === 'sculpt') return;
+  canvas.addEventListener('click', (e) => {
+    // Skip if in transform mode
+    if (transformMode) {
+      exitTransformMode(true); // Confirm transform
+      return;
+    }
 
-    if (transformControl.dragging) return;
     const rect = canvas.getBoundingClientRect();
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -859,13 +918,182 @@
     }));
     const intersects = raycaster.intersectObjects(allMeshes, false);
     if (intersects.length > 0) {
-      selectObject(intersects[0].object, e.ctrlKey || e.metaKey);
-    } else if (!e.ctrlKey && !e.metaKey) {
+      selectObject(intersects[0].object, e.shiftKey);
+    } else if (!e.shiftKey) {
       selectedObjects = [];
-      transformControl.detach();
       updateSelectedObjectUI();
       updateSelectionHighlight();
       updateLayersList();
+    }
+  });
+
+  // Blender-style mouse transform
+  canvas.addEventListener('mousedown', (e) => {
+    if (transformMode && selectedObjects.length > 0) {
+      if (e.button === 0) { // Left click starts transform
+        isTransforming = true;
+        initialMouse.set(e.clientX, e.clientY);
+        e.preventDefault();
+      }
+    }
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!isTransforming || !transformMode || selectedObjects.length === 0) return;
+    
+    const deltaX = e.clientX - initialMouse.x;
+    const deltaY = e.clientY - initialMouse.y;
+    
+    const sensitivity = 0.01;
+    
+    selectedObjects.forEach(obj => {
+      switch (transformMode) {
+        case 'move':
+          const moveVec = new THREE.Vector3(deltaX, -deltaY, 0).multiplyScalar(sensitivity);
+          if (axisConstraint === 'x') {
+            moveVec.y = 0;
+            moveVec.z = 0;
+          } else if (axisConstraint === 'y') {
+            moveVec.x = 0;
+            moveVec.z = 0;
+          } else if (axisConstraint === 'z') {
+            moveVec.x = 0;
+            moveVec.y = 0;
+          }
+          obj.position.add(moveVec);
+          break;
+          
+        case 'rotate':
+          const rotVec = new THREE.Vector3(deltaY, deltaX, 0).multiplyScalar(sensitivity);
+          if (axisConstraint === 'x') {
+            rotVec.y = 0;
+            rotVec.z = 0;
+          } else if (axisConstraint === 'y') {
+            rotVec.x = 0;
+            rotVec.z = 0;
+          } else if (axisConstraint === 'z') {
+            rotVec.x = 0;
+            rotVec.y = 0;
+          }
+          obj.rotation.x += rotVec.x;
+          obj.rotation.y += rotVec.y;
+          obj.rotation.z += rotVec.z;
+          break;
+          
+        case 'scale':
+          const scaleVec = new THREE.Vector3(deltaX * sensitivity, deltaY * sensitivity, 0);
+          const scaleFactor = Math.exp(scaleVec.x + scaleVec.y);
+          
+          if (axisConstraint === 'x') {
+            obj.scale.x *= scaleFactor;
+          } else if (axisConstraint === 'y') {
+            obj.scale.y *= scaleFactor;
+          } else if (axisConstraint === 'z') {
+            obj.scale.z *= scaleFactor;
+          } else {
+            obj.scale.multiplyScalar(scaleFactor);
+          }
+          break;
+      }
+      
+      // Update outline
+      const outline = selectionOutlines.get(obj);
+      if (outline) {
+        outline.position.copy(obj.position);
+        outline.rotation.copy(obj.rotation);
+        outline.scale.copy(obj.scale).multiplyScalar(1.02);
+      }
+    });
+    
+    initialMouse.set(e.clientX, e.clientY);
+    updateSelectedObjectUI();
+  });
+
+  canvas.addEventListener('mouseup', (e) => {
+    if (transformMode && isTransforming) {
+      if (e.button === 0) {
+        // Transform complete on mouse up
+        isTransforming = false;
+        // Don't exit yet - wait for another click or Enter to confirm
+      }
+    }
+  });
+
+  // Confirm/Cancel transforms with mouse
+  canvas.addEventListener('click', (e) => {
+    if (transformMode && !isTransforming) {
+      // Second click confirms transform
+      exitTransformMode(true);
+    }
+  });
+
+  canvas.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    if (transformMode) {
+      exitTransformMode(false); // Cancel on right click
+    }
+  });
+
+  // Keyboard shortcuts
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    
+    // Transform modes
+    if (!transformMode) {
+      switch(e.key.toLowerCase()) {
+        case 'g':
+          enterTransformMode('move');
+          break;
+        case 'r':
+          enterTransformMode('rotate');
+          break;
+        case 's':
+          enterTransformMode('scale');
+          break;
+        case 'tab':
+          e.preventDefault();
+          setEditMode(currentMode === 'object' ? 'edit' : 'object');
+          break;
+        case 'delete':
+        case 'backspace':
+          document.getElementById('deleteBtn').click();
+          break;
+        case 'd':
+          if (e.shiftKey) {
+            e.preventDefault();
+            document.getElementById('duplicateBtn').click();
+          }
+          break;
+        case 'z':
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            if (e.shiftKey) {
+              redo();
+            } else {
+              undo();
+            }
+          }
+          break;
+        case 'y':
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            redo();
+          }
+          break;
+      }
+    } else {
+      // In transform mode
+      if (e.key === 'Enter') {
+        exitTransformMode(true); // Confirm
+      } else if (e.key === 'Escape') {
+        exitTransformMode(false); // Cancel
+      } else if (e.key.toLowerCase() === 'x') {
+        setAxisConstraint('x');
+      } else if (e.key.toLowerCase() === 'y') {
+        setAxisConstraint('y');
+      } else if (e.key.toLowerCase() === 'z') {
+        setAxisConstraint('z');
+      }
     }
   });
 
@@ -929,7 +1157,6 @@
       obj.position.copy(pos);
       obj.rotation.copy(rot);
       obj.scale.copy(scale);
-      // Update outline if exists
       const outline = selectionOutlines.get(obj);
       if (outline) {
         outline.position.copy(pos);
@@ -994,7 +1221,6 @@
     if (selectedObjects.length === 0) return;
     saveState();
     selectedObjects.forEach(obj => {
-      // Remove outline
       const outline = selectionOutlines.get(obj);
       if (outline) {
         scene.remove(outline);
@@ -1012,7 +1238,6 @@
       }
     });
     selectedObjects = [];
-    transformControl.detach();
     updateLayersList();
     updateSelectedObjectUI();
   };
@@ -1077,19 +1302,18 @@
     const li = document.createElement('li');
     li.className = 'layer-item' + (selectedObjects.includes(obj) ? ' active' : '') + (obj.userData.isGroup ? ' group' : '');
     li.innerHTML = `
-      <span class="layer-toggle">${obj.userData.isGroup ? '▼' : ''}</span>
-      <span class="layer-visibility">${obj.visible ? '👁' : '🚫'}</span>
+      <span class="layer-toggle">${obj.userData.isGroup ? '\u25bc' : ''}</span>
+      <span class="layer-visibility">${obj.visible ? '\ud83d\udc41' : '\ud83d\udeab'}</span>
       <span class="layer-name">${obj.userData.name || 'Object'}</span>
-      <span class="layer-delete">×</span>
+      <span class="layer-delete">\u00d7</span>
     `;
     parentList.appendChild(li);
 
     li.querySelector('.layer-visibility').onclick = (e) => {
       e.stopPropagation();
       obj.visible = !obj.visible;
-      li.querySelector('.layer-visibility').textContent = obj.visible ? '👁' : '🚫';
+      li.querySelector('.layer-visibility').textContent = obj.visible ? '\ud83d\udc41' : '\ud83d\udeab';
       obj.traverse(child => child.visible = obj.visible);
-      // Update outline visibility
       const outline = selectionOutlines.get(obj);
       if (outline) outline.visible = obj.visible;
       saveState();
@@ -1098,7 +1322,6 @@
     li.querySelector('.layer-delete').onclick = (e) => {
       e.stopPropagation();
       saveState();
-      // Remove outline
       const outline = selectionOutlines.get(obj);
       if (outline) {
         scene.remove(outline);
@@ -1129,7 +1352,7 @@
       li.querySelector('.layer-toggle').onclick = (e) => {
         e.stopPropagation();
         childList.style.display = childList.style.display === 'none' ? 'block' : 'none';
-        li.querySelector('.layer-toggle').textContent = childList.style.display === 'none' ? '▶' : '▼';
+        li.querySelector('.layer-toggle').textContent = childList.style.display === 'none' ? '\u25b6' : '\u25bc';
       };
     }
   }
@@ -1143,7 +1366,6 @@
       exportStatus.style.color = '#ef4444';
       return;
     }
-    // Temporarily remove selection outlines before export
     selectionOutlines.forEach((outline, obj) => {
       scene.remove(outline);
     });
@@ -1160,7 +1382,6 @@
       exportStatus.textContent = 'Exported!';
       exportStatus.style.color = '#4ade80';
       
-      // Add outlines back
       selectionOutlines.forEach((outline, obj) => {
         scene.add(outline);
       });
@@ -1176,9 +1397,9 @@
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
     panel.classList.toggle('visible', panelVisible);
-    panelToggle.textContent = panelVisible ? '←' : '→';
+    panelToggle.textContent = panelVisible ? '\u2190' : '\u2192';
     const span = mobilePanelToggle.querySelector('span');
-    if (span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
+    if (span) span.textContent = panelVisible ? '\u25bc Hide Controls' : '\u25b2 Controls';
   }
   panelToggle.onclick = togglePanel;
   mobilePanelToggle.onclick = togglePanel;
@@ -1224,7 +1445,7 @@
 
   // Sculpting interaction
   canvas.addEventListener('pointerdown', (e) => {
-    if (currentMode !== 'sculpt') return;
+    if (currentMode !== 'edit') return;
     if (selectedObjects.length === 0 || !selectedObjects[0].isMesh) return;
 
     isSculpting = true;
@@ -1233,7 +1454,7 @@
   });
 
   canvas.addEventListener('pointermove', (e) => {
-    if (!isSculpting || currentMode !== 'sculpt') return;
+    if (!isSculpting || currentMode !== 'edit') return;
     if (selectedObjects.length === 0 || !selectedObjects[0].isMesh) return;
 
     const currentPos = getIntersectionPoint(e);
@@ -1244,7 +1465,6 @@
     
     lastSculptPosition = currentPos;
     
-    // Update selection outline
     const outline = selectionOutlines.get(mesh);
     if (outline) {
       outline.geometry.dispose();
@@ -1282,7 +1502,6 @@
     const positionAttribute = geometry.attributes.position;
     const vertexCount = positionAttribute.count;
     
-    // Convert to non-indexed if indexed for sculpting
     if (geometry.index) {
       geometry.toNonIndexed();
       geometry.computeVertexNormals();
@@ -1294,17 +1513,12 @@
     const normals = normalAttribute.array;
 
     const localLastPoint = mesh.worldToLocal(lastPoint.point.clone());
-    const localCurrentPoint = mesh.worldToLocal(currentPoint.point.clone());
     const brushRadius = brushSize / mesh.scale.x;
     const strength = brushStrength * 0.01;
 
     const vertex = new THREE.Vector3();
     const tempVertex = new THREE.Vector3();
     const center = new THREE.Vector3();
-
-    // Calculate brush direction
-    const brushDirection = new THREE.Vector3().subVectors(currentPoint.point, lastPoint.point);
-    const isShiftHeld = false; // Could add shift key detection for inverse
 
     for (let i = 0; i < vertexCount; i++) {
       vertex.fromArray(positions, i * 3);
@@ -1336,7 +1550,6 @@
             break;
 
           case 'smooth':
-            // Average with nearby vertices
             center.set(0, 0, 0);
             let count = 0;
             for (let j = 0; j < vertexCount; j++) {
@@ -1356,7 +1569,6 @@
             break;
 
           case 'flatten':
-            // Push towards a plane
             const planeHeight = localLastPoint.y;
             const diff = planeHeight - vertex.y;
             vertex.y += diff * falloff * strength;
@@ -1381,7 +1593,7 @@
     const file = e.dataTransfer.files[0];
     if (file && (file.name.endsWith('.glb') || file.name.endsWith('.gltf'))) {
       const url = URL.createObjectURL(file);
-      alert("Drag & drop import not fully implemented in this version – use the upload button.");
+      alert("Drag & drop import not fully implemented in this version \u2013 use the upload button.");
     }
   });
 
