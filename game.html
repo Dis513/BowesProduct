@@ -2,430 +2,180 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Neon Nightmare</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #000;
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-            height: 100vh;
-        }
-
-        /* Floating Neon Particles */
-        #particles {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            animation: float linear infinite;
-        }
-        @keyframes float {
-            from { transform: translateY(100vh); opacity: 0; }
-            10% { opacity: 1; }
-            to { transform: translateY(-100px); opacity: 0; }
-        }
-
-        /* Menus - All hidden by default except main menu */
-        #mainMenu, #gameContainer, #pauseMenu, #settingsMenu, #songCompleteMenu {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0,0,0,0.95);
-            z-index: 10;
-        }
-        #gameContainer, #pauseMenu, #settingsMenu, #songCompleteMenu {
-            display: none; /* Hidden at start */
-        }
-        #pauseMenu.active, #settingsMenu.active, #songCompleteMenu.active {
-            display: flex !important;
-        }
-
-        h1 { font-size: 4.5rem; color: #9d00ff; text-shadow: 0 0 30px #9d00ff; margin-bottom: 2rem; }
-        button {
-            background: transparent;
-            border: 3px solid #00ffff;
-            color: #00ffff;
-            padding: 1rem 2.5rem;
-            font-size: 1.8rem;
-            margin: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            border-radius: 10px;
-        }
-        button:hover {
-            background: #00ffff;
-            color: #000;
-            box-shadow: 0 0 40px #00ffff;
-        }
-
-        /* HUD */
-        #hud {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 20;
-        }
-        .hud-item {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            text-shadow: 0 0 15px;
-        }
-        #scoreValue { color: #00ff00; }
-        #levelValue { color: #ffaa00; }
-        #multiplierValue { color: #ffff00; }
-        #comboValue { color: #ff00ff; }
-
-        /* Note Highway */
-        #noteHighway {
-            position: absolute;
-            bottom: 200px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 700px;
-            height: 700px;
-            background: rgba(20,0,40,0.7);
-            border: 4px solid #9d00ff;
-            border-radius: 20px;
-            overflow: hidden;
-            display: flex;
-            box-shadow: 0 0 50px #9d00ff;
-        }
-        .fret-lane {
-            flex: 1;
-            position: relative;
-            border-right: 2px solid rgba(157,0,255,0.4);
-        }
-        .fret-lane:last-child { border-right: none; }
-
-        #targetLine {
-            position: absolute;
-            bottom: 120px;
-            left: 0;
-            width: 100%;
-            height: 8px;
-            background: #ffff00;
-            box-shadow: 0 0 40px #ffff00;
-            z-index: 10;
-        }
-
-        /* Fret Buttons */
-        #fretButtons {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 700px;
-            display: flex;
-            z-index: 15;
-        }
-        .fret-button {
-            flex: 1;
-            height: 120px;
-            border: 6px solid;
-            background: rgba(255,255,255,0.05);
-            transition: 0.1s;
-            border-radius: 15px;
-            margin: 0 5px;
-        }
-        .fret-button.green { border-color: #00ff00; }
-        .fret-button.red { border-color: #ff0000; }
-        .fret-button.yellow { border-color: #ffff00; }
-        .fret-button.blue { border-color: #0000ff; }
-        .fret-button.orange { border-color: #ff8800; }
-        .fret-button.pressed {
-            transform: scale(0.9);
-            box-shadow: 0 0 60px inset;
-        }
-
-        /* Notes */
-        .note {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            left: 50%;
-            margin-left: -40px;
-            border-radius: 50%;
-            border: 5px solid;
-            box-shadow: 0 0 30px;
-        }
-        .note.green { background: #003300; border-color: #00ff00; }
-        .note.red { background: #330000; border-color: #ff0000; }
-        .note.yellow { background: #333300; border-color: #ffff00; }
-        .note.blue { background: #000033; border-color: #0000ff; }
-        .note.orange { background: #332200; border-color: #ff8800; }
-        .note.hit { animation: explode 0.4s forwards; }
-        .note.miss { opacity: 0.3; animation: fade 0.5s forwards; }
-        @keyframes explode { to { transform: scale(2.5); opacity: 0; } }
-        @keyframes fade { to { opacity: 0; } }
-
-        /* Hit Feedback */
-        .hit-feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            font-weight: bold;
-            pointer-events: none;
-            z-index: 30;
-            animation: pop 0.8s ease-out forwards;
-        }
-        .hit-feedback.perfect { color: #00ffff; text-shadow: 0 0 40px #00ffff; }
-        .hit-feedback.great { color: #00ff00; text-shadow: 0 0 40px #00ff00; }
-        .hit-feedback.good { color: #ffff00; text-shadow: 0 0 40px #ffff00; }
-        @keyframes pop {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.4); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-        }
-
-        /* Progress Bar */
-        #progressBar {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 700px;
-            height: 16px;
-            background: #111;
-            border: 3px solid #9d00ff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 20px #9d00ff;
-        }
-        #progressFill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #00ffff, #ff00ff, #9d00ff);
-            box-shadow: 0 0 30px #ff00ff;
-            transition: width 0.1s;
-        }
-
-        /* Song Info */
-        #songInfo {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            font-size: 1.5rem;
-            color: #aaa;
-        }
-
-        @media (max-width: 768px) {
-            #noteHighway, #fretButtons, #progressBar { width: 90vw; }
-            h1 { font-size: 3rem; }
-            button { font-size: 1.5rem; padding: 1rem 2rem; }
-            .hud-item { font-size: 1.4rem; }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON NIGHTMARE - Local Rhythm Game</title>
+    <link rel="stylesheet" href="styles.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
-
-    <div id="particles"></div>
+    <!-- Background Effects -->
+    <div class="void-background"></div>
+    <div class="fog-layer"></div>
+    <div class="particles" id="particles"></div>
+    
+    <!-- Decorative Elements -->
+    <div class="crooked-tree left"></div>
+    <div class="crooked-tree right"></div>
 
     <!-- Main Menu -->
-    <div id="mainMenu">
-        <h1>NEON NIGHTMARE</h1>
-        <button id="uploadButton">Upload Audio File</button>
-        <p id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
-        <input type="file" id="audioFileInput" accept="audio/*" style="display:none">
-        <button id="openSettings">Settings</button>
+    <div class="menu-container" id="mainMenu">
+        <h1 class="game-title">NEON NIGHTMARE</h1>
+        <p class="game-subtitle">A Local File Rhythm Experience</p>
+        
+        <div class="menu-options">
+            <div class="file-upload-container">
+                <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
+                <button class="menu-button" id="uploadButton">
+                    🎵 Upload Audio File
+                </button>
+                <p class="upload-info" id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
+            </div>
+            <button class="menu-button" id="playDemo">
+                🎮 Play Demo Mode
+            </button>
+            <button class="menu-button" id="viewLeaderboards">
+                🏆 High Scores
+            </button>
+            <button class="menu-button" id="openSettings">
+                ⚙️ Settings
+            </button>
+        </div>
     </div>
 
-    <!-- Game Screen -->
-    <div id="gameContainer">
-        <div id="hud">
-            <div class="hud-item">SCORE: <span id="scoreValue">0</span></div>
-            <div class="hud-item">LEVEL: <span id="levelValue">1</span></div>
-            <div class="hud-item">MULTIPLIER: <span id="multiplierValue">1</span>x</div>
-            <div class="hud-item">COMBO: <span id="comboValue">0</span></div>
+    <!-- Game Container -->
+    <div class="game-container" id="gameContainer">
+        <!-- Top HUD -->
+        <div class="hud-top">
+            <div class="score-display">
+                SCORE: <span id="scoreValue">0</span>
+            </div>
+            <div class="multiplier-display">
+                <span id="multiplierValue">1</span>x
+            </div>
         </div>
 
-        <div id="noteHighway">
-            <div class="fret-lane" data-fret="green"></div>
-            <div class="fret-lane" data-fret="red"></div>
-            <div class="fret-lane" data-fret="yellow"></div>
-            <div class="fret-lane" data-fret="blue"></div>
-            <div class="fret-lane" data-fret="orange"></div>
-            <div id="targetLine"></div>
+        <!-- Song Info -->
+        <div class="song-info">
+            <h2 class="song-title" id="songTitle">No Track Loaded</h2>
+            <p class="song-artist" id="songArtist">Upload an audio file to begin</p>
         </div>
 
-        <div id="fretButtons">
-            <div class="fret-button green"></div>
-            <div class="fret-button red"></div>
-            <div class="fret-button yellow"></div>
-            <div class="fret-button blue"></div>
-            <div class="fret-button orange"></div>
+        <!-- Note Highway -->
+        <div class="note-highway" id="noteHighway">
+            <div class="fret-lanes">
+                <div class="fret-lane" data-fret="green"></div>
+                <div class="fret-lane" data-fret="red"></div>
+                <div class="fret-lane" data-fret="yellow"></div>
+                <div class="fret-lane" data-fret="blue"></div>
+                <div class="fret-lane" data-fret="orange"></div>
+            </div>
+            <div class="target-line" id="targetLine"></div>
         </div>
 
-        <div id="progressBar"><div id="progressFill"></div></div>
-        <div id="songInfo">Song: <span id="songTitle">Unknown</span> - <span id="songArtist">Local File</span></div>
+        <!-- Fret Buttons -->
+        <div class="fret-buttons">
+            <div class="fret-button green" data-fret="green">
+                <span>A</span>
+                <span class="fret-button-key">Green</span>
+            </div>
+            <div class="fret-button red" data-fret="red">
+                <span>S</span>
+                <span class="fret-button-key">Red</span>
+            </div>
+            <div class="fret-button yellow" data-fret="yellow">
+                <span>D</span>
+                <span class="fret-button-key">Yellow</span>
+            </div>
+            <div class="fret-button blue" data-fret="blue">
+                <span>F</span>
+                <span class="fret-button-key">Blue</span>
+            </div>
+            <div class="fret-button orange" data-fret="orange">
+                <span>G</span>
+                <span class="fret-button-key">Orange</span>
+            </div>
+        </div>
+
+        <!-- Bottom HUD -->
+        <div class="hud-bottom">
+            <div class="combo-display" id="comboDisplay">
+                <span id="comboValue">0</span> COMBO
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Pause Menu -->
-    <div id="pauseMenu">
-        <h1>PAUSED</h1>
-        <button id="resumeGame">Resume</button>
-        <button id="restartSong">Restart Song</button>
-        <button id="returnToMenu">Main Menu</button>
+    <div class="pause-menu" id="pauseMenu">
+        <h2 class="pause-title">⏸️ PAUSED</h2>
+        <div class="menu-options">
+            <button class="menu-button" id="resumeGame">
+                ▶️ Resume
+            </button>
+            <button class="menu-button" id="restartSong">
+                🔄 Restart
+            </button>
+            <button class="menu-button" id="changeDifficulty">
+                📊 Change Difficulty
+            </button>
+            <button class="menu-button" id="returnToMenu">
+                🏠 Main Menu
+            </button>
+        </div>
     </div>
 
-    <!-- Settings Menu -->
-    <div id="settingsMenu">
-        <h1>SETTINGS</h1>
-        <button id="setDifficultyEasy">Easy</button>
-        <button id="setDifficultyMedium">Medium</button>
-        <button id="setDifficultyHard">Hard</button>
-        <button id="setDifficultyExpert">Expert</button>
-        <button id="closeSettings">Back</button>
+    <!-- Settings Modal -->
+    <div class="pause-menu" id="settingsMenu">
+        <h2 class="pause-title">⚙️ SETTINGS</h2>
+        <div class="menu-options">
+            <button class="menu-button" id="setDifficultyEasy">
+                🟢 Easy
+            </button>
+            <button class="menu-button" id="setDifficultyMedium">
+                🟡 Medium
+            </button>
+            <button class="menu-button" id="setDifficultyHard">
+                🟠 Hard
+            </button>
+            <button class="menu-button" id="setDifficultyExpert">
+                🔴 Expert
+            </button>
+            <button class="menu-button" id="closeSettings">
+                ← Back
+            </button>
+        </div>
     </div>
 
-    <!-- Song Complete Menu -->
-    <div id="songCompleteMenu">
-        <h1>SONG COMPLETE</h1>
-        <p>Final Score: <span id="finalScoreValue">0</span></p>
-        <p>Level Reached: <span id="levelValueComplete">1</span></p>
-        <p>Max Combo: <span id="maxComboValue">0</span></p>
-        <p>Perfect: <span id="perfectCount">0</span> | Great: <span id="greatCount">0</span> | Good: <span id="goodCount">0</span> | Miss: <span id="missCount">0</span></p>
-        <button id="playAgain">Play Again</button>
-        <button id="uploadNewSong">New Song</button>
+    <!-- Song Complete Modal -->
+    <div class="pause-menu" id="songCompleteMenu">
+        <h2 class="pause-title">🎵 SONG COMPLETE!</h2>
+        <div class="menu-options">
+            <div class="final-score">
+                <p class="score-label">Final Score</p>
+                <p class="score-value" id="finalScoreValue">0</p>
+            </div>
+            <div class="final-stats">
+                <p>Perfect: <span id="perfectCount">0</span></p>
+                <p>Great: <span id="greatCount">0</span></p>
+                <p>Good: <span id="goodCount">0</span></p>
+                <p>Miss: <span id="missCount">0</span></p>
+                <p>Max Combo: <span id="maxComboValue">0</span></p>
+            </div>
+            <button class="menu-button" id="playAgain">
+                🔄 Play Again
+            </button>
+            <button class="menu-button" id="uploadNewSong">
+                📁 Upload New Song
+            </button>
+            <button class="menu-button" id="mainMenuFromComplete">
+                🏠 Main Menu
+            </button>
+        </div>
     </div>
 
-    <script>
-        class NeonNightmare {
-            constructor() {
-                this.isPlaying = false;
-                this.isPaused = false;
-                this.score = 0;
-                this.combo = 0;
-                this.maxCombo = 0;
-                this.multiplier = 1;
-                this.level = 1;
-                this.difficulty = 'medium';
-
-                this.audioContext = null;
-                this.audioBuffer = null;
-                this.audioSource = null;
-                this.startTime = 0;
-                this.duration = 0;
-
-                this.notes = [];
-                this.activeNotes = [];
-
-                this.frets = ['green', 'red', 'yellow', 'blue', 'orange'];
-                this.fretKeys = ['a', 's', 'd', 'f', 'g'];
-                this.fretButtons = {};
-
-                this.perfectHits = 0;
-                this.greatHits = 0;
-                this.goodHits = 0;
-                this.misses = 0;
-
-                this.timingWindows = {
-                    easy: { perfect: 120, great: 240, good: 360 },
-                    medium: { perfect: 80, great: 160, good: 240 },
-                    hard: { perfect: 50, great: 100, good: 150 },
-                    expert: { perfect: 30, great: 60, good: 90 }
-                };
-
-                this.initializeElements();
-                this.setupEventListeners();
-                this.createParticles();
-            }
-
-            initializeElements() {
-                this.mainMenu = document.getElementById('mainMenu');
-                this.gameContainer = document.getElementById('gameContainer');
-                this.pauseMenu = document.getElementById('pauseMenu');
-                this.settingsMenu = document.getElementById('settingsMenu');
-                this.songCompleteMenu = document.getElementById('songCompleteMenu');
-
-                this.audioFileInput = document.getElementById('audioFileInput');
-                this.uploadButton = document.getElementById('uploadButton');
-
-                this.scoreValue = document.getElementById('scoreValue');
-                this.levelValue = document.getElementById('levelValue');
-                this.multiplierValue = document.getElementById('multiplierValue');
-                this.comboValue = document.getElementById('comboValue');
-                this.progressFill = document.getElementById('progressFill');
-                this.songTitle = document.getElementById('songTitle');
-                this.songArtist = document.getElementById('songArtist');
-
-                this.noteHighway = document.getElementById('noteHighway');
-
-                this.frets.forEach(fret => {
-                    this.fretButtons[fret] = document.querySelector(`.fret-button.${fret}`);
-                });
-            }
-
-            // ... (All your other methods remain exactly the same as before)
-
-            startGame() {
-                this.isPlaying = true;
-                this.isPaused = false;
-                this.score = 0;
-                this.combo = 0;
-                this.maxCombo = 0;
-                this.multiplier = 1;
-                this.level = 1;
-                this.perfectHits = this.greatHits = this.goodHits = this.misses = 0;
-                this.activeNotes = [];
-
-                this.notes.forEach(n => { n.hit = false; n.missed = false; });
-
-                this.updateHUD();
-                this.mainMenu.style.display = 'none';
-                this.gameContainer.style.display = 'flex';
-                this.songCompleteMenu.style.display = 'none'; // Ensure hidden
-
-                this.playAudio();
-                this.gameLoop();
-            }
-
-            endGame() {
-                this.isPlaying = false;
-                this.cleanup();
-                document.getElementById('finalScoreValue').textContent = this.score.toLocaleString();
-                document.getElementById('levelValueComplete').textContent = this.level;
-                document.getElementById('maxComboValue').textContent = this.maxCombo;
-                document.getElementById('perfectCount').textContent = this.perfectHits;
-                document.getElementById('greatCount').textContent = this.greatHits;
-                document.getElementById('goodCount').textContent = this.goodHits;
-                document.getElementById('missCount').textContent = this.misses;
-                this.songCompleteMenu.style.display = 'flex';
-            }
-
-            returnToMenu() {
-                this.cleanup();
-                this.gameContainer.style.display = 'none';
-                this.mainMenu.style.display = 'flex';
-                this.songCompleteMenu.style.display = 'none';
-                this.uploadButton.textContent = 'Upload Audio File';
-                this.uploadButton.disabled = false;
-            }
-
-            // Keep all other methods (handleFileUpload, generateNotesFromAudio, etc.) exactly as in previous version
-            // (They are unchanged — just make sure songCompleteMenu is hidden at start and only shown in endGame())
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            window.game = new NeonNightmare();
-        });
-    </script>
+    <!-- Scripts -->
+    <script src="game.js"></script>
 </body>
 </html>
