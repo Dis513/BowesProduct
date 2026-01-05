@@ -911,14 +911,34 @@ function setTransformMode(mode) {
 // UI
 // ===============================
 function updateProperties() {
-  console.log("Update Properties");
+  if (selectedObjects.length === 0) {
+    document.getElementById('posX').value = '';
+    document.getElementById('posY').value = '';
+    document.getElementById('posZ').value = '';
+    document.getElementById('rotX').value = '';
+    document.getElementById('rotY').value = '';
+    document.getElementById('rotZ').value = '';
+    document.getElementById('scaleX').value = '';
+    document.getElementById('scaleY').value = '';
+    document.getElementById('scaleZ').value = '';
+    updateModifierList();
+    return;
+  }
 
-  const panel = document.getElementById("properties-panel");
-  if (!panel) return;
+  const obj = selectedObjects[0];
+  document.getElementById('posX').value = obj.position.x.toFixed(2);
+  document.getElementById('posY').value = obj.position.y.toFixed(2);
+  document.getElementById('posZ').value = obj.position.z.toFixed(2);
 
-  panel.innerHTML = selectedObjects.length
-    ? `Selected: ${selectedObjects.length}`
-    : "No selection";
+  document.getElementById('rotX').value = THREE.MathUtils.radToDeg(obj.rotation.x).toFixed(1);
+  document.getElementById('rotY').value = THREE.MathUtils.radToDeg(obj.rotation.y).toFixed(1);
+  document.getElementById('rotZ').value = THREE.MathUtils.radToDeg(obj.rotation.z).toFixed(1);
+
+  document.getElementById('scaleX').value = obj.scale.x.toFixed(2);
+  document.getElementById('scaleY').value = obj.scale.y.toFixed(2);
+  document.getElementById('scaleZ').value = obj.scale.z.toFixed(2);
+
+  updateModifierList();
 }
 
   // ==================== INITIALIZATION ====================
@@ -2266,6 +2286,7 @@ setTimeout(() => {
 
 </body>
 </html>
+
 
 
 
