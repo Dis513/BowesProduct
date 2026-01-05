@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Modeler Pro – BowesProduct</title>
+  <title>Modeler Pro \u2013 BowesProduct</title>
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
   <script type="importmap">
   {
@@ -198,7 +199,7 @@
   }
   .layer-item.active { background: #1e293b; border-color: #60a5fa; }
   .layer-item.group { background: #162032; }
-  .layer-item.group > .layer-name::before { content: "📁 "; }
+  .layer-item.group > .layer-name::before { content: "\ud83d\udcc1 "; }
   .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
   .layer-name { flex: 1; font-size: 0.95rem; }
   .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 24px; text-align: center; }
@@ -247,22 +248,22 @@
   <div id="loader">Add objects or upload a model to start</div>
   <canvas id="canvas"></canvas>
   <div id="floatingControls">
-    <div class="floater" id="floaterSelect" title="Select Mode">👆</div>
-    <div class="floater" id="floaterMove" title="Move (G)">✥</div>
-    <div class="floater" id="floaterRotate" title="Rotate (R)">↻</div>
-    <div class="floater" id="floaterScale" title="Scale (S)">⤢</div>
+    <div class="floater" id="floaterSelect" title="Select Mode">\ud83d\udc46</div>
+    <div class="floater" id="floaterMove" title="Move (G)">\u2725</div>
+    <div class="floater" id="floaterRotate" title="Rotate (R)">\u21bb</div>
+    <div class="floater" id="floaterScale" title="Scale (S)">\u2922</div>
   </div>
   <div class="panel visible" id="panel">
-  <button id="panelToggle">←</button>
+  <button id="panelToggle">\u2190</button>
  
   <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
   <strong style="color:#60a5fa">Controls:</strong><br>
-  • Left click + drag: Rotate view<br>
-  • Right click + drag: Pan<br>
-  • Scroll: Zoom<br>
-  • Click object: Select • Ctrl/Cmd + click: Multi-select<br>
-  • G/R/S: Move/Rotate/Scale<br>
-  • Delete: Delete • Ctrl+D: Duplicate • Ctrl+Z/Y: Undo/Redo
+  \u2022 Left click + drag: Rotate view<br>
+  \u2022 Right click + drag: Pan<br>
+  \u2022 Scroll: Zoom<br>
+  \u2022 Click object: Select \u2022 Ctrl/Cmd + click: Multi-select<br>
+  \u2022 G/R/S: Move/Rotate/Scale<br>
+  \u2022 Delete: Delete \u2022 Ctrl+D: Duplicate \u2022 Ctrl+Z/Y: Undo/Redo
   </div>
   <h2>Add Objects</h2>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;">
@@ -363,10 +364,10 @@
   <a href="refund.html">Refund</a>
   <a href="rewards.html">Rewards</a>
   </nav>
-  <p>© 2026 BowesProduct</p>
+  <p>\u00a9 2026 BowesProduct</p>
   </div>
 </footer>
-<div id="mobilePanelToggle"><span>▲ Controls</span></div>
+<div id="mobilePanelToggle"><span>\u25b2 Controls</span></div>
 
 <script type="module">
   import * as THREE from 'three';
@@ -433,8 +434,8 @@
   loadEnvironment('neutral');
 
   // Object & Group Management
-  const rootObjects = []; // Top-level objects and groups
-  let selectedObjects = []; // Multiple selection
+  const rootObjects = [];
+  let selectedObjects = [];
   let objectCounter = 0;
 
   // Undo/Redo
@@ -451,6 +452,7 @@
     redoStack.length = 0;
     undoBtn.disabled = false;
     redoBtn.disabled = true;
+    addXP(1);
   }
 
   function serializeObject(obj) {
@@ -464,7 +466,7 @@
         scale: obj.scale.toArray(),
         children: obj.children.map(child => serializeObject(child))
       };
-    } else {
+    } else if (obj.isMesh) {
       return {
         type: 'mesh',
         name: obj.userData.name,
@@ -478,6 +480,7 @@
         roughness: obj.material.roughness
       };
     }
+    return null;
   }
 
   function deserializeObject(data, parent = null) {
@@ -487,10 +490,11 @@
       obj.userData.isGroup = true;
       data.children.forEach(childData => {
         const child = deserializeObject(childData, obj);
-        obj.add(child);
+        if (child) obj.add(child);
       });
-    } else {
+    } else if (data.type === 'mesh') {
       const geometry = createGeometryForName(data.geometry);
+      if (!geometry) return null;
       const material = new THREE.MeshStandardMaterial({
         color: data.color,
         metalness: data.metallic,
@@ -501,13 +505,16 @@
       obj.castShadow = true;
       obj.receiveShadow = true;
     }
-    obj.userData.name = data.name;
-    obj.userData.id = objectCounter++;
-    obj.visible = data.visible;
-    obj.position.fromArray(data.position);
-    obj.rotation.fromArray(data.rotation);
-    obj.scale.fromArray(data.scale);
-    if (parent) parent.add(obj);
+    
+    if (obj) {
+      obj.userData.name = data.name;
+      obj.userData.id = objectCounter++;
+      obj.visible = data.visible;
+      obj.position.fromArray(data.position);
+      obj.rotation.fromArray(data.rotation);
+      obj.scale.fromArray(data.scale);
+      if (parent) parent.add(obj);
+    }
     return obj;
   }
 
@@ -516,17 +523,20 @@
     rootObjects.length = 0;
     state.forEach(data => {
       const obj = deserializeObject(data);
-      scene.add(obj);
-      rootObjects.push(obj);
+      if (obj) {
+        scene.add(obj);
+        rootObjects.push(obj);
+      }
     });
     selectedObjects = [];
+    transformControl.detach();
     updateSelectedObjectUI();
     updateLayersList();
   }
 
   function undo() {
     if (undoStack.length === 0) return;
-    redoStack.push(rootObjects.map(obj => serializeObject(obj)));
+    redoStack.push(rootObjects.map(obj => serializeObject(obj)).filter(s => s !== null));
     const state = undoStack.pop();
     restoreState(state);
     undoBtn.disabled = undoStack.length === 0;
@@ -535,7 +545,7 @@
 
   function redo() {
     if (redoStack.length === 0) return;
-    undoStack.push(rootObjects.map(obj => serializeObject(obj)));
+    undoStack.push(rootObjects.map(obj => serializeObject(obj)).filter(s => s !== null));
     const state = redoStack.pop();
     restoreState(state);
     redoBtn.disabled = redoStack.length === 0;
@@ -548,6 +558,33 @@
   window.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
     if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+    if (e.key === 'g' || e.key === 'G') {
+      e.preventDefault();
+      transformControl.setMode('translate');
+      updateFloaterActiveState();
+    }
+    if (e.key === 'r' || e.key === 'R') {
+      e.preventDefault();
+      transformControl.setMode('rotate');
+      updateFloaterActiveState();
+    }
+    if (e.key === 's' || e.key === 'S') {
+      if (!(e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        transformControl.setMode('scale');
+        updateFloaterActiveState();
+      }
+    }
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      if (document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        deleteSelected();
+      }
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+      e.preventDefault();
+      duplicateSelected();
+    }
   });
 
   function createGeometryForName(name) {
@@ -586,9 +623,10 @@
     mesh.userData.id = objectCounter++;
     scene.add(mesh);
     rootObjects.push(mesh);
-    selectObject(mesh, e => e.ctrlKey || e.metaKey);
+    selectObject(mesh, false);
     updateLayersList();
     document.getElementById('loader').style.display = 'none';
+    addXP(5);
   }
 
   // Primitive buttons
@@ -656,11 +694,15 @@
     if (selectedObjects.length === 1) {
       const obj = selectedObjects[0];
       html += `<p>Type: ${obj.userData.name || 'Mesh'}</p><p>ID: ${obj.userData.id}</p>`;
-      document.getElementById('materialColor').value = '#' + obj.material.color.getHexString();
-      document.getElementById('metallicSlider').value = obj.material.metalness;
-      document.getElementById('metallicVal').textContent = obj.material.metalness.toFixed(2);
-      document.getElementById('roughnessSlider').value = obj.material.roughness;
-      document.getElementById('roughnessVal').textContent = obj.material.roughness.toFixed(2);
+      if (obj.material && obj.material.color) {
+        document.getElementById('materialColor').value = '#' + obj.material.color.getHexString();
+      }
+      if (obj.material) {
+        document.getElementById('metallicSlider').value = obj.material.metalness || 0;
+        document.getElementById('metallicVal').textContent = (obj.material.metalness || 0).toFixed(2);
+        document.getElementById('roughnessSlider').value = obj.material.roughness || 0.5;
+        document.getElementById('roughnessVal').textContent = (obj.material.roughness || 0.5).toFixed(2);
+      }
     } else {
       html += `<p>Multi-selection active</p>`;
     }
@@ -715,65 +757,85 @@
   });
 
   document.getElementById('materialColor').addEventListener('input', (e) => {
-    if (selectedObjects.length === 1 && selectedObjects[0].isMesh) {
+    if (selectedObjects.length === 1 && selectedObjects[0].isMesh && selectedObjects[0].material) {
       selectedObjects[0].material.color.set(e.target.value);
-      saveState();
+      addXP(1);
     }
   });
 
   document.getElementById('metallicSlider').addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
     document.getElementById('metallicVal').textContent = v.toFixed(2);
-    if (selectedObjects.length === 1 && selectedObjects[0].isMesh) {
+    if (selectedObjects.length === 1 && selectedObjects[0].isMesh && selectedObjects[0].material) {
       selectedObjects[0].material.metalness = v;
-      saveState();
+      addXP(1);
     }
   });
 
   document.getElementById('roughnessSlider').addEventListener('input', (e) => {
     const v = parseFloat(e.target.value);
     document.getElementById('roughnessVal').textContent = v.toFixed(2);
-    if (selectedObjects.length === 1 && selectedObjects[0].isMesh) {
+    if (selectedObjects.length === 1 && selectedObjects[0].isMesh && selectedObjects[0].material) {
       selectedObjects[0].material.roughness = v;
-      saveState();
+      addXP(1);
     }
   });
 
-  document.getElementById('duplicateBtn').onclick = () => {
+  function duplicateSelected() {
     if (selectedObjects.length === 0) return;
     saveState();
     const clones = [];
     selectedObjects.forEach(obj => {
       const clone = obj.clone();
-      if (obj.isMesh) clone.material = obj.material.clone();
+      if (obj.isMesh && obj.material) clone.material = obj.material.clone();
       clone.position.x += 1;
       clone.userData.id = objectCounter++;
+      clone.userData.name = obj.userData.name + ' (copy)';
       scene.add(clone);
       rootObjects.push(clone);
       clones.push(clone);
     });
     selectedObjects = clones;
+    transformControl.attach(selectedObjects[0]);
     updateLayersList();
     updateSelectedObjectUI();
-  };
+    addXP(3);
+  }
 
-  document.getElementById('deleteBtn').onclick = () => {
+  function deleteSelected() {
     if (selectedObjects.length === 0) return;
     saveState();
-    selectedObjects.forEach(obj => {
-      if (obj.parent && obj.parent.isGroup) {
-        obj.parent.remove(obj);
+    
+    // Get all selected objects to delete
+    const objectsToDelete = [...selectedObjects];
+    
+    objectsToDelete.forEach(obj => {
+      // Find if object is in a group
+      let parent = obj.parent;
+      if (parent && parent.isGroup) {
+        parent.remove(obj);
+        // If group is now empty, remove it
+        if (parent.children.length === 0) {
+          scene.remove(parent);
+          const idx = rootObjects.indexOf(parent);
+          if (idx > -1) rootObjects.splice(idx, 1);
+        }
       } else {
         scene.remove(obj);
         const idx = rootObjects.indexOf(obj);
         if (idx > -1) rootObjects.splice(idx, 1);
       }
     });
+    
     selectedObjects = [];
     transformControl.detach();
     updateLayersList();
     updateSelectedObjectUI();
-  };
+    addXP(2);
+  }
+
+  document.getElementById('duplicateBtn').onclick = duplicateSelected;
+  document.getElementById('deleteBtn').onclick = deleteSelected;
 
   // Grouping
   document.getElementById('createGroup').onclick = () => {
@@ -784,25 +846,41 @@
     group.userData.name = `Group ${rootObjects.filter(o => o.userData.isGroup).length + 1}`;
     group.userData.id = objectCounter++;
 
+    // Calculate center of selected objects
+    const center = new THREE.Vector3();
+    selectedObjects.forEach(obj => center.add(obj.position));
+    center.divideScalar(selectedObjects.length);
+
     selectedObjects.forEach(obj => {
       const worldPos = new THREE.Vector3();
       obj.getWorldPosition(worldPos);
       obj.parent.remove(obj);
       group.add(obj);
-      obj.position.copy(worldPos).sub(group.position);
+      obj.position.copy(worldPos).sub(center);
     });
 
+    group.position.copy(center);
     scene.add(group);
     rootObjects.push(group);
+    
+    // Remove individual objects from rootObjects
+    selectedObjects.forEach(obj => {
+      const idx = rootObjects.indexOf(obj);
+      if (idx > -1) rootObjects.splice(idx, 1);
+    });
+    
     selectedObjects = [group];
+    transformControl.attach(group);
     updateLayersList();
     updateSelectedObjectUI();
+    addXP(5);
   };
 
   document.getElementById('ungroup').onclick = () => {
     const groupsToUngroup = selectedObjects.filter(o => o.isGroup);
     if (groupsToUngroup.length === 0) return;
     saveState();
+    
     groupsToUngroup.forEach(group => {
       const children = [...group.children];
       children.forEach(child => {
@@ -818,32 +896,36 @@
       if (idx > -1) rootObjects.splice(idx, 1);
     });
     selectedObjects = [];
+    transformControl.detach();
     updateLayersList();
     updateSelectedObjectUI();
+    addXP(3);
   };
 
   // Layers List
   function updateLayersList() {
     const list = document.getElementById('layersList');
     list.innerHTML = '';
-    rootObjects.slice().reverse().forEach(obj => addLayerItem(obj, list));
+    rootObjects.slice().reverse().forEach(obj => {
+      if (obj) addLayerItem(obj, list);
+    });
   }
 
   function addLayerItem(obj, parentList) {
     const li = document.createElement('li');
     li.className = 'layer-item' + (selectedObjects.includes(obj) ? ' active' : '') + (obj.userData.isGroup ? ' group' : '');
     li.innerHTML = `
-      <span class="layer-toggle">${obj.userData.isGroup ? '▼' : ''}</span>
-      <span class="layer-visibility">${obj.visible ? '👁' : '🚫'}</span>
+      <span class="layer-toggle">${obj.userData.isGroup ? '\u25bc' : ''}</span>
+      <span class="layer-visibility">${obj.visible ? '\ud83d\udc41' : '\ud83d\udeab'}</span>
       <span class="layer-name">${obj.userData.name || 'Object'}</span>
-      <span class="layer-delete">×</span>
+      <span class="layer-delete">\u00d7</span>
     `;
     parentList.appendChild(li);
 
     li.querySelector('.layer-visibility').onclick = (e) => {
       e.stopPropagation();
       obj.visible = !obj.visible;
-      li.querySelector('.layer-visibility').textContent = obj.visible ? '👁' : '🚫';
+      li.querySelector('.layer-visibility').textContent = obj.visible ? '\ud83d\udc41' : '\ud83d\udeab';
       obj.traverse(child => child.visible = obj.visible);
       saveState();
     };
@@ -851,12 +933,20 @@
     li.querySelector('.layer-delete').onclick = (e) => {
       e.stopPropagation();
       saveState();
-      scene.remove(obj);
-      const idx = rootObjects.indexOf(obj);
-      if (idx > -1) rootObjects.splice(idx, 1);
+      
+      if (obj.parent && obj.parent.isGroup) {
+        obj.parent.remove(obj);
+      } else {
+        scene.remove(obj);
+        const idx = rootObjects.indexOf(obj);
+        if (idx > -1) rootObjects.splice(idx, 1);
+      }
+      
       selectedObjects = selectedObjects.filter(o => o !== obj);
+      transformControl.detach();
       updateLayersList();
       updateSelectedObjectUI();
+      addXP(2);
     };
 
     li.onclick = (e) => {
@@ -873,16 +963,87 @@
       li.querySelector('.layer-toggle').onclick = (e) => {
         e.stopPropagation();
         childList.style.display = childList.style.display === 'none' ? 'block' : 'none';
-        li.querySelector('.layer-toggle').textContent = childList.style.display === 'none' ? '▶' : '▼';
+        li.querySelector('.layer-toggle').textContent = childList.style.display === 'none' ? '\u25b6' : '\u25bc';
       };
     }
   }
 
-  // Model Import/Export, Environment, Panel Toggle, Resize, etc. (same as before)
-  // ... [rest of the original code for import/export, env, panel, etc. remains unchanged]
+  // Model Import
+  const gltfLoader = new GLTFLoader();
+  
+  document.getElementById('uploadModel').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const url = URL.createObjectURL(file);
+    loadModel(url);
+  });
 
-  document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
+  function loadModel(url) {
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('loader').textContent = 'Loading model...';
+    
+    gltfLoader.load(url, (gltf) => {
+      const model = gltf.scene;
+      
+      // Auto-center model
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      model.position.sub(center);
+      
+      // Enable shadows for all meshes
+      model.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          child.userData.name = child.name || 'Imported Model';
+          child.userData.id = objectCounter++;
+        }
+      });
+      
+      model.userData.name = 'Imported Model';
+      model.userData.id = objectCounter++;
+      
+      scene.add(model);
+      rootObjects.push(model);
+      selectObject(model, false);
+      updateLayersList();
+      
+      document.getElementById('loader').style.display = 'none';
+      saveState();
+      addXP(10);
+    }, 
+    (progress) => {
+      const percent = (progress.loaded / progress.total * 100).toFixed(0);
+      document.getElementById('loader').textContent = `Loading... ${percent}%`;
+    },
+    (error) => {
+      console.error('Error loading model:', error);
+      document.getElementById('loader').textContent = 'Error loading model';
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+      }, 2000);
+    });
+  }
 
+  // Drag & drop import
+  window.addEventListener('dragover', e => e.preventDefault());
+  window.addEventListener('drop', e => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && (file.name.endsWith('.glb') || file.name.endsWith('.gltf'))) {
+      const url = URL.createObjectURL(file);
+      loadModel(url);
+    }
+  });
+
+  // Environment
+  document.getElementById('envPreset').addEventListener('change', (e) => {
+    loadEnvironment(e.target.value);
+    addXP(1);
+  });
+
+  // Export
   const exportStatus = document.getElementById('exportStatus');
   document.getElementById('exportBtn').onclick = () => {
     if (rootObjects.length === 0) {
@@ -892,8 +1053,16 @@
     }
     exportStatus.textContent = 'Exporting...';
     exportStatus.style.color = '#60a5fa';
+    
     const exporter = new GLTFExporter();
-    exporter.parse(scene, (result) => {
+    const exportScene = new THREE.Scene();
+    
+    // Add only our objects (not helpers, lights, etc.)
+    rootObjects.forEach(obj => {
+      exportScene.add(obj.clone());
+    });
+    
+    exporter.parse(exportScene, (result) => {
       const blob = new Blob([result], { type: 'application/octet-stream' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -901,31 +1070,84 @@
       link.click();
       exportStatus.textContent = 'Exported!';
       exportStatus.style.color = '#4ade80';
+      addXP(5);
     }, { binary: true });
   };
 
-  // Panel toggle (same as original)
+  // Floating controls
+  const floaterSelect = document.getElementById('floaterSelect');
+  const floaterMove = document.getElementById('floaterMove');
+  const floaterRotate = document.getElementById('floaterRotate');
+  const floaterScale = document.getElementById('floaterScale');
+
+  function updateFloaterActiveState() {
+    floaterSelect.classList.remove('active');
+    floaterMove.classList.remove('active');
+    floaterRotate.classList.remove('active');
+    floaterScale.classList.remove('active');
+    
+    const mode = transformControl.getMode();
+    if (mode === 'translate') floaterMove.classList.add('active');
+    else if (mode === 'rotate') floaterRotate.classList.add('active');
+    else if (mode === 'scale') floaterScale.classList.add('active');
+    else floaterSelect.classList.add('active');
+  }
+
+  floaterSelect.onclick = () => {
+    transformControl.detach();
+    updateFloaterActiveState();
+  };
+
+  floaterMove.onclick = () => {
+    if (selectedObjects.length === 1) {
+      transformControl.attach(selectedObjects[0]);
+      transformControl.setMode('translate');
+      updateFloaterActiveState();
+    }
+  };
+
+  floaterRotate.onclick = () => {
+    if (selectedObjects.length === 1) {
+      transformControl.attach(selectedObjects[0]);
+      transformControl.setMode('rotate');
+      updateFloaterActiveState();
+    }
+  };
+
+  floaterScale.onclick = () => {
+    if (selectedObjects.length === 1) {
+      transformControl.attach(selectedObjects[0]);
+      transformControl.setMode('scale');
+      updateFloaterActiveState();
+    }
+  };
+
+  // Panel toggle
   const panel = document.getElementById('panel');
   const panelToggle = document.getElementById('panelToggle');
   const mobilePanelToggle = document.getElementById('mobilePanelToggle');
   let panelVisible = true;
+  
   function togglePanel() {
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
     panel.classList.toggle('visible', panelVisible);
-    panelToggle.textContent = panelVisible ? '←' : '→';
+    panelToggle.textContent = panelVisible ? '\u2190' : '\u2192';
     const span = mobilePanelToggle.querySelector('span');
-    if (span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
+    if (span) span.textContent = panelVisible ? '\u25bc Hide Controls' : '\u25b2 Controls';
   }
+  
   panelToggle.onclick = togglePanel;
   mobilePanelToggle.onclick = togglePanel;
 
+  // Window resize
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
+  // Animation loop
   function animate() {
     requestAnimationFrame(animate);
     controls.update();
@@ -933,17 +1155,147 @@
   }
   animate();
 
-  // Drag & drop import
-  window.addEventListener('dragover', e => e.preventDefault());
-  window.addEventListener('drop', e => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && (file.name.endsWith('.glb') || file.name.endsWith('.gltf'))) {
-      const url = URL.createObjectURL(file);
-      // You can extend this to support imported model grouping if desired
-      alert("Drag & drop import not fully implemented in this version – use the upload button.");
+  // ============================================
+  // XP / Level / Login System (No Firebase)
+  // ============================================
+  
+  const authBtn = document.getElementById('authBtn');
+  const profilePic = document.getElementById('profilePic');
+  const levelInfo = document.getElementById('levelInfo');
+  const levelText = document.getElementById('levelText');
+  const xpBar = document.getElementById('xpBar');
+  
+  let user = null;
+  let xp = 0;
+  let level = 1;
+  const xpPerLevel = 100;
+  
+  // Load from localStorage
+  function loadUserData() {
+    const savedUser = localStorage.getItem('modelerPro_user');
+    const savedXP = localStorage.getItem('modelerPro_xp');
+    const savedLevel = localStorage.getItem('modelerPro_level');
+    
+    if (savedUser) {
+      user = JSON.parse(savedUser);
+      xp = parseInt(savedXP) || 0;
+      level = parseInt(savedLevel) || 1;
+      updateAuthUI();
     }
-  });
+  }
+  
+  function saveUserData() {
+    localStorage.setItem('modelerPro_user', JSON.stringify(user));
+    localStorage.setItem('modelerPro_xp', xp.toString());
+    localStorage.setItem('modelerPro_level', level.toString());
+  }
+  
+  function addXP(amount) {
+    if (!user) return;
+    
+    xp += amount;
+    const newLevel = Math.floor(xp / xpPerLevel) + 1;
+    
+    if (newLevel > level) {
+      level = newLevel;
+      showLevelUpNotification();
+    }
+    
+    updateXPBar();
+    saveUserData();
+  }
+  
+  function updateXPBar() {
+    const xpInCurrentLevel = xp % xpPerLevel;
+    const percentage = (xpInCurrentLevel / xpPerLevel) * 100;
+    xpBar.style.width = percentage + '%';
+    levelText.textContent = `Level ${level} - ${xpInCurrentLevel}/${xpPerLevel} XP`;
+  }
+  
+  function showLevelUpNotification() {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      z-index: 9999;
+      animation: levelUp 2s ease-out forwards;
+      box-shadow: 0 10px 30px rgba(96, 165, 250, 0.4);
+    `;
+    notification.textContent = `\ud83c\udf89 Level Up! You are now Level ${level}!`;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 2000);
+  }
+  
+  // Add animation keyframes
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes levelUp {
+      0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  function updateAuthUI() {
+    if (user) {
+      authBtn.textContent = 'Logout';
+      profilePic.style.display = 'block';
+      profilePic.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=60a5fa&color=fff`;
+      levelInfo.style.display = 'block';
+      updateXPBar();
+    } else {
+      authBtn.textContent = 'Login';
+      profilePic.style.display = 'none';
+      levelInfo.style.display = 'none';
+    }
+  }
+  
+  function handleLogin() {
+    if (user) {
+      // Logout
+      user = null;
+      xp = 0;
+      level = 1;
+      localStorage.removeItem('modelerPro_user');
+      localStorage.removeItem('modelerPro_xp');
+      localStorage.removeItem('modelerPro_level');
+      updateAuthUI();
+    } else {
+      // Simple demo login (in production, use OAuth providers)
+      const displayName = prompt('Enter your name:', 'Creator');
+      if (displayName) {
+        user = {
+          displayName: displayName,
+          photoURL: null,
+          email: `${displayName.toLowerCase().replace(/\s/g, '')}@example.com`
+        };
+        xp = 0;
+        level = 1;
+        saveUserData();
+        updateAuthUI();
+        addXP(10); // Bonus XP for logging in
+      }
+    }
+  }
+  
+  authBtn.onclick = handleLogin;
+  
+  // Initialize
+  loadUserData();
+  updateFloaterActiveState();
 </script>
 </body>
 </html>
