@@ -654,6 +654,11 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const provider = new GoogleAuthProvider();
+  // 🔥 Expose Firebase to non-module scripts
+window.auth = auth;
+window.db = db;
+window.storage = storage;
+
 
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
@@ -704,6 +709,7 @@ window.addXP = async (amount) => {
   }
 };
 
+  
 // Auto-save every 30 seconds
 setInterval(async () => {
   if (auth.currentUser && window.saveSceneToFirebase) {
@@ -2143,6 +2149,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
 
