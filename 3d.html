@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Modeler Pro \u2013 BowesProduct</title>
+  <title>Modeler Pro - BowesProduct</title>
   <script async src="https://unpkg.com/es-module-shims@1.8.2/dist/es-module-shims.js"></script>
   <script type="importmap">
   {
@@ -15,286 +14,188 @@
   }
   </script>
   <style>
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
-  .site-header {
-  position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
-  }
-  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
-  .header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-  .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
-  .main-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.9rem; white-space: nowrap; }
-  .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
-  .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; flex-wrap: wrap; }
-  #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
-  .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
-  #levelInfo { display: none; font-size: 0.8rem; color: #cbd5e1; }
-  #levelText { white-space: nowrap; font-size: 0.75rem; }
-  #xpOuter { width: 100px; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
-  #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
-  @media (max-width: 900px) {
-  .header-inner { padding: 0.5rem; }
-  .header-left { width: 100%; justify-content: space-between; }
-  .main-nav { gap: 0.8rem; order: 3; width: 100%; }
-  .main-nav a { font-size: 0.85rem; }
-  .header-right { width: 100%; justify-content: space-between; }
-  #levelInfo { flex: 1; }
-  #xpOuter { width: 100%; }
-  }
-  #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
-  #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
-  .panel {
-  position: absolute;
-  top: 90px;
-  right: 20px;
-  width: 420px;
-  max-height: calc(100vh - 220px);
-  background: rgba(2, 6, 23, 0.95);
-  border: 1px solid #1e293b;
-  border-radius: 12px;
-  padding: 1.5rem;
-  overflow-y: auto;
-  z-index: 20;
-  backdrop-filter: blur(10px);
-  transition: transform 0.3s ease;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  }
-  .panel.hidden { transform: translateX(460px); }
-  .panel::-webkit-scrollbar { width: 6px; }
-  .panel::-webkit-scrollbar-track { background: #0f172a; }
-  .panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-  #panelToggle {
-  position: absolute;
-  left: -60px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60px;
-  height: 110px;
-  background: rgba(2, 6, 23, 0.98);
-  border: 1px solid #1e293b;
-  border-right: none;
-  border-radius: 20px 0 0 20px;
-  color: #60a5fa;
-  font-size: 2.4rem;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 21;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 6px 30px rgba(0,0,0,0.5);
-  transition: all 0.3s ease;
-  }
-  #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
-  @media (max-width: 900px) {
-  .panel {
-  position: absolute;
-  top: auto;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 85vh;
-  max-height: none;
-  border-radius: 20px 20px 0 0;
-  transform: translateY(calc(100% - 60px));
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  padding-top: 20px;
-  padding-bottom: 120px;
-  z-index: 1100;
-  overflow-y: auto;
-  background: rgba(2, 6, 23, 0.95);
-  border: 1px solid #1e293b;
-  border-bottom: none;
-  box-shadow: 0 -5px 25px rgba(0,0,0,0.5);
-  }
-  .panel.visible { transform: translateY(0); }
-  #panelToggle { display: none; }
-  }
-  #mobilePanelToggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 140px;
-  height: 44px;
-  background: rgba(2, 6, 23, 0.9);
-  border: 1px solid #60a5fa;
-  border-radius: 22px;
-  color: #60a5fa;
-  font-size: 0.85rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1200;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-  transition: background 0.2s, transform 0.1s;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  }
-  #mobilePanelToggle:active { transform: scale(0.96); }
-  #mobilePanelToggle::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 4px;
-  background: #94a3b8;
-  border-radius: 2px;
-  opacity: 0.5;
-  }
-  @media (min-width: 901px) { #mobilePanelToggle { display: none; } }
-  @media (max-width: 900px) { #mobilePanelToggle { display: flex; } }
-  .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
-  .control-group { margin-bottom: 1.2rem; }
-  label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
-  input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
-  input[type="range"] { padding: 0.3rem 0; accent-color: #60a5fa; }
-  input[type="color"] { height: 44px; padding: 0.2rem; }
-  button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; transition: background 0.2s; }
-  button:hover { background: #3b82f6; }
-  button:disabled { background: #475569; cursor: not-allowed; }
-  #modeIndicator {
-  position: fixed;
-  top: 80px;
-  left: 20px;
-  background: rgba(2, 6, 23, 0.9);
-  border: 2px solid #60a5fa;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #60a5fa;
-  z-index: 100;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  display: none;
-  }
-  #modeIndicator.visible { display: block; }
-  #transformStatus {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(2, 6, 23, 0.95);
-  border: 2px solid #f59e0b;
-  border-radius: 8px;
-  padding: 12px 24px;
-  font-size: 1rem;
-  color: #f59e0b;
-  z-index: 100;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  display: none;
-  }
-  #transformStatus.visible { display: block; }
-  #axisIndicator {
-  position: fixed;
-  bottom: 130px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 100;
-  }
-  .axis-btn {
-  background: rgba(2, 6, 23, 0.95);
-  border: 2px solid #475569;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #94a3b8;
-  cursor: pointer;
-  transition: all 0.2s;
-  }
-  .axis-btn.active { border-color: #f59e0b; color: #f59e0b; }
-  .axis-btn:hover { border-color: #60a5fa; color: #60a5fa; }
-  #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
-  .layer-item {
-  display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent;
-  }
-  .layer-item.active { background: #1e293b; border-color: #60a5fa; }
-  .layer-item.group { background: #162032; }
-  .layer-item.group > .layer-name::before { content: "\ud83d\udcc1 "; }
-  .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
-  .layer-name { flex: 1; font-size: 0.95rem; }
-  .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 24px; text-align: center; }
-  .layer-toggle { cursor: pointer; font-size: 1rem; width: 20px; }
-  .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
-  #loader {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  color: #60a5fa; font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 0;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-  }
-  .transform-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1rem; }
-  .transform-input label { font-size: 0.75rem; color: #94a3b8; margin: 0; }
-  .object-info { background: #0f172a; padding: 10px; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #1e293b; }
-  .object-info h3 { margin: 0 0 8px; font-size: 0.95rem; color: #60a5fa; }
-  .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
-  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
-  .footer-nav a { color: #cbd5e1; text-decoration: none; }
-  .footer-nav a:hover { color: #60a5fa; }
-  #sculptingControls { display: none; }
-  #sculptingControls.visible { display: block; }
-  .sculpt-tool-btn { width: auto; display: inline-block; margin: 2px; font-size: 0.8rem; }
-  .sculpt-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.8rem; }
-  .sculpt-row button { flex: 1; min-width: 60px; }
-  .mode-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  }
-  .mode-badge.object { background: #60a5fa; color: white; }
-  .mode-badge.edit { background: #f59e0b; color: white; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
+    .site-header {
+      position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
+    }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+    .header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
+    .main-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .main-nav a { color: #e5e7eb; text-decoration: none; font-size: 0.9rem; white-space: nowrap; }
+    .main-nav a:hover, .main-nav a.active { color: #60a5fa; }
+    .header-right { display: flex; align-items: center; gap: 0.8rem; min-height: 44px; flex-wrap: wrap; }
+    #profilePic { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #60a5fa; object-fit: cover; display: none; }
+    .login-btn { padding: 0.45rem 1.1rem; border-radius: 999px; border: 1.5px solid #60a5fa; background: transparent; color: #60a5fa; font-size: 0.95rem; cursor: pointer; }
+    #levelInfo { display: none; font-size: 0.8rem; color: #cbd5e1; }
+    #levelText { white-space: nowrap; font-size: 0.75rem; }
+    #xpOuter { width: 100px; height: 5px; background: #1e293b; border-radius: 3px; margin-top: 4px; }
+    #xpBar { height: 100%; width: 0%; background: #60a5fa; border-radius: 3px; transition: width 0.35s ease; }
+    @media (max-width: 900px) {
+      .header-inner { padding: 0.5rem; }
+      .header-left { width: 100%; justify-content: space-between; }
+      .main-nav { gap: 0.8rem; order: 3; width: 100%; }
+      .main-nav a { font-size: 0.85rem; }
+      .header-right { width: 100%; justify-content: space-between; }
+      #levelInfo { flex: 1; }
+      #xpOuter { width: 100%; }
+    }
+    #container { position: relative; width: 100%; height: 100%; padding-top: 70px; padding-bottom: 80px; }
+    #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+    .panel {
+      position: absolute; top: 90px; right: 20px; width: 420px; max-height: calc(100vh - 220px);
+      background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem;
+      overflow-y: auto; z-index: 20; backdrop-filter: blur(10px); transition: transform 0.3s ease;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .panel.hidden { transform: translateX(460px); }
+    .panel::-webkit-scrollbar { width: 6px; }
+    .panel::-webkit-scrollbar-track { background: #0f172a; }
+    .panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    #panelToggle {
+      position: absolute; left: -60px; top: 50%; transform: translateY(-50%);
+      width: 60px; height: 110px; background: rgba(2, 6, 23, 0.98); border: 1px solid #1e293b;
+      border-right: none; border-radius: 20px 0 0 20px; color: #60a5fa; font-size: 2.4rem;
+      font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      z-index: 21; backdrop-filter: blur(12px); box-shadow: 0 6px 30px rgba(0,0,0,0.5); transition: all 0.3s ease;
+    }
+    #panelToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
+    @media (max-width: 900px) {
+      .panel {
+        position: absolute; top: auto; right: 0; left: 0; bottom: 0; width: 100%; height: 85vh;
+        max-height: none; border-radius: 20px 20px 0 0; transform: translateY(calc(100% - 60px));
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); padding-top: 20px; padding-bottom: 120px;
+        z-index: 1100; overflow-y: auto; background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b;
+        border-bottom: none; box-shadow: 0 -5px 25px rgba(0,0,0,0.5);
+      }
+      .panel.visible { transform: translateY(0); }
+      #panelToggle { display: none; }
+    }
+    #mobilePanelToggle {
+      position: fixed; bottom: 20px; right: 20px; width: 140px; height: 44px;
+      background: rgba(2, 6, 23, 0.9); border: 1px solid #60a5fa; border-radius: 22px;
+      color: #60a5fa; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; z-index: 1200; backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6); transition: background 0.2s, transform 0.1s;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    #mobilePanelToggle:active { transform: scale(0.96); }
+    #mobilePanelToggle::before {
+      content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 4px; background: #94a3b8; border-radius: 2px; opacity: 0.5;
+    }
+    @media (min-width: 901px) { #mobilePanelToggle { display: none; } }
+    @media (max-width: 900px) { #mobilePanelToggle { display: flex; } }
+    .panel h2 { color: #60a5fa; margin: 1.5rem 0 1rem; font-size: 1.1rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.5rem; }
+    .control-group { margin-bottom: 1.2rem; }
+    label { display: block; font-size: 0.9rem; color: #e5e7eb; margin-bottom: 0.4rem; }
+    input, select, button { width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #1f2937; background: #020617; color: #e5e7eb; font: inherit; }
+    input[type="range"] { padding: 0.3rem 0; accent-color: #60a5fa; }
+    input[type="color"] { height: 44px; padding: 0.2rem; }
+    button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; transition: background 0.2s; }
+    button:hover { background: #3b82f6; }
+    button:disabled { background: #475569; cursor: not-allowed; }
+    #modeIndicator {
+      position: fixed; top: 80px; left: 20px; background: rgba(2, 6, 23, 0.9);
+      border: 2px solid #60a5fa; border-radius: 8px; padding: 8px 16px; font-size: 1.2rem;
+      font-weight: 700; color: #60a5fa; z-index: 100; backdrop-filter: blur(12px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: none;
+    }
+    #modeIndicator.visible { display: block; }
+    #transformStatus {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+      background: rgba(2, 6, 23, 0.95); border: 2px solid #f59e0b; border-radius: 8px;
+      padding: 12px 24px; font-size: 1rem; color: #f59e0b; z-index: 100;
+      backdrop-filter: blur(12px); box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: none;
+    }
+    #transformStatus.visible { display: block; }
+    #axisIndicator {
+      position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 100;
+    }
+    .axis-btn {
+      background: rgba(2, 6, 23, 0.95); border: 2px solid #475569; border-radius: 6px;
+      padding: 8px 16px; font-size: 0.9rem; font-weight: 700; color: #94a3b8;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .axis-btn.active { border-color: #f59e0b; color: #f59e0b; }
+    .axis-btn:hover { border-color: #60a5fa; color: #60a5fa; }
+    #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
+    .layer-item {
+      display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a;
+      border-radius: 8px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent;
+    }
+    .layer-item.active { background: #1e293b; border-color: #60a5fa; }
+    .layer-item.group { background: #162032; }
+    .layer-item.group > .layer-name::before { content: "📁 "; }
+    .layer-visibility { font-size: 1.3rem; cursor: pointer; width: 24px; text-align: center; }
+    .layer-name { flex: 1; font-size: 0.95rem; }
+    .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; width: 24px; text-align: center; }
+    .layer-toggle { cursor: pointer; font-size: 1rem; width: 20px; }
+    .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
+    #loader {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      color: #60a5fa; font-size: 1.5rem; font-weight: bold; pointer-events: none; z-index: 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .transform-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1rem; }
+    .transform-input label { font-size: 0.75rem; color: #94a3b8; margin: 0; }
+    .object-info { background: #0f172a; padding: 10px; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #1e293b; }
+    .object-info h3 { margin: 0 0 8px; font-size: 0.95rem; color: #60a5fa; }
+    .site-footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2,6,23,0.95); border-top: 1px solid #1e293b; padding: 1rem; z-index: 1000; backdrop-filter: blur(10px); }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
+    .footer-nav a { color: #cbd5e1; text-decoration: none; }
+    .footer-nav a:hover { color: #60a5fa; }
+    #sculptingControls { display: none; }
+    #sculptingControls.visible { display: block; }
+    .sculpt-tool-btn { width: auto; display: inline-block; margin: 2px; font-size: 0.8rem; }
+    .sculpt-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.8rem; }
+    .sculpt-row button { flex: 1; min-width: 60px; }
+    .mode-badge {
+      display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .mode-badge.object { background: #60a5fa; color: white; }
+    .mode-badge.edit { background: #f59e0b; color: white; }
   </style>
-  <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 <header class="site-header">
   <div class="header-inner">
-  <div class="header-left">
-  <div class="logo"><a href="index.html">BowesProduct</a></div>
-  <nav class="main-nav">
-  <a href="index.html">Home</a>
-  <a href="models.html">Models</a>
-  <a href="retexture.html">Retexture</a>
-    <a href="editor.html">Editor</a>
-    <a href="3d.html" class="active">3D</a>
-  </nav>
-  </div>
-  <div class="header-right">
-  <img id="profilePic" alt="Profile">
-  <div id="levelInfo">
-  <div id="levelText"></div>
-  <div id="xpOuter"><div id="xpBar"></div></div>
-  </div>
-  <button id="authBtn" class="login-btn">Login</button>
-  </div>
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="models.html">Models</a>
+        <a href="retexture.html">Retexture</a>
+        <a href="editor.html">Editor</a>
+        <a href="3d.html" class="active">3D</a>
+      </nav>
+    </div>
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+      <button id="authBtn" class="login-btn">Login</button>
+    </div>
   </div>
 </header>
+
 <div id="container">
   <div id="loader">Add objects or upload a model to start</div>
   <canvas id="canvas"></canvas>
-  
+
   <div id="modeIndicator">
     <span class="mode-badge object" id="modeBadge">Object Mode</span>
   </div>
-  
+
   <div id="transformStatus">
     <span id="transformText">Move</span>
   </div>
-  
+
   <div id="axisIndicator">
     <button class="axis-btn" id="axisX">X</button>
     <button class="axis-btn" id="axisY">Y</button>
@@ -302,149 +203,157 @@
   </div>
 
   <div class="panel visible" id="panel">
-  <button id="panelToggle">\u2190</button>
- 
-  <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
-  <strong style="color:#60a5fa">Blender-Style Controls:</strong><br>
-  \u2022 Tab: Switch Object/Edit Mode<br>
-  \u2022 G: Move \u2022 R: Rotate \u2022 S: Scale<br>
-  \u2022 X/Y/Z: Constrain to axis<br>
-  \u2022 Middle mouse: Orbit view<br>
-  \u2022 Shift+Middle: Pan view<br>
-  \u2022 Scroll: Zoom<br>
-  \u2022 Left click/Enter: Confirm \u2022 Esc/Right click: Cancel<br>
-  \u2022 Click object: Select \u2022 Shift+Click: Multi-select
-  </div>
+    <button id="panelToggle">←</button>
 
-  <h2>Current Mode</h2>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem;">
-    <button id="modeObject" class="mode-btn active">Object Mode (Tab)</button>
-    <button id="modeEdit" class="mode-btn">Edit Mode (Tab)</button>
-  </div>
+    <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
+      <strong style="color:#60a5fa">Controls (Blender-style)</strong>
+      <ul style="margin:10px 0 0 0;padding-left:20px;color:#e5e7eb;">
+        <li><strong>Tab</strong>: Switch Object/Edit Mode</li>
+        <li><strong>G</strong>: Move • <strong>R</strong>: Rotate • <strong>S</strong>: Scale</li>
+        <li><strong>X / Y / Z</strong>: Constrain to axis</li>
+        <li><strong>Middle mouse drag</strong>: Orbit view</li>
+        <li><strong>Shift + Middle drag</strong>: Pan view</li>
+        <li><strong>Scroll / Pinch</strong>: Zoom</li>
+        <li><strong>Left click / Tap or Enter</strong>: Confirm • <strong>Esc / Right click</strong>: Cancel</li>
+        <li><strong>Click / Tap object</strong>: Select • <strong>Shift + Click</strong>: Multi-select</li>
+      </ul>
+      <p style="margin:15px 0 0 0;color:#cbd5e1;font-size:0.8rem;">
+        <strong>Mobile:</strong> One finger drag = orbit • Two fingers drag = pan • Pinch = zoom • Tap = select/confirm
+      </p>
+    </div>
 
-  <h2 id="sculptingHeader" style="display:none;">Sculpting Tools</h2>
-  <div id="sculptingControls">
-    <div class="sculpt-row">
-      <button id="sculptBrush" class="sculpt-tool-btn active">Brush</button>
-      <button id="sculptInflate" class="sculpt-tool-btn">Inflate</button>
-      <button id="sculptDeflate" class="sculpt-tool-btn">Deflate</button>
-      <button id="sculptSmooth" class="sculpt-tool-btn">Smooth</button>
-      <button id="sculptFlatten" class="sculpt-tool-btn">Flatten</button>
+    <h2>Current Mode</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem;">
+      <button id="modeObject" class="mode-btn active">Object Mode (Tab)</button>
+      <button id="modeEdit" class="mode-btn">Edit Mode (Tab)</button>
+    </div>
+
+    <h2 id="sculptingHeader" style="display:none;">Sculpting Tools</h2>
+    <div id="sculptingControls">
+      <div class="sculpt-row">
+        <button id="sculptBrush" class="sculpt-tool-btn active">Brush</button>
+        <button id="sculptInflate" class="sculpt-tool-btn">Inflate</button>
+        <button id="sculptDeflate" class="sculpt-tool-btn">Deflate</button>
+        <button id="sculptSmooth" class="sculpt-tool-btn">Smooth</button>
+        <button id="sculptFlatten" class="sculpt-tool-btn">Flatten</button>
+      </div>
+      <div class="control-group">
+        <label for="brushSize">Brush Size: <span id="brushSizeVal">0.5</span></label>
+        <input type="range" id="brushSize" min="0.1" max="2" step="0.1" value="0.5">
+      </div>
+      <div class="control-group">
+        <label for="brushStrength">Brush Strength: <span id="brushStrengthVal">0.5</span></label>
+        <input type="range" id="brushStrength" min="0.1" max="2" step="0.1" value="0.5">
+      </div>
+      <div class="hint">Click and drag on mesh to sculpt. Hold Shift to invert.</div>
+    </div>
+
+    <h2>Add Objects</h2>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;">
+      <button id="addBox">Box</button>
+      <button id="addSphere">Sphere</button>
+      <button id="addCylinder">Cylinder</button>
+      <button id="addTorus">Torus</button>
+      <button id="addCone">Cone</button>
+      <button id="addPlane">Plane</button>
+      <button id="addIcosahedron">Icosahedron</button>
+      <button id="addDodecahedron">Dodecahedron</button>
+      <button id="addOctahedron">Octahedron</button>
+      <button id="addTetrahedron">Tetrahedron</button>
+      <button id="addRing">Ring</button>
+      <button id="addTube">Tube</button>
+    </div>
+
+    <h2>Group</h2>
+    <button id="createGroup">Create Group from Selected</button>
+    <button id="ungroup">Ungroup Selected</button>
+    <div class="hint">Hold Shift and click objects to multi-select</div>
+
+    <h2>Model</h2>
+    <div class="control-group">
+      <label for="uploadModel">Upload GLB/GLTF</label>
+      <input type="file" id="uploadModel" accept=".glb,.gltf">
+      <div class="hint">Supports GLB/GLTF. Auto-centers model.</div>
+    </div>
+
+    <h2>Selected Object(s)</h2>
+    <div id="selectedObjectInfo">
+      <p style="color:#94a3b8;font-size:0.85rem;">No object selected</p>
+    </div>
+
+    <div id="transformControls" style="display:none;">
+      <div class="control-group"><label>Position</label><div class="transform-controls">
+        <div class="transform-input"><label>X</label><input type="number" id="posX" step="0.1"></div>
+        <div class="transform-input"><label>Y</label><input type="number" id="posY" step="0.1"></div>
+        <div class="transform-input"><label>Z</label><input type="number" id="posZ" step="0.1"></div>
+      </div></div>
+      <div class="control-group"><label>Rotation (degrees)</label><div class="transform-controls">
+        <div class="transform-input"><label>X</label><input type="number" id="rotX" step="5"></div>
+        <div class="transform-input"><label>Y</label><input type="number" id="rotY" step="5"></div>
+        <div class="transform-input"><label>Z</label><input type="number" id="rotZ" step="5"></div>
+      </div></div>
+      <div class="control-group"><label>Scale</label><div class="transform-controls">
+        <div class="transform-input"><label>X</label><input type="number" id="scaleX" step="0.1" min="0.01"></div>
+        <div class="transform-input"><label>Y</label><input type="number" id="scaleY" step="0.1" min="0.01"></div>
+        <div class="transform-input"><label>Z</label><input type="number" id="scaleZ" step="0.1" min="0.01"></div>
+      </div></div>
+      <button id="duplicateBtn">Duplicate (Shift+D)</button>
+      <button id="deleteBtn" style="background:#ef4444;">Delete Selected</button>
+    </div>
+
+    <h2>Material (applies to single mesh)</h2>
+    <div class="control-group">
+      <label for="materialColor">Color</label>
+      <input type="color" id="materialColor" value="#60a5fa">
     </div>
     <div class="control-group">
-      <label for="brushSize">Brush Size: <span id="brushSizeVal">0.5</span></label>
-      <input type="range" id="brushSize" min="0.1" max="2" step="0.1" value="0.5">
+      <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
+      <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
     </div>
     <div class="control-group">
-      <label for="brushStrength">Brush Strength: <span id="brushStrengthVal">0.5</span></label>
-      <input type="range" id="brushStrength" min="0.1" max="2" step="0.1" value="0.5">
+      <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
+      <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
     </div>
-    <div class="hint">Click and drag on mesh to sculpt. Hold Shift to invert.</div>
-  </div>
 
-  <h2>Add Objects</h2>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;">
-  <button id="addBox">Box</button>
-  <button id="addSphere">Sphere</button>
-  <button id="addCylinder">Cylinder</button>
-  <button id="addTorus">Torus</button>
-  <button id="addCone">Cone</button>
-  <button id="addPlane">Plane</button>
-  <button id="addIcosahedron">Icosahedron</button>
-  <button id="addDodecahedron">Dodecahedron</button>
-  <button id="addOctahedron">Octahedron</button>
-  <button id="addTetrahedron">Tetrahedron</button>
-  <button id="addRing">Ring</button>
-  <button id="addTube">Tube</button>
-  </div>
-  <h2>Group</h2>
-  <button id="createGroup">Create Group from Selected</button>
-  <button id="ungroup">Ungroup Selected</button>
-  <div class="hint">Hold Shift and click objects to multi-select</div>
+    <h2>Layers / Objects</h2>
+    <ol id="layersList"></ol>
+    <div id="undoRedoGroup">
+      <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
+      <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
+    </div>
 
-  <h2>Model</h2>
-  <div class="control-group">
-  <label for="uploadModel">Upload GLB/GLTF</label>
-  <input type="file" id="uploadModel" accept=".glb,.gltf">
-  <div class="hint">Supports GLB/GLTF. Auto-centers model.</div>
-  </div>
+    <h2>Lighting</h2>
+    <div class="control-group">
+      <label for="envPreset">Environment</label>
+      <select id="envPreset">
+        <option value="neutral">Neutral</option>
+        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
+        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
+        <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
+      </select>
+    </div>
 
-  <h2>Selected Object(s)</h2>
-  <div id="selectedObjectInfo">
-  <p style="color:#94a3b8;font-size:0.85rem;">No object selected</p>
-  </div>
-
-  <div id="transformControls" style="display:none;">
-  <div class="control-group"><label>Position</label><div class="transform-controls">
-  <div class="transform-input"><label>X</label><input type="number" id="posX" step="0.1"></div>
-  <div class="transform-input"><label>Y</label><input type="number" id="posY" step="0.1"></div>
-  <div class="transform-input"><label>Z</label><input type="number" id="posZ" step="0.1"></div>
-  </div></div>
-  <div class="control-group"><label>Rotation (degrees)</label><div class="transform-controls">
-  <div class="transform-input"><label>X</label><input type="number" id="rotX" step="5"></div>
-  <div class="transform-input"><label>Y</label><input type="number" id="rotY" step="5"></div>
-  <div class="transform-input"><label>Z</label><input type="number" id="rotZ" step="5"></div>
-  </div></div>
-  <div class="control-group"><label>Scale</label><div class="transform-controls">
-  <div class="transform-input"><label>X</label><input type="number" id="scaleX" step="0.1" min="0.01"></div>
-  <div class="transform-input"><label>Y</label><input type="number" id="scaleY" step="0.1" min="0.01"></div>
-  <div class="transform-input"><label>Z</label><input type="number" id="scaleZ" step="0.1" min="0.01"></div>
-  </div></div>
-  <button id="duplicateBtn">Duplicate (Shift+D)</button>
-  <button id="deleteBtn" style="background:#ef4444;">Delete Selected</button>
-  </div>
-
-  <h2>Material (applies to single mesh)</h2>
-  <div class="control-group">
-  <label for="materialColor">Color</label>
-  <input type="color" id="materialColor" value="#60a5fa">
-  </div>
-  <div class="control-group">
-  <label for="metallicSlider">Metallic <span id="metallicVal">0.00</span></label>
-  <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
-  </div>
-  <div class="control-group">
-  <label for="roughnessSlider">Roughness <span id="roughnessVal">0.50</span></label>
-  <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
-  </div>
-
-  <h2>Layers / Objects</h2>
-  <ol id="layersList"></ol>
-  <div id="undoRedoGroup">
-  <button id="undoBtn" disabled>Undo (Ctrl+Z)</button>
-  <button id="redoBtn" disabled>Redo (Ctrl+Y)</button>
-  </div>
-
-  <h2>Lighting</h2>
-  <div class="control-group">
-  <label for="envPreset">Environment</label>
-  <select id="envPreset">
-  <option value="neutral">Neutral</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
-  <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
-  </select>
-  </div>
-
-  <h2>Export</h2>
-  <button id="exportBtn">Export Scene as GLB</button>
-  <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
+    <h2>Export</h2>
+    <button id="exportBtn">Export Scene as GLB</button>
+    <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
   </div>
 </div>
+
 <footer class="site-footer">
   <div class="footer-inner">
-  <nav class="footer-nav">
-  <a href="about.html">About</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="terms.html">Terms</a>
-  <a href="license.html">License</a>
-  <a href="refund.html">Refund</a>
-  <a href="rewards.html">Rewards</a>
-  </nav>
-  <p>\u00a9 2026 BowesProduct</p>
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <p>© BowesProduct</p>
   </div>
 </footer>
-<div id="mobilePanelToggle"><span>\u25b2 Controls</span></div>
+
+<div id="mobilePanelToggle"><span>▲ Controls</span></div>
 
 <script type="module">
   import * as THREE from 'three';
@@ -480,39 +389,26 @@
   const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.set(5, 4, 5);
 
-  // Blender-style view controls
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
-  controls.mouseButtons = {
-    LEFT: null, // Left mouse for selection
-    MIDDLE: THREE.MOUSE.ROTATE, // Middle mouse for orbit
-    RIGHT: THREE.MOUSE.PAN // Right mouse for pan (but we'll use shift+middle for pan)
-  };
-  
-  // Custom mouse handling for Blender-style navigation
+
   let isMiddleMouseDown = false;
   let isShiftPressed = false;
-  let isDragging = false;
-  
+
   canvas.addEventListener('pointerdown', (e) => {
-    if (e.button === 1) { // Middle mouse
+    if (e.button === 1) {
       isMiddleMouseDown = true;
-      isDragging = true;
       e.preventDefault();
     }
   });
 
   canvas.addEventListener('pointerup', (e) => {
-    if (e.button === 1) {
-      isMiddleMouseDown = false;
-      isDragging = false;
-    }
+    if (e.button === 1) isMiddleMouseDown = false;
   });
 
   canvas.addEventListener('pointerleave', () => {
     isMiddleMouseDown = false;
-    isDragging = false;
   });
 
   window.addEventListener('keydown', (e) => {
@@ -523,7 +419,6 @@
     if (e.key === 'Shift') isShiftPressed = false;
   });
 
-  // Modify controls for Blender-style pan with shift+middle
   const originalPan = controls.pan;
   controls.pan = function(deltaX, deltaY) {
     if (isShiftPressed && isMiddleMouseDown) {
@@ -531,16 +426,15 @@
     }
   };
 
-  // Mode management
-  let currentMode = 'object'; // 'object' or 'edit'
-  let transformMode = null; // 'move', 'rotate', 'scale', or null
-  let axisConstraint = null; // 'x', 'y', 'z', or null
+  let currentMode = 'object';
+  let transformMode = null;
+  let axisConstraint = null;
 
   function setEditMode(mode) {
     currentMode = mode;
     const modeBadge = document.getElementById('modeBadge');
     const modeIndicator = document.getElementById('modeIndicator');
-    
+
     if (mode === 'object') {
       modeBadge.textContent = 'Object Mode';
       modeBadge.className = 'mode-badge object';
@@ -553,11 +447,10 @@
       modeBadge.className = 'mode-badge edit';
       document.getElementById('modeObject').classList.remove('active');
       document.getElementById('modeEdit').classList.add('active');
-      // Show sculpting in edit mode
       document.getElementById('sculptingHeader').style.display = 'block';
       document.getElementById('sculptingControls').classList.add('visible');
     }
-    
+
     modeIndicator.classList.add('visible');
     setTimeout(() => modeIndicator.classList.remove('visible'), 1500);
   }
@@ -565,7 +458,6 @@
   document.getElementById('modeObject').onclick = () => setEditMode('object');
   document.getElementById('modeEdit').onclick = () => setEditMode('edit');
 
-  // Modal transform system
   let isTransforming = false;
   let initialMouse = new THREE.Vector2();
   let initialTransform = {
@@ -576,27 +468,24 @@
 
   function enterTransformMode(mode) {
     if (selectedObjects.length === 0) return;
-    
+
     transformMode = mode;
     axisConstraint = null;
     isTransforming = false;
-    
+
     const transformStatus = document.getElementById('transformStatus');
     const transformText = document.getElementById('transformText');
-    
+
     transformText.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
     transformStatus.classList.add('visible');
-    
-    // Store initial transform values
+
     const obj = selectedObjects[0];
     initialTransform.position.copy(obj.position);
     initialTransform.rotation.copy(obj.rotation);
     initialTransform.scale.copy(obj.scale);
-    
-    // Disable camera controls during transform
+
     controls.enabled = false;
-    
-    // Reset axis buttons
+
     ['axisX', 'axisY', 'axisZ'].forEach(id => {
       document.getElementById(id).classList.remove('active');
     });
@@ -604,25 +493,22 @@
 
   function exitTransformMode(confirm = false) {
     if (!transformMode) return;
-    
+
     const transformStatus = document.getElementById('transformStatus');
     transformStatus.classList.remove('visible');
-    
-    // Reset axis buttons
+
     ['axisX', 'axisY', 'axisZ'].forEach(id => {
       document.getElementById(id).classList.remove('active');
     });
-    
+
     if (confirm) {
       saveState();
     } else {
-      // Restore initial values if cancelled
       selectedObjects.forEach(obj => {
         obj.position.copy(initialTransform.position);
         obj.rotation.copy(initialTransform.rotation);
         obj.scale.copy(initialTransform.scale);
-        
-        // Update outline
+
         const outline = selectionOutlines.get(obj);
         if (outline) {
           outline.position.copy(obj.position);
@@ -632,7 +518,7 @@
       });
       updateSelectedObjectUI();
     }
-    
+
     transformMode = null;
     axisConstraint = null;
     isTransforming = false;
@@ -641,14 +527,12 @@
 
   function setAxisConstraint(axis) {
     axisConstraint = axis;
-    
-    // Update UI
+
     ['axisX', 'axisY', 'axisZ'].forEach(id => {
       document.getElementById(id).classList.remove('active');
     });
     document.getElementById(`axis${axis.toUpperCase()}`).classList.add('active');
-    
-    // Update status text
+
     const transformText = document.getElementById('transformText');
     const axisName = axis.toUpperCase();
     transformText.textContent = `${transformMode.charAt(0).toUpperCase() + transformMode.slice(1)} [${axisName}]`;
@@ -678,12 +562,10 @@
   }
   loadEnvironment('neutral');
 
-  // Object & Group Management
   const rootObjects = [];
   let selectedObjects = [];
   let objectCounter = 0;
 
-  // Selection highlight - green emissive glow
   const selectionOutlineMaterial = new THREE.MeshBasicMaterial({
     color: 0x22c55e,
     transparent: true,
@@ -717,7 +599,6 @@
     });
   }
 
-  // Undo/Redo
   const undoStack = [];
   const redoStack = [];
   const MAX_UNDO = 50;
@@ -820,7 +701,7 @@
     undoStack.push(rootObjects.map(obj => serializeObject(obj)));
     const state = redoStack.pop();
     restoreState(state);
-    redoStack.disabled = redoStack.length === 0;
+    redoBtn.disabled = redoStack.length === 0;
     undoBtn.disabled = false;
   }
 
@@ -873,7 +754,6 @@
     document.getElementById('loader').style.display = 'none';
   }
 
-  // Primitive buttons
   document.getElementById('addBox').onclick = () => addPrimitive('Box');
   document.getElementById('addSphere').onclick = () => addPrimitive('Sphere');
   document.getElementById('addCylinder').onclick = () => addPrimitive('Cylinder');
@@ -887,24 +767,20 @@
   document.getElementById('addRing').onclick = () => addPrimitive('Ring');
   document.getElementById('addTube').onclick = () => addPrimitive('Tube');
 
-  // Selection
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
   function selectObject(object, multi = false) {
     if (!multi) selectedObjects = [];
-    if (object) {
-      if (!selectedObjects.includes(object)) selectedObjects.push(object);
-    }
+    if (object && !selectedObjects.includes(object)) selectedObjects.push(object);
     updateSelectedObjectUI();
     updateSelectionHighlight();
     updateLayersList();
   }
 
   canvas.addEventListener('click', (e) => {
-    // Skip if in transform mode
     if (transformMode) {
-      exitTransformMode(true); // Confirm transform
+      exitTransformMode(true);
       return;
     }
 
@@ -927,76 +803,52 @@
     }
   });
 
-  // Blender-style mouse transform
   canvas.addEventListener('mousedown', (e) => {
-    if (transformMode && selectedObjects.length > 0) {
-      if (e.button === 0) { // Left click starts transform
-        isTransforming = true;
-        initialMouse.set(e.clientX, e.clientY);
-        e.preventDefault();
-      }
+    if (transformMode && selectedObjects.length > 0 && e.button === 0) {
+      isTransforming = true;
+      initialMouse.set(e.clientX, e.clientY);
+      e.preventDefault();
     }
   });
 
   canvas.addEventListener('mousemove', (e) => {
     if (!isTransforming || !transformMode || selectedObjects.length === 0) return;
-    
+
     const deltaX = e.clientX - initialMouse.x;
     const deltaY = e.clientY - initialMouse.y;
-    
+
     const sensitivity = 0.01;
-    
+
     selectedObjects.forEach(obj => {
       switch (transformMode) {
         case 'move':
           const moveVec = new THREE.Vector3(deltaX, -deltaY, 0).multiplyScalar(sensitivity);
-          if (axisConstraint === 'x') {
-            moveVec.y = 0;
-            moveVec.z = 0;
-          } else if (axisConstraint === 'y') {
-            moveVec.x = 0;
-            moveVec.z = 0;
-          } else if (axisConstraint === 'z') {
-            moveVec.x = 0;
-            moveVec.y = 0;
-          }
+          if (axisConstraint === 'x') { moveVec.y = 0; moveVec.z = 0; }
+          else if (axisConstraint === 'y') { moveVec.x = 0; moveVec.z = 0; }
+          else if (axisConstraint === 'z') { moveVec.x = 0; moveVec.y = 0; }
           obj.position.add(moveVec);
           break;
-          
+
         case 'rotate':
           const rotVec = new THREE.Vector3(deltaY, deltaX, 0).multiplyScalar(sensitivity);
-          if (axisConstraint === 'x') {
-            rotVec.y = 0;
-            rotVec.z = 0;
-          } else if (axisConstraint === 'y') {
-            rotVec.x = 0;
-            rotVec.z = 0;
-          } else if (axisConstraint === 'z') {
-            rotVec.x = 0;
-            rotVec.y = 0;
-          }
+          if (axisConstraint === 'x') { rotVec.y = 0; rotVec.z = 0; }
+          else if (axisConstraint === 'y') { rotVec.x = 0; rotVec.z = 0; }
+          else if (axisConstraint === 'z') { rotVec.x = 0; rotVec.y = 0; }
           obj.rotation.x += rotVec.x;
           obj.rotation.y += rotVec.y;
           obj.rotation.z += rotVec.z;
           break;
-          
+
         case 'scale':
           const scaleVec = new THREE.Vector3(deltaX * sensitivity, deltaY * sensitivity, 0);
           const scaleFactor = Math.exp(scaleVec.x + scaleVec.y);
-          
-          if (axisConstraint === 'x') {
-            obj.scale.x *= scaleFactor;
-          } else if (axisConstraint === 'y') {
-            obj.scale.y *= scaleFactor;
-          } else if (axisConstraint === 'z') {
-            obj.scale.z *= scaleFactor;
-          } else {
-            obj.scale.multiplyScalar(scaleFactor);
-          }
+          if (axisConstraint === 'x') obj.scale.x *= scaleFactor;
+          else if (axisConstraint === 'y') obj.scale.y *= scaleFactor;
+          else if (axisConstraint === 'z') obj.scale.z *= scaleFactor;
+          else obj.scale.multiplyScalar(scaleFactor);
           break;
       }
-      
-      // Update outline
+
       const outline = selectionOutlines.get(obj);
       if (outline) {
         outline.position.copy(obj.position);
@@ -1004,25 +856,19 @@
         outline.scale.copy(obj.scale).multiplyScalar(1.02);
       }
     });
-    
+
     initialMouse.set(e.clientX, e.clientY);
     updateSelectedObjectUI();
   });
 
   canvas.addEventListener('mouseup', (e) => {
-    if (transformMode && isTransforming) {
-      if (e.button === 0) {
-        // Transform complete on mouse up
-        isTransforming = false;
-        // Don't exit yet - wait for another click or Enter to confirm
-      }
+    if (transformMode && isTransforming && e.button === 0) {
+      isTransforming = false;
     }
   });
 
-  // Confirm/Cancel transforms with mouse
   canvas.addEventListener('click', (e) => {
     if (transformMode && !isTransforming) {
-      // Second click confirms transform
       exitTransformMode(true);
     }
   });
@@ -1030,70 +876,40 @@
   canvas.addEventListener('contextmenu', (e) => {
     e.preventDefault();
     if (transformMode) {
-      exitTransformMode(false); // Cancel on right click
+      exitTransformMode(false);
     }
   });
 
-  // Keyboard shortcuts
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    
-    // Transform modes
+
     if (!transformMode) {
       switch(e.key.toLowerCase()) {
-        case 'g':
-          enterTransformMode('move');
-          break;
-        case 'r':
-          enterTransformMode('rotate');
-          break;
-        case 's':
-          enterTransformMode('scale');
-          break;
-        case 'tab':
-          e.preventDefault();
-          setEditMode(currentMode === 'object' ? 'edit' : 'object');
-          break;
+        case 'g': enterTransformMode('move'); break;
+        case 'r': enterTransformMode('rotate'); break;
+        case 's': enterTransformMode('scale'); break;
+        case 'tab': e.preventDefault(); setEditMode(currentMode === 'object' ? 'edit' : 'object'); break;
         case 'delete':
-        case 'backspace':
-          document.getElementById('deleteBtn').click();
-          break;
+        case 'backspace': document.getElementById('deleteBtn').click(); break;
         case 'd':
-          if (e.shiftKey) {
-            e.preventDefault();
-            document.getElementById('duplicateBtn').click();
-          }
+          if (e.shiftKey) { e.preventDefault(); document.getElementById('duplicateBtn').click(); }
           break;
         case 'z':
           if (e.ctrlKey || e.metaKey) {
             e.preventDefault();
-            if (e.shiftKey) {
-              redo();
-            } else {
-              undo();
-            }
+            if (e.shiftKey) redo(); else undo();
           }
           break;
         case 'y':
-          if (e.ctrlKey || e.metaKey) {
-            e.preventDefault();
-            redo();
-          }
+          if (e.ctrlKey || e.metaKey) { e.preventDefault(); redo(); }
           break;
       }
     } else {
-      // In transform mode
-      if (e.key === 'Enter') {
-        exitTransformMode(true); // Confirm
-      } else if (e.key === 'Escape') {
-        exitTransformMode(false); // Cancel
-      } else if (e.key.toLowerCase() === 'x') {
-        setAxisConstraint('x');
-      } else if (e.key.toLowerCase() === 'y') {
-        setAxisConstraint('y');
-      } else if (e.key.toLowerCase() === 'z') {
-        setAxisConstraint('z');
-      }
+      if (e.key === 'Enter') exitTransformMode(true);
+      else if (e.key === 'Escape') exitTransformMode(false);
+      else if (e.key.toLowerCase() === 'x') setAxisConstraint('x');
+      else if (e.key.toLowerCase() === 'y') setAxisConstraint('y');
+      else if (e.key.toLowerCase() === 'z') setAxisConstraint('z');
     }
   });
 
@@ -1228,7 +1044,7 @@
         outline.material.dispose();
         selectionOutlines.delete(obj);
       }
-      
+
       if (obj.parent && obj.parent.isGroup) {
         obj.parent.remove(obj);
       } else {
@@ -1242,7 +1058,6 @@
     updateSelectedObjectUI();
   };
 
-  // Grouping
   document.getElementById('createGroup').onclick = () => {
     if (selectedObjects.length < 2) return;
     saveState();
@@ -1291,7 +1106,6 @@
     updateSelectedObjectUI();
   };
 
-  // Layers List
   function updateLayersList() {
     const list = document.getElementById('layersList');
     list.innerHTML = '';
@@ -1302,17 +1116,17 @@
     const li = document.createElement('li');
     li.className = 'layer-item' + (selectedObjects.includes(obj) ? ' active' : '') + (obj.userData.isGroup ? ' group' : '');
     li.innerHTML = `
-      <span class="layer-toggle">${obj.userData.isGroup ? '\u25bc' : ''}</span>
-      <span class="layer-visibility">${obj.visible ? '\ud83d\udc41' : '\ud83d\udeab'}</span>
+      <span class="layer-toggle">${obj.userData.isGroup ? '▼' : ''}</span>
+      <span class="layer-visibility">${obj.visible ? '👁' : '👁‍🗨'}</span>
       <span class="layer-name">${obj.userData.name || 'Object'}</span>
-      <span class="layer-delete">\u00d7</span>
+      <span class="layer-delete">×</span>
     `;
     parentList.appendChild(li);
 
     li.querySelector('.layer-visibility').onclick = (e) => {
       e.stopPropagation();
       obj.visible = !obj.visible;
-      li.querySelector('.layer-visibility').textContent = obj.visible ? '\ud83d\udc41' : '\ud83d\udeab';
+      li.querySelector('.layer-visibility').textContent = obj.visible ? '👁' : '👁‍🗨';
       obj.traverse(child => child.visible = obj.visible);
       const outline = selectionOutlines.get(obj);
       if (outline) outline.visible = obj.visible;
@@ -1352,7 +1166,7 @@
       li.querySelector('.layer-toggle').onclick = (e) => {
         e.stopPropagation();
         childList.style.display = childList.style.display === 'none' ? 'block' : 'none';
-        li.querySelector('.layer-toggle').textContent = childList.style.display === 'none' ? '\u25b6' : '\u25bc';
+        li.querySelector('.layer-toggle').textContent = childList.style.display === 'none' ? '▶' : '▼';
       };
     }
   }
@@ -1369,7 +1183,7 @@
     selectionOutlines.forEach((outline, obj) => {
       scene.remove(outline);
     });
-    
+
     exportStatus.textContent = 'Exporting...';
     exportStatus.style.color = '#60a5fa';
     const exporter = new GLTFExporter();
@@ -1381,14 +1195,13 @@
       link.click();
       exportStatus.textContent = 'Exported!';
       exportStatus.style.color = '#4ade80';
-      
+
       selectionOutlines.forEach((outline, obj) => {
         scene.add(outline);
       });
     }, { binary: true });
   };
 
-  // Panel toggle
   const panel = document.getElementById('panel');
   const panelToggle = document.getElementById('panelToggle');
   const mobilePanelToggle = document.getElementById('mobilePanelToggle');
@@ -1397,9 +1210,9 @@
     panelVisible = !panelVisible;
     panel.classList.toggle('hidden', !panelVisible);
     panel.classList.toggle('visible', panelVisible);
-    panelToggle.textContent = panelVisible ? '\u2190' : '\u2192';
+    panelToggle.textContent = panelVisible ? '←' : '→';
     const span = mobilePanelToggle.querySelector('span');
-    if (span) span.textContent = panelVisible ? '\u25bc Hide Controls' : '\u25b2 Controls';
+    if (span) span.textContent = panelVisible ? '▼ Hide Controls' : '▲ Controls';
   }
   panelToggle.onclick = togglePanel;
   mobilePanelToggle.onclick = togglePanel;
@@ -1410,7 +1223,6 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // ============ SCULPTING SYSTEM ============
   let currentSculptTool = 'brush';
   let brushSize = 0.5;
   let brushStrength = 0.5;
@@ -1443,7 +1255,6 @@
     document.getElementById('brushStrengthVal').textContent = brushStrength.toFixed(1);
   });
 
-  // Sculpting interaction
   canvas.addEventListener('pointerdown', (e) => {
     if (currentMode !== 'edit') return;
     if (selectedObjects.length === 0 || !selectedObjects[0].isMesh) return;
@@ -1462,9 +1273,9 @@
 
     const mesh = selectedObjects[0];
     applySculpt(mesh, lastSculptPosition, currentPos);
-    
+
     lastSculptPosition = currentPos;
-    
+
     const outline = selectionOutlines.get(mesh);
     if (outline) {
       outline.geometry.dispose();
@@ -1487,7 +1298,7 @@
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
-    
+
     if (selectedObjects.length > 0 && selectedObjects[0].isMesh) {
       const intersects = raycaster.intersectObject(selectedObjects[0], false);
       if (intersects.length > 0) {
@@ -1501,12 +1312,6 @@
     const geometry = mesh.geometry;
     const positionAttribute = geometry.attributes.position;
     const vertexCount = positionAttribute.count;
-    
-    if (geometry.index) {
-      geometry.toNonIndexed();
-      geometry.computeVertexNormals();
-      return;
-    }
 
     const positions = positionAttribute.array;
     const normalAttribute = geometry.attributes.normal;
@@ -1522,7 +1327,7 @@
 
     for (let i = 0; i < vertexCount; i++) {
       vertex.fromArray(positions, i * 3);
-      
+
       const distance = vertex.distanceTo(localLastPoint);
       if (distance < brushRadius) {
         const falloff = Math.pow(1 - (distance / brushRadius), 2);
@@ -1532,11 +1337,6 @@
 
         switch (currentSculptTool) {
           case 'brush':
-            displacement = falloff * strength;
-            tempVertex.copy(normal).multiplyScalar(displacement);
-            vertex.add(tempVertex);
-            break;
-
           case 'inflate':
             displacement = falloff * strength;
             tempVertex.copy(normal).multiplyScalar(displacement);
@@ -1586,18 +1386,39 @@
     geometry.attributes.normal.needsUpdate = true;
   }
 
-  // Drag & drop import
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file && (file.name.endsWith('.glb') || file.name.endsWith('.gltf'))) {
-      const url = URL.createObjectURL(file);
-      alert("Drag & drop import not fully implemented in this version \u2013 use the upload button.");
+      alert("Drag & drop import not fully implemented – use the upload button.");
     }
   });
 
-  // Animation loop
+  document.getElementById('uploadModel').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    new GLTFLoader().load(url, (gltf) => {
+      saveState();
+      const model = gltf.scene;
+      model.traverse(child => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      model.position.sub(center);
+      model.position.y -= box.min.y;
+      scene.add(model);
+      rootObjects.push(model);
+      document.getElementById('loader').style.display = 'none';
+      URL.revokeObjectURL(url);
+    });
+  });
+
   function animate() {
     requestAnimationFrame(animate);
     controls.update();
