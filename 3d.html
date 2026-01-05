@@ -47,7 +47,7 @@
   position: absolute;
   top: 90px;
   right: 20px;
-  width: 380px;
+  width: 420px;
   max-height: calc(100vh - 220px);
   background: rgba(2, 6, 23, 0.95);
   border: 1px solid #1e293b;
@@ -59,7 +59,7 @@
   transition: transform 0.3s ease;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   }
-  .panel.hidden { transform: translateX(420px); }
+  .panel.hidden { transform: translateX(460px); }
   .panel::-webkit-scrollbar { width: 6px; }
   .panel::-webkit-scrollbar-track { background: #0f172a; }
   .panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
@@ -192,6 +192,9 @@
   button { background: #60a5fa; border: none; color: white; cursor: pointer; margin-top: 0.8rem; font-weight: 600; transition: background 0.2s; }
   button:hover { background: #3b82f6; }
   button:disabled { background: #475569; cursor: not-allowed; }
+  button.mode-btn { margin-top: 0.2rem; padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+  button.mode-btn.active { background: #22c55e; border-color: #22c55e; }
+  button.mode-btn.sculpt-active { background: #f59e0b; border-color: #f59e0b; }
   #layersList { list-style: none; padding: 0; margin: 0 0 1rem; }
   .layer-item {
   display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent;
@@ -217,6 +220,11 @@
   .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; }
   .footer-nav a { color: #cbd5e1; text-decoration: none; }
   .footer-nav a:hover { color: #60a5fa; }
+  #sculptingControls { display: none; }
+  #sculptingControls.visible { display: block; }
+  .sculpt-tool-btn { width: auto; display: inline-block; margin: 2px; font-size: 0.8rem; }
+  .sculpt-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.8rem; }
+  . sculpt-row button { flex: 1; min-width: 60px; }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
@@ -247,23 +255,53 @@
   <div id="loader">Add objects or upload a model to start</div>
   <canvas id="canvas"></canvas>
   <div id="floatingControls">
-    <div class="floater" id="floaterSelect" title="Select Mode">👆</div>
+    <div class="floater" id="floaterSelect" title="Select Mode (Q)">👆</div>
     <div class="floater" id="floaterMove" title="Move (G)">✥</div>
     <div class="floater" id="floaterRotate" title="Rotate (R)">↻</div>
     <div class="floater" id="floaterScale" title="Scale (S)">⤢</div>
+    <div class="floater" id="floaterSculpt" title="Sculpt Mode (E)">🎨</div>
   </div>
   <div class="panel visible" id="panel">
   <button id="panelToggle">←</button>
  
   <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
   <strong style="color:#60a5fa">Controls:</strong><br>
+  • Q: Select Mode • G: Move • R: Rotate • S: Scale • E: Sculpt<br>
   • Left click + drag: Rotate view<br>
   • Right click + drag: Pan<br>
   • Scroll: Zoom<br>
   • Click object: Select • Ctrl/Cmd + click: Multi-select<br>
-  • G/R/S: Move/Rotate/Scale<br>
   • Delete: Delete • Ctrl+D: Duplicate • Ctrl+Z/Y: Undo/Redo
   </div>
+  <h2>Mode</h2>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:1rem;">
+    <button id="modeSelect" class="mode-btn active">Select (Q)</button>
+    <button id="modeMove" class="mode-btn">Move (G)</button>
+    <button id="modeRotate" class="mode-btn">Rotate (R)</button>
+    <button id="modeScale" class="mode-btn">Scale (S)</button>
+    <button id="modeSculpt" class="mode-btn">Sculpt (E)</button>
+  </div>
+
+  <h2 id="sculptingHeader" style="display:none;">Sculpting Tools</h2>
+  <div id="sculptingControls">
+    <div class="sculpt-row">
+      <button id="sculptBrush" class="sculpt-tool-btn active">Brush</button>
+      <button id="sculptInflate" class="sculpt-tool-btn">Inflate</button>
+      <button id="sculptDeflate" class="sculpt-tool-btn">Deflate</button>
+      <button id="sculptSmooth" class="sculpt-tool-btn">Smooth</button>
+      <button id="sculptFlatten" class="sculpt-tool-btn">Flatten</button>
+    </div>
+    <div class="control-group">
+      <label for="brushSize">Brush Size: <span id="brushSizeVal">0.5</span></label>
+      <input type="range" id="brushSize" min="0.1" max="2" step="0.1" value="0.5">
+    </div>
+    <div class="control-group">
+      <label for="brushStrength">Brush Strength: <span id="brushStrengthVal">0.5</span></label>
+      <input type="range" id="brushStrength" min="0.1" max="2" step="0.1" value="0.5">
+    </div>
+    <div class="hint">Click and drag on mesh to sculpt. Hold Shift to invert.</div>
+  </div>
+
   <h2>Add Objects</h2>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;">
   <button id="addBox">Box</button>
@@ -407,8 +445,11 @@
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
 
+  // Transform controls - properly initialized
   const transformControl = new TransformControls(camera, renderer.domElement);
-  transformControl.addEventListener('dragging-changed', (event) => controls.enabled = !event.value);
+  transformControl.addEventListener('dragging-changed', (event) => {
+    controls.enabled = !event.value;
+  });
   transformControl.addEventListener('change', updateTransformInputs);
   scene.add(transformControl);
 
@@ -432,10 +473,174 @@
   }
   loadEnvironment('neutral');
 
+  // Mode management
+  let currentMode = 'select'; // select, move, rotate, scale, sculpt
+  const modes = ['select', 'move', 'rotate', 'scale', 'sculpt'];
+
+  function setMode(mode) {
+    currentMode = mode;
+    
+    // Update UI buttons
+    modes.forEach(m => {
+      const btn = document.getElementById(`mode${m.charAt(0).toUpperCase() + m.slice(1)}`);
+      if (btn) btn.classList.remove('active', 'sculpt-active');
+    });
+    const activeBtn = document.getElementById(`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+      if (mode === 'sculpt') activeBtn.classList.add('sculpt-active');
+    }
+
+    // Update floater buttons
+    const floaters = {
+      'floaterSelect': 'select',
+      'floaterMove': 'move',
+      'floaterRotate': 'rotate',
+      'floaterScale': 'scale',
+      'floaterSculpt': 'sculpt'
+    };
+    Object.entries(floaters).forEach(([id, m]) => {
+      const el = document.getElementById(id);
+      el.classList.toggle('active', m === mode);
+    });
+
+    // Update transform controls
+    if (selectedObjects.length > 0) {
+      if (mode === 'select') {
+        transformControl.detach();
+      } else if (mode === 'move') {
+        transformControl.setMode('translate');
+        transformControl.attach(selectedObjects[0]);
+      } else if (mode === 'rotate') {
+        transformControl.setMode('rotate');
+        transformControl.attach(selectedObjects[0]);
+      } else if (mode === 'scale') {
+        transformControl.setMode('scale');
+        transformControl.attach(selectedObjects[0]);
+      } else if (mode === 'sculpt') {
+        transformControl.detach();
+      }
+    }
+
+    // Show/hide sculpting controls
+    const sculptingControls = document.getElementById('sculptingControls');
+    const sculptingHeader = document.getElementById('sculptingHeader');
+    if (mode === 'sculpt') {
+      sculptingControls.classList.add('visible');
+      sculptingHeader.style.display = 'block';
+    } else {
+      sculptingControls.classList.remove('visible');
+      sculptingHeader.style.display = 'none';
+    }
+  }
+
+  // Mode buttons
+  modes.forEach(mode => {
+    const btn = document.getElementById(`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
+    if (btn) {
+      btn.onclick = () => setMode(mode);
+    }
+  });
+
+  // Floater buttons
+  document.getElementById('floaterSelect').onclick = () => setMode('select');
+  document.getElementById('floaterMove').onclick = () => setMode('move');
+  document.getElementById('floaterRotate').onclick = () => setMode('rotate');
+  document.getElementById('floaterScale').onclick = () => setMode('scale');
+  document.getElementById('floaterSculpt').onclick = () => setMode('sculpt');
+
+  // Keyboard shortcuts for modes
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    switch(e.key.toLowerCase()) {
+      case 'q': setMode('select'); break;
+      case 'g': setMode('move'); break;
+      case 'r': setMode('rotate'); break;
+      case 's': setMode('scale'); break;
+      case 'e': setMode('sculpt'); break;
+      case 'delete':
+      case 'backspace':
+        document.getElementById('deleteBtn').click();
+        break;
+      case 'd':
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          document.getElementById('duplicateBtn').click();
+        }
+        break;
+      case 'z':
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          if (e.shiftKey) {
+            redo();
+          } else {
+            undo();
+          }
+        }
+        break;
+      case 'y':
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          redo();
+        }
+        break;
+    }
+  });
+
+  function updateFloaterActiveState() {
+    const floaters = {
+      'floaterSelect': 'select',
+      'floaterMove': 'move',
+      'floaterRotate': 'rotate',
+      'floaterScale': 'scale',
+      'floaterSculpt': 'sculpt'
+    };
+    Object.entries(floaters).forEach(([id, m]) => {
+      const el = document.getElementById(id);
+      el.classList.toggle('active', m === currentMode);
+    });
+  }
+
   // Object & Group Management
-  const rootObjects = []; // Top-level objects and groups
-  let selectedObjects = []; // Multiple selection
+  const rootObjects = [];
+  let selectedObjects = [];
   let objectCounter = 0;
+
+  // Selection highlight - green emissive glow
+  const selectionOutlineMaterial = new THREE.MeshBasicMaterial({
+    color: 0x22c55e,
+    transparent: true,
+    opacity: 0.3,
+    side: THREE.DoubleSide,
+    depthTest: false,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+
+  const selectionOutlines = new Map();
+
+  function updateSelectionHighlight() {
+    // Remove old outlines
+    selectionOutlines.forEach((outline, obj) => {
+      scene.remove(outline);
+      outline.geometry.dispose();
+      outline.material.dispose();
+    });
+    selectionOutlines.clear();
+
+    // Add new outlines
+    selectedObjects.forEach(obj => {
+      if (obj.isMesh) {
+        const outline = obj.clone();
+        outline.material = selectionOutlineMaterial.clone();
+        outline.scale.multiplyScalar(1.02);
+        outline.userData.isOutline = true;
+        outline.renderOrder = 999;
+        scene.add(outline);
+        selectionOutlines.set(obj, outline);
+      }
+    });
+  }
 
   // Undo/Redo
   const undoStack = [];
@@ -494,7 +699,8 @@
       const material = new THREE.MeshStandardMaterial({
         color: data.color,
         metalness: data.metallic,
-        roughness: data.roughness
+        roughness: data.roughness,
+        flatShading: false
       });
       obj = new THREE.Mesh(geometry, material);
       obj.userData.geometryName = data.geometry;
@@ -522,6 +728,7 @@
     selectedObjects = [];
     updateSelectedObjectUI();
     updateLayersList();
+    updateSelectionHighlight();
   }
 
   function undo() {
@@ -538,45 +745,45 @@
     undoStack.push(rootObjects.map(obj => serializeObject(obj)));
     const state = redoStack.pop();
     restoreState(state);
-    redoBtn.disabled = redoStack.length === 0;
+    redoStack.disabled = redoStack.length === 0;
     undoBtn.disabled = false;
   }
 
   undoBtn.onclick = undo;
   redoBtn.onclick = redo;
 
-  window.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
-  });
-
   function createGeometryForName(name) {
     switch(name) {
-      case 'Box': return new THREE.BoxGeometry(1, 1, 1);
-      case 'Sphere': return new THREE.SphereGeometry(0.5, 32, 32);
-      case 'Cylinder': return new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
-      case 'Torus': return new THREE.TorusGeometry(0.5, 0.2, 16, 48);
-      case 'Cone': return new THREE.ConeGeometry(0.5, 1, 32);
-      case 'Plane': return new THREE.PlaneGeometry(1, 1);
-      case 'Icosahedron': return new THREE.IcosahedronGeometry(0.6);
-      case 'Dodecahedron': return new THREE.DodecahedronGeometry(0.6);
-      case 'Octahedron': return new THREE.OctahedronGeometry(0.7);
-      case 'Tetrahedron': return new THREE.TetrahedronGeometry(0.7);
-      case 'Ring': return new THREE.RingGeometry(0.3, 0.6, 32);
+      case 'Box': return new THREE.BoxGeometry(1, 1, 1, 16, 16, 16);
+      case 'Sphere': return new THREE.SphereGeometry(0.5, 64, 64);
+      case 'Cylinder': return new THREE.CylinderGeometry(0.5, 0.5, 1, 64);
+      case 'Torus': return new THREE.TorusGeometry(0.5, 0.2, 32, 64);
+      case 'Cone': return new THREE.ConeGeometry(0.5, 1, 64);
+      case 'Plane': return new THREE.PlaneGeometry(1, 1, 32, 32);
+      case 'Icosahedron': return new THREE.IcosahedronGeometry(0.6, 2);
+      case 'Dodecahedron': return new THREE.DodecahedronGeometry(0.6, 1);
+      case 'Octahedron': return new THREE.OctahedronGeometry(0.7, 1);
+      case 'Tetrahedron': return new THREE.TetrahedronGeometry(0.7, 1);
+      case 'Ring': return new THREE.RingGeometry(0.3, 0.6, 64);
       case 'Tube': return new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
         new THREE.Vector3(-1, 0, 0),
         new THREE.Vector3(-0.5, 1, 0),
         new THREE.Vector3(0.5, -1, 0),
         new THREE.Vector3(1, 0, 0)
-      ]), 64, 0.1, 8, false);
-      default: return new THREE.BoxGeometry(1, 1, 1);
+      ]), 64, 0.1, 16, false);
+      default: return new THREE.BoxGeometry(1, 1, 1, 16, 16, 16);
     }
   }
 
   function addPrimitive(name) {
     saveState();
     const geometry = createGeometryForName(name);
-    const material = new THREE.MeshStandardMaterial({ color: 0x60a5fa, metalness: 0, roughness: 0.5 });
+    const material = new THREE.MeshStandardMaterial({ 
+      color: 0x60a5fa, 
+      metalness: 0, 
+      roughness: 0.5,
+      flatShading: false
+    });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.y = 0.5;
     mesh.castShadow = true;
@@ -586,7 +793,7 @@
     mesh.userData.id = objectCounter++;
     scene.add(mesh);
     rootObjects.push(mesh);
-    selectObject(mesh, e => e.ctrlKey || e.metaKey);
+    selectObject(mesh, false);
     updateLayersList();
     document.getElementById('loader').style.display = 'none';
   }
@@ -615,24 +822,41 @@
       if (!selectedObjects.includes(object)) selectedObjects.push(object);
     }
     updateSelectedObjectUI();
-    updateFloaterActiveState();
+    updateSelectionHighlight();
     updateLayersList();
 
+    // Update transform control based on mode
     if (selectedObjects.length === 1) {
-      transformControl.attach(selectedObjects[0]);
+      if (currentMode === 'move') {
+        transformControl.setMode('translate');
+        transformControl.attach(selectedObjects[0]);
+      } else if (currentMode === 'rotate') {
+        transformControl.setMode('rotate');
+        transformControl.attach(selectedObjects[0]);
+      } else if (currentMode === 'scale') {
+        transformControl.setMode('scale');
+        transformControl.attach(selectedObjects[0]);
+      } else {
+        transformControl.detach();
+      }
     } else {
       transformControl.detach();
     }
   }
 
   canvas.addEventListener('pointerdown', (e) => {
+    // Skip if in sculpting mode
+    if (currentMode === 'sculpt') return;
+
     if (transformControl.dragging) return;
     const rect = canvas.getBoundingClientRect();
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
     const allMeshes = [];
-    rootObjects.forEach(obj => obj.traverse(child => { if (child.isMesh) allMeshes.push(child); }));
+    rootObjects.forEach(obj => obj.traverse(child => { 
+      if (child.isMesh && !child.userData.isOutline) allMeshes.push(child); 
+    }));
     const intersects = raycaster.intersectObjects(allMeshes, false);
     if (intersects.length > 0) {
       selectObject(intersects[0].object, e.ctrlKey || e.metaKey);
@@ -640,6 +864,7 @@
       selectedObjects = [];
       transformControl.detach();
       updateSelectedObjectUI();
+      updateSelectionHighlight();
       updateLayersList();
     }
   });
@@ -704,6 +929,13 @@
       obj.position.copy(pos);
       obj.rotation.copy(rot);
       obj.scale.copy(scale);
+      // Update outline if exists
+      const outline = selectionOutlines.get(obj);
+      if (outline) {
+        outline.position.copy(pos);
+        outline.rotation.copy(rot);
+        outline.scale.copy(scale).multiplyScalar(1.02);
+      }
     });
   }
 
@@ -753,6 +985,7 @@
       clones.push(clone);
     });
     selectedObjects = clones;
+    updateSelectionHighlight();
     updateLayersList();
     updateSelectedObjectUI();
   };
@@ -761,6 +994,15 @@
     if (selectedObjects.length === 0) return;
     saveState();
     selectedObjects.forEach(obj => {
+      // Remove outline
+      const outline = selectionOutlines.get(obj);
+      if (outline) {
+        scene.remove(outline);
+        outline.geometry.dispose();
+        outline.material.dispose();
+        selectionOutlines.delete(obj);
+      }
+      
       if (obj.parent && obj.parent.isGroup) {
         obj.parent.remove(obj);
       } else {
@@ -795,6 +1037,7 @@
     scene.add(group);
     rootObjects.push(group);
     selectedObjects = [group];
+    updateSelectionHighlight();
     updateLayersList();
     updateSelectedObjectUI();
   };
@@ -818,6 +1061,7 @@
       if (idx > -1) rootObjects.splice(idx, 1);
     });
     selectedObjects = [];
+    updateSelectionHighlight();
     updateLayersList();
     updateSelectedObjectUI();
   };
@@ -845,16 +1089,28 @@
       obj.visible = !obj.visible;
       li.querySelector('.layer-visibility').textContent = obj.visible ? '👁' : '🚫';
       obj.traverse(child => child.visible = obj.visible);
+      // Update outline visibility
+      const outline = selectionOutlines.get(obj);
+      if (outline) outline.visible = obj.visible;
       saveState();
     };
 
     li.querySelector('.layer-delete').onclick = (e) => {
       e.stopPropagation();
       saveState();
+      // Remove outline
+      const outline = selectionOutlines.get(obj);
+      if (outline) {
+        scene.remove(outline);
+        outline.geometry.dispose();
+        outline.material.dispose();
+        selectionOutlines.delete(obj);
+      }
       scene.remove(obj);
       const idx = rootObjects.indexOf(obj);
       if (idx > -1) rootObjects.splice(idx, 1);
       selectedObjects = selectedObjects.filter(o => o !== obj);
+      updateSelectionHighlight();
       updateLayersList();
       updateSelectedObjectUI();
     };
@@ -878,9 +1134,6 @@
     }
   }
 
-  // Model Import/Export, Environment, Panel Toggle, Resize, etc. (same as before)
-  // ... [rest of the original code for import/export, env, panel, etc. remains unchanged]
-
   document.getElementById('envPreset').addEventListener('change', (e) => loadEnvironment(e.target.value));
 
   const exportStatus = document.getElementById('exportStatus');
@@ -890,6 +1143,11 @@
       exportStatus.style.color = '#ef4444';
       return;
     }
+    // Temporarily remove selection outlines before export
+    selectionOutlines.forEach((outline, obj) => {
+      scene.remove(outline);
+    });
+    
     exportStatus.textContent = 'Exporting...';
     exportStatus.style.color = '#60a5fa';
     const exporter = new GLTFExporter();
@@ -901,10 +1159,15 @@
       link.click();
       exportStatus.textContent = 'Exported!';
       exportStatus.style.color = '#4ade80';
+      
+      // Add outlines back
+      selectionOutlines.forEach((outline, obj) => {
+        scene.add(outline);
+      });
     }, { binary: true });
   };
 
-  // Panel toggle (same as original)
+  // Panel toggle
   const panel = document.getElementById('panel');
   const panelToggle = document.getElementById('panelToggle');
   const mobilePanelToggle = document.getElementById('mobilePanelToggle');
@@ -926,12 +1189,190 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
+  // ============ SCULPTING SYSTEM ============
+  let currentSculptTool = 'brush';
+  let brushSize = 0.5;
+  let brushStrength = 0.5;
+  let isSculpting = false;
+  let lastSculptPosition = null;
+
+  const sculptTools = ['brush', 'inflate', 'deflate', 'smooth', 'flatten'];
+
+  sculptTools.forEach(tool => {
+    const btn = document.getElementById(`sculpt${tool.charAt(0).toUpperCase() + tool.slice(1)}`);
+    if (btn) {
+      btn.onclick = () => {
+        currentSculptTool = tool;
+        sculptTools.forEach(t => {
+          const b = document.getElementById(`sculpt${t.charAt(0).toUpperCase() + t.slice(1)}`);
+          if (b) b.classList.remove('active');
+        });
+        btn.classList.add('active');
+      };
+    }
+  });
+
+  document.getElementById('brushSize').addEventListener('input', (e) => {
+    brushSize = parseFloat(e.target.value);
+    document.getElementById('brushSizeVal').textContent = brushSize.toFixed(1);
+  });
+
+  document.getElementById('brushStrength').addEventListener('input', (e) => {
+    brushStrength = parseFloat(e.target.value);
+    document.getElementById('brushStrengthVal').textContent = brushStrength.toFixed(1);
+  });
+
+  // Sculpting interaction
+  canvas.addEventListener('pointerdown', (e) => {
+    if (currentMode !== 'sculpt') return;
+    if (selectedObjects.length === 0 || !selectedObjects[0].isMesh) return;
+
+    isSculpting = true;
+    lastSculptPosition = getIntersectionPoint(e);
+    saveState();
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!isSculpting || currentMode !== 'sculpt') return;
+    if (selectedObjects.length === 0 || !selectedObjects[0].isMesh) return;
+
+    const currentPos = getIntersectionPoint(e);
+    if (!currentPos || !lastSculptPosition) return;
+
+    const mesh = selectedObjects[0];
+    applySculpt(mesh, lastSculptPosition, currentPos);
+    
+    lastSculptPosition = currentPos;
+    
+    // Update selection outline
+    const outline = selectionOutlines.get(mesh);
+    if (outline) {
+      outline.geometry.dispose();
+      outline.geometry = mesh.geometry.clone();
+    }
+  });
+
+  canvas.addEventListener('pointerup', () => {
+    isSculpting = false;
+    lastSculptPosition = null;
+  });
+
+  canvas.addEventListener('pointerleave', () => {
+    isSculpting = false;
+    lastSculptPosition = null;
+  });
+
+  function getIntersectionPoint(e) {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    
+    if (selectedObjects.length > 0 && selectedObjects[0].isMesh) {
+      const intersects = raycaster.intersectObject(selectedObjects[0], false);
+      if (intersects.length > 0) {
+        return intersects[0];
+      }
+    }
+    return null;
   }
-  animate();
+
+  function applySculpt(mesh, lastPoint, currentPoint) {
+    const geometry = mesh.geometry;
+    const positionAttribute = geometry.attributes.position;
+    const vertexCount = positionAttribute.count;
+    
+    // Convert to non-indexed if indexed for sculpting
+    if (geometry.index) {
+      geometry.toNonIndexed();
+      geometry.computeVertexNormals();
+      return;
+    }
+
+    const positions = positionAttribute.array;
+    const normalAttribute = geometry.attributes.normal;
+    const normals = normalAttribute.array;
+
+    const localLastPoint = mesh.worldToLocal(lastPoint.point.clone());
+    const localCurrentPoint = mesh.worldToLocal(currentPoint.point.clone());
+    const brushRadius = brushSize / mesh.scale.x;
+    const strength = brushStrength * 0.01;
+
+    const vertex = new THREE.Vector3();
+    const tempVertex = new THREE.Vector3();
+    const center = new THREE.Vector3();
+
+    // Calculate brush direction
+    const brushDirection = new THREE.Vector3().subVectors(currentPoint.point, lastPoint.point);
+    const isShiftHeld = false; // Could add shift key detection for inverse
+
+    for (let i = 0; i < vertexCount; i++) {
+      vertex.fromArray(positions, i * 3);
+      
+      const distance = vertex.distanceTo(localLastPoint);
+      if (distance < brushRadius) {
+        const falloff = Math.pow(1 - (distance / brushRadius), 2);
+        let displacement = 0;
+
+        const normal = new THREE.Vector3(normals[i * 3], normals[i * 3 + 1], normals[i * 3 + 2]);
+
+        switch (currentSculptTool) {
+          case 'brush':
+            displacement = falloff * strength;
+            tempVertex.copy(normal).multiplyScalar(displacement);
+            vertex.add(tempVertex);
+            break;
+
+          case 'inflate':
+            displacement = falloff * strength;
+            tempVertex.copy(normal).multiplyScalar(displacement);
+            vertex.add(tempVertex);
+            break;
+
+          case 'deflate':
+            displacement = falloff * strength;
+            tempVertex.copy(normal).multiplyScalar(-displacement);
+            vertex.add(tempVertex);
+            break;
+
+          case 'smooth':
+            // Average with nearby vertices
+            center.set(0, 0, 0);
+            let count = 0;
+            for (let j = 0; j < vertexCount; j++) {
+              if (i === j) continue;
+              tempVertex.fromArray(positions, j * 3);
+              const d = vertex.distanceTo(tempVertex);
+              if (d < brushRadius * 0.5) {
+                center.add(tempVertex);
+                count++;
+              }
+            }
+            if (count > 0) {
+              center.divideScalar(count);
+              tempVertex.subVectors(center, vertex).multiplyScalar(falloff * strength);
+              vertex.add(tempVertex);
+            }
+            break;
+
+          case 'flatten':
+            // Push towards a plane
+            const planeHeight = localLastPoint.y;
+            const diff = planeHeight - vertex.y;
+            vertex.y += diff * falloff * strength;
+            break;
+        }
+
+        positions[i * 3] = vertex.x;
+        positions[i * 3 + 1] = vertex.y;
+        positions[i * 3 + 2] = vertex.z;
+      }
+    }
+
+    positionAttribute.needsUpdate = true;
+    geometry.computeVertexNormals();
+    geometry.attributes.normal.needsUpdate = true;
+  }
 
   // Drag & drop import
   window.addEventListener('dragover', e => e.preventDefault());
@@ -940,10 +1381,17 @@
     const file = e.dataTransfer.files[0];
     if (file && (file.name.endsWith('.glb') || file.name.endsWith('.gltf'))) {
       const url = URL.createObjectURL(file);
-      // You can extend this to support imported model grouping if desired
       alert("Drag & drop import not fully implemented in this version – use the upload button.");
     }
   });
+
+  // Animation loop
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
 </script>
 </body>
 </html>
