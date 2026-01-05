@@ -3,499 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Nightmare: Local Rhythm Game</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background: #000033;
-            color: #F8F8FF;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-        }
-        #ui {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 10;
-            text-shadow: 0 0 10px #00FFFF;
-        }
-        #controls {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            z-index: 10;
-            font-size: 14px;
-        }
-        canvas {
-            display: block;
-            cursor: crosshair;
-        }
-        input, button {
-            background: #1A1A1A;
-            color: #00FFFF;
-            border: 2px solid #00FFFF;
-            padding: 10px;
-            margin: 5px;
-            font-family: inherit;
-            cursor: pointer;
-            box-shadow: 0 0 10px #00FFFF;
-        }
-        input:hover, button:hover {
-            box-shadow: 0 0 20px #00FFFF;
-        }
-        #uploadArea {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 20;
-        }
-    </style>
+    <title>NEON NIGHTMARE - Local Rhythm Game</title>
+    <link rel="stylesheet" href="styles.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
-    <div id="uploadArea">
-        <h1 style="font-size: 3em; text-shadow: 0 0 30px #FF1493;">NEON NIGHTMARE</h1>
-        <p>Upload your local audio file (MP3, WAV, etc.)</p>
-        <input type="file" id="audioFile" accept="audio/*">
-        <br>
-        <button id="loadBtn">Load & Analyze</button>
-        <button id="playBtn" disabled>Play Nightmare</button>
+    <!-- Background Effects -->
+    <div class="void-background"></div>
+    <div class="fog-layer"></div>
+    <div class="particles" id="particles"></div>
+    
+    <!-- Decorative Elements -->
+    <div class="crooked-tree left"></div>
+    <div class="crooked-tree right"></div>
+
+    <!-- Main Menu -->
+    <div class="menu-container" id="mainMenu">
+        <h1 class="game-title">NEON NIGHTMARE</h1>
+        <p class="game-subtitle">A Local File Rhythm Experience</p>
+        
+        <div class="menu-options">
+            <div class="file-upload-container">
+                <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
+                <button class="menu-button" id="uploadButton">
+                    🎵 Upload Audio File
+                </button>
+                <p class="upload-info" id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
+            </div>
+            <button class="menu-button" id="playDemo">
+                🎮 Play Demo Mode
+            </button>
+            <button class="menu-button" id="viewLeaderboards">
+                🏆 High Scores
+            </button>
+            <button class="menu-button" id="openSettings">
+                ⚙️ Settings
+            </button>
+        </div>
     </div>
-    <div id="ui" style="display:none;">
-        <div id="score" style="font-size: 2em;">Score: 0</div>
-        <div id="combo" style="font-size: 1.5em;">Combo: 0x | Multiplier: 1x</div>
-        <div id="progress" style="font-size: 1em;">Progress: 0%</div>
+
+    <!-- Game Container -->
+    <div class="game-container" id="gameContainer">
+        <!-- Top HUD -->
+        <div class="hud-top">
+            <div class="score-display">
+                SCORE: <span id="scoreValue">0</span>
+            </div>
+            <div class="multiplier-display">
+                <span id="multiplierValue">1</span>x
+            </div>
+        </div>
+
+        <!-- Song Info -->
+        <div class="song-info">
+            <h2 class="song-title" id="songTitle">No Track Loaded</h2>
+            <p class="song-artist" id="songArtist">Upload an audio file to begin</p>
+        </div>
+
+        <!-- Note Highway -->
+        <div class="note-highway" id="noteHighway">
+            <div class="fret-lanes">
+                <div class="fret-lane" data-fret="green"></div>
+                <div class="fret-lane" data-fret="red"></div>
+                <div class="fret-lane" data-fret="yellow"></div>
+                <div class="fret-lane" data-fret="blue"></div>
+                <div class="fret-lane" data-fret="orange"></div>
+            </div>
+            <div class="target-line" id="targetLine"></div>
+        </div>
+
+        <!-- Fret Buttons -->
+        <div class="fret-buttons">
+            <div class="fret-button green" data-fret="green">
+                <span>A</span>
+                <span class="fret-button-key">Green</span>
+            </div>
+            <div class="fret-button red" data-fret="red">
+                <span>S</span>
+                <span class="fret-button-key">Red</span>
+            </div>
+            <div class="fret-button yellow" data-fret="yellow">
+                <span>D</span>
+                <span class="fret-button-key">Yellow</span>
+            </div>
+            <div class="fret-button blue" data-fret="blue">
+                <span>F</span>
+                <span class="fret-button-key">Blue</span>
+            </div>
+            <div class="fret-button orange" data-fret="orange">
+                <span>G</span>
+                <span class="fret-button-key">Orange</span>
+            </div>
+        </div>
+
+        <!-- Bottom HUD -->
+        <div class="hud-bottom">
+            <div class="combo-display" id="comboDisplay">
+                <span id="comboValue">0</span> COMBO
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
     </div>
-    <div id="controls" style="display:none;">
-        <p>Keyboard: A S D F G</p>
-        <p>Touch: Tap lanes</p>
-        <p>ESC: Pause/Resume</p>
+
+    <!-- Pause Menu -->
+    <div class="pause-menu" id="pauseMenu">
+        <h2 class="pause-title">⏸️ PAUSED</h2>
+        <div class="menu-options">
+            <button class="menu-button" id="resumeGame">
+                ▶️ Resume
+            </button>
+            <button class="menu-button" id="restartSong">
+                🔄 Restart
+            </button>
+            <button class="menu-button" id="changeDifficulty">
+                📊 Change Difficulty
+            </button>
+            <button class="menu-button" id="returnToMenu">
+                🏠 Main Menu
+            </button>
+        </div>
     </div>
-    <canvas id="canvas"></canvas>
 
-    <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const loadBtn = document.getElementById('loadBtn');
-        const playBtn = document.getElementById('playBtn');
-        const ui = document.getElementById('ui');
-        const controls = document.getElementById('controls');
-        const uploadArea = document.getElementById('uploadArea');
+    <!-- Settings Modal -->
+    <div class="pause-menu" id="settingsMenu">
+        <h2 class="pause-title">⚙️ SETTINGS</h2>
+        <div class="menu-options">
+            <button class="menu-button" id="setDifficultyEasy">
+                🟢 Easy
+            </button>
+            <button class="menu-button" id="setDifficultyMedium">
+                🟡 Medium
+            </button>
+            <button class="menu-button" id="setDifficultyHard">
+                🟠 Hard
+            </button>
+            <button class="menu-button" id="setDifficultyExpert">
+                🔴 Expert
+            </button>
+            <button class="menu-button" id="closeSettings">
+                ← Back
+            </button>
+        </div>
+    </div>
 
-        let audioCtx;
-        let buffer;
-        let notes = [];
-        let source;
-        let startTime = 0;
-        let isPlaying = false;
-        let paused = false;
-        let score = 0;
-        let combo = 0;
-        let multiplier = 1;
-        let particles = [];
-        let duration = 0;
+    <!-- Song Complete Modal -->
+    <div class="pause-menu" id="songCompleteMenu">
+        <h2 class="pause-title">🎵 SONG COMPLETE!</h2>
+        <div class="menu-options">
+            <div class="final-score">
+                <p class="score-label">Final Score</p>
+                <p class="score-value" id="finalScoreValue">0</p>
+            </div>
+            <div class="final-stats">
+                <p>Perfect: <span id="perfectCount">0</span></p>
+                <p>Great: <span id="greatCount">0</span></p>
+                <p>Good: <span id="goodCount">0</span></p>
+                <p>Miss: <span id="missCount">0</span></p>
+                <p>Max Combo: <span id="maxComboValue">0</span></p>
+            </div>
+            <button class="menu-button" id="playAgain">
+                🔄 Play Again
+            </button>
+            <button class="menu-button" id="uploadNewSong">
+                📁 Upload New Song
+            </button>
+            <button class="menu-button" id="mainMenuFromComplete">
+                🏠 Main Menu
+            </button>
+        </div>
+    </div>
 
-        const lanes = 5;
-        const laneKeys = ['A', 'S', 'D', 'F', 'G'];
-        const colors = ['#39FF14', '#FF1493', '#00FFFF', '#9D00FF', '#FFBF00']; // Acid Green, Hot Pink, Electric Blue, Deep Purple, Golden Amber
-        const laneWidth = 0.2; // fraction of screen per lane
-        const lookAhead = 5; // seconds visible ahead
-        const hitOffset = 3; // seconds to target line
-        const perfectWindow = 0.05;
-        const greatWindow = 0.10;
-        const goodWindow = 0.15;
-        const missWindow = 0.20;
-        const targetFrac = hitOffset / lookAhead;
-        const threshold = 0.25; // peak threshold, tune as needed
-        const minIntervalSec = 0.08; // min note spacing
-
-        let activeLanes = new Set();
-        let lastCheckTime = 0;
-
-        // Resize canvas
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        // Input handling
-        document.addEventListener('keydown', (e) => {
-            if (paused) return;
-            const key = e.key.toUpperCase();
-            const lane = laneKeys.indexOf(key);
-            if (lane >= 0) {
-                activeLanes.add(lane);
-                e.preventDefault();
-            }
-            if (e.key === 'Escape') {
-                togglePause();
-            }
-        });
-        document.addEventListener('keyup', (e) => {
-            const key = e.key.toUpperCase();
-            const lane = laneKeys.indexOf(key);
-            if (lane >= 0) {
-                activeLanes.delete(lane);
-            }
-        });
-
-        canvas.addEventListener('mousedown', (e) => {
-            if (paused) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const lane = Math.floor(x / rect.width * lanes);
-            if (lane >= 0 && lane < lanes) {
-                activeLanes.add(lane);
-            }
-        });
-        canvas.addEventListener('mouseup', () => {
-            activeLanes.clear();
-        });
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            const x = touch.clientX - rect.left;
-            const lane = Math.floor(x / rect.width * lanes);
-            if (lane >= 0 && lane < lanes) {
-                activeLanes.add(lane);
-            }
-        });
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            activeLanes.clear();
-        });
-
-        // Load button
-        loadBtn.onclick = async () => {
-            const file = document.getElementById('audioFile').files[0];
-            if (!file) {
-                alert('Please select an audio file');
-                return;
-            }
-            uploadArea.style.display = 'none';
-            ui.style.display = 'block';
-            controls.style.display = 'block';
-            try {
-                const arrayBuffer = await file.arrayBuffer();
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                buffer = await audioCtx.decodeAudioData(arrayBuffer);
-                duration = buffer.duration;
-                await analyze(buffer);
-                playBtn.disabled = false;
-                updateUI();
-            } catch (err) {
-                alert('Error loading audio: ' + err.message);
-            }
-        };
-
-        // Analyze and generate procedural notes
-        async function analyze(buffer) {
-            // Low-pass filter for bass/kick detection
-            const offlineCtx = new OfflineAudioContext(1, buffer.length, buffer.sampleRate);
-            const src = offlineCtx.createBufferSource();
-            src.buffer = buffer;
-            const filter = offlineCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.value = 150;
-            src.connect(filter);
-            filter.connect(offlineCtx.destination);
-            src.start(0);
-            const filteredBuffer = await offlineCtx.startRendering();
-            const data = filteredBuffer.getChannelData(0);
-
-            // Find peaks
-            const peaks = getPeaksAtThreshold(data, threshold);
-
-            // Generate notes at peak times, random lane, min spacing
-            notes = [];
-            const minIntervalSamples = audioCtx.sampleRate * minIntervalSec;
-            let lastPeak = -minIntervalSamples;
-            for (let peak of peaks) {
-                if (peak - lastPeak > minIntervalSamples) {
-                    const lane = Math.floor(Math.random() * lanes);
-                    notes.push({
-                        time: peak / buffer.sampleRate,
-                        lane,
-                        hit: false
-                    });
-                    lastPeak = peak;
-                }
-            }
-            notes.sort((a, b) => a.time - b.time);
-            console.log(`Generated ${notes.length} procedural notes from audio peaks`);
-        }
-
-        function getPeaksAtThreshold(data, threshold) {
-            const peaks = [];
-            for (let i = 0; i < data.length; ) {
-                if (data[i] > threshold) {
-                    peaks.push(i);
-                    i += Math.floor(audioCtx.sampleRate * 0.1); // skip ~100ms
-                } else {
-                    i++;
-                }
-            }
-            return peaks;
-        }
-
-        // Play button
-        playBtn.onclick = () => {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            source = audioCtx.createBufferSource();
-            source.buffer = buffer;
-            source.connect(audioCtx.destination);
-            source.start(0);
-            startTime = audioCtx.currentTime;
-            isPlaying = true;
-            paused = false;
-            playBtn.textContent = 'Playing...';
-            playBtn.disabled = true;
-            gameLoop();
-        };
-
-        function togglePause() {
-            if (!isPlaying) return;
-            paused = !paused;
-            if (paused) {
-                source.stop();
-            } else {
-                // Restart from current position approx
-                const currentPos = audioCtx.currentTime - startTime;
-                source = audioCtx.createBufferSource();
-                source.buffer = buffer;
-                source.connect(audioCtx.destination);
-                source.start(0, currentPos);
-                startTime = audioCtx.currentTime - currentPos;
-            }
-        }
-
-        // Game loop
-        function gameLoop() {
-            if (!isPlaying || paused) {
-                requestAnimationFrame(gameLoop);
-                return;
-            }
-
-            const now = audioCtx.currentTime;
-            let songTime = now - startTime;
-            if (songTime >= duration + 1) {
-                // Game over
-                alert(`Nightmare Complete! Final Score: ${score}`);
-                return;
-            }
-
-            checkHits(songTime);
-
-            draw(songTime);
-
-            updateUI(songTime / duration);
-
-            requestAnimationFrame(gameLoop);
-        }
-
-        function checkHits(songTime) {
-            // Hit detection for active lanes
-            for (let lane of activeLanes) {
-                for (let note of notes) {
-                    if (note.hit) continue;
-                    const delta = note.time - (songTime + hitOffset);
-                    if (Math.abs(delta) < goodWindow && note.lane === lane) {
-                        note.hit = true;
-                        const points = getPoints(Math.abs(delta));
-                        score += points * multiplier;
-                        combo++;
-                        if (combo % 10 === 0) multiplier++;
-                        // Particles!
-                        spawnParticles(canvas.width * (lane / lanes + 1/lanes/2), canvas.height * (1 - targetFrac), colors[lane]);
-                        break; // one per frame
-                    }
-                }
-            }
-
-            // Miss check
-            for (let note of notes) {
-                if (!note.hit) {
-                    const delta = note.time - (songTime + hitOffset);
-                    if (delta < -missWindow) {
-                        note.hit = true; // mark to avoid repeat
-                        combo = 0;
-                        multiplier = 1;
-                        // Miss effect: red flash or something
-                        break;
-                    }
-                }
-            }
-        }
-
-        function getPoints(delta) {
-            if (delta < perfectWindow) return 100;
-            if (delta < greatWindow) return 75;
-            return 50;
-        }
-
-        function spawnParticles(x, y, col) {
-            for (let i = 0; i < 8; i++) {
-                particles.push({
-                    x, y,
-                    vx: (Math.random() - 0.5) * 20,
-                    vy: -Math.random() * 10 - 5,
-                    col,
-                    life: 1,
-                    size: Math.random() * 5 + 2
-                });
-            }
-        }
-
-        function updateUI(progress) {
-            document.getElementById('score').textContent = `Score: ${score.toLocaleString()}`;
-            document.getElementById('combo').textContent = `Combo: ${combo} | Multiplier: ${multiplier}x`;
-            document.getElementById('progress').textContent = `Progress: ${Math.floor(progress * 100)}%`;
-        }
-
-        // Draw everything
-        function draw(songTime) {
-            const w = canvas.width;
-            const h = canvas.height;
-
-            // Trail/fog
-            ctx.fillStyle = 'rgba(0, 0, 51, 0.3)';
-            ctx.fillRect(0, 0, w, h);
-
-            // Glow setup
-            ctx.shadowBlur = 30;
-            ctx.shadowColor = '#00FFFF';
-
-            // Twisted gothic background elements
-            drawGothicBg(w, h);
-
-            ctx.shadowBlur = 0;
-
-            // Highway lanes
-            const lanePos = [];
-            for (let i = 0; i < lanes; i++) {
-                const x = w * (i / lanes + 0.5 / lanes);
-                lanePos[i] = x;
-                ctx.strokeStyle = colors[i];
-                ctx.lineWidth = 4;
-                ctx.shadowColor = colors[i];
-                ctx.shadowBlur = 20;
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, h);
-                ctx.stroke();
-            }
-            ctx.shadowBlur = 0;
-
-            // Target line
-            const targetY = h * (1 - targetFrac);
-            ctx.strokeStyle = '#F8F8FF';
-            ctx.lineWidth = 8;
-            ctx.shadowColor = '#F8F8FF';
-            ctx.shadowBlur = 40;
-            ctx.beginPath();
-            ctx.moveTo(0, targetY);
-            ctx.lineTo(w, targetY);
-            ctx.stroke();
-
-            // Notes
-            ctx.shadowBlur = 15;
-            for (let note of notes) {
-                if (note.hit) continue;
-                const frac = (note.time - songTime) / lookAhead;
-                const y = h * (1 - frac);
-                if (y > -50 && y < h + 50) {
-                    const x = lanePos[note.lane];
-                    ctx.fillStyle = colors[note.lane];
-                    ctx.shadowColor = colors[note.lane];
-                    ctx.shadowBlur = 25;
-                    ctx.fillRect(x - 15, y - 30, 30, 60); // Tall spectral note
-                }
-            }
-            ctx.shadowBlur = 0;
-
-            // Particles
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.3; // gravity
-                p.life -= 0.03;
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                    continue;
-                }
-                ctx.save();
-                ctx.globalAlpha = p.life;
-                ctx.shadowColor = p.col;
-                ctx.shadowBlur = 20;
-                ctx.fillStyle = p.col;
-                ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
-                ctx.restore();
-            }
-
-            // Progress vine (twisted bar)
-            const progY = h - 20;
-            ctx.strokeStyle = '#39FF14';
-            ctx.lineWidth = 6;
-            ctx.shadowColor = '#39FF14';
-            ctx.shadowBlur = 15;
-            ctx.beginPath();
-            ctx.moveTo(20, progY);
-            for (let t = 0; t < 1; t += 0.05) {
-                const twist = Math.sin(t * Math.PI * 8) * 10;
-                ctx.lineTo(20 + t * (w - 40) + twist, progY + Math.sin(t * Math.PI * 4) * 5);
-            }
-            ctx.stroke();
-            ctx.strokeStyle = 'rgba(57, 255, 20, 0.3)';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(20, progY);
-            for (let t = 0; t < (songTime / duration); t += 0.05) {
-                const twist = Math.sin(t * Math.PI * 8) * 10;
-                ctx.lineTo(20 + t * (w - 40) + twist, progY + Math.sin(t * Math.PI * 4) * 5);
-            }
-            ctx.stroke();
-        }
-
-        function drawGothicBg(w, h) {
-            // Crooked towers and trees
-            ctx.lineWidth = 3;
-            for (let i = 0; i < 8; i++) {
-                const col = colors[Math.floor(Math.random() * colors.length)];
-                ctx.strokeStyle = col;
-                ctx.shadowColor = col;
-                ctx.shadowBlur = 40;
-                const x = (i + 1) * w / 9;
-                ctx.beginPath();
-                ctx.moveTo(x, h);
-                for (let j = 0; j < 15; j++) {
-                    const y = h - (j / 15) * h * 0.8;
-                    const twist = Math.sin(j * 0.4 + i) * 40;
-                    ctx.lineTo(x + twist, y);
-                }
-                ctx.lineTo(x, 0);
-                ctx.stroke();
-            }
-            // Floating lanterns
-            ctx.fillStyle = '#FFBF00';
-            ctx.shadowColor = '#FFBF00';
-            ctx.shadowBlur = 30;
-            for (let i = 0; i < 12; i++) {
-                const x = (i % 4) * w / 4 + w / 8;
-                const y = (Math.floor(i / 4)) * h / 3 + 100 + Math.sin(Date.now() * 0.001 + i) * 20;
-                ctx.beginPath();
-                ctx.arc(x, y, 15, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        // Prevent context menu on canvas
-        canvas.addEventListener('contextmenu', (e) => e.preventDefault());
-    </script>
+    <!-- Scripts -->
+    <script src="game.js"></script>
 </body>
 </html>
