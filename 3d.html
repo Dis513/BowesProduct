@@ -303,9 +303,14 @@
   }
   </style>
  
-
-</script>
-
+  <!-- Three.js and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/TransformControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/STLLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/exporters/GLTFExporter.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -316,7 +321,6 @@
         <a href="index.html">Home</a>
         <a href="models.html">Models</a>
         <a href="retexture.html">Retexture</a>
-        <a href="editor.html">Editor</a>
         <a href="3d.html" class="active">3D</a>
       </nav>
     </div>
@@ -438,7 +442,7 @@
     <button class="btn btn-primary" style="width:100%" onclick="applyMaterial()">Apply to Selection</button>
   </div>
   <div id="canvas-container">
-    <div id="loader">Initializing 3D Engine...</div>
+    <div id="loader">Blender Pro 2026 • Initializing 3D Engine...</div>
    
     <!-- Rulers -->
     <div class="ruler-corner" id="rulerCorner"></div>
@@ -707,320 +711,136 @@ setInterval(async () => {
   }
 }, 30000);
 </script>
-  <script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
-
-    "three/examples/jsm/controls/OrbitControls.js":
-      "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js",
-
-    "three/examples/jsm/controls/TransformControls.js":
-      "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/TransformControls.js",
-
-    "three/examples/jsm/loaders/GLTFLoader.js":
-      "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/GLTFLoader.js",
-
-    "three/examples/jsm/loaders/OBJLoader.js":
-      "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/OBJLoader.js",
-
-    "three/examples/jsm/loaders/STLLoader.js":
-      "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/STLLoader.js",
-
-    "three/examples/jsm/exporters/GLTFExporter.js":
-      "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/exporters/GLTFExporter.js"
-  }
-}
-</script>
-
-<script type="module">
-import * as THREE from "three";
-
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
-
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
-
-import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
-
-  // ==================== GLOBAL STATE ====================
-  let scene, camera, renderer, controls, transformControls;
-  let selectedObjects = [];
-  let currentMode = 'object';
-  let currentTool = 'select';
-  let currentBrush = 'draw';
-  let brushSize = 0.5;
-  let brushStrength = 0.5;
-  let symmetryEnabled = false;
-  let sculpting = false;
-  let raycaster, mouse;
-  let gridHelper, axesHelper;
-  let ambientLight, directionalLight, hemisphereLight;
-  let undoStack = [];
-  let redoStack = [];
-  let objectCounter = 0;
-  let materials = [];
-  let lastTime = performance.now();
-  let frameCount = 0;
-  let fps = 60;
+<script>
+// ==================== GLOBAL STATE ====================
+let scene, camera, renderer, controls, transformControls;
 let selectedObjects = [];
+let currentMode = 'object';
+let currentTool = 'select';
+let currentBrush = 'draw';
+let brushSize = 0.5;
+let brushStrength = 0.5;
+let symmetryEnabled = false;
+let sculpting = false;
+let raycaster, mouse;
+let gridHelper, axesHelper;
+let ambientLight, directionalLight, hemisphereLight;
 let undoStack = [];
 let redoStack = [];
-let transformMode = "translate";
-
-// ===============================
-// FILE / SCENE
-// ===============================
-function newScene() {
-  console.log("New Scene");
-
-  if (!scene) return;
-
-  // clear scene except camera/lights
-  scene.children.slice().forEach(obj => {
-    if (!obj.isCamera && !obj.isLight) {
-      scene.remove(obj);
-    }
-  });
-
-  selectedObjects = [];
-  undoStack = [];
-  redoStack = [];
-
-  updateProperties();
-}
-
-function showSceneLoader() {
-  console.log("Show Scene Loader (Firebase)");
-  alert("Scene loader not yet implemented");
-}
-
-function saveScene() {
-  console.log("Save Scene");
-
-  const data = scene.toJSON();
-  console.log("Scene JSON:", data);
-
-  alert("Scene serialized (check console)");
-}
-
-// ===============================
-// IMPORT / EXPORT
-// ===============================
-function importModel() {
-  console.log("Import Model");
-
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = ".gltf,.glb,.obj,.stl";
-
-  input.onchange = e => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    console.log("Selected file:", file.name);
-    alert("Importer hook ready (loader not wired yet)");
-  };
-
-  input.click();
-}
-
-function exportModel() {
-  console.log("Export Model");
-
-  const exporter = new GLTFExporter();
-  exporter.parse(
-    scene,
-    gltf => {
-      const blob = new Blob([JSON.stringify(gltf)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "scene.gltf";
-      a.click();
-
-      URL.revokeObjectURL(url);
-    },
-    { binary: false }
+let objectCounter = 0;
+let materials = [];
+let modifiers = {};
+let lastTime = performance.now();
+let frameCount = 0;
+let fps = 60;
+// ==================== INITIALIZATION ====================
+function init() {
+  console.log('Initializing Blender Pro 2026...');
+ 
+  const canvas = document.getElementById('canvas');
+  const container = document.getElementById('canvas-container');
+ 
+  // Scene
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x1a1a2e);
+ 
+  // Camera
+  camera = new THREE.PerspectiveCamera(
+    75,
+    canvas.clientWidth / canvas.clientHeight,
+    0.1,
+    1000
   );
-}
-
-// ===============================
-// EDIT
-// ===============================
-function undo() {
-  console.log("Undo");
-  if (undoStack.length === 0) return;
-
-  const state = undoStack.pop();
-  redoStack.push(scene.toJSON());
-  // restore logic goes here
-}
-
-function redo() {
-  console.log("Redo");
-  if (redoStack.length === 0) return;
-
-  const state = redoStack.pop();
-  undoStack.push(scene.toJSON());
-  // restore logic goes here
-}
-
-function duplicateSelected() {
-  console.log("Duplicate Selected");
-
-  selectedObjects.forEach(obj => {
-    const clone = obj.clone();
-    clone.position.x += 0.2;
-    clone.position.y += 0.2;
-    scene.add(clone);
+  camera.position.set(5, 5, 5);
+  camera.lookAt(0, 0, 0);
+ 
+  // Renderer
+  renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    antialias: true,
+    preserveDrawingBuffer: true
   });
-}
-
-function deleteSelected() {
-  console.log("Delete Selected");
-
-  selectedObjects.forEach(obj => scene.remove(obj));
-  selectedObjects = [];
-  updateProperties();
-}
-
-function selectAll() {
-  console.log("Select All");
-
-  selectedObjects = scene.children.filter(o => o.isMesh);
-  updateProperties();
-}
-
-// ===============================
-// TRANSFORM
-// ===============================
-function setTransformMode(mode) {
-  console.log("Transform mode:", mode);
-  transformMode = mode;
-
-  if (transformControls) {
-    transformControls.setMode(mode);
-  }
-}
-
-// ===============================
-// UI
-// ===============================
-function updateProperties() {
-  if (selectedObjects.length === 0) {
-    document.getElementById('posX').value = '';
-    document.getElementById('posY').value = '';
-    document.getElementById('posZ').value = '';
-    document.getElementById('rotX').value = '';
-    document.getElementById('rotY').value = '';
-    document.getElementById('rotZ').value = '';
-    document.getElementById('scaleX').value = '';
-    document.getElementById('scaleY').value = '';
-    document.getElementById('scaleZ').value = '';
-    updateModifierList();
-    return;
-  }
-
-  const obj = selectedObjects[0];
-  document.getElementById('posX').value = obj.position.x.toFixed(2);
-  document.getElementById('posY').value = obj.position.y.toFixed(2);
-  document.getElementById('posZ').value = obj.position.z.toFixed(2);
-
-  document.getElementById('rotX').value = THREE.MathUtils.radToDeg(obj.rotation.x).toFixed(1);
-  document.getElementById('rotY').value = THREE.MathUtils.radToDeg(obj.rotation.y).toFixed(1);
-  document.getElementById('rotZ').value = THREE.MathUtils.radToDeg(obj.rotation.z).toFixed(1);
-
-  document.getElementById('scaleX').value = obj.scale.x.toFixed(2);
-  document.getElementById('scaleY').value = obj.scale.y.toFixed(2);
-  document.getElementById('scaleZ').value = obj.scale.z.toFixed(2);
-
-  updateModifierList();
-}
-
-  // ==================== INITIALIZATION ====================
-  function init() {
-    console.log('Initializing Blender Pro 2026...');
-    const canvas = document.getElementById('canvas');
-
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a1a2e);
-
-    camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    camera.position.set(5, 5, 5);
-
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.screenSpacePanning = true;
-    controls.minDistance = 0.1;
-    controls.maxDistance = 500;
-
-    transformControls = new TransformControls(camera, renderer.domElement);
-    transformControls.addEventListener('dragging-changed', (event) => {
-      controls.enabled = !event.value;
-    });
-    transformControls.addEventListener('change', updateProperties);
-    scene.add(transformControls);
-
-    raycaster = new THREE.Raycaster();
-    mouse = new THREE.Vector2();
-
-    gridHelper = new THREE.GridHelper(20, 20, 0x60a5fa, 0x334155);
-    scene.add(gridHelper);
-
-    axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
-
-    ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-    hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
-    scene.add(hemisphereLight);
-    directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 10, 7);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
-    scene.add(directionalLight);
-
-    window.addEventListener('resize', onWindowResize);
-    canvas.addEventListener('mousedown', onMouseDown);
-    canvas.addEventListener('mousemove', onMouseMove);
-    canvas.addEventListener('mouseup', onMouseUp);
-    canvas.addEventListener('wheel', onMouseWheel, { passive: false });
-    canvas.addEventListener('contextmenu', onContextMenu);
-    document.addEventListener('keydown', onKeyDown);
-
-    initPanelTabs();
-    updateOutliner();
-
-    animate();
-
-    setTimeout(() => {
-      document.getElementById('loader').style.display = 'none';
-      console.log('Blender Pro 2026 initialized successfully!');
-    }, 1000);
-
- function saveState() {
-  // Placeholder - full undo would need deep scene serialization
-  undoStack.push({
-    selected: [...selectedObjects],
-    timestamp: Date.now()
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+ 
+  // Orbit Controls
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.screenSpacePanning = true;
+  controls.minDistance = 0.1;
+  controls.maxDistance = 500;
+ 
+  // Transform Controls
+  transformControls = new THREE.TransformControls(camera, renderer.domElement);
+  transformControls.addEventListener('dragging-changed', (event) => {
+    controls.enabled = !event.value;
   });
-  if (undoStack.length > 50) undoStack.shift();
-  redoStack = [];
+  transformControls.addEventListener('change', () => {
+    updateProperties();
+  });
+  scene.add(transformControls);
+ 
+  // Raycaster
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2();
+ 
+  // Grid Helper
+  gridHelper = new THREE.GridHelper(20, 20, 0x60a5fa, 0x334155);
+  scene.add(gridHelper);
+ 
+  // Axes Helper
+  axesHelper = new THREE.AxesHelper(5);
+  scene.add(axesHelper);
+ 
+  // Lighting
+  ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambientLight);
+ 
+  hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+  scene.add(hemisphereLight);
+ 
+  directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(5, 10, 7);
+  directionalLight.castShadow = true;
+  directionalLight.shadow.mapSize.width = 2048;
+  directionalLight.shadow.mapSize.height = 2048;
+  directionalLight.shadow.camera.near = 0.5;
+  directionalLight.shadow.camera.far = 500;
+  scene.add(directionalLight);
+ 
+  // Event Listeners
+  window.addEventListener('resize', onWindowResize);
+  canvas.addEventListener('mousedown', onMouseDown);
+  canvas.addEventListener('mousemove', onMouseMove);
+  canvas.addEventListener('mouseup', onMouseUp);
+  canvas.addEventListener('wheel', onMouseWheel, { passive: false });
+  canvas.addEventListener('contextmenu', onContextMenu);
+  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keyup', onKeyUp);
+ 
+  // Touch support
+  canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+  canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+  canvas.addEventListener('touchend', onTouchEnd);
+ 
+  // Initialize panels
+  initPanelTabs();
+  updateOutliner();
+ 
+  // Start animation loop
+  animate();
+ 
+  // Hide loader
+  setTimeout(() => {
+    document.getElementById('loader').style.display = 'none';
+    console.log('Blender Pro 2026 initialized successfully!');
+  }, 1000);
+ 
+  saveState();
 }
-  }
-
 // ==================== ANIMATION LOOP ====================
 function animate() {
   requestAnimationFrame(animate);
@@ -1082,8 +902,7 @@ function onMouseDown(event) {
       }
      
       selectObject(obj);
-     updateProperties();
-updateModifierList();
+     
       if (selectedObjects.length > 0) {
         transformControls.attach(selectedObjects[0]);
       }
@@ -1334,38 +1153,7 @@ function selectObject(obj) {
       obj.material.emissiveIntensity = 0.2;
     }
    
-  function updateProperties() {
-  if (selectedObjects.length === 0) {
-    document.getElementById('posX').value = '';
-    document.getElementById('posY').value = '';
-    document.getElementById('posZ').value = '';
-    document.getElementById('rotX').value = '';
-    document.getElementById('rotY').value = '';
-    document.getElementById('rotZ').value = '';
-    document.getElementById('scaleX').value = '';
-    document.getElementById('scaleY').value = '';
-    document.getElementById('scaleZ').value = '';
-    updateModifierList();
-    return;
-  }
-
-  // Use only the first selected object for properties
-  const obj = selectedObjects[0];
-
-  document.getElementById('posX').value = obj.position.x.toFixed(2);
-  document.getElementById('posY').value = obj.position.y.toFixed(2);
-  document.getElementById('posZ').value = obj.position.z.toFixed(2);
-
-  document.getElementById('rotX').value = THREE.MathUtils.radToDeg(obj.rotation.x).toFixed(1);
-  document.getElementById('rotY').value = THREE.MathUtils.radToDeg(obj.rotation.y).toFixed(1);
-  document.getElementById('rotZ').value = THREE.MathUtils.radToDeg(obj.rotation.z).toFixed(1);
-
-  document.getElementById('scaleX').value = obj.scale.x.toFixed(2);
-  document.getElementById('scaleY').value = obj.scale.y.toFixed(2);
-  document.getElementById('scaleZ').value = obj.scale.z.toFixed(2);
-
-  updateModifierList();
-}
+    updateProperties();
     updateOutliner();
   }
 }
@@ -1882,7 +1670,7 @@ function handleImport(event) {
     const contents = e.target.result;
    
     if (file.name.endsWith('.gltf') || file.name.endsWith('.glb')) {
-      const loader = new  GLTFLoader();
+      const loader = new THREE.GLTFLoader();
       loader.parse(contents, '', (gltf) => {
         const model = gltf.scene;
         model.name = file.name;
@@ -2060,7 +1848,71 @@ function redo() {
   undoStack.push(redoStack.pop());
   showNotification('Redo');
 }
-
+// ==================== FIREBASE SCENE MANAGEMENT ====================
+async function saveScene() {
+  if (!window.auth || !window.auth.currentUser) {
+    showNotification('Login to save scenes');
+    return;
+  }
+ 
+  await window.saveSceneToFirebase();
+  showNotification('Scene Saved');
+}
+async function window.saveSceneToFirebase() {
+  if (!window.db || !window.auth.currentUser) return;
+ 
+  const sceneData = {
+    timestamp: Date.now(),
+    objectCount: scene.children.length
+  };
+ 
+  const scenesRef = collection(window.db, `users/${window.auth.currentUser.uid}/scenes`);
+  await addDoc(scenesRef, sceneData);
+}
+async function showSceneLoader() {
+  if (!window.auth || !window.auth.currentUser) {
+    showNotification('Login to load scenes');
+    return;
+  }
+ 
+  showNotification('Loading scenes from Firebase...');
+ 
+  const scenesRef = collection(window.db, `users/${window.auth.currentUser.uid}/scenes`);
+  const snapshot = await getDocs(scenesRef);
+ 
+  const scenes = [];
+  snapshot.forEach(doc => {
+    scenes.push({ id: doc.id, ...doc.data() });
+  });
+ 
+  if (scenes.length === 0) {
+    showNotification('No saved scenes');
+  } else {
+    showNotification(`Found ${scenes.length} scenes`);
+  }
+}
+function newScene() {
+  if (confirm('Create new scene? All unsaved changes will be lost.')) {
+    const toRemove = [];
+    scene.children.forEach(obj => {
+      if (obj.isMesh) {
+        toRemove.push(obj);
+      }
+    });
+    toRemove.forEach(obj => {
+      scene.remove(obj);
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) obj.material.dispose();
+    });
+   
+    selectedObjects = [];
+    transformControls.detach();
+    updateOutliner();
+    saveState();
+   
+    showNotification('New Scene');
+  }
+}
 // ==================== UI UPDATES ====================
 function updateProperties() {
   if (selectedObjects.length === 0) {
@@ -2201,7 +2053,7 @@ function showContextMenu(x, y) {
     document.addEventListener('click', closeMenu);
   }, 0);
 }
-/ ==================== PANEL TABS ====================
+// ==================== PANEL TABS ====================
 function initPanelTabs() {
   document.querySelectorAll('.panel-tab').forEach(tab => {
     tab.addEventListener('click', function() {
@@ -2272,48 +2124,18 @@ window.newScene = newScene;
 window.updateTransform = updateTransform;
 window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
-    
-  
+// ==================== INITIALIZE ====================
+// Force initialization first
 init();
-addPrimitive('cube');
-setTool('select');
-setMode('object');
-updateProperties();
-updateOutliner();
-setTimeout(() => {
-  document.getElementById('loader').style.display = 'none';
-}, 500);
 
+// Add a default cube after everything is set up
+addPrimitive('cube');
+
+// Also keep the event listener in case it fires later
+window.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
