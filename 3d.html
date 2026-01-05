@@ -311,6 +311,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/OBJLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/STLLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/exporters/GLTFExporter.js"></script>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -692,7 +693,7 @@ onAuthStateChanged(auth, async (user) => {
   let prev = levels[level - 1] || 0;
   let next = levels[level] || prev + 1000;
   let progress = ((xp - prev) / (next - prev)) * 100;
-  levelText.textContent = `Level ${level} • ${xp} XP`;
+  levelText.textContent = Level ${level} • ${xp} XP;
   xpBar.style.width = progress + "%";
   levelInfo.style.display = "block";
 });
@@ -700,7 +701,7 @@ onAuthStateChanged(auth, async (user) => {
 // XP System
 window.addXP = async (amount) => {
   if (!auth.currentUser) return;
-  const userRef = doc(db, "users", auth.currentUser.uid);
+  const userRef = doc(db, auth.currentUser.uid);
   const snap = await getDoc(userRef);
   if (snap.exists()) {
     const data = snap.data();
@@ -764,12 +765,14 @@ function init() {
   renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     antialias: true,
-    preserveDrawingBuffer: true
+    preserveDrawingBuffer: true,
+    alpha: true
   });
   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setClearColor(0x1a1a2e, 1);
  
   // Orbit Controls
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -839,10 +842,11 @@ function init() {
   // Start animation loop
   animate();
  
-  // Hide loader
+  // Hide loader and add initial cube
   setTimeout(() => {
     document.getElementById('loader').style.display = 'none';
     console.log('Blender Pro 2026 initialized successfully!');
+    addPrimitive('cube');
   }, 1000);
  
   saveState();
@@ -859,7 +863,7 @@ function animate() {
   const currentTime = performance.now();
   if (currentTime - lastTime >= 1000) {
     fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-    document.getElementById('statusFPS').textContent = `FPS: ${fps}`;
+    document.getElementById('statusFPS').textContent = FPS: ${fps};
     frameCount = 0;
     lastTime = currentTime;
   }
@@ -1068,7 +1072,7 @@ function setTool(tool) {
     toolBtn.classList.add('active');
   }
  
-  document.getElementById('statusTool').textContent = `Tool: ${tool.charAt(0).toUpperCase() + tool.slice(1)}`;
+  document.getElementById('statusTool').textContent = Tool: ${tool.charAt(0).toUpperCase() + tool.slice(1)};
   showNotification(tool.charAt(0).toUpperCase() + tool.slice(1) + ' Tool');
 }
 function setMode(mode) {
@@ -1083,7 +1087,7 @@ function setMode(mode) {
     modeBtn.classList.add('active');
   }
  
-  document.getElementById('statusMode').textContent = `Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
+  document.getElementById('statusMode').textContent = Mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)};
  
   if (mode === 'sculpt') {
     showNotification('Sculpt Mode');
@@ -1116,7 +1120,7 @@ function setTransformMode(mode) {
   }
  
   currentTool = toolName;
-  document.getElementById('statusTool').textContent = `Tool: ${toolName.charAt(0).toUpperCase() + toolName.slice(1)}`;
+  document.getElementById('statusTool').textContent = Tool: ${toolName.charAt(0).toUpperCase() + toolName.slice(1)};
   showNotification(toolName.charAt(0).toUpperCase() + toolName.slice(1));
 }
 function setBrush(brush) {
@@ -1238,7 +1242,7 @@ function addPrimitive(type) {
   mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
-  mesh.name = `${type}_${++objectCounter}`;
+  mesh.name = ${type}_${++objectCounter};
   mesh.userData.modifiers = [];
   mesh.userData.materials = [];
  
@@ -1253,7 +1257,7 @@ function addPrimitive(type) {
     window.addXP(5);
   }
  
-  showNotification(`Added ${type}`);
+  showNotification(Added ${type});
 }
 function showAddMenu() {
   const primitives = ['cube', 'sphere', 'uvsphere', 'icosphere', 'cylinder', 'cone', 'torus', 'plane', 'monkey'];
@@ -1476,7 +1480,7 @@ function addModifierToObject(obj, type) {
   applyModifierEffect(obj, modifier);
  
   updateModifierList();
-  showNotification(`Added ${type} modifier`);
+  showNotification(Added ${type} modifier);
 }
 function applyModifierEffect(obj, modifier) {
   switch(modifier.type) {
@@ -1520,7 +1524,7 @@ function updateModifierList() {
 // ==================== MATERIALS ====================
 function createMaterial() {
   const material = {
-    name: `Material_${materials.length + 1}`,
+    name: Material_${materials.length + 1},
     color: 0x60a5fa,
     metalness: 0,
     roughness: 0.5,
@@ -1751,7 +1755,7 @@ function setShadingMode(mode) {
     }
   });
  
-  showNotification(`${mode.charAt(0).toUpperCase() + mode.slice(1)} Shading`);
+  showNotification(${mode.charAt(0).toUpperCase() + mode.slice(1)} Shading);
 }
 function renderScene() {
   renderer.setSize(1920, 1080);
@@ -1874,19 +1878,11 @@ window.saveSceneToFirebase = async function () {
 
   const scenesRef = collection(
     window.db,
-    `users/${window.auth.currentUser.uid}/scenes`
+    users/${window.auth.currentUser.uid}/scenes
   );
   await addDoc(scenesRef, sceneData);
 };
 
-  const sceneData = {
-    timestamp: Date.now(),
-    objectCount: scene.children.length
-  };
- 
-  const scenesRef = collection(window.db, `users/${window.auth.currentUser.uid}/scenes`);
-  await addDoc(scenesRef, sceneData);
-}
 async function showSceneLoader() {
   if (!window.auth || !window.auth.currentUser) {
     showNotification('Login to load scenes');
@@ -1895,7 +1891,7 @@ async function showSceneLoader() {
  
   showNotification('Loading scenes from Firebase...');
  
-  const scenesRef = collection(window.db, `users/${window.auth.currentUser.uid}/scenes`);
+  const scenesRef = collection(window.db, users/${window.auth.currentUser.uid}/scenes);
   const snapshot = await getDocs(scenesRef);
  
   const scenes = [];
@@ -1906,7 +1902,7 @@ async function showSceneLoader() {
   if (scenes.length === 0) {
     showNotification('No saved scenes');
   } else {
-    showNotification(`Found ${scenes.length} scenes`);
+    showNotification(Found ${scenes.length} scenes);
   }
 }
 function newScene() {
@@ -2001,7 +1997,7 @@ function updateOutliner() {
     }
   });
  
-  document.getElementById('statusSelection').textContent = `Selected: ${selectedObjects.length} objects, ${vertCount} vertices`;
+  document.getElementById('statusSelection').textContent = Selected: ${selectedObjects.length} objects, ${vertCount} vertices;
 }
 function updateCursorDisplay() {
   raycaster.setFromCamera(mouse, camera);
@@ -2010,7 +2006,7 @@ function updateCursorDisplay() {
   if (intersects.length > 0) {
     const point = intersects[0].point;
     document.getElementById('statusCursor').textContent =
-      `Cursor: ${point.x.toFixed(1)}, ${point.y.toFixed(1)}, ${point.z.toFixed(1)}`;
+      Cursor: ${point.x.toFixed(1)}, ${point.y.toFixed(1)}, ${point.z.toFixed(1)};
   }
 }
 function updateTimeline() {
@@ -2022,7 +2018,7 @@ function addArmature() {
   const boneGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 8);
   const boneMaterial = new THREE.MeshBasicMaterial({ color: 0xff6b6b });
   const bone = new THREE.Mesh(boneGeometry, boneMaterial);
-  bone.name = `Bone_${++objectCounter}`;
+  bone.name = Bone_${++objectCounter};
  
   scene.add(bone);
   selectObject(bone);
@@ -2144,15 +2140,7 @@ window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
 window.addEventListener('DOMContentLoaded', () => {
   init();
-  addPrimitive('cube');
 });
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
