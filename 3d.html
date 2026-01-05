@@ -990,7 +990,15 @@ function updateProperties() {
       console.log('Blender Pro 2026 initialized successfully!');
     }, 1000);
 
-    saveState();
+ function saveState() {
+  // Placeholder - full undo would need deep scene serialization
+  undoStack.push({
+    selected: [...selectedObjects],
+    timestamp: Date.now()
+  });
+  if (undoStack.length > 50) undoStack.shift();
+  redoStack = [];
+}
   }
 
 // ==================== ANIMATION LOOP ====================
@@ -2246,16 +2254,19 @@ window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
     
   
-  // At the very end:
-  init();
-  // Set initial tool and mode
+init();
+addPrimitive('cube');
 setTool('select');
 setMode('object');
-  addPrimitive('cube');
-  
+updateProperties();
+updateOutliner();
+setTimeout(() => {
+  document.getElementById('loader').style.display = 'none';
+}, 500);
 
 </body>
 </html>
+
 
 
 
