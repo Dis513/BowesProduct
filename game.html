@@ -2,467 +2,482 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D FPS Battle Arena</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Space Lane Dodger</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Courier New', monospace;
+            touch-action: manipulation;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            color: white;
+        }
+        #score, #speed {
+            position: absolute;
+            left: 10px;
+            font-size: 5vw;
+            text-shadow: 0 0 10px #00ff00;
+            pointer-events: none;
+            z-index: 10;
+        }
+        #score { top: 10px; color: #00ff00; }
+        #speed { top: 50px; color: #ffff00; font-size: 4vw; }
 
-    <!-- Latest Three.js (r182 as of January 2026 - supports CapsuleGeometry natively) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r182/three.min.js"></script>
+        #start-screen, #game-over-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: auto;
+            width: 90%;
+            max-width: 400px;
+        }
+        #start-screen h1, #game-over-screen h2 {
+            font-size: 10vw;
+            margin: 0 0 20px 0;
+            color: #00ff00;
+            text-shadow: 0 0 20px #00ff00;
+        }
+        #start-screen p, #game-over-screen p {
+            font-size: 4.5vw;
+            margin-bottom: 30px;
+            color: #aaa;
+        }
+        button {
+            padding: 15px 40px;
+            font-size: 7vw;
+            background: #00ff00;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #00ff00;
+            min-width: 200px;
+        }
+        #game-over-screen { display: none; }
+        #game-over-screen h2 { color: #ff0066; text-shadow: 0 0 20px #ff0066; }
+
+        /* Touch buttons for mobile */
+        #touch-controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: none;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-sizing: border-box;
+            pointer-events: auto;
+            z-index: 20;
+        }
+        .touch-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 255, 0, 0.3);
+            border: 3px solid #00ff00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #00ff00;
+            box-shadow: 0 0 15px #00ff00;
+        }
+        @media (max-width: 768px) {
+            #touch-controls { display: flex; }
+            #score, #speed { font-size: 6vw; }
+        }
+    </style>
 </head>
 <body>
-    <div id="game-container">
-        <canvas id="game-canvas"></canvas>
+    <canvas id="canvas"></canvas>
 
-        <!-- HUD -->
-        <div id="hud">
-            <div id="crosshair">
-                <div class="crosshair-line horizontal"></div>
-                <div class="crosshair-line vertical"></div>
-            </div>
+    <div id="ui">
+        <div id="score">SCORE: 0</div>
+        <div id="speed">SPEED: 1.0x</div>
 
-            <div id="health-bar">
-                <div id="health-fill"></div>
-            </div>
-
-            <div id="ammo-display">30/90</div>
-            <div id="score-display">Score: 0</div>
-            <div id="wave-display">Wave: 1</div>
+        <div id="start-screen">
+            <h1>SPACE DODGER</h1>
+            <p>Tap sides or swipe to change lanes<br>Avoid asteroids • Collect green orbs</p>
+            <button id="start-button">PLAY</button>
         </div>
 
-        <!-- Wave Announcement -->
-        <div id="wave-announcement">WAVE 1</div>
-
-        <!-- Main Menu -->
-        <div id="menu">
-            <h1>3D FPS BATTLE ARENA</h1>
-            <p>Survive the waves and become the ultimate champion!</p>
-
-            <div id="character-select">
-                <div class="character-option selected" data-character="default" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                    <canvas id="preview-default" width="120" height="120"></canvas>
-                </div>
-                <div class="character-option" data-character="ninja" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
-                    <canvas id="preview-ninja" width="120" height="120"></canvas>
-                </div>
-                <div class="character-option" data-character="cyber" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                    <canvas id="preview-cyber" width="120" height="120"></canvas>
-                </div>
-            </div>
-
-            <div id="upload-section">
-                <h2>Upload Custom Character</h2>
-                <p>Upload a GLB/GLTF 3D model (max 50MB)</p>
-                <input type="file" id="file-input" accept=".glb,.gltf">
-                <button class="upload-button" onclick="document.getElementById('file-input').click()">Choose Model</button>
-                <div id="model-preview"></div>
-            </div>
-
-            <button class="menu-button" id="start-button">START GAME</button>
-
-            <div id="instructions">
-                <h3>Controls</h3>
-                <ul>
-                    <li><span class="key">WASD</span> Move</li>
-                    <li><span class="key">Mouse</span> Look around</li>
-                    <li><span class="key">Left Click</span> Shoot</li>
-                    <li><span class="key">R</span> Reload</li>
-                    <li><span class="key">Shift</span> Sprint</li>
-                </ul>
-            </div>
+        <div id="game-over-screen">
+            <h2>GAME OVER</h2>
+            <p id="final-score">FINAL SCORE: 0</p>
+            <button id="restart-button">PLAY AGAIN</button>
         </div>
 
-        <!-- Game Over Screen -->
-        <div id="game-over">
-            <h1>GAME OVER</h1>
-            <div id="final-score">Final Score: 0</div>
-            <button class="menu-button" id="restart-button">PLAY AGAIN</button>
+        <div id="touch-controls">
+            <div class="touch-btn" id="left-btn">←</div>
+            <div class="touch-btn" id="right-btn">→</div>
         </div>
     </div>
 
     <script>
-        // Game State
-        const gameState = {
-            isPlaying: false,
-            health: 100,
-            ammo: 30,
-            maxAmmo: 30,
-            reserveAmmo: 90,
-            score: 0,
-            wave: 1,
-            enemies: [],
-            bullets: [],
-            selectedCharacter: 'default',
-            customModel: null
-        };
+        class Game {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
 
-        // Three.js Setup
-        let scene, camera, renderer, clock;
-        let enemies = [];
-        let bullets = [];
-        let isLocked = false;
-        let moveForward = false;
-        let moveBackward = false;
-        let moveLeft = false;
-        let moveRight = false;
-        let velocity = new THREE.Vector3();
-        let direction = new THREE.Vector3();
-        let prevTime = performance.now();
+                this.gameState = 'start';
+                this.score = 0;
+                this.distance = 0;
+                this.baseSpeed = 3;
+                this.currentSpeed = this.baseSpeed;
+                this.speedBoostTimer = 0;
 
-        // Initialize Three.js
-        function initThreeJS() {
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x1a1a2e);
-            scene.fog = new THREE.Fog(0x1a1a2e, 10, 100);
+                this.lanes = 3;
+                this.playerLane = 1;
+                this.targetLane = 1;
+                this.laneTransition = 1;
 
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 0);
+                this.obstacles = [];
+                this.boosts = [];
+                this.stars = [];
+                this.particles = [];
 
-            renderer = new THREE.WebGLRenderer({
-                canvas: document.getElementById('game-canvas'),
-                antialias: true
-            });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                this.lastTime = 0;
 
-            clock = new THREE.Clock();
+                this.createStars();
+                this.setupControls();
+                this.animate();
+            }
 
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
-            scene.add(ambientLight);
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.laneWidth = this.canvas.width / this.lanes;
+            }
 
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(50, 100, 50);
-            directionalLight.castShadow = true;
-            directionalLight.shadow.mapSize.width = 2048;
-            directionalLight.shadow.mapSize.height = 2048;
-            scene.add(directionalLight);
+            createStars() {
+                this.stars = [];
+                for (let i = 0; i < 150; i++) {
+                    this.stars.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 2 + 0.5,
+                        speed: Math.random() * 1 + 0.5
+                    });
+                }
+            }
 
-            const pointLight1 = new THREE.PointLight(0x00ff88, 1, 50);
-            pointLight1.position.set(10, 10, 10);
-            scene.add(pointLight1);
-
-            const pointLight2 = new THREE.PointLight(0xff0066, 1, 50);
-            pointLight2.position.set(-10, 10, -10);
-            scene.add(pointLight2);
-
-            createMap();
-            createCharacterPreviews();
-
-            window.addEventListener('resize', onWindowResize);
-        }
-
-        // Create Game Map
-        function createMap() {
-            // Ground
-            const groundGeometry = new THREE.PlaneGeometry(200, 200, 50, 50);
-            const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x2a2a4a, roughness: 0.8, metalness: 0.2 });
-            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-            ground.rotation.x = -Math.PI / 2;
-            ground.receiveShadow = true;
-            scene.add(ground);
-
-            // Walls material
-            const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x3a3a6a, roughness: 0.6, metalness: 0.3 });
-
-            // Arena boundaries
-            const wallGeometry = new THREE.BoxGeometry(200, 10, 2);
-
-            const northWall = new THREE.Mesh(wallGeometry, wallMaterial);
-            northWall.position.set(0, 5, -100);
-            northWall.castShadow = northWall.receiveShadow = true;
-            scene.add(northWall);
-
-            const southWall = new THREE.Mesh(wallGeometry, wallMaterial);
-            southWall.position.set(0, 5, 100);
-            southWall.castShadow = southWall.receiveShadow = true;
-            scene.add(southWall);
-
-            const eastWall = new THREE.Mesh(new THREE.BoxGeometry(2, 10, 200), wallMaterial);
-            eastWall.position.set(100, 5, 0);
-            eastWall.castShadow = eastWall.receiveShadow = true;
-            scene.add(eastWall);
-
-            const westWall = new THREE.Mesh(new THREE.BoxGeometry(2, 10, 200), wallMaterial);
-            westWall.position.set(-100, 5, 0);
-            westWall.castShadow = westWall.receiveShadow = true;
-            scene.add(westWall);
-
-            addObstacles();
-            addDecorations();
-        }
-
-        function addObstacles() {
-            const obstaclePositions = [
-                { x: 20, z: 20, width: 4, height: 3, depth: 4 },
-                { x: -20, z: -20, width: 3, height: 2, depth: 3 },
-                { x: 30, z: -30, width: 5, height: 4, depth: 2 },
-                { x: -30, z: 30, width: 2, height: 3, depth: 5 },
-                { x: 0, z: 40, width: 6, height: 2, depth: 2 },
-                { x: 40, z: 0, width: 2, height: 3, depth: 6 },
-                { x: -40, z: 0, width: 2, height: 2, depth: 4 },
-                { x: 15, z: -40, width: 4, height: 3, depth: 3 },
-                { x: -15, z: 40, width: 3, height: 2, depth: 4 },
-                { x: 50, z: 50, width: 4, height: 3, depth: 4 },
-                { x: -50, z: -50, width: 3, height: 2, depth: 3 }
-            ];
-
-            const obstacleColors = [0x4a4a8a, 0x5a5a9a, 0x3a3a7a, 0x6a6aaa];
-
-            obstaclePositions.forEach((pos, index) => {
-                const geometry = new THREE.BoxGeometry(pos.width, pos.height, pos.depth);
-                const material = new THREE.MeshStandardMaterial({
-                    color: obstacleColors[index % obstacleColors.length],
-                    roughness: 0.7,
-                    metalness: 0.3
+            setupControls() {
+                // Keyboard
+                window.addEventListener('keydown', (e) => {
+                    if (this.gameState !== 'playing') return;
+                    if (e.key === 'ArrowLeft' || e.key === 'a') this.moveLeft();
+                    if (e.key === 'ArrowRight' || e.key === 'd') this.moveRight();
                 });
-                const obstacle = new THREE.Mesh(geometry, material);
-                obstacle.position.set(pos.x, pos.height / 2, pos.z);
-                obstacle.castShadow = obstacle.receiveShadow = true;
-                scene.add(obstacle);
-            });
-        }
 
-        function addDecorations() {
-            // Glowing orbs
-            const orbGeometry = new THREE.SphereGeometry(1, 32, 32);
-            const orbMaterial = new THREE.MeshStandardMaterial({
-                color: 0x00ff88,
-                emissive: 0x00ff88,
-                emissiveIntensity: 0.5
-            });
+                // Touch swipe
+                let touchStartX = 0;
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    touchStartX = e.touches[0].clientX;
+                }, { passive: false });
 
-            for (let i = 0; i < 10; i++) {
-                const orb = new THREE.Mesh(orbGeometry, orbMaterial);
-                orb.position.set(
-                    Math.random() * 160 - 80,
-                    2 + Math.random() * 3,
-                    Math.random() * 160 - 80
-                );
-                scene.add(orb);
+                this.canvas.addEventListener('touchend', (e) => {
+                    if (this.gameState !== 'playing') return;
+                    e.preventDefault();
+                    const touchEndX = e.changedTouches[0].clientX;
+                    const diff = touchEndX - touchStartX;
+                    if (Math.abs(diff) > 50) {
+                        if (diff < 0) this.moveLeft();
+                        else this.moveRight();
+                    }
+                }, { passive: false });
+
+                // On-screen buttons
+                document.getElementById('left-btn').addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (this.gameState === 'playing') this.moveLeft();
+                }, { passive: false });
+
+                document.getElementById('right-btn').addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (this.gameState === 'playing') this.moveRight();
+                }, { passive: false });
+
+                // Start / Restart
+                document.getElementById('start-button').onclick = () => this.startGame();
+                document.getElementById('restart-button').onclick = () => this.restart();
             }
 
-            // Pillars
-            const pillarGeometry = new THREE.CylinderGeometry(1, 1, 8, 32);
-            const pillarMaterial = new THREE.MeshStandardMaterial({
-                color: 0x5a5a9a,
-                roughness: 0.5,
-                metalness: 0.5
-            });
-
-            for (let i = 0; i < 8; i++) {
-                const pillar = new THREE.Mesh(pillarGeometry, pillarMaterial);
-                const angle = (i / 8) * Math.PI * 2;
-                pillar.position.set(Math.cos(angle) * 40, 4, Math.sin(angle) * 40);
-                pillar.castShadow = pillar.receiveShadow = true;
-                scene.add(pillar);
+            moveLeft() {
+                if (this.playerLane > 0) this.targetLane = this.playerLane - 1;
             }
-        }
 
-        // Create character previews
-        function createCharacterPreviews() {
-            const characters = ['default', 'ninja', 'cyber'];
+            moveRight() {
+                if (this.playerLane < 2) this.targetLane = this.playerLane + 1;
+            }
 
-            characters.forEach(char => {
-                const canvas = document.getElementById(`preview-${char}`);
-                const previewScene = new THREE.Scene();
-                previewScene.background = new THREE.Color(0x1a1a2e);
+            startGame() {
+                this.gameState = 'playing';
+                document.getElementById('start-screen').style.display = 'none';
+                this.score = 0;
+                this.distance = 0;
+                this.baseSpeed = 3;
+                this.currentSpeed = this.baseSpeed;
+                this.playerLane = 1;
+                this.targetLane = 1;
+                this.obstacles = [];
+                this.boosts = [];
+                this.particles = [];
+            }
 
-                const previewCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-                previewCamera.position.set(0, 1.5, 3);
-                previewCamera.lookAt(0, 1, 0);
+            restart() {
+                document.getElementById('game-over-screen').style.display = 'none';
+                this.startGame();
+            }
 
-                const previewRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-                previewRenderer.setSize(120, 120);
+            spawnObstacle() {
+                const lane = Math.floor(Math.random() * 3);
+                this.obstacles.push({
+                    lane,
+                    y: -60,
+                    size: 40 + Math.random() * 20,
+                    pulse: 0
+                });
+            }
 
-                const light = new THREE.DirectionalLight(0xffffff, 1);
-                light.position.set(5, 10, 5);
-                previewScene.add(light);
+            spawnBoost() {
+                const lane = Math.floor(Math.random() * 3);
+                this.boosts.push({
+                    lane,
+                    y: -60,
+                    rotation: 0
+                });
+            }
 
-                const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
-                previewScene.add(ambientLight);
-
-                const characterMesh = createCharacterMesh(char);
-                previewScene.add(characterMesh);
-
-                const groundGeometry = new THREE.PlaneGeometry(10, 10);
-                const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x2a2a4a });
-                const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-                ground.rotation.x = -Math.PI / 2;
-                previewScene.add(ground);
-
-                function animatePreview() {
-                    requestAnimationFrame(animatePreview);
-                    characterMesh.rotation.y += 0.02;
-                    previewRenderer.render(previewScene, previewCamera);
+            createParticles(x, y, color) {
+                for (let i = 0; i < 15; i++) {
+                    const angle = (Math.PI * 2 / 15) * i;
+                    const speed = 3 + Math.random() * 4;
+                    this.particles.push({
+                        x, y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 1,
+                        color
+                    });
                 }
-                animatePreview();
-            });
-        }
-
-        // Create character mesh
-        function createCharacterMesh(type) {
-            const group = new THREE.Group();
-
-            let color = 0x667eea;
-            let accentColor = 0x764ba2;
-
-            switch (type) {
-                case 'ninja':
-                    color = 0x1a1a1a;
-                    accentColor = 0xff0066;
-                    break;
-                case 'cyber':
-                    color = 0x00f2fe;
-                    accentColor = 0x4facfe;
-                    break;
             }
 
-            // Body (CapsuleGeometry works in r182+)
-            const bodyGeometry = new THREE.CapsuleGeometry(0.3, 0.8, 4, 8);
-            const bodyMaterial = new THREE.MeshStandardMaterial({ color: color, roughness: 0.5, metalness: 0.5 });
-            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            body.position.y = 1;
-            group.add(body);
+            update(delta) {
+                if (this.gameState !== 'playing') return;
 
-            // Head
-            const headGeometry = new THREE.SphereGeometry(0.25, 16, 16);
-            const headMaterial = new THREE.MeshStandardMaterial({ color: accentColor, roughness: 0.3, metalness: 0.7 });
-            const head = new THREE.Mesh(headGeometry, headMaterial);
-            head.position.y = 1.7;
-            group.add(head);
+                this.distance += this.currentSpeed * delta * 60;
+                this.score = Math.floor(this.distance / 15);
 
-            // Eyes
-            const eyeGeometry = new THREE.SphereGeometry(0.05, 8, 8);
-            const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff88, emissive: 0x00ff88, emissiveIntensity: 1 });
-
-            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            leftEye.position.set(0.1, 1.75, 0.2);
-            group.add(leftEye);
-
-            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            rightEye.position.set(-0.1, 1.75, 0.2);
-            group.add(rightEye);
-
-            return group;
-        }
-
-        // Enemy creation
-        function createEnemy(position) {
-            const enemyGroup = new THREE.Group();
-
-            const bodyGeometry = new THREE.CapsuleGeometry(0.4, 1, 8, 16);
-            const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xff0044, roughness: 0.6, metalness: 0.4 });
-            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            body.position.y = 1;
-            body.castShadow = true;
-            enemyGroup.add(body);
-
-            const headGeometry = new THREE.SphereGeometry(0.3, 16, 16);
-            const headMaterial = new THREE.MeshStandardMaterial({ color: 0xff0066, roughness: 0.4, metalness: 0.6 });
-            const head = new THREE.Mesh(headGeometry, headMaterial);
-            head.position.y = 2;
-            head.castShadow = true;
-            enemyGroup.add(head);
-
-            const eyeGeometry = new THREE.SphereGeometry(0.08, 8, 8);
-            const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0xff0000, emissiveIntensity: 1 });
-
-            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            leftEye.position.set(0.12, 2.05, 0.25);
-            enemyGroup.add(leftEye);
-
-            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            rightEye.position.set(-0.12, 2.05, 0.25);
-            enemyGroup.add(rightEye);
-
-            enemyGroup.position.copy(position);
-            enemyGroup.userData = {
-                health: 50 + gameState.wave * 10,
-                speed: 3 + gameState.wave * 0.5,
-                damage: 10 + gameState.wave * 2,
-                lastAttack: 0
-            };
-
-            scene.add(enemyGroup);
-            enemies.push(enemyGroup);
-
-            return enemyGroup;
-        }
-
-        // Rest of your functions (spawnWave, updateEnemies, shoot, etc.) go here unchanged
-        // (I've fixed the syntax issues like performance.now() and gameState.health)
-
-        // Example fixes applied:
-        function updateEnemies(delta) {
-            const playerPosition = camera.position.clone();
-
-            enemies.forEach((enemy, index) => {
-                if (!enemy.parent) return;
-
-                const direction = new THREE.Vector3().subVectors(playerPosition, enemy.position).normalize();
-                direction.y = 0;
-
-                enemy.position.add(direction.multiplyScalar(enemy.userData.speed * delta));
-                enemy.lookAt(playerPosition.x, enemy.position.y, playerPosition.z);
-
-                const distanceToPlayer = enemy.position.distanceTo(playerPosition);
-                if (distanceToPlayer < 2 && performance.now() - enemy.userData.lastAttack > 1000) {
-                    gameState.health -= enemy.userData.damage;
-                    enemy.userData.lastAttack = performance.now();
-                    updateHealthBar();
-                    shakeScreen();
-
-                    if (gameState.health <= 0) gameOver();
+                // Increase difficulty
+                if (this.distance % 1000 < 10) {
+                    this.baseSpeed = Math.min(this.baseSpeed + 0.5, 12);
                 }
-            });
-        }
 
-        function updateHealthBar() {
-            const healthFill = document.getElementById('health-fill');
-            healthFill.style.width = `${gameState.health}%`;
-        }
+                // Speed boost
+                if (this.speedBoostTimer > 0) {
+                    this.speedBoostTimer -= delta;
+                    this.currentSpeed = this.baseSpeed * 2;
+                } else {
+                    this.currentSpeed = this.baseSpeed;
+                }
 
-        // Game loop
-        function animate() {
-            requestAnimationFrame(animate);
+                // Lane transition
+                if (this.laneTransition < 1) {
+                    this.laneTransition += delta * 8;
+                } else if (this.playerLane !== this.targetLane) {
+                    this.playerLane = this.targetLane;
+                    this.laneTransition = 0;
+                }
 
-            if (!gameState.isPlaying) {
-                renderer.render(scene, camera);
-                return;
+                // Spawn items
+                if (Math.random() < 0.02 + this.currentSpeed * 0.002) this.spawnObstacle();
+                if (Math.random() < 0.008) this.spawnBoost();
+
+                // Update objects
+                this.obstacles = this.obstacles.filter(obs => {
+                    obs.y += this.currentSpeed * delta * 60;
+                    obs.pulse += delta * 8;
+                    return obs.y < this.canvas.height + 100;
+                });
+
+                this.boosts = this.boosts.filter(boost => {
+                    boost.y += this.currentSpeed * delta * 60;
+                    boost.rotation += delta * 6;
+                    return boost.y < this.canvas.height + 100;
+                });
+
+                this.particles = this.particles.filter(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.3;
+                    p.life -= delta * 2;
+                    return p.life > 0;
+                });
+
+                // Collision check
+                const playerX = (this.playerLane + this.laneTransition * (this.targetLane - this.playerLane)) * this.laneWidth + this.laneWidth / 2;
+
+                for (let obs of this.obstacles) {
+                    const obsX = obs.lane * this.laneWidth + this.laneWidth / 2;
+                    if (Math.abs(playerX - obsX) < 50 && Math.abs(obs.y - this.canvas.height * 0.8) < 60) {
+                        this.gameOver();
+                        return;
+                    }
+                }
+
+                for (let i = this.boosts.length - 1; i >= 0; i--) {
+                    let boost = this.boosts[i];
+                    const boostX = boost.lane * this.laneWidth + this.laneWidth / 2;
+                    if (Math.abs(playerX - boostX) < 50 && Math.abs(boost.y - this.canvas.height * 0.8) < 50) {
+                        this.speedBoostTimer = 4;
+                        this.score += 100;
+                        this.createParticles(boostX, boost.y, '#00ff00');
+                        this.boosts.splice(i, 1);
+                    }
+                }
+
+                document.getElementById('score').textContent = `SCORE: ${this.score}`;
+                document.getElementById('speed').textContent = `SPEED: ${(this.currentSpeed / this.baseSpeed).toFixed(1)}x`;
             }
 
-            const delta = (performance.now() - prevTime) / 1000;
+            draw() {
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            updatePlayerMovement(delta);
-            updateEnemies(delta);
-            updateBullets(delta);
+                // Stars
+                this.ctx.fillStyle = '#ffffff';
+                for (let star of this.stars) {
+                    star.y += star.speed * this.currentSpeed * 0.5;
+                    if (star.y > this.canvas.height) star.y = 0;
+                    this.ctx.globalAlpha = star.speed / 1.5;
+                    this.ctx.fillRect(star.x, star.y, star.size, star.size);
+                }
+                this.ctx.globalAlpha = 1;
 
-            renderer.render(scene, camera);
-            prevTime = performance.now();
+                // Lane lines
+                this.ctx.strokeStyle = '#333366';
+                this.ctx.lineWidth = 4;
+                for (let i = 1; i < this.lanes; i++) {
+                    const x = i * this.laneWidth;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x, 0);
+                    this.ctx.lineTo(x, this.canvas.height);
+                    this.ctx.stroke();
+                }
+
+                // Player ship
+                const playerX = (this.playerLane + this.laneTransition * (this.targetLane - this.playerLane)) * this.laneWidth + this.laneWidth / 2;
+                const playerY = this.canvas.height * 0.8;
+
+                this.ctx.save();
+                this.ctx.translate(playerX, playerY);
+                if (this.speedBoostTimer > 0) {
+                    this.ctx.scale(1 + Math.sin(performance.now() * 0.01) * 0.1, 1 + Math.sin(performance.now() * 0.01) * 0.1);
+                }
+
+                // Ship body
+                this.ctx.fillStyle = this.speedBoostTimer > 0 ? '#00ffff' : '#0088ff';
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, -40);
+                this.ctx.lineTo(-25, 20);
+                this.ctx.lineTo(-10, 15);
+                this.ctx.lineTo(0, 30);
+                this.ctx.lineTo(10, 15);
+                this.ctx.lineTo(25, 20);
+                this.ctx.closePath();
+                this.ctx.fill();
+
+                // Glow
+                if (this.speedBoostTimer > 0) {
+                    this.ctx.shadowBlur = 30;
+                    this.ctx.shadowColor = '#00ffff';
+                    this.ctx.fill();
+                    this.ctx.shadowBlur = 0;
+                }
+                this.ctx.restore();
+
+                // Obstacles (asteroids)
+                for (let obs of this.obstacles) {
+                    const x = obs.lane * this.laneWidth + this.laneWidth / 2;
+                    const scale = 1 + Math.sin(obs.pulse) * 0.2;
+                    this.ctx.save();
+                    this.ctx.translate(x, obs.y);
+                    this.ctx.scale(scale, scale);
+                    this.ctx.fillStyle = '#ff3366';
+                    this.ctx.beginPath();
+                    this.ctx.arc(0, 0, obs.size / 2, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    this.ctx.restore();
+                }
+
+                // Boosts
+                for (let boost of this.boosts) {
+                    const x = boost.lane * this.laneWidth + this.laneWidth / 2;
+                    this.ctx.save();
+                    this.ctx.translate(x, boost.y);
+                    this.ctx.rotate(boost.rotation);
+                    this.ctx.fillStyle = '#00ff88';
+                    this.ctx.beginPath();
+                    for (let i = 0; i < 8; i++) {
+                        const angle = (Math.PI * 2 / 8) * i;
+                        const radius = i % 2 === 0 ? 25 : 15;
+                        this.ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+                    }
+                    this.ctx.closePath();
+                    this.ctx.fill();
+                    this.ctx.restore();
+                }
+
+                // Particles
+                for (let p of this.particles) {
+                    this.ctx.globalAlpha = p.life;
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.fillRect(p.x - 3, p.y - 3, 6, 6);
+                }
+                this.ctx.globalAlpha = 1;
+            }
+
+            gameOver() {
+                this.gameState = 'gameOver';
+                document.getElementById('final-score').textContent = `FINAL SCORE: ${this.score}`;
+                document.getElementById('game-over-screen').style.display = 'block';
+                this.createParticles(this.canvas.width / 2, this.canvas.height * 0.8, '#ff0066');
+            }
+
+            animate(time = 0) {
+                const delta = time - this.lastTime;
+                this.lastTime = time;
+
+                if (delta < 100) {
+                    this.update(delta / 1000);
+                }
+
+                this.draw();
+                requestAnimationFrame((t) => this.animate(t));
+            }
         }
 
-        // Start game, gameOver, handleFileUpload, etc. (all your original code with the same fixes applied)
-
-        function init() {
-            initThreeJS();
-            setupEventListeners();
-            animate();
-        }
-    </script>
-
-    <!-- Load GLTFLoader (matching r182) -->
-    <script>
-        const gltfScript = document.createElement('script');
-        gltfScript.src = 'https://cdn.jsdelivr.net/npm/three@0.182.0/examples/js/loaders/GLTFLoader.js';
-        gltfScript.onload = function () {
-            init();
-        };
-        gltfScript.onerror = function () {
-            console.error('Failed to load GLTFLoader');
-            alert('Could not load the 3D model loader. Check your internet connection.');
-        };
-        document.head.appendChild(gltfScript);
+        // Start the game when page loads
+        window.onload = () => new Game();
     </script>
 </body>
 </html>
