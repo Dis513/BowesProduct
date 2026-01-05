@@ -1858,9 +1858,21 @@ async function saveScene() {
   await window.saveSceneToFirebase();
   showNotification('Scene Saved');
 }
-async function window.saveSceneToFirebase() {
+window.saveSceneToFirebase = async function () {
   if (!window.db || !window.auth.currentUser) return;
- 
+
+  const sceneData = {
+    timestamp: Date.now(),
+    objectCount: scene.children.length
+  };
+
+  const scenesRef = collection(
+    window.db,
+    `users/${window.auth.currentUser.uid}/scenes`
+  );
+  await addDoc(scenesRef, sceneData);
+};
+
   const sceneData = {
     timestamp: Date.now(),
     objectCount: scene.children.length
@@ -2136,6 +2148,7 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
 
 
 
