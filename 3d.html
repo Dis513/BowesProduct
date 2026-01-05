@@ -16,11 +16,10 @@
   <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #020617; color: white; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
-  /* ================= HEADER ================= */
   .site-header {
     position: sticky; top: 0; z-index: 1000; background: rgba(2,6,23,0.95); border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px);
   }
-  .header-inner { max-width: 1400px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
   .header-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .logo a { font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; white-space: nowrap; }
   .main-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -42,192 +41,71 @@
     #levelInfo { flex: 1; }
     #xpOuter { width: 100%; }
   }
-  /* ================= APPLICATION MENU BAR ================= */
+
+  /* Top Menu Bar */
   .app-menu-bar {
-    background: rgba(15,23,42,0.98);
-    border-bottom: 1px solid #1e293b;
-    padding: 0;
-    padding-left: 150px;
-    display: flex;
-    gap: 0;
-    font-size: 0.85rem;
-    position: sticky;
-    top: 70px;
-    z-index: 999;
-    backdrop-filter: blur(10px);
-    flex-wrap: wrap;
-    height: 36px;
-    align-items: center;
+    position: sticky; top: 70px; z-index: 999; background: rgba(15,23,42,0.98); border-bottom: 1px solid #1e293b; padding: 0 1rem; display: flex; height: 36px; align-items: center; backdrop-filter: blur(10px); overflow-x: auto; white-space: nowrap; flex-wrap: nowrap;
   }
-  .menu-bar { display: flex; height: 100%; }
-  .menu-bar > div {
-    position: relative; cursor: pointer; padding: 0.5rem 1rem; height: 100%; display: flex; align-items: center; user-select: none;
+  .menu-item {
+    padding: 0 1rem; cursor: pointer; height: 100%; display: flex; align-items: center; font-size: 0.85rem;
   }
-  .menu-bar > div:hover { color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
+  .menu-item:hover { background: rgba(96,165,250,0.1); color: #60a5fa; }
   .dropdown {
-    position: absolute; top: 100%; left: 0; background: #0f172a; border: 1px solid #1e293b; min-width: 260px; display: none; flex-direction: column; box-shadow: 0 8px 25px rgba(0,0,0,0.6); border-radius: 6px; overflow: hidden; z-index: 10000; margin-top: 2px;
+    position: absolute; top: 100%; left: 0; background: #0f172a; border: 1px solid #1e293b; min-width: 220px; display: none; flex-direction: column; box-shadow: 0 8px 25px rgba(0,0,0,0.6); border-radius: 8px; overflow: hidden; z-index: 10000;
   }
-  .dropdown div { padding: 0.6rem 1.2rem; text-align: left; white-space: nowrap; transition: background 0.15s; font-size: 0.85rem; cursor: pointer; }
+  .dropdown div { padding: 0.6rem 1rem; cursor: pointer; white-space: nowrap; }
   .dropdown div:hover { background: #1e293b; }
-  .dropdown div:active { background: #334155; }
-  .dropdown .shortcut { float: right; color: #64748b; font-size: 0.75rem; margin-left: 2rem; }
-  .dropdown hr { border: none; border-top: 1px solid #1e293b; margin: 0.4rem 0; }
-  .dropdown .submenu { position: absolute; left: 100%; top: 0; min-width: 220px; display: none; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; box-shadow: 0 8px 25px rgba(0,0,0,0.6); }
-  .dropdown div:hover .submenu { display: flex; flex-direction: column; }
-  .menu-bar > div:hover .dropdown, .dropdown:hover { display: flex; }
-  /* ================= MAIN LAYOUT ================= */
-  #container { position: relative; width: 100%; height: 100%; padding-top: 106px; padding-bottom: 0; display: flex; }
-  /* ================= CANVAS AREA ================= */
-  #canvas-container {
-    flex: 1; position: relative; background: #1a1a2e; overflow: hidden; display: flex; flex-direction: column;
+  .menu-item:hover .dropdown { display: flex; }
+
+  #container { position: relative; width: 100%; height: calc(100vh - 106px); }
+  #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+
+  .panel {
+    position: absolute; top: 20px; right: 20px; width: 380px; max-height: calc(100vh - 160px); background: rgba(2,6,23,0.95); border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; overflow-y: auto; z-index: 20; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: transform 0.3s ease;
   }
-  /* Rulers */
-  .ruler { position: absolute; background: #1e293b; color: #64748b; font-size: 10px; z-index: 10; }
-  .ruler-h { top: 0; left: 60px; right: 0; height: 20px; border-bottom: 1px solid #334155; }
-  .ruler-v { top: 20px; left: 0; width: 60px; bottom: 0; border-right: 1px solid #334155; }
-  .ruler-corner { position: absolute; top: 0; left: 0; width: 60px; height: 20px; background: #1e293b; border-right: 1px solid #334155; border-bottom: 1px solid #334155; z-index: 11; }
-  #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; margin-top: 20px; margin-left: 60px; background: #1a1a2e; }
-  /* ================= LEFT TOOLBAR ================= */
-  #floatingToolbar {
-    position: fixed; left: 20px; top: 116px; background: rgba(30, 41, 59, 0.95); padding: 10px; border-radius: 12px; border: 1px solid #1e293b; backdrop-filter: blur(8px); z-index: 1150; display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 180px); overflow-y: auto;
+  .panel.hidden { transform: translateX(420px); }
+  #panelToggle {
+    position: absolute; left: -60px; top: 50%; transform: translateY(-50%); width: 60px; height: 110px; background: rgba(2,6,23,0.98); border: 1px solid #1e293b; border-right: none; border-radius: 20px 0 0 20px; color: #60a5fa; font-size: 2.4rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 21; backdrop-filter: blur(12px);
   }
-  .tool-group { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-bottom: 1px solid #1e293b; }
-  .tool-group:last-child { border-bottom: none; }
-  .tool-btn {
-    width: 42px; height: 42px; border-radius: 6px; border: 1px solid transparent; background: transparent; color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; font-size: 1.3rem; position: relative;
+  #panelToggle:hover { background: rgba(30,41,59,0.98); color: white; }
+
+  #floatingControls {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; z-index: 1150; pointer-events: none;
   }
-  .tool-btn:hover { background: rgba(51, 65, 85, 1); color: white; }
-  .tool-btn.active { color: #22c55e; background: rgba(34, 197, 94, 0.1); border-color: #22c55e; }
-  /* ================= RIGHT PANEL DOCK ================= */
-  .panel-dock {
-    position: fixed; right: 20px; top: 116px; width: 340px; max-height: calc(100vh - 140px); background: rgba(2, 6, 23, 0.95); border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; z-index: 20; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column;
+  .floater {
+    pointer-events: auto; width: 56px; height: 56px; border-radius: 50%; background: rgba(30,41,59,0.95); border: 1px solid #475569; color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.6rem; box-shadow: 0 6px 20px rgba(0,0,0,0.5); transition: all 0.2s;
   }
-  #dockToggle {
-    position: absolute; left: -50px; top: 50%; transform: translateY(-50%); width: 50px; height: 100px; background: rgba(2, 6, 23, 0.98); border: 1px solid #1e293b; border-right: none; border-radius: 12px 0 0 12px; color: #60a5fa; font-size: 2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 21; backdrop-filter: blur(12px); box-shadow: 0 6px 30px rgba(0,0,0,0.5); transition: all 0.3s ease;
-  }
-  #dockToggle:hover { background: rgba(30, 41, 59, 0.98); color: white; transform: translateY(-50%) translateX(-4px); }
-  .panel-tabs { display: flex; background: #0f172a; border-bottom: 1px solid #1e293b; overflow-x: auto; position: relative; }
-  .panel-tab {
-    padding: 0.6rem 1rem; background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 0.8rem; white-space: nowrap; transition: all 0.2s; flex-shrink: 0;
-  }
-  .panel-tab:hover { color: #e5e7eb; }
-  .panel-tab.active { color: #60a5fa; background: rgba(96, 165, 250, 0.1); border-bottom: 2px solid #60a5fa; }
-  .panel-close-btn {
-    position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.2s;
-  }
-  .panel-close-btn:hover { background: #334155; color: #e5e7eb; }
-  .panel-content { padding: 1rem; overflow-y: auto; flex: 1; }
-  .panel-section { display: none; }
-  .panel-section.active { display: block; }
-  .panel-section h3 {
-    color: #60a5fa; margin: 1rem 0 0.8rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e293b; padding-bottom: 0.4rem; font-weight: 600;
-  }
-  .control-group { margin-bottom: 1rem; }
-  .control-group label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.4rem; }
-  .control-row { display: flex; gap: 0.5rem; align-items: center; }
-  input[type="text"], input[type="number"], select {
-    width: 100%; padding: 0.4rem 0.6rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #e5e7eb; font-size: 0.85rem;
-  }
-  input[type="range"] { width: 100%; accent-color: #60a5fa; }
-  input[type="color"] { width: 100%; height: 36px; padding: 2px; border: 1px solid #334155; border-radius: 4px; background: #0f172a; cursor: pointer; }
-  .btn {
-    padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #e5e7eb; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
-  }
-  .btn:hover { background: #334155; border-color: #475569; }
-  .btn-primary { background: #60a5fa; border-color: #60a5fa; color: white; }
-  .btn-primary:hover { background: #3b82f6; border-color: #3b82f6; }
-  .btn-group { display: flex; gap: 0.25rem; }
-  .btn-group .btn { flex: 1; }
-  /* Tool Notification */
+  .floater:hover { background: rgba(51,65,85,1); color: white; transform: translateY(-4px); }
+  .floater.active { color: #60a5fa; border-color: #60a5fa; background: rgba(2,6,23,1); }
+
   .tool-notification {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    background: linear-gradient(135deg, rgba(96, 165, 250, 0.95), rgba(59, 130, 246, 0.95));
-    color: white;
-    padding: 1.5rem 2.5rem;
-    border-radius: 16px;
-    font-size: 1.8rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    z-index: 10000;
-    pointer-events: none;
-    opacity: 0;
-    box-shadow: 0 20px 60px rgba(96, 165, 250, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.8); background: linear-gradient(135deg,rgba(96,165,250,0.95),rgba(59,130,246,0.95)); color: white; padding: 1.5rem 3rem; border-radius: 20px; font-size: 1.8rem; font-weight: 700; z-index: 10000; pointer-events: none; opacity: 0; box-shadow: 0 20px 60px rgba(96,165,250,0.4); backdrop-filter: blur(10px); transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
   }
-  .tool-notification.show {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+  .tool-notification.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+
+  button { background: #60a5fa; border: none; color: white; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 0.5rem; width: 100%; }
+  button:hover { background: #3b82f6; }
+  input[type="color"] { height: 44px; width: 100%; }
+  input[type="range"] { accent-color: #60a5fa; }
+
+  .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
+  #layersList { list-style: none; padding: 0; margin: 1rem 0; }
+  .layer-item {
+    display: flex; align-items: center; gap: 8px; padding: 10px; background: #0f172a; border-radius: 8px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent;
   }
-  /* Color Picker Popup */
-  .color-picker-popup {
-    position: fixed;
-    left: 70px;
-    top: 116px;
-    width: 280px;
-    background: rgba(15, 23, 42, 0.98);
-    border: 1px solid #1e293b;
-    border-radius: 12px;
-    padding: 1rem;
-    z-index: 1200;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    backdrop-filter: blur(10px);
-    display: none;
-  }
-  .color-picker-popup.active {
-    display: block;
-  }
-  #loader {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #60a5fa; font-size: 1.2rem; font-weight: 600; pointer-events: none; z-index: 5;
-  }
-  .outliner-item {
-    padding: 0.5rem;
-    background: #0f172a;
-    border-radius: 6px;
-    margin-bottom: 0.3rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    transition: background 0.15s;
-  }
-  .outliner-item:hover { background: #1e293b; }
-  .outliner-item.selected { background: rgba(96, 165, 250, 0.2); border: 1px solid #60a5fa; }
-  .modifier-item {
-    padding: 0.6rem;
-    background: #0f172a;
-    border-radius: 6px;
-    margin-bottom: 0.4rem;
-    border-left: 3px solid #60a5fa;
-  }
-  .modifier-item h4 {
-    margin: 0 0 0.5rem 0;
-    font-size: 0.85rem;
-    color: #60a5fa;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .modifier-item .remove {
-    cursor: pointer;
-    color: #ef4444;
-    font-size: 1rem;
-  }
-  .status-bar {
-    position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); border-top: 1px solid #1e293b; padding: 0.4rem 1rem; font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; z-index: 1000; backdrop-filter: blur(10px);
-  }
-  .status-bar .left { display: flex; gap: 2rem; }
-  .status-bar .right { display: flex; gap: 1rem; }
+  .layer-item.active { background: #1e293b; border-color: #60a5fa; }
+  .layer-item.group { background: #162032; }
+  .layer-item.group > .layer-name::before { content: "📁 "; }
+  .layer-visibility { font-size: 1.3rem; cursor: pointer; }
+  .layer-name { flex: 1; font-size: 0.95rem; }
+  .layer-delete { color: #ef4444; cursor: pointer; font-size: 1.2rem; }
+
   @media (max-width: 900px) {
-    #floatingToolbar { left: 10px; top: 111px; padding: 6px; }
-    .tool-btn { width: 38px; height: 38px; font-size: 1.1rem; }
-    .panel-dock { top: auto; bottom: 0; right: 0; left: 0; width: 100%; height: 40vh; border-radius: 12px 12px 0 0; }
-    #dockToggle { top: -50px; left: 50%; transform: translateX(-50%); width: 100px; height: 50px; border-radius: 12px 12px 0 0; }
-    .app-menu-bar { padding-left: 60px; }
+    .panel { top: auto; bottom: 0; left: 0; right: 0; width: 100%; height: 80vh; border-radius: 20px 20px 0 0; max-height: none; transform: translateY(calc(100% - 60px)); }
+    .panel.visible { transform: translateY(0); }
+    #panelToggle { display: none; }
+    #floatingControls { bottom: 90px; }
+    .app-menu-bar { padding: 0 0.5rem; }
   }
   </style>
   <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
@@ -256,176 +134,162 @@
   </div>
 </header>
 
-<!-- Application Menu Bar -->
 <div class="app-menu-bar">
-  <div class="menu-bar">
-    <div>File
-      <div class="dropdown">
-        <div onclick="newScene()">New <span class="shortcut">Ctrl+N</span></div>
-        <div onclick="importModel()">Import (GLB/GLTF/OBJ/FBX) <span class="shortcut">Ctrl+I</span></div>
-        <div onclick="exportModel()">Export (GLB) <span class="shortcut">Ctrl+E</span></div>
-      </div>
+  <div class="menu-item">File
+    <div class="dropdown">
+      <div onclick="document.getElementById('uploadModel').click()">Import Model (GLB/GLTF/OBJ/FBX)</div>
+      <div onclick="exportModel()">Export Scene as GLB</div>
     </div>
-    <div>Edit
-      <div class="dropdown">
-        <div onclick="undo()">Undo <span class="shortcut">Ctrl+Z</span></div>
-        <div onclick="redo()">Redo <span class="shortcut">Ctrl+Y</span></div>
-        <hr>
-        <div onclick="duplicateSelected()">Duplicate <span class="shortcut">Shift+D</span></div>
-        <div onclick="deleteSelected()">Delete <span class="shortcut">Del</span></div>
-      </div>
+  </div>
+  <div class="menu-item">Edit
+    <div class="dropdown">
+      <div onclick="undo()">Undo (Ctrl+Z)</div>
+      <div onclick="redo()">Redo (Ctrl+Y)</div>
+      <hr>
+      <div onclick="duplicateSelected()">Duplicate (Ctrl+D)</div>
+      <div onclick="deleteSelected()">Delete</div>
     </div>
-    <div>Object
-      <div class="dropdown">
-        <div onclick="setTransformMode('translate')">Move <span class="shortcut">G</span></div>
-        <div onclick="setTransformMode('rotate')">Rotate <span class="shortcut">R</span></div>
-        <div onclick="setTransformMode('scale')">Scale <span class="shortcut">S</span></div>
-        <hr>
-        <div onclick="createGroup()">Group <span class="shortcut">Ctrl+G</span></div>
-        <div onclick="ungroup()">Ungroup <span class="shortcut">Ctrl+Shift+G</span></div>
-      </div>
+  </div>
+  <div class="menu-item">Object
+    <div class="dropdown">
+      <div onclick="setTransformMode('translate')">Move (G)</div>
+      <div onclick="setTransformMode('rotate')">Rotate (R)</div>
+      <div onclick="setTransformMode('scale')">Scale (S)</div>
+      <hr>
+      <div onclick="createGroup()">Create Group from Selected</div>
+      <div onclick="ungroup()">Ungroup Selected</div>
     </div>
-    <div>Add
-      <div class="dropdown">
-        <div>Add Primitive ↓
-          <div class="submenu">
-            <div onclick="addPrimitive('Box')">Box</div>
-            <div onclick="addPrimitive('Sphere')">Sphere</div>
-            <div onclick="addPrimitive('Cylinder')">Cylinder</div>
-            <div onclick="addPrimitive('Torus')">Torus</div>
-            <div onclick="addPrimitive('Cone')">Cone</div>
-            <div onclick="addPrimitive('Plane')">Plane</div>
-            <div onclick="addPrimitive('Icosahedron')">Icosahedron</div>
-            <div onclick="addPrimitive('Ring')">Ring</div>
-            <div onclick="addPrimitive('Tube')">Tube</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>Sculpt
-      <div class="dropdown">
-        <div onclick="setBrush('draw')">Draw Brush</div>
-        <div onclick="setBrush('clay')">Clay Brush</div>
-        <div onclick="setBrush('grab')">Grab Brush</div>
-        <div onclick="setBrush('smooth')">Smooth Brush</div>
-        <hr>
-        <div onclick="toggleSymmetry()">Toggle Symmetry</div>
-      </div>
-    </div>
-    <div>View
-      <div class="dropdown">
-        <div onclick="frameSelected()">Frame Selected <span class="shortcut">F</span></div>
-      </div>
+  </div>
+  <div class="menu-item">Add
+    <div class="dropdown">
+      <div onclick="addPrimitive('Box')">Box</div>
+      <div onclick="addPrimitive('Sphere')">Sphere</div>
+      <div onclick="addPrimitive('Cylinder')">Cylinder</div>
+      <div onclick="addPrimitive('Torus')">Torus</div>
+      <div onclick="addPrimitive('Cone')">Cone</div>
+      <div onclick="addPrimitive('Plane')">Plane</div>
+      <div onclick="addPrimitive('Icosahedron')">Icosahedron</div>
+      <div onclick="addPrimitive('Dodecahedron')">Dodecahedron</div>
+      <div onclick="addPrimitive('Octahedron')">Octahedron</div>
+      <div onclick="addPrimitive('Tetrahedron')">Tetrahedron</div>
+      <div onclick="addPrimitive('Ring')">Ring</div>
+      <div onclick="addPrimitive('Tube')">Tube</div>
     </div>
   </div>
 </div>
 
 <div id="container">
-  <input type="file" id="uploadModel" accept=".glb,.gltf,.obj,.fbx" style="display:none">
+  <div id="loader">Add objects or upload a model to start</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="floatingControls">
+    <div class="floater active" id="floaterSelect" title="Select">👆</div>
+    <div class="floater" id="floaterMove" title="Move (G)">✥</div>
+    <div class="floater" id="floaterRotate" title="Rotate (R)">↻</div>
+    <div class="floater" id="floaterScale" title="Scale (S)">⤢</div>
+  </div>
 
   <div class="tool-notification" id="toolNotification"></div>
 
-  <div class="color-picker-popup" id="colorPicker">
-    <h4>Material</h4>
-    <div class="control-group">
-      <label>Color</label>
-      <input type="color" id="materialColor" value="#60a5fa">
-    </div>
-    <div class="control-group">
-      <label>Metallic <span id="metallicVal">0.00</span></label>
-      <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
-    </div>
-    <div class="control-group">
-      <label>Roughness <span id="roughnessVal">0.50</span></label>
-      <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
-    </div>
-    <button class="btn btn-primary" onclick="applyMaterialToSelected()">Apply</button>
-  </div>
+  <input type="file" id="uploadModel" accept=".glb,.gltf,.obj,.fbx" style="display:none;">
 
-  <div id="canvas-container">
-    <div id="loader">Initializing Modeler Pro...</div>
-    <div class="ruler-corner"></div>
-    <div class="ruler ruler-h"></div>
-    <div class="ruler ruler-v"></div>
-    <canvas id="canvas"></canvas>
-  </div>
+  <div class="panel visible" id="panel">
+    <button id="panelToggle">←</button>
 
-  <div id="floatingToolbar">
-    <div class="tool-group">
-      <div class="tool-btn active" id="selectTool" title="Select" onclick="setTool('select')">👆</div>
-      <div class="tool-btn" id="moveTool" title="Move (G)" onclick="setTransformMode('translate')">✥</div>
-      <div class="tool-btn" id="rotateTool" title="Rotate (R)" onclick="setTransformMode('rotate')">↻</div>
-      <div class="tool-btn" id="scaleTool" title="Scale (S)" onclick="setTransformMode('scale')">⤢</div>
+    <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
+      <strong style="color:#60a5fa">Controls:</strong><br>
+      • Left drag: Orbit view • Right drag: Pan • Scroll: Zoom<br>
+      • Click: Select • Ctrl+Click: Multi-select<br>
+      • G / R / S: Move / Rotate / Scale<br>
+      • Ctrl+Z/Y: Undo/Redo • Ctrl+D: Duplicate • Del: Delete
     </div>
-    <div class="tool-group">
-      <div class="tool-btn" id="addTool" title="Add Primitive" onclick="showAddMenu()">+</div>
-    </div>
-    <div class="tool-group">
-      <div class="tool-btn" id="drawBrush" title="Draw Brush" onclick="setBrush('draw')">🖌</div>
-      <div class="tool-btn" id="clayBrush" title="Clay Brush" onclick="setBrush('clay')">🧱</div>
-      <div class="tool-btn" id="grabBrush" title="Grab Brush" onclick="setBrush('grab')">✊</div>
-      <div class="tool-btn" id="smoothBrush" title="Smooth Brush" onclick="setBrush('smooth')">〰</div>
-    </div>
-    <div class="tool-group">
-      <div class="tool-btn" id="colorTool" title="Material" onclick="showColorPicker()">◐</div>
-    </div>
-  </div>
 
-  <div class="panel-dock visible" id="panelDock">
-    <button id="dockToggle">◀</button>
-    <div class="panel-tabs">
-      <button class="panel-tab active" data-panel="properties">Properties</button>
-      <button class="panel-tab" data-panel="outliner">Outliner</button>
-      <button class="panel-tab" data-panel="materials">Materials</button>
-      <button class="panel-tab" data-panel="world">World</button>
+    <h2>Add Primitives</h2>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;">
+      <button onclick="addPrimitive('Box')">Box</button>
+      <button onclick="addPrimitive('Sphere')">Sphere</button>
+      <button onclick="addPrimitive('Cylinder')">Cylinder</button>
+      <button onclick="addPrimitive('Torus')">Torus</button>
+      <button onclick="addPrimitive('Cone')">Cone</button>
+      <button onclick="addPrimitive('Plane')">Plane</button>
+      <button onclick="addPrimitive('Icosahedron')">Icosahedron</button>
+      <button onclick="addPrimitive('Dodecahedron')">Dodecahedron</button>
+      <button onclick="addPrimitive('Octahedron')">Octahedron</button>
+      <button onclick="addPrimitive('Tetrahedron')">Tetrahedron</button>
+      <button onclick="addPrimitive('Ring')">Ring</button>
+      <button onclick="addPrimitive('Tube')">Tube</button>
     </div>
-    <div class="panel-content">
-      <div id="panel-properties" class="panel-section active">
-        <h3>Transform</h3>
-        <div class="control-row">
-          <div class="control-group" style="flex:1"><label>X</label><input type="number" id="posX" step="0.1"></div>
-          <div class="control-group" style="flex:1"><label>Y</label><input type="number" id="posY" step="0.1"></div>
-          <div class="control-group" style="flex:1"><label>Z</label><input type="number" id="posZ" step="0.1"></div>
-        </div>
-        <div class="control-row">
-          <div class="control-group" style="flex:1"><label>X</label><input type="number" id="rotX" step="5"></div>
-          <div class="control-group" style="flex:1"><label>Y</label><input type="number" id="rotY" step="5"></div>
-          <div class="control-group" style="flex:1"><label>Z</label><input type="number" id="rotZ" step="5"></div>
-        </div>
-        <div class="control-row">
-          <div class="control-group" style="flex:1"><label>X</label><input type="number" id="scaleX" step="0.1" min="0.01"></div>
-          <div class="control-group" style="flex:1"><label>Y</label><input type="number" id="scaleY" step="0.1" min="0.01"></div>
-          <div class="control-group" style="flex:1"><label>Z</label><input type="number" id="scaleZ" step="0.1" min="0.01"></div>
-        </div>
+
+    <h2>Group</h2>
+    <button onclick="createGroup()">Create Group from Selected</button>
+    <button onclick="ungroup()">Ungroup Selected</button>
+    <div class="hint">Hold Ctrl/Cmd to multi-select</div>
+
+    <h2>Model Import</h2>
+    <button onclick="document.getElementById('uploadModel').click()">Upload GLB/GLTF/OBJ/FBX</button>
+    <div class="hint">Auto-centers and scales imported models</div>
+
+    <h2>Selected Object(s)</h2>
+    <div id="selectedObjectInfo"><p style="color:#94a3b8;font-size:0.85rem;">No object selected</p></div>
+
+    <div id="transformControls" style="display:none;">
+      <h3>Position</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <input type="number" id="posX" step="0.1" placeholder="X">
+        <input type="number" id="posY" step="0.1" placeholder="Y">
+        <input type="number" id="posZ" step="0.1" placeholder="Z">
       </div>
-      <div id="panel-outliner" class="panel-section">
-        <ol id="layersList"></ol>
+      <h3>Rotation (degrees)</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <input type="number" id="rotX" step="5">
+        <input type="number" id="rotY" step="5">
+        <input type="number" id="rotZ" step="5">
       </div>
-      <div id="panel-materials" class="panel-section">
-        <button class="btn btn-primary" onclick="showColorPicker()">Edit Material</button>
+      <h3>Scale</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <input type="number" id="scaleX" step="0.1" min="0.01">
+        <input type="number" id="scaleY" step="0.1" min="0.01">
+        <input type="number" id="scaleZ" step="0.1" min="0.01">
       </div>
-      <div id="panel-world" class="panel-section">
-        <h3>Environment</h3>
-        <select id="envPreset">
-          <option value="neutral">Neutral</option>
-          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
-          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
-          <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
-        </select>
-      </div>
+      <button onclick="duplicateSelected()">Duplicate (Ctrl+D)</button>
+      <button onclick="deleteSelected()" style="background:#ef4444;">Delete Selected</button>
     </div>
+
+    <h2>Material (single mesh)</h2>
+    <label>Color</label>
+    <input type="color" id="materialColor" value="#60a5fa">
+    <label>Metallic <span id="metallicVal">0.00</span></label>
+    <input type="range" id="metallicSlider" min="0" max="1" step="0.01" value="0">
+    <label>Roughness <span id="roughnessVal">0.50</span></label>
+    <input type="range" id="roughnessSlider" min="0" max="1" step="0.01" value="0.5">
+
+    <h2>Lighting & Environment</h2>
+    <label>Environment Preset</label>
+    <select id="envPreset">
+      <option value="neutral">Neutral</option>
+      <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/royal_esplanade_1k.hdr">Royal Esplanade</option>
+      <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/spruit_sunrise_1k.hdr">Sunrise</option>
+      <option value="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r182/examples/textures/equirect/moonless_golf_1k.hdr">Night</option>
+    </select>
+
+    <h2>Objects / Layers</h2>
+    <ol id="layersList"></ol>
+
+    <h2>Export</h2>
+    <button onclick="exportModel()">Export Scene as GLB</button>
+    <div id="exportStatus" style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;"></div>
+
+    <h2>Undo / Redo</h2>
+    <button onclick="undo()" id="undoBtn">Undo (Ctrl+Z)</button>
+    <button onclick="redo()" id="redoBtn">Redo (Ctrl+Y)</button>
   </div>
 </div>
 
-<div class="status-bar">
-  <div class="left">
-    <span id="statusMode">Object Mode</span>
-    <span id="statusSelection">Selected: 0 objects</span>
+<footer class="site-footer">
+  <div style="max-width:1200px;margin:0 auto;padding:1rem;text-align:center;font-size:0.85rem;">
+    © 2026 BowesProduct
   </div>
-  <div class="right">
-    <span id="statusFPS">FPS: 60</span>
-  </div>
-</div>
+</footer>
 
 <script type="module">
 import * as THREE from 'three';
@@ -449,14 +313,13 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x020617);
-
-const gridHelper = new THREE.GridHelper(20, 20, 0x1e293b, 0x0f172a);
-scene.add(gridHelper);
-
+const grid = new THREE.GridHelper(20, 20, 0x1e293b, 0x0f172a);
+scene.add(grid);
 scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
-dirLight.position.set(5, 10, 7);
+const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+dirLight.position.set(5,10,7);
 dirLight.castShadow = true;
+dirLight.shadow.mapSize.width = dirLight.shadow.mapSize.height = 2048;
 scene.add(dirLight);
 
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -467,7 +330,7 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
 const transformControl = new TransformControls(camera, canvas);
-transformControl.addEventListener('dragging-changed', e => controls.enabled = !e.value);
+transformControl.addEventListener('dragging-changed', event => controls.enabled = !event.value);
 transformControl.addEventListener('change', updateTransformInputs);
 scene.add(transformControl);
 
@@ -509,9 +372,28 @@ function saveState() {
 
 function serializeObject(obj) {
   if (obj.userData.isGroup) {
-    return { type: 'group', name: obj.userData.name, visible: obj.visible, position: obj.position.toArray(), rotation: obj.rotation.toArray(), scale: obj.scale.toArray(), children: obj.children.map(c => serializeObject(c)) };
+    return {
+      type: 'group',
+      name: obj.userData.name,
+      visible: obj.visible,
+      position: obj.position.toArray(),
+      rotation: obj.rotation.toArray(),
+      scale: obj.scale.toArray(),
+      children: obj.children.map(child => serializeObject(child))
+    };
   } else {
-    return { type: 'mesh', name: obj.userData.name, geometry: obj.userData.geometryName || 'imported', visible: obj.visible, position: obj.position.toArray(), rotation: obj.rotation.toArray(), scale: obj.scale.toArray(), color: obj.material.color.getHex(), metallic: obj.material.metalness, roughness: obj.material.roughness };
+    return {
+      type: 'mesh',
+      name: obj.userData.name,
+      geometry: obj.userData.geometryName || 'imported',
+      visible: obj.visible,
+      position: obj.position.toArray(),
+      rotation: obj.rotation.toArray(),
+      scale: obj.scale.toArray(),
+      color: obj.material.color.getHex(),
+      metallic: obj.material.metalness,
+      roughness: obj.material.roughness
+    };
   }
 }
 
@@ -520,10 +402,14 @@ function deserializeObject(data) {
   if (data.type === 'group') {
     obj = new THREE.Group();
     obj.userData.isGroup = true;
-    data.children.forEach(c => obj.add(deserializeObject(c)));
+    data.children.forEach(childData => obj.add(deserializeObject(childData)));
   } else {
     const geometry = data.geometry !== 'imported' ? createGeometryForName(data.geometry) : new THREE.BoxGeometry(1,1,1);
-    const material = new THREE.MeshStandardMaterial({ color: data.color, metalness: data.metallic, roughness: data.roughness });
+    const material = new THREE.MeshStandardMaterial({
+      color: data.color,
+      metalness: data.metallic,
+      roughness: data.roughness
+    });
     obj = new THREE.Mesh(geometry, material);
     obj.castShadow = obj.receiveShadow = true;
   }
@@ -539,10 +425,10 @@ function deserializeObject(data) {
 function restoreState(state) {
   rootObjects.forEach(o => scene.remove(o));
   rootObjects.length = 0;
-  state.forEach(d => {
-    const o = deserializeObject(d);
-    scene.add(o);
-    rootObjects.push(o);
+  state.forEach(data => {
+    const obj = deserializeObject(data);
+    scene.add(obj);
+    rootObjects.push(obj);
   });
   selectedObjects = [];
   updateSelectedObjectUI();
@@ -552,13 +438,13 @@ function restoreState(state) {
 function undo() {
   if (undoStack.length <= 1) return;
   redoStack.push(undoStack.pop());
-  restoreState(undoStack[undoStack.length-1]);
+  restoreState(undoStack[undoStack.length - 1]);
 }
 
 function redo() {
   if (redoStack.length === 0) return;
   undoStack.push(redoStack.pop());
-  restoreState(undoStack[undoStack.length-1]);
+  restoreState(undoStack[undoStack.length - 1]);
 }
 
 function createGeometryForName(name) {
@@ -570,6 +456,9 @@ function createGeometryForName(name) {
     case 'Cone': return new THREE.ConeGeometry(0.5,1,32);
     case 'Plane': return new THREE.PlaneGeometry(1,1);
     case 'Icosahedron': return new THREE.IcosahedronGeometry(0.6);
+    case 'Dodecahedron': return new THREE.DodecahedronGeometry(0.6);
+    case 'Octahedron': return new THREE.OctahedronGeometry(0.7);
+    case 'Tetrahedron': return new THREE.TetrahedronGeometry(0.7);
     case 'Ring': return new THREE.RingGeometry(0.3,0.6,32);
     case 'Tube': return new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(-1,0,0),new THREE.Vector3(-0.5,1,0),new THREE.Vector3(0.5,-1,0),new THREE.Vector3(1,0,0)]),64,0.1,8,false);
     default: return new THREE.BoxGeometry(1,1,1);
@@ -578,50 +467,52 @@ function createGeometryForName(name) {
 
 function addPrimitive(name) {
   saveState();
-  const geo = createGeometryForName(name);
-  const mat = new THREE.MeshStandardMaterial({color:0x60a5fa,metalness:0,roughness:0.5});
-  const mesh = new THREE.Mesh(geo, mat);
+  const geometry = createGeometryForName(name);
+  const material = new THREE.MeshStandardMaterial({ color: 0x60a5fa, metalness: 0, roughness: 0.5 });
+  const mesh = new THREE.Mesh(geometry, material);
   mesh.position.y = 0.5;
-  mesh.castShadow = mesh.receiveShadow = true;
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   mesh.userData.name = name;
   mesh.userData.geometryName = name;
   mesh.userData.id = objectCounter++;
   scene.add(mesh);
   rootObjects.push(mesh);
   selectObject(mesh);
+  updateLayersList();
   document.getElementById('loader').style.display = 'none';
   showNotification(`Added ${name}`);
-}
-
-function showAddMenu() {
-  const names = ['Box','Sphere','Cylinder','Torus','Cone','Plane','Icosahedron','Ring','Tube'];
-  const choice = prompt('Primitive:\n' + names.join(', '), 'Box');
-  if (choice && names.includes(choice)) addPrimitive(choice);
 }
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-function selectObject(obj, multi = false) {
+function selectObject(object, multi = false) {
   if (!multi) selectedObjects = [];
-  if (obj && !selectedObjects.includes(obj)) selectedObjects.push(obj);
+  if (object) {
+    if (!selectedObjects.includes(object)) selectedObjects.push(object);
+  }
   updateSelectedObjectUI();
   updateLayersList();
-  transformControl.attach(selectedObjects.length === 1 ? selectedObjects[0] : null);
+  if (selectedObjects.length === 1) {
+    transformControl.attach(selectedObjects[0]);
+  } else {
+    transformControl.detach();
+  }
 }
 
 canvas.addEventListener('pointerdown', e => {
   if (transformControl.dragging) return;
   if (e.button !== 0) return;
   const rect = canvas.getBoundingClientRect();
-  mouse.x = ((e.clientX - rect.left)/rect.width)*2-1;
-  mouse.y = -((e.clientY - rect.top)/rect.height)*2+1;
+  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
-  const meshes = [];
-  rootObjects.forEach(o => o.traverse(c => { if (c.isMesh) meshes.push(c); }));
-  const hits = raycaster.intersectObjects(meshes, false);
-  if (hits.length > 0) {
-    selectObject(hits[0].object, e.ctrlKey || e.metaKey);
+  const allMeshes = [];
+  rootObjects.forEach(obj => obj.traverse(child => { if (child.isMesh) allMeshes.push(child); }));
+  const intersects = raycaster.intersectObjects(allMeshes, false);
+  if (intersects.length > 0) {
+    selectObject(intersects[0].object, e.ctrlKey || e.metaKey);
   } else if (!(e.ctrlKey || e.metaKey)) {
     selectedObjects = [];
     transformControl.detach();
@@ -631,128 +522,178 @@ canvas.addEventListener('pointerdown', e => {
 });
 
 function updateSelectedObjectUI() {
+  const info = document.getElementById('selectedObjectInfo');
+  const trans = document.getElementById('transformControls');
+  if (selectedObjects.length === 0) {
+    info.innerHTML = '<p style="color:#94a3b8;font-size:0.85rem;">No object selected</p>';
+    trans.style.display = 'none';
+    return;
+  }
+  info.innerHTML = `<p style="color:#e5e7eb;">${selectedObjects.length} object${selectedObjects.length > 1 ? 's' : ''} selected</p>`;
+  trans.style.display = selectedObjects.length === 1 ? 'block' : 'none';
   if (selectedObjects.length === 1 && selectedObjects[0].isMesh) {
-    const m = selectedObjects[0].material;
-    document.getElementById('materialColor').value = '#' + m.color.getHexString();
-    document.getElementById('metallicSlider').value = m.metalness;
-    document.getElementById('roughnessSlider').value = m.roughness;
-    document.getElementById('metallicVal').textContent = m.metalness.toFixed(2);
-    document.getElementById('roughnessVal').textContent = m.roughness.toFixed(2);
+    const mat = selectedObjects[0].material;
+    document.getElementById('materialColor').value = '#' + mat.color.getHexString();
+    document.getElementById('metallicSlider').value = mat.metalness;
+    document.getElementById('roughnessSlider').value = mat.roughness;
+    document.getElementById('metallicVal').textContent = mat.metalness.toFixed(2);
+    document.getElementById('roughnessVal').textContent = mat.roughness.toFixed(2);
   }
   updateTransformInputs();
 }
 
 function updateTransformInputs() {
   if (selectedObjects.length !== 1) return;
-  const o = selectedObjects[0];
-  document.getElementById('posX').value = o.position.x.toFixed(2);
-  document.getElementById('posY').value = o.position.y.toFixed(2);
-  document.getElementById('posZ').value = o.position.z.toFixed(2);
-  document.getElementById('rotX').value = THREE.MathUtils.radToDeg(o.rotation.x).toFixed(1);
-  document.getElementById('rotY').value = THREE.MathUtils.radToDeg(o.rotation.y).toFixed(1);
-  document.getElementById('rotZ').value = THREE.MathUtils.radToDeg(o.rotation.z).toFixed(1);
-  document.getElementById('scaleX').value = o.scale.x.toFixed(2);
-  document.getElementById('scaleY').value = o.scale.y.toFixed(2);
-  document.getElementById('scaleZ').value = o.scale.z.toFixed(2);
+  const obj = selectedObjects[0];
+  document.getElementById('posX').value = obj.position.x.toFixed(2);
+  document.getElementById('posY').value = obj.position.y.toFixed(2);
+  document.getElementById('posZ').value = obj.position.z.toFixed(2);
+  document.getElementById('rotX').value = THREE.MathUtils.radToDeg(obj.rotation.x).toFixed(1);
+  document.getElementById('rotY').value = THREE.MathUtils.radToDeg(obj.rotation.y).toFixed(1);
+  document.getElementById('rotZ').value = THREE.MathUtils.radToDeg(obj.rotation.z).toFixed(1);
+  document.getElementById('scaleX').value = obj.scale.x.toFixed(2);
+  document.getElementById('scaleY').value = obj.scale.y.toFixed(2);
+  document.getElementById('scaleZ').value = obj.scale.z.toFixed(2);
 }
 
 ['posX','posY','posZ','rotX','rotY','rotZ','scaleX','scaleY','scaleZ'].forEach(id => {
   document.getElementById(id).addEventListener('change', () => {
     if (selectedObjects.length === 0) return;
     saveState();
-    const o = selectedObjects[0];
-    o.position.set(parseFloat(document.getElementById('posX').value)||0, parseFloat(document.getElementById('posY').value)||0, parseFloat(document.getElementById('posZ').value)||0);
-    o.rotation.set(THREE.MathUtils.degToRad(parseFloat(document.getElementById('rotX').value)||0), THREE.MathUtils.degToRad(parseFloat(document.getElementById('rotY').value)||0), THREE.MathUtils.degToRad(parseFloat(document.getElementById('rotZ').value)||0));
-    o.scale.set(parseFloat(document.getElementById('scaleX').value)||1, parseFloat(document.getElementById('scaleY').value)||1, parseFloat(document.getElementById('scaleZ').value)||1);
+    const obj = selectedObjects[0];
+    obj.position.set(parseFloat(document.getElementById('posX').value)||0, parseFloat(document.getElementById('posY').value)||0, parseFloat(document.getElementById('posZ').value)||0);
+    obj.rotation.set(THREE.MathUtils.degToRad(parseFloat(document.getElementById('rotX').value)||0), THREE.MathUtils.degToRad(parseFloat(document.getElementById('rotY').value)||0), THREE.MathUtils.degToRad(parseFloat(document.getElementById('rotZ').value)||0));
+    obj.scale.set(parseFloat(document.getElementById('scaleX').value)||1, parseFloat(document.getElementById('scaleY').value)||1, parseFloat(document.getElementById('scaleZ').value)||1);
   });
 });
 
-function applyMaterialToSelected() {
-  if (selectedObjects.length === 0) return;
-  const color = document.getElementById('materialColor').value;
-  const metal = parseFloat(document.getElementById('metallicSlider').value);
-  const rough = parseFloat(document.getElementById('roughnessSlider').value);
-  const mat = new THREE.MeshStandardMaterial({color, metalness: metal, roughness: rough});
-  selectedObjects.forEach(o => { if (o.isMesh) o.material = mat; });
-  saveState();
-  document.getElementById('colorPicker').classList.remove('active');
-}
+document.getElementById('materialColor').addEventListener('input', e => {
+  if (selectedObjects.length === 1 && selectedObjects[0].isMesh) selectedObjects[0].material.color.set(e.target.value);
+});
+document.getElementById('metallicSlider').addEventListener('input', e => {
+  const v = parseFloat(e.target.value);
+  document.getElementById('metallicVal').textContent = v.toFixed(2);
+  if (selectedObjects.length === 1 && selectedObjects[0].isMesh) selectedObjects[0].material.metalness = v;
+});
+document.getElementById('roughnessSlider').addEventListener('input', e => {
+  const v = parseFloat(e.target.value);
+  document.getElementById('roughnessVal').textContent = v.toFixed(2);
+  if (selectedObjects.length === 1 && selectedObjects[0].isMesh) selectedObjects[0].material.roughness = v;
+});
 
 function duplicateSelected() {
   if (selectedObjects.length === 0) return;
   saveState();
   const clones = [];
-  selectedObjects.forEach(o => {
-    const c = o.clone(true);
-    c.position.x += 1;
-    c.userData.id = objectCounter++;
-    scene.add(c);
-    rootObjects.push(c);
-    clones.push(c);
+  selectedObjects.forEach(obj => {
+    const clone = obj.clone(true);
+    if (obj.isMesh) clone.material = obj.material.clone();
+    clone.position.x += 1;
+    clone.userData.id = objectCounter++;
+    scene.add(clone);
+    rootObjects.push(clone);
+    clones.push(clone);
   });
   selectedObjects = clones;
   updateLayersList();
+  updateSelectedObjectUI();
 }
 
 function deleteSelected() {
   if (selectedObjects.length === 0) return;
   saveState();
-  selectedObjects.forEach(o => {
-    scene.remove(o);
-    const i = rootObjects.indexOf(o);
-    if (i > -1) rootObjects.splice(i, 1);
+  selectedObjects.forEach(obj => {
+    if (obj.parent && obj.parent.userData.isGroup) obj.parent.remove(obj);
+    else scene.remove(obj);
+    const idx = rootObjects.indexOf(obj);
+    if (idx > -1) rootObjects.splice(idx, 1);
   });
   selectedObjects = [];
   transformControl.detach();
   updateLayersList();
+  updateSelectedObjectUI();
 }
 
 function createGroup() {
   if (selectedObjects.length < 2) return;
   saveState();
-  const g = new THREE.Group();
-  g.userData.isGroup = true;
-  g.userData.name = `Group ${rootObjects.filter(o=>o.userData.isGroup).length+1}`;
-  selectedObjects.forEach(o => g.add(o));
-  scene.add(g);
-  rootObjects.push(g);
-  selectedObjects = [g];
+  const group = new THREE.Group();
+  group.userData.isGroup = true;
+  group.userData.name = `Group ${rootObjects.filter(o => o.userData.isGroup).length + 1}`;
+  group.userData.id = objectCounter++;
+  selectedObjects.forEach(obj => {
+    obj.parent.remove(obj);
+    group.add(obj);
+  });
+  scene.add(group);
+  rootObjects.push(group);
+  selectedObjects = [group];
   updateLayersList();
+  updateSelectedObjectUI();
 }
 
 function ungroup() {
   const groups = selectedObjects.filter(o => o.userData.isGroup);
   if (groups.length === 0) return;
   saveState();
-  groups.forEach(g => {
-    g.children.forEach(c => { scene.add(c); rootObjects.push(c); });
-    scene.remove(g);
-    const i = rootObjects.indexOf(g);
-    if (i > -1) rootObjects.splice(i, 1);
+  groups.forEach(group => {
+    const children = [...group.children];
+    children.forEach(child => {
+      group.remove(child);
+      scene.add(child);
+      rootObjects.push(child);
+    });
+    scene.remove(group);
+    const idx = rootObjects.indexOf(group);
+    if (idx > -1) rootObjects.splice(idx, 1);
   });
   selectedObjects = [];
   updateLayersList();
+  updateSelectedObjectUI();
 }
 
 function updateLayersList() {
   const list = document.getElementById('layersList');
   list.innerHTML = '';
-  rootObjects.slice().reverse().forEach(o => addLayerItem(o, list));
+  rootObjects.slice().reverse().forEach(obj => addLayerItem(obj, list));
 }
 
-function addLayerItem(obj, parent) {
+function addLayerItem(obj, parentList) {
   const li = document.createElement('li');
   li.className = 'layer-item' + (selectedObjects.includes(obj) ? ' active' : '') + (obj.userData.isGroup ? ' group' : '');
-  li.innerHTML = `<span class="layer-visibility">${obj.visible?'👁':'🚫'}</span><span class="layer-name">${obj.userData.name||'Object'}</span><span class="layer-delete">×</span>`;
-  parent.appendChild(li);
-  li.querySelector('.layer-visibility').onclick = e => { e.stopPropagation(); obj.visible = !obj.visible; obj.traverse(c=>c.visible=obj.visible); li.querySelector('.layer-visibility').textContent = obj.visible?'👁':'🚫'; };
-  li.querySelector('.layer-delete').onclick = e => { e.stopPropagation(); deleteSelected([obj]); };
-  li.onclick = e => { if (!e.target.classList.contains('layer-delete') && !e.target.classList.contains('layer-visibility')) selectObject(obj, e.ctrlKey||e.metaKey); };
+  li.innerHTML = `
+    <span class="layer-visibility">${obj.visible ? '👁' : '🚫'}</span>
+    <span class="layer-name">${obj.userData.name || 'Object'}</span>
+    <span class="layer-delete">×</span>
+  `;
+  parentList.appendChild(li);
+  li.querySelector('.layer-visibility').onclick = e => {
+    e.stopPropagation();
+    obj.visible = !obj.visible;
+    li.querySelector('.layer-visibility').textContent = obj.visible ? '👁' : '🚫';
+    obj.traverse(child => child.visible = obj.visible);
+    saveState();
+  };
+  li.querySelector('.layer-delete').onclick = e => {
+    e.stopPropagation();
+    saveState();
+    scene.remove(obj);
+    const idx = rootObjects.indexOf(obj);
+    if (idx > -1) rootObjects.splice(idx, 1);
+    selectedObjects = selectedObjects.filter(o => o !== obj);
+    updateLayersList();
+    updateSelectedObjectUI();
+  };
+  li.onclick = e => {
+    if (e.target.classList.contains('layer-delete') || e.target.classList.contains('layer-visibility')) return;
+    selectObject(obj, e.ctrlKey || e.metaKey);
+  };
   if (obj.userData.isGroup) {
-    const ol = document.createElement('ol');
-    ol.style.marginLeft = '20px';
-    obj.children.forEach(c => addLayerItem(c, ol));
-    li.appendChild(ol);
+    const childList = document.createElement('ol');
+    childList.style.marginLeft = '20px';
+    childList.style.display = 'block';
+    obj.children.forEach(child => addLayerItem(child, childList));
+    li.appendChild(childList);
   }
 }
 
@@ -761,16 +702,17 @@ function loadModel(object) {
   const box = new THREE.Box3().setFromObject(object);
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
-  const max = Math.max(size.x,size.y,size.z);
-  const scale = 5/max;
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const scale = 5 / maxDim;
   object.scale.multiplyScalar(scale);
   object.position.sub(center.multiplyScalar(scale));
-  object.position.y -= size.y*scale/2;
-  object.traverse(c => {
-    if (c.isMesh) {
-      c.castShadow = c.receiveShadow = true;
-      c.userData.name = c.name || 'Imported';
-      c.userData.id = objectCounter++;
+  object.position.y -= size.y * scale / 2;
+  object.traverse(child => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      child.userData.name = child.name || 'Imported Mesh';
+      child.userData.id = objectCounter++;
     }
   });
   scene.add(object);
@@ -784,47 +726,45 @@ document.getElementById('uploadModel').addEventListener('change', e => {
   if (!file) return;
   const url = URL.createObjectURL(file);
   const name = file.name.toLowerCase();
-  if (name.endsWith('.glb') || name.endsWith('.gltf')) new GLTFLoader().load(url, g => loadModel(g.scene));
-  else if (name.endsWith('.obj')) new OBJLoader().load(url, o => loadModel(o));
-  else if (name.endsWith('.fbx')) new FBXLoader().load(url, f => loadModel(f));
+  if (name.endsWith('.glb') || name.endsWith('.gltf')) {
+    new GLTFLoader().load(url, gltf => loadModel(gltf.scene));
+  } else if (name.endsWith('.obj')) {
+    new OBJLoader().load(url, obj => loadModel(obj));
+  } else if (name.endsWith('.fbx')) {
+    new FBXLoader().load(url, fbx => loadModel(fbx));
+  }
 });
 
 function exportModel() {
-  if (rootObjects.length === 0) return;
+  if (rootObjects.length === 0) {
+    document.getElementById('exportStatus').textContent = 'Nothing to export';
+    return;
+  }
+  document.getElementById('exportStatus').textContent = 'Exporting...';
   const exporter = new GLTFExporter();
   exporter.parse(scene, result => {
-    const blob = new Blob([result], {type:'application/octet-stream'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'scene.glb';
-    a.click();
-  }, {binary:true});
+    const blob = new Blob([result], { type: 'application/octet-stream' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'scene.glb';
+    link.click();
+    document.getElementById('exportStatus').textContent = 'Exported successfully!';
+    document.getElementById('exportStatus').style.color = '#4ade80';
+  }, { binary: true });
 }
 
 function setTransformMode(mode) {
   transformControl.setMode(mode);
-  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-  if (mode==='translate') document.getElementById('moveTool').classList.add('active');
-  else if (mode==='rotate') document.getElementById('rotateTool').classList.add('active');
-  else if (mode==='scale') document.getElementById('scaleTool').classList.add('active');
+  document.querySelectorAll('.floater').forEach(f => f.classList.remove('active'));
+  if (mode === 'translate') document.getElementById('floaterMove').classList.add('active');
+  else if (mode === 'rotate') document.getElementById('floaterRotate').classList.add('active');
+  else if (mode === 'scale') document.getElementById('floaterScale').classList.add('active');
   showNotification(mode.charAt(0).toUpperCase() + mode.slice(1));
 }
 
-function setTool(tool) {
-  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(tool+'Tool')?.classList.add('active');
-  showNotification(tool.charAt(0).toUpperCase() + tool.slice(1));
-}
-
-function setBrush(brush) {
-  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(brush+'Brush').classList.add('active');
-  showNotification(brush.charAt(0).toUpperCase() + brush.slice(1) + ' Brush');
-}
-
-function showColorPicker() {
-  document.getElementById('colorPicker').classList.toggle('active');
-}
+document.getElementById('floaterMove').onclick = () => setTransformMode('translate');
+document.getElementById('floaterRotate').onclick = () => setTransformMode('rotate');
+document.getElementById('floaterScale').onclick = () => setTransformMode('scale');
 
 function showNotification(text) {
   const n = document.getElementById('toolNotification');
@@ -833,30 +773,29 @@ function showNotification(text) {
   setTimeout(() => n.classList.remove('show'), 1500);
 }
 
-function frameSelected() {
-  if (selectedObjects.length === 0) return;
-  const box = new THREE.Box3();
-  selectedObjects.forEach(o => box.expandByObject(o));
-  const center = box.getCenter(new THREE.Vector3());
-  controls.target.copy(center);
-  camera.position.copy(center).add(new THREE.Vector3(10,8,10));
+const panel = document.getElementById('panel');
+const panelToggle = document.getElementById('panelToggle');
+let panelVisible = true;
+function togglePanel() {
+  panelVisible = !panelVisible;
+  panel.classList.toggle('hidden', !panelVisible);
+  panelToggle.textContent = panelVisible ? '←' : '→';
 }
-
-window.addEventListener('keydown', e => {
-  if (e.ctrlKey || e.metaKey) {
-    if (e.key === 'z') { e.preventDefault(); undo(); }
-    if (e.key === 'y') { e.preventDefault(); redo(); }
-  }
-  if (selectedObjects.length === 0) return;
-  if (e.key.toLowerCase() === 'g') setTransformMode('translate');
-  if (e.key.toLowerCase() === 'r') setTransformMode('rotate');
-  if (e.key.toLowerCase() === 's') setTransformMode('scale');
-});
+panelToggle.onclick = togglePanel;
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+window.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+  if (selectedObjects.length === 0) return;
+  if (e.key.toLowerCase() === 'g') setTransformMode('translate');
+  if (e.key.toLowerCase() === 'r') setTransformMode('rotate');
+  if (e.key.toLowerCase() === 's') setTransformMode('scale');
 });
 
 function animate() {
@@ -866,8 +805,7 @@ function animate() {
 }
 animate();
 
-// Init
-document.getElementById('loader').style.display = 'none';
+saveState();
 addPrimitive('Box');
 </script>
 </body>
