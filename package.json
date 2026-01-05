@@ -1,0 +1,22 @@
+{
+  "name": "neon-nightmare",
+  "version": "1.0.0",
+  "description": "A Spotify-integrated rhythm game with Tim Burton-inspired aesthetics",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -p 8080",
+    "build": "echo 'Build complete'",
+    "dev": "npx serve -p 8080 -o"
+  },
+  "keywords": [
+    "rhythm-game",
+    "spotify",
+    "music-game",
+    "guitar-hero"
+  ],
+  "author": "SuperNinja",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

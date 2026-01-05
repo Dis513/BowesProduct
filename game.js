@@ -1,0 +1,789 @@
+// ===================================
+// NEON NIGHTMARE - Game Engine
+// Local File Version
+// ===================================
+
+class NeonNightmare {
+    constructor() {
+        // Game State
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.score = 0;
+        this.combo = 0;
+        this.maxCombo = 0;
+        this.multiplier = 1;
+        this.difficulty = 'medium';
+        
+        // Audio
+        this.audioContext = null;
+        this.audioBuffer = null;
+        this.audioSource = null;
+        this.analyser = null;
+        this.audioData = null;
+        this.startTime = 0;
+        this.duration = 0;
+        
+        // Notes
+        this.notes = [];
+        this.activeNotes = [];
+        this.noteSpeed = 3; // pixels per frame
+        this.noteSpawnY = -50;
+        this.targetY = 0;
+        
+        // Fret Configuration
+        this.frets = ['green', 'red', 'yellow', 'blue', 'orange'];
+        this.fretKeys = ['a', 's', 'd', 'f', 'g'];
+        this.fretButtons = {};
+        
+        // Statistics
+        this.perfectHits = 0;
+        this.greatHits = 0;
+        this.goodHits = 0;
+        this.misses = 0;
+        
+        // Timing Windows (in milliseconds)
+        this.timingWindows = {
+            easy: { perfect: 100, great: 200, good: 300 },
+            medium: { perfect: 50, great: 100, good: 150 },
+            hard: { perfect: 40, great: 80, good: 120 },
+            expert: { perfect: 30, great: 60, good: 90 }
+        };
+        
+        // DOM Elements
+        this.initializeElements();
+        this.setupEventListeners();
+        this.createParticles();
+    }
+
+    // ===================================
+    // Initialization
+    // ===================================
+
+    initializeElements() {
+        // Menu Elements
+        this.mainMenu = document.getElementById('mainMenu');
+        this.gameContainer = document.getElementById('gameContainer');
+        this.pauseMenu = document.getElementById('pauseMenu');
+        this.settingsMenu = document.getElementById('settingsMenu');
+        this.songCompleteMenu = document.getElementById('songCompleteMenu');
+        
+        // File Upload
+        this.audioFileInput = document.getElementById('audioFileInput');
+        this.uploadButton = document.getElementById('uploadButton');
+        this.uploadInfo = document.getElementById('uploadInfo');
+        
+        // HUD Elements
+        this.scoreValue = document.getElementById('scoreValue');
+        this.multiplierValue = document.getElementById('multiplierValue');
+        this.comboValue = document.getElementById('comboValue');
+        this.comboDisplay = document.getElementById('comboDisplay');
+        this.progressFill = document.getElementById('progressFill');
+        this.songTitle = document.getElementById('songTitle');
+        this.songArtist = document.getElementById('songArtist');
+        
+        // Game Elements
+        this.noteHighway = document.getElementById('noteHighway');
+        this.targetLine = document.getElementById('targetLine');
+        
+        // Fret Buttons
+        this.frets.forEach((fret, index) => {
+            this.fretButtons[fret] = document.querySelector(`.fret-button.${fret}`);
+        });
+        
+        // Calculate target line position
+        this.targetY = this.noteHighway.offsetHeight - 150;
+    }
+
+    setupEventListeners() {
+        // File Upload
+        this.uploadButton.addEventListener('click', () => this.audioFileInput.click());
+        this.audioFileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+        
+        // Menu Buttons
+        document.getElementById('playDemo').addEventListener('click', () => this.startDemoMode());
+        document.getElementById('openSettings').addEventListener('click', () => this.showSettings());
+        document.getElementById('viewLeaderboards').addEventListener('click', () => this.showLeaderboards());
+        
+        // Pause Menu
+        document.getElementById('resumeGame').addEventListener('click', () => this.resumeGame());
+        document.getElementById('restartSong').addEventListener('click', () => this.restartSong());
+        document.getElementById('returnToMenu').addEventListener('click', () => this.returnToMenu());
+        
+        // Settings
+        document.getElementById('setDifficultyEasy').addEventListener('click', () => this.setDifficulty('easy'));
+        document.getElementById('setDifficultyMedium').addEventListener('click', () => this.setDifficulty('medium'));
+        document.getElementById('setDifficultyHard').addEventListener('click', () => this.setDifficulty('hard'));
+        document.getElementById('setDifficultyExpert').addEventListener('click', () => this.setDifficulty('expert'));
+        document.getElementById('closeSettings').addEventListener('click', () => this.hideSettings());
+        
+        // Song Complete
+        document.getElementById('playAgain').addEventListener('click', () => this.restartSong());
+        document.getElementById('uploadNewSong').addEventListener('click', () => this.returnToMenu());
+        document.getElementById('mainMenuFromComplete').addEventListener('click', () => this.returnToMenu());
+        
+        // Keyboard Controls
+        document.addEventListener('keydown', (e) => this.handleKeyDown(e));
+        document.addEventListener('keyup', (e) => this.handleKeyUp(e));
+        
+        // Fret Button Controls
+        this.frets.forEach((fret, index) => {
+            const button = this.fretButtons[fret];
+            button.addEventListener('mousedown', () => this.handleFretPress(fret));
+            button.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.handleFretPress(fret);
+            });
+        });
+        
+        // Pause Toggle (Escape key)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isPlaying) {
+                this.togglePause();
+            }
+        });
+    }
+
+    createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (5 + Math.random() * 5) + 's';
+            
+            // Random colors
+            const colors = ['#00FFFF', '#9D00FF', '#39FF14', '#FF1493'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.background = color;
+            particle.style.boxShadow = `0 0 10px ${color}`;
+            
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    // ===================================
+    // File Upload & Audio Processing
+    // ===================================
+
+    async handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        this.uploadButton.textContent = '⏳ Processing...';
+        this.uploadButton.disabled = true;
+        
+        try {
+            // Initialize Audio Context
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Read file
+            const arrayBuffer = await file.arrayBuffer();
+            
+            // Decode audio
+            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+            this.duration = this.audioBuffer.duration;
+            
+            // Update song info
+            this.songTitle.textContent = file.name.replace(/\.[^/.]+$/, '');
+            this.songArtist.textContent = 'Local File';
+            
+            // Analyze audio and generate notes
+            await this.analyzeAudioAndGenerateNotes();
+            
+            // Start game
+            this.startGame();
+            
+        } catch (error) {
+            console.error('Error processing audio:', error);
+            alert('Error processing audio file. Please try a different file.');
+            this.uploadButton.textContent = '🎵 Upload Audio File';
+            this.uploadButton.disabled = false;
+        }
+    }
+
+    async analyzeAudioAndGenerateNotes() {
+        // Get audio data for analysis
+        const channelData = this.audioBuffer.getChannelData(0);
+        const sampleRate = this.audioBuffer.sampleRate;
+        
+        // Analyze to detect beats and generate notes
+        this.notes = this.generateNotesFromAudio(channelData, sampleRate);
+        
+        console.log(`Generated ${this.notes.length} notes`);
+    }
+
+    generateNotesFromAudio(channelData, sampleRate) {
+        const notes = [];
+        const windowSize = Math.floor(sampleRate * 0.1); // 100ms windows
+        const hopSize = Math.floor(sampleRate * 0.05); // 50ms overlap
+        
+        // Calculate energy for each window
+        const energies = [];
+        for (let i = 0; i < channelData.length - windowSize; i += hopSize) {
+            let energy = 0;
+            for (let j = 0; j < windowSize; j++) {
+                energy += Math.abs(channelData[i + j]);
+            }
+            energies.push(energy / windowSize);
+        }
+        
+        // Find peaks (beats) using simple thresholding
+        const threshold = this.calculateThreshold(energies);
+        const beats = [];
+        
+        for (let i = 1; i < energies.length - 1; i++) {
+            if (energies[i] > threshold && 
+                energies[i] > energies[i - 1] && 
+                energies[i] > energies[i + 1]) {
+                const time = (i * hopSize) / sampleRate;
+                beats.push({
+                    time: time,
+                    energy: energies[i]
+                });
+            }
+        }
+        
+        // Filter beats based on difficulty
+        const minBeatInterval = this.getMinBeatInterval();
+        const filteredBeats = this.filterBeats(beats, minBeatInterval);
+        
+        // Generate notes from beats
+        filteredBeats.forEach((beat, index) => {
+            // Select fret based on beat energy and index
+            const fret = this.selectFret(beat.energy, index);
+            
+            notes.push({
+                id: index,
+                time: beat.time,
+                fret: fret,
+                energy: beat.energy,
+                hit: false,
+                missed: false
+            });
+        });
+        
+        return notes;
+    }
+
+    calculateThreshold(energies) {
+        const mean = energies.reduce((a, b) => a + b, 0) / energies.length;
+        const stdDev = Math.sqrt(
+            energies.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / energies.length
+        );
+        return mean + stdDev * 0.5;
+    }
+
+    getMinBeatInterval() {
+        const intervals = {
+            easy: 0.5,    // 2 notes per second max
+            medium: 0.3,  // 3.3 notes per second max
+            hard: 0.2,    // 5 notes per second max
+            expert: 0.15  // 6.7 notes per second max
+        };
+        return intervals[this.difficulty] || 0.3;
+    }
+
+    filterBeats(beats, minInterval) {
+        const filtered = [];
+        let lastTime = -minInterval;
+        
+        beats.forEach(beat => {
+            if (beat.time - lastTime >= minInterval) {
+                filtered.push(beat);
+                lastTime = beat.time;
+            }
+        });
+        
+        return filtered;
+    }
+
+    selectFret(energy, index) {
+        // Use energy and index to select fret for variety
+        const fretIndex = Math.floor((energy + index * 0.1) * 7) % 5;
+        return this.frets[fretIndex];
+    }
+
+    // ===================================
+    // Game Loop & Rendering
+    // ===================================
+
+    startGame() {
+        this.isPlaying = true;
+        this.isPaused = false;
+        this.score = 0;
+        this.combo = 0;
+        this.maxCombo = 0;
+        this.multiplier = 1;
+        this.perfectHits = 0;
+        this.greatHits = 0;
+        this.goodHits = 0;
+        this.misses = 0;
+        this.activeNotes = [];
+        
+        // Reset notes
+        this.notes.forEach(note => {
+            note.hit = false;
+            note.missed = false;
+        });
+        
+        // Update UI
+        this.updateHUD();
+        this.mainMenu.classList.add('hidden');
+        this.gameContainer.classList.remove('hidden');
+        
+        // Start audio
+        this.playAudio();
+        
+        // Start game loop
+        this.gameLoop();
+    }
+
+    playAudio() {
+        this.audioSource = this.audioContext.createBufferSource();
+        this.audioSource.buffer = this.audioBuffer;
+        
+        // Create analyser for visualizations
+        this.analyser = this.audioContext.createAnalyser();
+        this.analyser.fftSize = 256;
+        
+        // Connect nodes
+        this.audioSource.connect(this.analyser);
+        this.analyser.connect(this.audioContext.destination);
+        
+        this.startTime = this.audioContext.currentTime;
+        this.audioSource.start(0);
+        
+        // Handle song end
+        this.audioSource.onended = () => {
+            if (this.isPlaying && !this.isPaused) {
+                this.endGame();
+            }
+        };
+    }
+
+    gameLoop() {
+        if (!this.isPlaying || this.isPaused) return;
+        
+        const currentTime = this.audioContext.currentTime - this.startTime;
+        
+        // Spawn notes
+        this.spawnNotes(currentTime);
+        
+        // Update notes
+        this.updateNotes(currentTime);
+        
+        // Update progress
+        this.updateProgress(currentTime);
+        
+        // Render
+        this.render();
+        
+        // Continue loop
+        requestAnimationFrame(() => this.gameLoop());
+    }
+
+    spawnNotes(currentTime) {
+        const noteLeadTime = 2.0; // seconds
+        
+        this.notes.forEach(note => {
+            if (!note.hit && !note.missed && 
+                !this.activeNotes.includes(note) &&
+                note.time <= currentTime + noteLeadTime &&
+                note.time > currentTime) {
+                this.activeNotes.push(note);
+                this.createNoteElement(note);
+            }
+        });
+    }
+
+    updateNotes(currentTime) {
+        const timingWindows = this.timingWindows[this.difficulty];
+        
+        this.activeNotes.forEach(note => {
+            if (note.hit || note.missed) return;
+            
+            const timeDiff = note.time - currentTime;
+            
+            // Check for miss (note passed target)
+            if (timeDiff < -timingWindows.good / 1000) {
+                this.missNote(note);
+            }
+        });
+        
+        // Remove inactive notes
+        this.activeNotes = this.activeNotes.filter(note => 
+            !note.missed || this.noteHighway.contains(note.element)
+        );
+    }
+
+    createNoteElement(note) {
+        const element = document.createElement('div');
+        element.className = `note ${note.fret}`;
+        element.dataset.noteId = note.id;
+        
+        const lane = document.querySelector(`.fret-lane[data-fret="${note.fret}"]`);
+        const laneRect = lane.getBoundingClientRect();
+        const highwayRect = this.noteHighway.getBoundingClientRect();
+        
+        element.style.left = (laneRect.left - highwayRect.left + laneRect.width / 2) + 'px';
+        element.style.top = this.noteSpawnY + 'px';
+        
+        note.element = element;
+        this.noteHighway.appendChild(element);
+    }
+
+    render() {
+        const currentTime = this.audioContext.currentTime - this.startTime;
+        const noteLeadTime = 2.0;
+        
+        this.activeNotes.forEach(note => {
+            if (!note.element) return;
+            
+            const timeToTarget = note.time - currentTime;
+            const progress = 1 - (timeToTarget / noteLeadTime);
+            
+            const y = this.noteSpawnY + progress * (this.targetY - this.noteSpawnY);
+            note.element.style.top = y + 'px';
+        });
+    }
+
+    updateProgress(currentTime) {
+        const progress = Math.min(currentTime / this.duration, 1);
+        this.progressFill.style.width = (progress * 100) + '%';
+    }
+
+    // ===================================
+    // Input Handling
+    // ===================================
+
+    handleKeyDown(event) {
+        const key = event.key.toLowerCase();
+        const fretIndex = this.fretKeys.indexOf(key);
+        
+        if (fretIndex !== -1) {
+            const fret = this.frets[fretIndex];
+            this.handleFretPress(fret);
+            this.animateFretButton(fret);
+        }
+    }
+
+    handleKeyUp(event) {
+        const key = event.key.toLowerCase();
+        const fretIndex = this.fretKeys.indexOf(key);
+        
+        if (fretIndex !== -1) {
+            const fret = this.frets[fretIndex];
+            this.animateFretButtonRelease(fret);
+        }
+    }
+
+    handleFretPress(fret) {
+        if (!this.isPlaying || this.isPaused) return;
+        
+        const currentTime = this.audioContext.currentTime - this.startTime;
+        const timingWindows = this.timingWindows[this.difficulty];
+        
+        // Find the closest note in this fret lane
+        const closestNote = this.activeNotes
+            .filter(note => note.fret === fret && !note.hit && !note.missed)
+            .sort((a, b) => Math.abs(a.time - currentTime) - Math.abs(b.time - currentTime))[0];
+        
+        if (closestNote) {
+            const timeDiff = Math.abs(closestNote.time - currentTime) * 1000; // Convert to ms
+            
+            if (timeDiff <= timingWindows.good) {
+                // Hit the note
+                let hitType;
+                if (timeDiff <= timingWindows.perfect) {
+                    hitType = 'perfect';
+                } else if (timeDiff <= timingWindows.great) {
+                    hitType = 'great';
+                } else {
+                    hitType = 'good';
+                }
+                
+                this.hitNote(closestNote, hitType);
+            }
+        }
+    }
+
+    animateFretButton(fret) {
+        const button = this.fretButtons[fret];
+        button.classList.add('pressed');
+        setTimeout(() => button.classList.remove('pressed'), 100);
+    }
+
+    animateFretButtonRelease(fret) {
+        const button = this.fretButtons[fret];
+        button.classList.remove('pressed');
+    }
+
+    // ===================================
+    // Scoring System
+    // ===================================
+
+    hitNote(note, hitType) {
+        note.hit = true;
+        
+        // Calculate points
+        const points = {
+            perfect: 100,
+            great: 75,
+            good: 50
+        };
+        
+        this.score += points[hitType] * this.multiplier;
+        this.combo++;
+        
+        // Update max combo
+        if (this.combo > this.maxCombo) {
+            this.maxCombo = this.combo;
+        }
+        
+        // Update multiplier
+        this.updateMultiplier();
+        
+        // Update statistics
+        if (hitType === 'perfect') this.perfectHits++;
+        else if (hitType === 'great') this.greatHits++;
+        else this.goodHits++;
+        
+        // Visual feedback
+        this.showHitFeedback(hitType);
+        this.animateNoteHit(note);
+        
+        // Update HUD
+        this.updateHUD();
+        
+        // Remove note from active notes
+        const index = this.activeNotes.indexOf(note);
+        if (index > -1) {
+            this.activeNotes.splice(index, 1);
+        }
+        
+        // Remove note element after animation
+        setTimeout(() => {
+            if (note.element && note.element.parentNode) {
+                note.element.parentNode.removeChild(note.element);
+            }
+        }, 200);
+    }
+
+    missNote(note) {
+        note.missed = true;
+        this.combo = 0;
+        this.multiplier = 1;
+        this.misses++;
+        
+        // Visual feedback
+        this.showMissFeedback();
+        this.animateNoteMiss(note);
+        
+        // Update HUD
+        this.updateHUD();
+        
+        // Remove note element after animation
+        setTimeout(() => {
+            if (note.element && note.element.parentNode) {
+                note.element.parentNode.removeChild(note.element);
+            }
+        }, 300);
+    }
+
+    updateMultiplier() {
+        if (this.combo >= 40) {
+            this.multiplier = 4;
+        } else if (this.combo >= 20) {
+            this.multiplier = 3;
+        } else if (this.combo >= 10) {
+            this.multiplier = 2;
+        } else {
+            this.multiplier = 1;
+        }
+    }
+
+    updateHUD() {
+        this.scoreValue.textContent = this.score.toLocaleString();
+        this.multiplierValue.textContent = this.multiplier;
+        this.comboValue.textContent = this.combo;
+    }
+
+    // ===================================
+    // Visual Effects
+    // ===================================
+
+    showHitFeedback(hitType) {
+        const feedback = document.createElement('div');
+        feedback.className = `hit-feedback ${hitType}`;
+        feedback.textContent = hitType.toUpperCase();
+        document.body.appendChild(feedback);
+        
+        setTimeout(() => feedback.remove(), 500);
+    }
+
+    showMissFeedback() {
+        const darken = document.createElement('div');
+        darken.className = 'screen-darken';
+        document.body.appendChild(darken);
+        
+        setTimeout(() => darken.remove(), 300);
+    }
+
+    animateNoteHit(note) {
+        if (note.element) {
+            note.element.classList.add('hit');
+        }
+        
+        // Flash effect on target line
+        const flash = document.createElement('div');
+        flash.className = 'screen-flash';
+        document.body.appendChild(flash);
+        
+        setTimeout(() => flash.remove(), 100);
+    }
+
+    animateNoteMiss(note) {
+        if (note.element) {
+            note.element.classList.add('miss');
+        }
+    }
+
+    // ===================================
+    // Game State Management
+    // ===================================
+
+    togglePause() {
+        this.isPaused = !this.isPaused;
+        
+        if (this.isPaused) {
+            this.audioContext.suspend();
+            this.pauseMenu.classList.add('active');
+        } else {
+            this.audioContext.resume();
+            this.pauseMenu.classList.remove('active');
+            this.gameLoop();
+        }
+    }
+
+    resumeGame() {
+        if (this.isPaused) {
+            this.togglePause();
+        }
+    }
+
+    restartSong() {
+        // Clean up
+        this.cleanup();
+        
+        // Reset UI
+        this.pauseMenu.classList.remove('active');
+        this.songCompleteMenu.classList.remove('active');
+        
+        // Start game
+        this.startGame();
+    }
+
+    endGame() {
+        this.isPlaying = false;
+        
+        // Clean up
+        this.cleanup();
+        
+        // Show completion menu
+        this.showSongComplete();
+    }
+
+    returnToMenu() {
+        this.isPlaying = false;
+        
+        // Clean up
+        this.cleanup();
+        
+        // Reset UI
+        this.pauseMenu.classList.remove('active');
+        this.songCompleteMenu.classList.remove('active');
+        this.settingsMenu.classList.remove('active');
+        this.gameContainer.classList.add('hidden');
+        this.mainMenu.classList.remove('hidden');
+        
+        // Reset upload button
+        this.uploadButton.textContent = '🎵 Upload Audio File';
+        this.uploadButton.disabled = false;
+        this.uploadInfo.textContent = 'Supports MP3, WAV, OGG, M4A';
+    }
+
+    cleanup() {
+        // Stop audio
+        if (this.audioSource) {
+            this.audioSource.stop();
+            this.audioSource.disconnect();
+        }
+        
+        // Remove all note elements
+        this.activeNotes.forEach(note => {
+            if (note.element && note.element.parentNode) {
+                note.element.parentNode.removeChild(note.element);
+            }
+        });
+        this.activeNotes = [];
+        
+        // Close audio context
+        if (this.audioContext && this.audioContext.state !== 'closed') {
+            this.audioContext.close();
+        }
+    }
+
+    // ===================================
+    // Menu Functions
+    // ===================================
+
+    showSettings() {
+        this.settingsMenu.classList.add('active');
+    }
+
+    hideSettings() {
+        this.settingsMenu.classList.remove('active');
+    }
+
+    setDifficulty(level) {
+        this.difficulty = level;
+        this.hideSettings();
+        
+        // Show confirmation
+        alert(`Difficulty set to ${level.toUpperCase()}`);
+    }
+
+    showSongComplete() {
+        // Update statistics
+        document.getElementById('finalScoreValue').textContent = this.score.toLocaleString();
+        document.getElementById('perfectCount').textContent = this.perfectHits;
+        document.getElementById('greatCount').textContent = this.greatHits;
+        document.getElementById('goodCount').textContent = this.goodHits;
+        document.getElementById('missCount').textContent = this.misses;
+        document.getElementById('maxComboValue').textContent = this.maxCombo;
+        
+        // Show menu
+        this.songCompleteMenu.classList.add('active');
+    }
+
+    showLeaderboards() {
+        alert('Leaderboards feature coming soon!');
+    }
+
+    // ===================================
+    // Demo Mode
+    // ===================================
+
+    startDemoMode() {
+        alert('Demo mode coming soon! Please upload an audio file to play.');
+    }
+}
+
+// ===================================
+// Initialize Game
+// ===================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    window.game = new NeonNightmare();
+});
