@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Frogger Game – BowesProduct</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Play Frogger and compete for high scores!">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.95);
+  border-bottom: 1px solid #1e293b;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.logo a {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.main-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.main-nav a.active,
+.main-nav a:hover {
+  color: #60a5fa;
+}
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 44px;
+}
+
+/* PROFILE */
+#profilePic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  display: none;
+}
+
+/* LOGIN */
+.login-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.login-btn:hover {
+  background: rgba(96, 165, 250, 0.1);
+}
+
+/* XP */
+#levelInfo {
+  display: none;
+  width: 140px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+#levelText {
+  white-space: nowrap;
+}
+#xpOuter {
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+#xpBar {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+/* MOBILE HEADER */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo {
+    width: 100%;
+  }
+}
+
+/* ================= MAIN CONTENT ================= */
+.game-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 200px);
+}
+
+.game-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.game-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.game-header p {
+  color: #cbd5e1;
+  margin: 0;
+}
+
+/* GAME WRAPPER */
+.game-wrapper {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* CANVAS */
+#gameCanvas {
+  border: 3px solid #60a5fa;
+  background: #0f172a;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* STATS PANEL */
+.stats-panel {
+  background: rgba(15, 23, 42, 0.8);
+  border: 2px solid #1e293b;
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-width: 250px;
+  backdrop-filter: blur(10px);
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #1e293b;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.stat-value.high {
+  color: #fbbf24;
+}
+
+/* CONTROLS */
+.controls-section {
+  background: rgba(15, 23, 42, 0.8);
+  border: 2px solid #1e293b;
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-width: 250px;
+  backdrop-filter: blur(10px);
+}
+
+.controls-section h3 {
+  margin: 0 0 1rem 0;
+  color: #60a5fa;
+  font-size: 1.1rem;
+}
+
+.control-item {
+  padding: 0.6rem 0;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.control-item strong {
+  color: #60a5fa;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.game-btn {
+  flex: 1;
+  min-width: 100px;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.game-btn.primary {
+  background: #2563eb;
+  color: white;
+}
+
+.game-btn.primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.game-btn.secondary {
+  background: transparent;
+  border: 1.5px solid #60a5fa;
+  color: #60a5fa;
+}
+
+.game-btn.secondary:hover {
+  background: rgba(96, 165, 250, 0.1);
+}
+
+/* ================= MODALS ================= */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 2px solid #60a5fa;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #60a5fa;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: #60a5fa;
+}
+
+.modal-body {
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.modal-body p {
+  margin: 0.8rem 0;
+}
+
+.modal-body strong {
+  color: #fbbf24;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.modal-actions button {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-actions .btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.modal-actions .btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.modal-actions .btn-secondary {
+  background: transparent;
+  border: 1.5px solid #60a5fa;
+  color: #60a5fa;
+}
+
+.modal-actions .btn-secondary:hover {
+  background: rgba(96, 165, 250, 0.1);
+}
+
+/* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
+  margin-top: 4rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+.footer-nav a:hover {
+  color: #60a5fa;
+}
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .game-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stats-panel,
+  .controls-section {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .game-header h1 {
+    font-size: 1.8rem;
+  }
+
+  #gameCanvas {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+/* TOAST NOTIFICATION */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 2px solid #60a5fa;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  color: #cbd5e1;
+  z-index: 3000;
+  animation: slideInUp 0.3s ease;
+  max-width: 300px;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .toast {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="models.html">Models</a>
+        <a href="retexture.html">Retexture</a>
+        <a href="game.html" class="active">Game</a>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+      <button id="authBtn" class="login-btn">Login</button>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<div class="game-container">
+  <div class="game-header">
+    <h1>🐸 Frogger Game</h1>
+    <p>Guide your frog across the road and river to reach home!</p>
+  </div>
+
+  <div class="game-wrapper">
+    <!-- CANVAS -->
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+    <!-- STATS PANEL -->
+    <div class="stats-panel">
+      <div class="stat-item">
+        <span class="stat-label">Current Score</span>
+        <span class="stat-value" id="scoreDisplay">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">High Score</span>
+        <span class="stat-value high" id="highScoreDisplay">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Level</span>
+        <span class="stat-value" id="levelDisplay">1</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Lives</span>
+        <span class="stat-value" id="livesDisplay">3</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Status</span>
+        <span class="stat-value" id="statusDisplay" style="color: #10b981;">Ready</span>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls-section">
+      <h3>Controls</h3>
+      <div class="control-item"><strong>↑</strong> Move Up</div>
+      <div class="control-item"><strong>↓</strong> Move Down</div>
+      <div class="control-item"><strong>←</strong> Move Left</div>
+      <div class="control-item"><strong>→</strong> Move Right</div>
+      <div class="control-item" style="margin-top: 1rem; color: #60a5fa;">
+        <strong>Goal:</strong> Reach the top without hitting cars or falling in water!
+      </div>
+      <div class="button-group">
+        <button class="game-btn primary" id="startBtn">Start Game</button>
+        <button class="game-btn secondary" id="resetBtn">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>🎮 Game Scores</h2>
+      <button class="modal-close" id="closeLoginModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Login to save your scores!</strong></p>
+      <p>Sign in with your Google account to:</p>
+      <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+        <li>Save your high scores</li>
+        <li>Track your progress</li>
+        <li>Compete with others</li>
+      </ul>
+      <p style="color: #94a3b8; font-size: 0.9rem;">Your scores will be saved automatically when you're logged in.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="loginWithGoogle">Login with Google</button>
+      <button class="btn-secondary" id="playAsGuest">Play as Guest</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME OVER MODAL -->
+<div class="modal" id="gameOverModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="gameOverTitle">Game Over!</h2>
+      <button class="modal-close" id="closeGameOverModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align: center; margin: 1.5rem 0;">
+        <div style="font-size: 2rem; margin-bottom: 1rem;" id="gameOverEmoji">💀</div>
+        <div style="margin: 1rem 0;">
+          <div style="color: #cbd5e1; margin-bottom: 0.5rem;">Final Score</div>
+          <div style="font-size: 2rem; color: #60a5fa; font-weight: 700;" id="finalScore">0</div>
+        </div>
+        <div style="margin: 1rem 0;" id="newHighScoreMsg" style="display: none;">
+          <div style="color: #fbbf24; font-size: 1.2rem; font-weight: 700;">🎉 NEW HIGH SCORE! 🎉</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="playAgainBtn">Play Again</button>
+      <button class="btn-secondary" id="backToMenuBtn">Back to Menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
+
+<!-- FIREBASE & GAME SCRIPT -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+// ============ FIREBASE AUTH ============
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
+
+let currentUser = null;
+
+authBtn.onclick = () =>
+  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    authBtn.textContent = "Login";
+    profilePic.style.display = "none";
+    levelInfo.style.display = "none";
+    currentUser = null;
+    return;
+  }
+
+  currentUser = user;
+  authBtn.textContent = "Logout";
+  profilePic.src = user.photoURL || "";
+  profilePic.style.display = "block";
+
+  const ref = doc(db, "users", user.uid);
+  let snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    await setDoc(ref, { xp: 10, gameHighScore: 0 });
+    snap = await getDoc(ref);
+  }
+
+  const xp = snap.data().xp || 0;
+  const levels = [0, 200, 500, 1000, 2000];
+  let level = levels.filter(v => xp >= v).length - 1;
+  let next = levels[level + 1] ?? levels[level];
+  let progress = next === levels[level] ? 100 :
+    ((xp - levels[level]) / (next - levels[level])) * 100;
+
+  levelText.textContent = `Level ${level} • ${xp} XP`;
+  xpBar.style.width = progress + "%";
+  levelInfo.style.display = "block";
+
+  // Load game high score
+  loadGameHighScore();
+});
+
+// ============ GAME LOGIC ============
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const GRID_SIZE = 40;
+const ROWS = canvas.height / GRID_SIZE;
+const COLS = canvas.width / GRID_SIZE;
+
+let gameState = {
+  isRunning: false,
+  score: 0,
+  highScore: 0,
+  level: 1,
+  lives: 3,
+  frogX: Math.floor(COLS / 2),
+  frogY: ROWS - 1,
+  cars: [],
+  logs: [],
+  gameSpeed: 1
+};
+
+// Car object
+class Car {
+  constructor(row, speed, width, color) {
+    this.row = row;
+    this.speed = speed;
+    this.width = width;
+    this.color = color;
+    this.x = Math.random() > 0.5 ? -width : canvas.width;
+  }
+
+  update() {
+    this.x += this.speed;
+    if (this.speed > 0 && this.x > canvas.width) {
+      this.x = -this.width;
+    } else if (this.speed < 0 && this.x < -this.width) {
+      this.x = canvas.width;
+    }
+  }
+
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.row * GRID_SIZE, this.width, GRID_SIZE - 4);
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(this.x, this.row * GRID_SIZE, this.width, GRID_SIZE - 4);
+  }
+
+  collidesWith(frogX, frogY) {
+    const frogPixelX = frogX * GRID_SIZE;
+    const frogPixelY = frogY * GRID_SIZE;
+    return (
+      frogPixelY === this.row * GRID_SIZE &&
+      frogPixelX < this.x + this.width &&
+      frogPixelX + GRID_SIZE > this.x
+    );
+  }
+}
+
+// Log object
+class Log {
+  constructor(row, speed, width, color) {
+    this.row = row;
+    this.speed = speed;
+    this.width = width;
+    this.color = color;
+    this.x = Math.random() > 0.5 ? -width : canvas.width;
+  }
+
+  update() {
+    this.x += this.speed;
+    if (this.speed > 0 && this.x > canvas.width) {
+      this.x = -this.width;
+    } else if (this.speed < 0 && this.x < -this.width) {
+      this.x = canvas.width;
+    }
+  }
+
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.row * GRID_SIZE, this.width, GRID_SIZE - 4);
+    ctx.strokeStyle = "#8b4513";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(this.x, this.row * GRID_SIZE, this.width, GRID_SIZE - 4);
+  }
+
+  carriesFrog(frogX, frogY) {
+    const frogPixelX = frogX * GRID_SIZE;
+    const frogPixelY = frogY * GRID_SIZE;
+    return (
+      frogPixelY === this.row * GRID_SIZE &&
+      frogPixelX < this.x + this.width &&
+      frogPixelX + GRID_SIZE > this.x
+    );
+  }
+}
+
+function initGame() {
+  gameState.isRunning = true;
+  gameState.score = 0;
+  gameState.level = 1;
+  gameState.lives = 3;
+  gameState.frogX = Math.floor(COLS / 2);
+  gameState.frogY = ROWS - 1;
+  gameState.gameSpeed = 1;
+  gameState.cars = [];
+  gameState.logs = [];
+
+  // Create cars (rows 9-13)
+  gameState.cars.push(new Car(9, 2 * gameState.gameSpeed, 60, "#e74c3c"));
+  gameState.cars.push(new Car(9, 2 * gameState.gameSpeed, 60, "#e74c3c"));
+  gameState.cars.push(new Car(10, -2.5 * gameState.gameSpeed, 70, "#f39c12"));
+  gameState.cars.push(new Car(10, -2.5 * gameState.gameSpeed, 70, "#f39c12"));
+  gameState.cars.push(new Car(11, 1.8 * gameState.gameSpeed, 65, "#3498db"));
+  gameState.cars.push(new Car(11, 1.8 * gameState.gameSpeed, 65, "#3498db"));
+  gameState.cars.push(new Car(12, -2 * gameState.gameSpeed, 75, "#9b59b6"));
+  gameState.cars.push(new Car(12, -2 * gameState.gameSpeed, 75, "#9b59b6"));
+  gameState.cars.push(new Car(13, 2.2 * gameState.gameSpeed, 70, "#1abc9c"));
+  gameState.cars.push(new Car(13, 2.2 * gameState.gameSpeed, 70, "#1abc9c"));
+
+  // Create logs (rows 4-8)
+  gameState.logs.push(new Log(4, 1.5 * gameState.gameSpeed, 100, "#8b6f47"));
+  gameState.logs.push(new Log(4, 1.5 * gameState.gameSpeed, 100, "#8b6f47"));
+  gameState.logs.push(new Log(5, -1.8 * gameState.gameSpeed, 120, "#a0826d"));
+  gameState.logs.push(new Log(5, -1.8 * gameState.gameSpeed, 120, "#a0826d"));
+  gameState.logs.push(new Log(6, 1.3 * gameState.gameSpeed, 110, "#8b6f47"));
+  gameState.logs.push(new Log(6, 1.3 * gameState.gameSpeed, 110, "#8b6f47"));
+  gameState.logs.push(new Log(7, -1.6 * gameState.gameSpeed, 115, "#a0826d"));
+  gameState.logs.push(new Log(7, -1.6 * gameState.gameSpeed, 115, "#a0826d"));
+  gameState.logs.push(new Log(8, 1.4 * gameState.gameSpeed, 105, "#8b6f47"));
+  gameState.logs.push(new Log(8, 1.4 * gameState.gameSpeed, 105, "#8b6f47"));
+
+  updateUI();
+  gameLoop();
+}
+
+function gameLoop() {
+  if (!gameState.isRunning) return;
+
+  // Update
+  gameState.cars.forEach(car => car.update());
+  gameState.logs.forEach(log => log.update());
+
+  // Check collisions with cars
+  for (let car of gameState.cars) {
+    if (car.collidesWith(gameState.frogX, gameState.frogY)) {
+      loseLife();
+      return;
+    }
+  }
+
+  // Check if on water
+  if (gameState.frogY >= 4 && gameState.frogY <= 8) {
+    let onLog = false;
+    for (let log of gameState.logs) {
+      if (log.carriesFrog(gameState.frogX, gameState.frogY)) {
+        gameState.frogX += log.speed / 10;
+        onLog = true;
+        break;
+      }
+    }
+    if (!onLog) {
+      loseLife();
+      return;
+    }
+  }
+
+  // Check win condition
+  if (gameState.frogY === 0) {
+    gameState.score += 100 + (gameState.level * 10);
+    gameState.level++;
+    gameState.gameSpeed += 0.2;
+    gameState.frogX = Math.floor(COLS / 2);
+    gameState.frogY = ROWS - 1;
+    updateUI();
+  }
+
+  // Draw
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+function draw() {
+  // Background
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Water
+  ctx.fillStyle = "#1e40af";
+  ctx.fillRect(0, 0, canvas.width, 9 * GRID_SIZE);
+
+  // Safe zones
+  ctx.fillStyle = "#064e3b";
+  ctx.fillRect(0, 0, canvas.width, GRID_SIZE);
+  ctx.fillRect(0, 9 * GRID_SIZE, canvas.width, GRID_SIZE);
+
+  // Road
+  ctx.fillStyle = "#374151";
+  ctx.fillRect(0, 9 * GRID_SIZE, canvas.width, 5 * GRID_SIZE);
+
+  // Road markings
+  ctx.strokeStyle = "#fbbf24";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([20, 20]);
+  for (let i = 9; i < 14; i++) {
+    ctx.beginPath();
+    ctx.moveTo(0, i * GRID_SIZE + GRID_SIZE / 2);
+    ctx.lineTo(canvas.width, i * GRID_SIZE + GRID_SIZE / 2);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // Draw logs
+  gameState.logs.forEach(log => log.draw());
+
+  // Draw cars
+  gameState.cars.forEach(car => car.draw());
+
+  // Draw frog
+  ctx.fillStyle = "#10b981";
+  ctx.beginPath();
+  ctx.arc(
+    gameState.frogX * GRID_SIZE + GRID_SIZE / 2,
+    gameState.frogY * GRID_SIZE + GRID_SIZE / 2,
+    GRID_SIZE / 2 - 4,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+  ctx.strokeStyle = "#059669";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Eyes
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.arc(
+    gameState.frogX * GRID_SIZE + GRID_SIZE / 2 - 6,
+    gameState.frogY * GRID_SIZE + GRID_SIZE / 2 - 4,
+    3,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(
+    gameState.frogX * GRID_SIZE + GRID_SIZE / 2 + 6,
+    gameState.frogY * GRID_SIZE + GRID_SIZE / 2 - 4,
+    3,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
+  // Home zone
+  ctx.strokeStyle = "#fbbf24";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(
+    gameState.frogX * GRID_SIZE,
+    0,
+    GRID_SIZE,
+    GRID_SIZE
+  );
+}
+
+function loseLife() {
+  gameState.lives--;
+  if (gameState.lives <= 0) {
+    endGame();
+  } else {
+    gameState.frogX = Math.floor(COLS / 2);
+    gameState.frogY = ROWS - 1;
+    updateUI();
+    setTimeout(() => gameLoop(), 500);
+  }
+}
+
+function endGame() {
+  gameState.isRunning = false;
+  updateUI();
+  showGameOverModal();
+}
+
+function updateUI() {
+  document.getElementById("scoreDisplay").textContent = gameState.score;
+  document.getElementById("levelDisplay").textContent = gameState.level;
+  document.getElementById("livesDisplay").textContent = gameState.lives;
+
+  if (gameState.score > gameState.highScore) {
+    gameState.highScore = gameState.score;
+    document.getElementById("highScoreDisplay").textContent = gameState.highScore;
+  }
+
+  if (gameState.isRunning) {
+    document.getElementById("statusDisplay").textContent = "Playing";
+    document.getElementById("statusDisplay").style.color = "#10b981";
+  } else {
+    document.getElementById("statusDisplay").textContent = "Game Over";
+    document.getElementById("statusDisplay").style.color = "#ef4444";
+  }
+}
+
+// ============ KEYBOARD CONTROLS ============
+document.addEventListener("keydown", (e) => {
+  if (!gameState.isRunning) return;
+
+  switch (e.key) {
+    case "ArrowUp":
+      if (gameState.frogY > 0) gameState.frogY--;
+      e.preventDefault();
+      break;
+    case "ArrowDown":
+      if (gameState.frogY < ROWS - 1) gameState.frogY++;
+      e.preventDefault();
+      break;
+    case "ArrowLeft":
+      if (gameState.frogX > 0) gameState.frogX--;
+      e.preventDefault();
+      break;
+    case "ArrowRight":
+      if (gameState.frogX < COLS - 1) gameState.frogX++;
+      e.preventDefault();
+      break;
+  }
+});
+
+// ============ UI CONTROLS ============
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
+const loginModal = document.getElementById("loginModal");
+const gameOverModal = document.getElementById("gameOverModal");
+
+startBtn.addEventListener("click", () => {
+  if (!gameState.isRunning) {
+    initGame();
+    startBtn.textContent = "Game Running...";
+    startBtn.disabled = true;
+  }
+});
+
+resetBtn.addEventListener("click", () => {
+  gameState.isRunning = false;
+  gameState.score = 0;
+  gameState.level = 1;
+  gameState.lives = 3;
+  gameState.frogX = Math.floor(COLS / 2);
+  gameState.frogY = ROWS - 1;
+  startBtn.textContent = "Start Game";
+  startBtn.disabled = false;
+  updateUI();
+  draw();
+});
+
+// ============ MODALS ============
+function showLoginModal() {
+  loginModal.classList.add("active");
+}
+
+function hideLoginModal() {
+  loginModal.classList.remove("active");
+}
+
+function showGameOverModal() {
+  document.getElementById("finalScore").textContent = gameState.score;
+  const newHighScore = gameState.score > gameState.highScore;
+  document.getElementById("newHighScoreMsg").style.display = newHighScore ? "block" : "none";
+  document.getElementById("gameOverEmoji").textContent = newHighScore ? "🎉" : "💀";
+  gameOverModal.classList.add("active");
+}
+
+function hideGameOverModal() {
+  gameOverModal.classList.remove("active");
+}
+
+document.getElementById("closeLoginModal").addEventListener("click", hideLoginModal);
+document.getElementById("closeGameOverModal").addEventListener("click", hideGameOverModal);
+
+document.getElementById("loginWithGoogle").addEventListener("click", async () => {
+  try {
+    await signInWithPopup(auth, provider);
+    hideLoginModal();
+    showToast("Logged in! Your scores will now be saved.");
+  } catch (error) {
+    console.error("Login error:", error);
+  }
+});
+
+document.getElementById("playAsGuest").addEventListener("click", () => {
+  hideLoginModal();
+  showToast("Playing as guest. Login to save scores!");
+});
+
+document.getElementById("playAgainBtn").addEventListener("click", () => {
+  hideGameOverModal();
+  startBtn.textContent = "Start Game";
+  startBtn.disabled = false;
+  saveGameScore();
+});
+
+document.getElementById("backToMenuBtn").addEventListener("click", () => {
+  hideGameOverModal();
+  resetBtn.click();
+});
+
+// ============ FIREBASE GAME SCORE ============
+async function loadGameHighScore() {
+  if (!currentUser) return;
+  try {
+    const ref = doc(db, "users", currentUser.uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const highScore = snap.data().gameHighScore || 0;
+      gameState.highScore = highScore;
+      document.getElementById("highScoreDisplay").textContent = highScore;
+    }
+  } catch (error) {
+    console.error("Error loading high score:", error);
+  }
+}
+
+async function saveGameScore() {
+  if (!currentUser) {
+    showToast("Login to save your score!");
+    return;
+  }
+
+  try {
+    const ref = doc(db, "users", currentUser.uid);
+    const snap = await getDoc(ref);
+    const currentHighScore = snap.data().gameHighScore || 0;
+
+    if (gameState.score > currentHighScore) {
+      await updateDoc(ref, {
+        gameHighScore: gameState.score,
+        lastGameScore: gameState.score,
+        lastGameDate: new Date().toISOString()
+      });
+      showToast("🎉 New high score saved!");
+    } else {
+      await updateDoc(ref, {
+        lastGameScore: gameState.score,
+        lastGameDate: new Date().toISOString()
+      });
+      showToast("Score saved!");
+    }
+  } catch (error) {
+    console.error("Error saving score:", error);
+    showToast("Error saving score. Try again!");
+  }
+}
+
+// ============ TOAST NOTIFICATION ============
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.animation = "slideInUp 0.3s ease reverse";
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// ============ INIT ============
+window.addEventListener("load", () => {
+  draw();
+  setTimeout(() => {
+    if (!currentUser) {
+      showLoginModal();
+    }
+  }, 500);
+});
+</script>
+
+</body>
+</html>
