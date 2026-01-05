@@ -732,82 +732,18 @@ html, body {
   </div>
 </footer>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
-  authDomain: "bowesproduct.firebaseapp.com",
-  projectId: "bowesproduct"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-const authBtn = document.getElementById("authBtn");
-const profilePic = document.getElementById("profilePic");
-const levelInfo = document.getElementById("levelInfo");
-const levelText = document.getElementById("levelText");
-const xpBar = document.getElementById("xpBar");
-authBtn.onclick = () =>
-  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
-let currentUser = null;
-onAuthStateChanged(auth, async (user) => {
- if (!user) {
-  authBtn.textContent = "Login";
-  profilePic.style.display = "none";
-  levelInfo.style.display = "none";
-  currentUser = null;
-  return;
- }
- currentUser = user;
- authBtn.textContent = "Logout";
- profilePic.src = user.photoURL || "";
- profilePic.style.display = "block";
- const ref = doc(db, "users", user.uid);
- let snap = await getDoc(ref);
- if (!snap.exists()) {
-  await setDoc(ref, { xp: 10, gamesPlayed: 0, totalKills: 0, wins: 0 });
-  snap = await getDoc(ref);
- }
- const xp = snap.data().xp || 0;
- const levels = [0, 200, 500, 1000, 2000, 3500, 5000, 7500, 10000];
- let level = levels.filter(v => xp >= v).length - 1;
- let next = levels[level + 1] ?? levels[level];
- let progress = next === levels[level] ? 100 :
-  ((xp - levels[level]) / (next - levels[level])) * 100;
- levelText.textContent = `Level ${level} • ${xp} XP`;
- xpBar.style.width = progress + "%";
- levelInfo.style.display = "block";
-});
-async function updateGameStats(kills, win) {
-  if (!currentUser) return;
- 
-  const ref = doc(db, "users", currentUser.uid);
-  const snap = await getDoc(ref);
-  if (snap.exists()) {
-    const data = snap.data();
-    const xpGain = kills * 50 + (win ? 100 : 25);
-    await updateDoc(ref, {
-      xp: (data.xp || 0) + xpGain,
-      gamesPlayed: (data.gamesPlayed || 0) + 1,
-      totalKills: (data.totalKills || 0) + kills,
-      wins: (data.wins || 0) + (win ? 1 : 0)
-    });
-  }
-}
-window.updateGameStats = updateGameStats;
-</script>
-<script type="module">
 import * as THREE from 'https://cdn.skypack.dev/three@0.168.0';
 import { PointerLockControls } from 'https://cdn.skypack.dev/three@0.168.0/examples/jsm/controls/PointerLockControls.js';
+
 const GameState = {
   MENU: 'menu',
   PLAYING: 'playing',
   PAUSED: 'paused',
   GAMEOVER: 'gameover'
 };
+
 let currentState = GameState.MENU;
+
 class AudioManager {
   constructor() {
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -909,6 +845,7 @@ class AudioManager {
     oscillator.stop(this.audioContext.currentTime + 0.1);
   }
 }
+
 class ParticleSystem {
   constructor(scene) {
     this.scene = scene;
@@ -980,4 +917,256 @@ class ParticleSystem {
       if (particle.type === 'muzzleFlash') {
         particle.mesh.scale.setScalar(1 + (1 - lifeRatio) * 2);
       } else if (particle.type === 'explosion') {
-        particle.mesh.scale.setScalar(1 + (1 - lifeRatio
+        particle.mesh.scale.setScalar(1 + (1 - lifeRatio) * 5);
+      }
+    }
+  }
+}
+
+// Scene setup
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x020617);
+scene.fog = new THREE.FogExp2(0x020617, 0.003);
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.y = 1.6;
+
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+
+const controls = new PointerLockControls(camera, document.body);
+
+const audioManager = new AudioManager();
+const particleSystem = new ParticleSystem(scene);
+
+// Lights
+const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
+scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+dirLight.position.set(10, 20, 10);
+dirLight.castShadow = true;
+scene.add(dirLight);
+
+// Simple floor
+const floorGeo = new THREE.PlaneGeometry(200, 200);
+const floorMat = new THREE.MeshStandardMaterial({ color: 0x1e293b });
+const floor = new THREE.Mesh(floorGeo, floorMat);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+// Placeholder enemies (red boxes)
+const enemies = [];
+for (let i = 0; i < 8; i++) {
+  const enemyGeo = new THREE.BoxGeometry(1.5, 2.5, 1);
+  const enemyMat = new THREE.MeshStandardMaterial({ color: 0xef4444 });
+  const enemy = new THREE.Mesh(enemyGeo, enemyMat);
+  enemy.position.set((Math.random() - 0.5) * 80, 1.25, (Math.random() - 0.5) * 80);
+  enemy.castShadow = true;
+  scene.add(enemy);
+  enemies.push({ mesh: enemy, health: 100 });
+}
+
+// Game variables
+let health = 100;
+let ammo = 30;
+let reserve = 120;
+let kills = 0;
+
+const clock = new THREE.Clock();
+
+let move = { forward: false, backward: false, left: false, right: false, sprint: false };
+let isCrouching = false;
+let lean = 0;
+
+// DOM elements
+const startScreen = document.getElementById('start-screen');
+const hud = document.getElementById('hud');
+const gameOverScreen = document.getElementById('game-over-screen');
+const restartBtn = document.getElementById('restart-btn');
+
+// Start game
+startScreen.addEventListener('click', () => {
+  controls.lock();
+  audioManager.audioContext.resume();
+});
+
+controls.addEventListener('lock', () => {
+  currentState = GameState.PLAYING;
+  startScreen.style.display = 'none';
+  hud.style.display = 'block';
+});
+
+controls.addEventListener('unlock', () => {
+  if (currentState === GameState.PLAYING) currentState = GameState.PAUSED;
+});
+
+// Input
+document.addEventListener('keydown', e => {
+  switch (e.code) {
+    case 'KeyW': move.forward = true; break;
+    case 'KeyS': move.backward = true; break;
+    case 'KeyA': move.left = true; break;
+    case 'KeyD': move.right = true; break;
+    case 'ShiftLeft':
+    case 'ShiftRight': move.sprint = true; break;
+    case 'ControlLeft':
+    case 'ControlRight': isCrouching = true; break;
+    case 'KeyQ': lean = -1; break;
+    case 'KeyE': lean = 1; break;
+    case 'KeyR': if (currentState === GameState.PLAYING) reload(); break;
+  }
+});
+document.addEventListener('keyup', e => {
+  switch (e.code) {
+    case 'KeyW': move.forward = false; break;
+    case 'KeyS': move.backward = false; break;
+    case 'KeyA': move.left = false; break;
+    case 'KeyD': move.right = false; break;
+    case 'ShiftLeft':
+    case 'ShiftRight': move.sprint = false; break;
+    case 'ControlLeft':
+    case 'ControlRight': isCrouching = false; break;
+    case 'KeyQ':
+    case 'KeyE': lean = 0; break;
+  }
+});
+
+document.addEventListener('mousedown', e => {
+  if (currentState === GameState.PLAYING && e.button === 0) shoot();
+});
+
+function reload() {
+  // Simple instant reload
+  const needed = 30 - ammo;
+  if (reserve >= needed) {
+    ammo = 30;
+    reserve -= needed;
+  } else {
+    ammo += reserve;
+    reserve = 0;
+  }
+  updateAmmo();
+}
+
+function shoot() {
+  if (ammo <= 0) return;
+  ammo--;
+  updateAmmo();
+  audioManager.playGunshot();
+
+  const muzzlePos = camera.position.clone();
+  muzzlePos.add(controls.getDirection(new THREE.Vector3()).multiplyScalar(0.5));
+  particleSystem.createMuzzleFlash(muzzlePos);
+
+  showHitmarker();
+
+  // Raycast for hits (simplified - always hit random enemy for demo)
+  if (enemies.length > 0) {
+    const target = enemies[Math.floor(Math.random() * enemies.length)];
+    target.health -= 50 + Math.random() * 50;
+    audioManager.playHitSound();
+    particleSystem.createBloodSplatter(target.mesh.position.clone().add(new THREE.Vector3(0, 1, 0)));
+
+    if (target.health <= 0) {
+      scene.remove(target.mesh);
+      enemies.splice(enemies.indexOf(target), 1);
+      kills++;
+      document.getElementById('kills-value').textContent = kills;
+      audioManager.playDeathSound();
+      if (enemies.length === 0) {
+        setTimeout(() => gameOver(true), 1000);
+      }
+    }
+  }
+}
+
+function showHitmarker() {
+  const hm = document.getElementById('hitmarker');
+  hm.style.opacity = 1;
+  hm.style.animation = 'hitmarkerAnim 0.4s ease-out';
+  setTimeout(() => { hm.style.opacity = 0; hm.style.animation = ''; }, 400);
+}
+
+function updateAmmo() {
+  document.getElementById('ammo-current').textContent = ammo;
+  document.getElementById('ammo-max').textContent = reserve;
+}
+
+function gameOver(victory) {
+  currentState = GameState.GAMEOVER;
+  gameOverScreen.style.display = 'flex';
+  document.getElementById('game-over-title').textContent = victory ? 'VICTORY' : 'DEFEAT';
+  document.getElementById('game-over-title').classList.toggle('victory', victory);
+  document.getElementById('game-over-title').classList.toggle('defeat', !victory);
+  document.getElementById('final-kills').textContent = kills;
+  updateGameStats(kills, victory);
+}
+
+restartBtn.onclick = () => location.reload();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Minimap (simple 2D top-down)
+const minimapCanvas = document.getElementById('minimap-canvas');
+const ctx = minimapCanvas.getContext('2d');
+minimapCanvas.width = 200;
+minimapCanvas.height = 200;
+
+function drawMinimap() {
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(0, 0, 200, 200);
+
+  // Player
+  ctx.fillStyle = '#60a5fa';
+  ctx.fillRect(100 - 3, 100 - 3, 6, 6);
+
+  // Enemies
+  ctx.fillStyle = '#ef4444';
+  enemies.forEach(e => {
+    const x = (e.mesh.position.x / 200 * 200) + 100;
+    const z = (e.mesh.position.z / 200 * 200) + 100;
+    ctx.fillRect(x - 3, z - 3, 6, 6);
+  });
+}
+
+// Main loop
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (currentState !== GameState.PLAYING) {
+    renderer.render(scene, camera);
+    return;
+  }
+
+  const delta = clock.getDelta();
+
+  particleSystem.update(delta);
+
+  // Movement
+  const speed = (move.sprint ? 12 : 6) * delta;
+  let forward = 0;
+  let strafe = 0;
+  if (move.forward) forward += speed;
+  if (move.backward) forward -= speed;
+  if (move.right) strafe += speed;
+  if (move.left) strafe -= speed;
+
+  controls.moveForward(forward);
+  controls.moveRight(strafe);
+
+  // Crouch & Lean
+  camera.position.y = isCrouching ? 0.8 : 1.6;
+  camera.position.x = lean * 0.5;
+
+  drawMinimap();
+  renderer.render(scene, camera);
+}
+
+animate();
+</script>
