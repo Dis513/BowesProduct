@@ -1846,15 +1846,6 @@ function redo() {
   showNotification('Redo');
 }
 
-
-// ==================== FINAL INITIALIZATION ====================
-// Remove the old init() call and DOMContentLoaded listener
-// Call init only once, after everything is defined
-init();
-
-// Add a default cube so the scene isn't empty
-addPrimitive('cube');
-</script>
 // ==================== UI UPDATES ====================
 function updateProperties() {
   if (selectedObjects.length === 0) {
@@ -2074,6 +2065,7 @@ window.addArmature = addArmature;
 
 </body>
 </html>
+
 
 
 
