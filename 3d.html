@@ -1915,12 +1915,14 @@ function newScene() {
       if (obj.geometry) obj.geometry.dispose();
       if (obj.material) obj.material.dispose();
     });
-   
+
     selectedObjects = [];
     transformControls.detach();
     updateOutliner();
     saveState();
-   
+
+    addPrimitive('cube');  // ← ADD THIS LINE
+
     showNotification('New Scene');
   }
 }
@@ -2145,5 +2147,6 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
