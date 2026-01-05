@@ -2136,18 +2136,14 @@ window.newScene = newScene;
 window.updateTransform = updateTransform;
 window.updateTimeline = updateTimeline;
 window.addArmature = addArmature;
-// ==================== INITIALIZE ====================
-// Force initialization first
-init();
-
-// Add a default cube after everything is set up
-addPrimitive('cube');
-
-// Also keep the event listener in case it fires later
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('DOMContentLoaded', () => {
+  init();
+  addPrimitive('cube');
+});
 </script>
 </body>
 </html>
+
 
 
 
