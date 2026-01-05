@@ -1024,21 +1024,22 @@
             animate();
         }
 
-     <script>
-// Load GLTFLoader and start the game once loaded
+<script>
+// Dynamically load GLTFLoader and initialize the game
 const gltfScript = document.createElement('script');
 gltfScript.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
-gltfScript.onload = function() {
-    init(); // Start the game once GLTFLoader is ready
+gltfScript.onload = function () {
+    init();  // Start everything once the loader is ready
 };
-gltfScript.onerror = function() {
+gltfScript.onerror = function () {
     console.error('Failed to load GLTFLoader');
-    alert('Failed to load required 3D model loader. Check your internet connection.');
+    alert('Could not load the 3D model loader. Check your internet connection or try a different browser.');
 };
 document.head.appendChild(gltfScript);
 </script>
 </body>
 </html>
+
 
 
 
