@@ -655,12 +655,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const provider = new GoogleAuthProvider();
-  // 🔥 Expose Firebase to non-module scripts
-window.auth = auth;
-window.db = db;
-window.storage = storage;
-
-
 const authBtn = document.getElementById("authBtn");
 const profilePic = document.getElementById("profilePic");
 const levelInfo = document.getElementById("levelInfo");
@@ -1876,11 +1870,11 @@ window.saveSceneToFirebase = async function () {
     objectCount: scene.children.length
   };
 
-  const scenesRef = collection(
+  const scenesRef = window.collection(
     window.db,
-    users/${window.auth.currentUser.uid}/scenes
+    `users/${window.auth.currentUser.uid}/scenes`
   );
-  await addDoc(scenesRef, sceneData);
+  await window.addDoc(scenesRef, sceneData);
 };
 
 async function showSceneLoader() {
@@ -1888,21 +1882,24 @@ async function showSceneLoader() {
     showNotification('Login to load scenes');
     return;
   }
- 
+
   showNotification('Loading scenes from Firebase...');
- 
-  const scenesRef = collection(window.db, users/${window.auth.currentUser.uid}/scenes);
-  const snapshot = await getDocs(scenesRef);
- 
+
+  const scenesRef = window.collection(
+    window.db,
+    `users/${window.auth.currentUser.uid}/scenes`
+  );
+  const snapshot = await window.getDocs(scenesRef);
+
   const scenes = [];
   snapshot.forEach(doc => {
     scenes.push({ id: doc.id, ...doc.data() });
   });
- 
+
   if (scenes.length === 0) {
     showNotification('No saved scenes');
   } else {
-    showNotification(Found ${scenes.length} scenes);
+    showNotification(`Found ${scenes.length} scenes`);
   }
 }
 function newScene() {
@@ -2097,6 +2094,10 @@ function initPanelTabs() {
   }
 }
 // ==================== EXPOSE FUNCTIONS ====================
+  // Expose Firestore functions for use in plain script
+window.collection = collection;
+window.addDoc = addDoc;
+window.getDocs = getDocs;
 window.setTool = setTool;
 window.setMode = setMode;
 window.setTransformMode = setTransformMode;
@@ -2144,3 +2145,4 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
