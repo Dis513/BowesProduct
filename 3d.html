@@ -765,6 +765,161 @@ import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
   let lastTime = performance.now();
   let frameCount = 0;
   let fps = 60;
+let selectedObjects = [];
+let undoStack = [];
+let redoStack = [];
+let transformMode = "translate";
+
+// ===============================
+// FILE / SCENE
+// ===============================
+function newScene() {
+  console.log("New Scene");
+
+  if (!scene) return;
+
+  // clear scene except camera/lights
+  scene.children.slice().forEach(obj => {
+    if (!obj.isCamera && !obj.isLight) {
+      scene.remove(obj);
+    }
+  });
+
+  selectedObjects = [];
+  undoStack = [];
+  redoStack = [];
+
+  updateProperties();
+}
+
+function showSceneLoader() {
+  console.log("Show Scene Loader (Firebase)");
+  alert("Scene loader not yet implemented");
+}
+
+function saveScene() {
+  console.log("Save Scene");
+
+  const data = scene.toJSON();
+  console.log("Scene JSON:", data);
+
+  alert("Scene serialized (check console)");
+}
+
+// ===============================
+// IMPORT / EXPORT
+// ===============================
+function importModel() {
+  console.log("Import Model");
+
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".gltf,.glb,.obj,.stl";
+
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    console.log("Selected file:", file.name);
+    alert("Importer hook ready (loader not wired yet)");
+  };
+
+  input.click();
+}
+
+function exportModel() {
+  console.log("Export Model");
+
+  const exporter = new GLTFExporter();
+  exporter.parse(
+    scene,
+    gltf => {
+      const blob = new Blob([JSON.stringify(gltf)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "scene.gltf";
+      a.click();
+
+      URL.revokeObjectURL(url);
+    },
+    { binary: false }
+  );
+}
+
+// ===============================
+// EDIT
+// ===============================
+function undo() {
+  console.log("Undo");
+  if (undoStack.length === 0) return;
+
+  const state = undoStack.pop();
+  redoStack.push(scene.toJSON());
+  // restore logic goes here
+}
+
+function redo() {
+  console.log("Redo");
+  if (redoStack.length === 0) return;
+
+  const state = redoStack.pop();
+  undoStack.push(scene.toJSON());
+  // restore logic goes here
+}
+
+function duplicateSelected() {
+  console.log("Duplicate Selected");
+
+  selectedObjects.forEach(obj => {
+    const clone = obj.clone();
+    clone.position.x += 0.2;
+    clone.position.y += 0.2;
+    scene.add(clone);
+  });
+}
+
+function deleteSelected() {
+  console.log("Delete Selected");
+
+  selectedObjects.forEach(obj => scene.remove(obj));
+  selectedObjects = [];
+  updateProperties();
+}
+
+function selectAll() {
+  console.log("Select All");
+
+  selectedObjects = scene.children.filter(o => o.isMesh);
+  updateProperties();
+}
+
+// ===============================
+// TRANSFORM
+// ===============================
+function setTransformMode(mode) {
+  console.log("Transform mode:", mode);
+  transformMode = mode;
+
+  if (transformControls) {
+    transformControls.setMode(mode);
+  }
+}
+
+// ===============================
+// UI
+// ===============================
+function updateProperties() {
+  console.log("Update Properties");
+
+  const panel = document.getElementById("properties-panel");
+  if (!panel) return;
+
+  panel.innerHTML = selectedObjects.length
+    ? `Selected: ${selectedObjects.length}`
+    : "No selection";
+}
 
   // ==================== INITIALIZATION ====================
   function init() {
@@ -899,7 +1054,8 @@ function onMouseDown(event) {
       }
      
       selectObject(obj);
-     
+     updateProperties();
+updateModifierList();
       if (selectedObjects.length > 0) {
         transformControls.attach(selectedObjects[0]);
       }
@@ -1150,7 +1306,38 @@ function selectObject(obj) {
       obj.material.emissiveIntensity = 0.2;
     }
    
-    updateProperties();
+  function updateProperties() {
+  if (selectedObjects.length === 0) {
+    document.getElementById('posX').value = '';
+    document.getElementById('posY').value = '';
+    document.getElementById('posZ').value = '';
+    document.getElementById('rotX').value = '';
+    document.getElementById('rotY').value = '';
+    document.getElementById('rotZ').value = '';
+    document.getElementById('scaleX').value = '';
+    document.getElementById('scaleY').value = '';
+    document.getElementById('scaleZ').value = '';
+    updateModifierList();
+    return;
+  }
+
+  // Use only the first selected object for properties
+  const obj = selectedObjects[0];
+
+  document.getElementById('posX').value = obj.position.x.toFixed(2);
+  document.getElementById('posY').value = obj.position.y.toFixed(2);
+  document.getElementById('posZ').value = obj.position.z.toFixed(2);
+
+  document.getElementById('rotX').value = THREE.MathUtils.radToDeg(obj.rotation.x).toFixed(1);
+  document.getElementById('rotY').value = THREE.MathUtils.radToDeg(obj.rotation.y).toFixed(1);
+  document.getElementById('rotZ').value = THREE.MathUtils.radToDeg(obj.rotation.z).toFixed(1);
+
+  document.getElementById('scaleX').value = obj.scale.x.toFixed(2);
+  document.getElementById('scaleY').value = obj.scale.y.toFixed(2);
+  document.getElementById('scaleZ').value = obj.scale.z.toFixed(2);
+
+  updateModifierList();
+}
     updateOutliner();
   }
 }
@@ -2061,10 +2248,15 @@ window.addArmature = addArmature;
   
   // At the very end:
   init();
+  // Set initial tool and mode
+setTool('select');
+setMode('object');
   addPrimitive('cube');
+  
 
 </body>
 </html>
+
 
 
 
