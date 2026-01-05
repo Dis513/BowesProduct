@@ -256,13 +256,14 @@
   <button id="panelToggle">\u2190</button>
  
 <div style="padding:0.8rem;background:rgba(30,41,59,0.4);border-radius:8px;margin-bottom:1rem;font-size:0.85rem;line-height:1.4;border:1px solid #334155;">
-  <strong style="color:#60a5fa">Controls:</strong><br><br>
-  • Left click + drag: Rotate view<br>
-  • Right click + drag: Pan<br>
-  • Scroll: Zoom<br>
-  • Click object: Select • Ctrl/Cmd + click: Multi-select<br>
-  • G/R/S: Move/Rotate/Scale<br>
-  • Delete: Delete • Ctrl+D: Duplicate • Ctrl+Z/Y: Undo/Redo
+  <strong style="color:#60a5fa">Blender-Style Controls:</strong><br><br>
+  • Left drag: Orbit view<br>
+  • Right drag: Pan view<br>
+  • Scroll wheel: Zoom<br>
+  • Click object: Select (hold Ctrl/Cmd for multi-select)<br>
+  • G: Move • R: Rotate • S: Scale<br>
+  • Click & drag red/green/blue arrows/rings to transform<br>
+  • Delete: Delete object • Ctrl+D: Duplicate • Ctrl+Z/Y: Undo/Redo
 </div>
   <h2>Add Objects</h2>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;">
@@ -403,9 +404,34 @@
   const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.set(5, 4, 5);
 
-  const controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.screenSpacePanning = true;        // Critical for proper panning
+controls.mouseButtons = {
+  LEFT: THREE.MOUSE.ROTATE,   // Left = orbit
+  MIDDLE: THREE.MOUSE.DOLLY,  // Middle = zoom
+  RIGHT: THREE.MOUSE.PAN      // Right = pan
+};
+controls.enablePan = true;
+controls.panSpeed = 1.0;
+controls.keys = {
+  LEFT: 'KeyA',    // Not used in this setup
+  UP: 'KeyW',
+  RIGHT: 'KeyD',
+  BOTTOM: 'KeyS'
+};
+
+  const transformControl = new TransformControls(camera, canvas);
+transformControl.addEventListener('dragging-changed', (event) => {
+  controls.enabled = !event.value;  // Disable orbit when using gizmo
+});
+transformControl.addEventListener('change', () => {
+  updateTransformInputs();
+  // Optional: save on change
+  // saveState();
+});
+scene.add(transformControl);
 
   const transformControl = new TransformControls(camera, renderer.domElement);
   transformControl.addEventListener('dragging-changed', (event) => controls.enabled = !event.value);
@@ -554,38 +580,67 @@
   undoBtn.onclick = undo;
   redoBtn.onclick = redo;
 
-  window.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
-    if (e.key === 'g' || e.key === 'G') {
-      e.preventDefault();
+ window.addEventListener('keydown', e => {
+  // Ignore if typing in an input field
+  if (document.activeElement.tagName === 'INPUT') return;
+
+  // G = Move
+  if (e.key.toLowerCase() === 'g') {
+    e.preventDefault();
+    if (selectedObjects.length === 1) {
+      transformControl.attach(selectedObjects[0]);
       transformControl.setMode('translate');
       updateFloaterActiveState();
+      showNotif && showNotif('Move (G)');
     }
-    if (e.key === 'r' || e.key === 'R') {
-      e.preventDefault();
+  }
+
+  // R = Rotate
+  if (e.key.toLowerCase() === 'r') {
+    e.preventDefault();
+    if (selectedObjects.length === 1) {
+      transformControl.attach(selectedObjects[0]);
       transformControl.setMode('rotate');
       updateFloaterActiveState();
+      showNotif && showNotif('Rotate (R)');
     }
-    if (e.key === 's' || e.key === 'S') {
-      if (!(e.ctrlKey || e.metaKey)) {
-        e.preventDefault();
-        transformControl.setMode('scale');
-        updateFloaterActiveState();
-      }
-    }
-    if (e.key === 'Delete' || e.key === 'Backspace') {
-      if (document.activeElement.tagName !== 'INPUT') {
-        e.preventDefault();
-        deleteSelected();
-      }
-    }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
-      e.preventDefault();
-      duplicateSelected();
-    }
-  });
+  }
 
+  // S = Scale
+  if (e.key.toLowerCase() === 's') {
+    e.preventDefault();
+    if (selectedObjects.length === 1) {
+      transformControl.attach(selectedObjects[0]);
+      transformControl.setMode('scale');
+      updateFloaterActiveState();
+      showNotif && showNotif('Scale (S)');
+    }
+  }
+
+  // Delete selected object
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (document.activeElement.tagName !== 'INPUT') {
+      e.preventDefault();
+      deleteSelected();
+    }
+  }
+
+  // Ctrl+D = Duplicate
+  if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+    e.preventDefault();
+    duplicateSelected();
+  }
+
+  // Ctrl+Z / Ctrl+Y = Undo/Redo (already in your code, but safe to keep)
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+    e.preventDefault();
+    undo();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+    e.preventDefault();
+    redo();
+  }
+});
   function createGeometryForName(name) {
     switch(name) {
       case 'Box': return new THREE.BoxGeometry(1, 1, 1);
@@ -1298,5 +1353,6 @@
 </script>
 </body>
 </html>
+
 
 
