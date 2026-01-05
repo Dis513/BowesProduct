@@ -288,7 +288,7 @@
                 this.score = Math.floor(this.distance / 15);
 
                 // Increase difficulty
-                if (this.distance % 1000 < 10) {
+                if (Math.floor(this.distance / 1000) > Math.floor((this.distance - this.currentSpeed * delta * 60) / 1000)) {
                     this.baseSpeed = Math.min(this.baseSpeed + 0.5, 12);
                 }
 
@@ -363,13 +363,13 @@
                 this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // Stars
+                // Stars (starfield effect)
                 this.ctx.fillStyle = '#ffffff';
                 for (let star of this.stars) {
-                    star.y += star.speed * this.currentSpeed * 0.5;
-                    if (star.y > this.canvas.height) star.y = 0;
+                    star.y += star.speed * this.currentSpeed;
+                    if (star.y > this.canvas.height) star.y = -10;
                     this.ctx.globalAlpha = star.speed / 1.5;
-                    this.ctx.fillRect(star.x, star.y, star.size, star.size);
+                    this.ctx.fillRect(star.x, star.y, star.size, star.size * 4); // streaking stars
                 }
                 this.ctx.globalAlpha = 1;
 
@@ -391,7 +391,7 @@
                 this.ctx.save();
                 this.ctx.translate(playerX, playerY);
                 if (this.speedBoostTimer > 0) {
-                    this.ctx.scale(1 + Math.sin(performance.now() * 0.01) * 0.1, 1 + Math.sin(performance.now() * 0.01) * 0.1);
+                    this.ctx.scale(1.1 + Math.sin(performance.now() * 0.01) * 0.1, 1.1 + Math.sin(performance.now() * 0.01) * 0.1);
                 }
 
                 // Ship body
@@ -406,9 +406,9 @@
                 this.ctx.closePath();
                 this.ctx.fill();
 
-                // Glow
+                // Glow during boost
                 if (this.speedBoostTimer > 0) {
-                    this.ctx.shadowBlur = 30;
+                    this.ctx.shadowBlur = 40;
                     this.ctx.shadowColor = '#00ffff';
                     this.ctx.fill();
                     this.ctx.shadowBlur = 0;
@@ -429,7 +429,7 @@
                     this.ctx.restore();
                 }
 
-                // Boosts
+                // Boosts (green orbs)
                 for (let boost of this.boosts) {
                     const x = boost.lane * this.laneWidth + this.laneWidth / 2;
                     this.ctx.save();
@@ -443,6 +443,12 @@
                         this.ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
                     }
                     this.ctx.closePath();
+                    this.ctx.fill();
+
+                    // Inner glow
+                    this.ctx.fillStyle = '#00ff00';
+                    this.ctx.beginPath();
+                    this.ctx.arc(0, 0, 10, 0, Math.PI * 2);
                     this.ctx.fill();
                     this.ctx.restore();
                 }
@@ -464,19 +470,16 @@
             }
 
             animate(time = 0) {
-                const delta = time - this.lastTime;
+                const delta = (time - this.lastTime) / 1000;
                 this.lastTime = time;
 
-                if (delta < 100) {
-                    this.update(delta / 1000);
-                }
-
+                this.update(delta);
                 this.draw();
+
                 requestAnimationFrame((t) => this.animate(t));
             }
         }
 
-        // Start the game when page loads
         window.onload = () => new Game();
     </script>
 </body>
