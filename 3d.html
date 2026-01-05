@@ -700,41 +700,46 @@ scene.add(transformControl);
   // Selection
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
-
-  function selectObject(object, multi = false) {
-    if (!multi) selectedObjects = [];
-    if (object) {
-      if (!selectedObjects.includes(object)) selectedObjects.push(object);
+function selectObject(object, multi = false) {
+  // Clear previous highlights
+  selectedObjects.forEach(o => {
+    if (o.userData.originalMaterial) {
+      o.material = o.userData.originalMaterial;
+      delete o.userData.originalMaterial;
     }
-    updateSelectedObjectUI();
-    updateFloaterActiveState();
-    updateLayersList();
+  });
 
-    if (selectedObjects.length === 1) {
-      transformControl.attach(selectedObjects[0]);
-    } else {
-      transformControl.detach();
+  if (!multi) {
+    selectedObjects = [];
+  }
+
+  if (object) {
+    if (!selectedObjects.includes(object)) {
+      selectedObjects.push(object);
+
+      // Save original material and apply green glow
+      if (object.isMesh && object.material) {
+        object.userData.originalMaterial = object.material.clone();
+
+        const highlightMat = object.material.clone();
+        highlightMat.emissive = new THREE.Color(0x22c55e); // Green
+        highlightMat.emissiveIntensity = 0.5;
+        object.material = highlightMat;
+      }
     }
   }
 
-  canvas.addEventListener('pointerdown', (e) => {
-    if (transformControl.dragging) return;
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    raycaster.setFromCamera(mouse, camera);
-    const allMeshes = [];
-    rootObjects.forEach(obj => obj.traverse(child => { if (child.isMesh) allMeshes.push(child); }));
-    const intersects = raycaster.intersectObjects(allMeshes, false);
-    if (intersects.length > 0) {
-      selectObject(intersects[0].object, e.ctrlKey || e.metaKey);
-    } else if (!e.ctrlKey && !e.metaKey) {
-      selectedObjects = [];
-      transformControl.detach();
-      updateSelectedObjectUI();
-      updateLayersList();
-    }
-  });
+  // Attach gizmo only if exactly one object selected
+  if (selectedObjects.length === 1) {
+    transformControl.attach(selectedObjects[0]);
+  } else {
+    transformControl.detach();
+  }
+
+  updateSelectedObjectUI();
+  updateFloaterActiveState();
+  updateLayersList();
+}
 
   function updateSelectedObjectUI() {
     const infoDiv = document.getElementById('selectedObjectInfo');
@@ -1353,6 +1358,7 @@ scene.add(transformControl);
 </script>
 </body>
 </html>
+
 
 
 
