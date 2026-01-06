@@ -1263,7 +1263,7 @@ class NeonNightmare {
         this.settingsMenu.classList.remove('active');
     }
 
-    setDifficulty(level) {
+    setDifficulty(level) { 
         this.difficulty = level;
         this.hideSettings();
         
