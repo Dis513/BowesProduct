@@ -1195,3 +1195,84 @@ body {
     color: #666;
     margin-top: 0.5rem;
 }
+/* ===================================
+   RESPONSIVE FIXES FOR MOBILE
+   =================================== */
+
+/* Make pause menus (including level select) responsive */
+.pause-menu {
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+/* Fix the level grid for mobile */
+.level-grid {
+    grid-template-columns: repeat(5, 1fr) !important; /* Reduce from 10 columns */
+    gap: 12px;
+    max-width: 100%;
+    max-height: none;
+    padding: 15px;
+}
+
+/* Make level items a bit larger and touch-friendly */
+.level-item {
+    width: 60px;
+    height: 60px;
+    font-size: 1.2rem;
+}
+
+/* Tablet and smaller screens */
+@media (max-width: 768px) {
+    .level-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 10px;
+    }
+    
+    .level-item {
+        width: 55px;
+        height: 55px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+    .level-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px;
+        padding: 10px;
+    }
+    
+    .level-item {
+        width: 70px;
+        height: 70px;
+        font-size: 1.3rem;
+    }
+    
+    .pause-title {
+        font-size: 1.8rem;
+    }
+    
+    .menu-button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        min-width: 220px;
+    }
+}
+
+/* Very small phones – stack in 2 columns for better tapping */
+@media (max-width: 360px) {
+    .level-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px;
+    }
+    
+    .level-item {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+}
