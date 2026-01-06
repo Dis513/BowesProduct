@@ -857,6 +857,78 @@ body {
 }
 
 /* ===================================
+   Health Bar
+   =================================== */
+
+.health-container {
+    position: fixed;
+    top: 130px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 60;
+}
+
+.health-label {
+    font-size: 0.8rem;
+    color: #FF1493;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.health-bar {
+    width: 300px;
+    height: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #FF1493;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(255, 20, 147, 0.3);
+}
+
+@media (max-width: 768px) {
+    .health-bar {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .health-bar {
+        width: 150px;
+    }
+}
+
+.health-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #39FF14, #00FFFF);
+    border-radius: 8px;
+    transition: width 0.3s ease, background 0.3s ease;
+    box-shadow: 0 0 10px #39FF14;
+}
+
+.health-fill.damaged {
+    animation: healthDamage 0.3s ease-out;
+}
+
+@keyframes healthDamage {
+    0% {
+        transform: scaleX(1);
+    }
+    50% {
+        transform: scaleX(0.95);
+        filter: brightness(2);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+/* ===================================
    Note Highway
    =================================== */
 
