@@ -1,6 +1,6 @@
 // ===================================
 // NEON NIGHTMARE - Game Engine
-// Local File Version
+// Local File Version with Character & Map System
 // ===================================
 
 class NeonNightmare {
@@ -13,6 +13,29 @@ class NeonNightmare {
         this.maxCombo = 0;
         this.multiplier = 1;
         this.difficulty = 'medium';
+        
+        // Level System
+        this.currentLevel = 1;
+        this.levelProgress = 0;
+        this.levelThreshold = 500; // Score needed for level up
+        this.maxLevel = Infinity; // Infinite levels
+        
+        // Character System
+        this.character = null;
+        this.characterSprite = null;
+        this.characterAura = null;
+        this.characterState = 'idle';
+        this.lastAnimationTime = 0;
+        
+        // Map System
+        this.parallaxLayers = [];
+        this.scrollPositions = { layer1: 0, layer2: 0, layer3: 0, layer4: 0 };
+        this.lastScrollTime = 0;
+        
+        // Beat Detection
+        this.beatDetected = false;
+        this.lastBeatTime = 0;
+        this.beatThreshold = 0.3;
         
         // Audio
         this.audioContext = null;
@@ -53,6 +76,8 @@ class NeonNightmare {
         this.initializeElements();
         this.setupEventListeners();
         this.createParticles();
+        this.initializeCharacter();
+        this.initializeMap();
     }
 
     // ===================================
@@ -81,9 +106,13 @@ class NeonNightmare {
         this.songTitle = document.getElementById('songTitle');
         this.songArtist = document.getElementById('songArtist');
         
+        // Level Elements
+        this.levelNumber = document.getElementById('levelNumber');
+        
         // Game Elements
         this.noteHighway = document.getElementById('noteHighway');
         this.targetLine = document.getElementById('targetLine');
+        this.beatGlow = document.getElementById('beatGlow');
         
         // Fret Buttons
         this.frets.forEach((fret, index) => {
@@ -92,6 +121,29 @@ class NeonNightmare {
         
         // Calculate target line position
         this.targetY = this.noteHighway.offsetHeight - 150;
+    }
+
+    initializeCharacter() {
+        // Create character DOM element
+        this.character = document.getElementById('character');
+        this.characterSprite = document.getElementById('characterSprite');
+        this.characterAura = document.getElementById('characterAura');
+        
+        // Set initial state
+        this.setCharacterState('idle');
+    }
+
+    initializeMap() {
+        // Initialize parallax layers
+        this.parallaxLayers = {
+            layer1: document.getElementById('parallaxLayer1'),
+            layer2: document.getElementById('parallaxLayer2'),
+            layer3: document.getElementById('parallaxLayer3'),
+            layer4: document.getElementById('parallaxLayer4')
+        };
+        
+        // Set initial scroll positions
+        this.lastScrollTime = performance.now();
     }
 
     setupEventListeners() {
@@ -159,6 +211,157 @@ class NeonNightmare {
             particle.style.boxShadow = `0 0 10px ${color}`;
             
             particlesContainer.appendChild(particle);
+        }
+    }
+
+    // ===================================
+    // Character System
+    // ===================================
+
+    setCharacterState(state) {
+        // Remove old state
+        this.character.classList.remove(this.characterState);
+        
+        // Set new state
+        this.characterState = state;
+        this.character.classList.add(state);
+        
+        // Reset after animation
+        if (state === 'hit' || state === 'miss' || state === 'groove') {
+            setTimeout(() => {
+                this.setCharacterState('idle');
+            }, 300);
+        }
+    }
+
+    animateCharacterToBeat() {
+        if (this.combo > 5 && this.characterState === 'idle') {
+            this.setCharacterState('groove');
+        }
+    }
+
+    activateCharacterAura() {
+        if (this.characterAura) {
+            this.characterAura.classList.add('active');
+            setTimeout(() => {
+                this.characterAura.classList.remove('active');
+            }, 500);
+        }
+    }
+
+    // ===================================
+    // Map System
+    // ===================================
+
+    updateMapScroll(currentTime) {
+        const deltaTime = currentTime - this.lastScrollTime;
+        const scrollSpeed = 0.02 + (this.currentLevel * 0.005); // Speed increases with level
+        
+        // Update parallax layers with different speeds
+        this.scrollPositions.layer1 = (this.scrollPositions.layer1 + scrollSpeed * 0.1) % 100;
+        this.scrollPositions.layer2 = (this.scrollPositions.layer2 + scrollSpeed * 0.3) % 100;
+        this.scrollPositions.layer3 = (this.scrollPositions.layer3 + scrollSpeed * 0.5) % 100;
+        this.scrollPositions.layer4 = (this.scrollPositions.layer4 + scrollSpeed * 0.8) % 100;
+        
+        // Apply transforms
+        if (this.parallaxLayers.layer1) {
+            this.parallaxLayers.layer1.style.transform = `translateX(${this.scrollPositions.layer1}%)`;
+        }
+        if (this.parallaxLayers.layer2) {
+            this.parallaxLayers.layer2.style.transform = `translateX(${this.scrollPositions.layer2}%)`;
+        }
+        if (this.parallaxLayers.layer3) {
+            this.parallaxLayers.layer3.style.transform = `translateX(${this.scrollPositions.layer3}%)`;
+        }
+        if (this.parallaxLayers.layer4) {
+            this.parallaxLayers.layer4.style.transform = `translateX(${this.scrollPositions.layer4}%)`;
+        }
+        
+        this.lastScrollTime = currentTime;
+    }
+
+    // ===================================
+    // Level System
+    // ===================================
+
+    updateLevel() {
+        // Calculate level based on score (infinite levels)
+        const newLevel = Math.floor(this.score / this.levelThreshold) + 1;
+        
+        if (newLevel > this.currentLevel) {
+            // Level up!
+            this.currentLevel = newLevel;
+            this.levelNumber.textContent = this.currentLevel;
+            this.levelNumber.classList.add('level-up');
+            
+            // Increase difficulty slightly with each level
+            this.increaseDifficulty();
+            
+            // Remove level-up animation
+            setTimeout(() => {
+                this.levelNumber.classList.remove('level-up');
+            }, 500);
+            
+            console.log(`Level up! Now at level ${this.currentLevel}`);
+        }
+    }
+
+    increaseDifficulty() {
+        // Adjust note spawn rate based on level
+        const minBeatInterval = Math.max(0.1, this.getMinBeatInterval() - (this.currentLevel * 0.01));
+        
+        // Store the adjusted interval for note generation
+        this.adjustedMinBeatInterval = minBeatInterval;
+    }
+
+    // ===================================
+    // Beat-reactive Visuals
+    // ===================================
+
+    detectBeat(currentTime) {
+        if (!this.analyser || !this.audioData) return false;
+        
+        // Get frequency data
+        this.analyser.getByteFrequencyData(this.audioData);
+        
+        // Calculate average volume for low frequencies (bass)
+        let bassSum = 0;
+        const bassRange = this.audioData.slice(0, 10); // Low frequencies
+        
+        for (let i = 0; i < bassRange.length; i++) {
+            bassSum += bassRange[i];
+        }
+        
+        const bassAverage = bassSum / bassRange.length;
+        const normalizedBass = bassAverage / 255;
+        
+        // Check for beat
+        const isBeat = normalizedBass > this.beatThreshold;
+        
+        if (isBeat && (currentTime - this.lastBeatTime > 0.2)) {
+            this.lastBeatTime = currentTime;
+            this.triggerBeatReactiveVisuals(normalizedBass);
+            return true;
+        }
+        
+        return false;
+    }
+
+    triggerBeatReactiveVisuals(intensity) {
+        // Beat glow effect
+        if (this.beatGlow) {
+            this.beatGlow.classList.add('active');
+            setTimeout(() => {
+                this.beatGlow.classList.remove('active');
+            }, 100);
+        }
+        
+        // Character reacts to beat
+        this.animateCharacterToBeat();
+        
+        // Activate character aura on strong beats
+        if (intensity > 0.6) {
+            this.activateCharacterAura();
         }
     }
 
@@ -245,7 +448,7 @@ class NeonNightmare {
         }
         
         // Filter beats based on difficulty
-        const minBeatInterval = this.getMinBeatInterval();
+        const minBeatInterval = this.adjustedMinBeatInterval || this.getMinBeatInterval();
         const filteredBeats = this.filterBeats(beats, minBeatInterval);
         
         // Generate notes from beats
@@ -315,11 +518,14 @@ class NeonNightmare {
         this.combo = 0;
         this.maxCombo = 0;
         this.multiplier = 1;
+        this.currentLevel = 1;
+        this.levelProgress = 0;
         this.perfectHits = 0;
         this.greatHits = 0;
         this.goodHits = 0;
         this.misses = 0;
         this.activeNotes = [];
+        this.adjustedMinBeatInterval = null;
         
         // Reset notes
         this.notes.forEach(note => {
@@ -329,8 +535,12 @@ class NeonNightmare {
         
         // Update UI
         this.updateHUD();
+        this.levelNumber.textContent = '1';
         this.mainMenu.classList.add('hidden');
         this.gameContainer.classList.remove('hidden');
+        
+        // Set character to idle
+        this.setCharacterState('idle');
         
         // Start audio
         this.playAudio();
@@ -346,6 +556,7 @@ class NeonNightmare {
         // Create analyser for visualizations
         this.analyser = this.audioContext.createAnalyser();
         this.analyser.fftSize = 256;
+        this.audioData = new Uint8Array(this.analyser.frequencyBinCount);
         
         // Connect nodes
         this.audioSource.connect(this.analyser);
@@ -366,6 +577,13 @@ class NeonNightmare {
         if (!this.isPlaying || this.isPaused) return;
         
         const currentTime = this.audioContext.currentTime - this.startTime;
+        const performanceTime = performance.now();
+        
+        // Detect beats and trigger visuals
+        this.detectBeat(performanceTime);
+        
+        // Update map scroll
+        this.updateMapScroll(performanceTime);
         
         // Spawn notes
         this.spawnNotes(currentTime);
@@ -549,6 +767,13 @@ class NeonNightmare {
         else if (hitType === 'great') this.greatHits++;
         else this.goodHits++;
         
+        // Update level
+        this.updateLevel();
+        
+        // Character animation
+        this.setCharacterState('hit');
+        this.activateCharacterAura();
+        
         // Visual feedback
         this.showHitFeedback(hitType);
         this.animateNoteHit(note);
@@ -575,6 +800,9 @@ class NeonNightmare {
         this.combo = 0;
         this.multiplier = 1;
         this.misses++;
+        
+        // Character animation
+        this.setCharacterState('miss');
         
         // Visual feedback
         this.showMissFeedback();
@@ -706,6 +934,9 @@ class NeonNightmare {
         this.settingsMenu.classList.remove('active');
         this.gameContainer.classList.add('hidden');
         this.mainMenu.classList.remove('hidden');
+        
+        // Reset level
+        this.currentLevel = 1;
         
         // Reset upload button
         this.uploadButton.textContent = '🎵 Upload Audio File';
