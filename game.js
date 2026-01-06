@@ -70,7 +70,8 @@ class NeonNightmare {
             easy: { perfect: 100, great: 200, good: 300 },
             medium: { perfect: 50, great: 100, good: 150 },
             hard: { perfect: 40, great: 80, good: 120 },
-            expert: { perfect: 30, great: 60, good: 90 }
+            expert: { perfect: 30, great: 60, good: 90 },
+            master: { perfect: 20, great: 40, good: 60 }
         };
         
         // DOM Elements
@@ -108,6 +109,7 @@ class NeonNightmare {
         // HUD Elements
         this.scoreValue = document.getElementById('scoreValue');
         this.multiplierValue = document.getElementById('multiplierValue');
+        this.multiplierPulse = document.getElementById('multiplierPulse');
         this.comboValue = document.getElementById('comboValue');
         this.comboDisplay = document.getElementById('comboDisplay');
         this.progressFill = document.getElementById('progressFill');
@@ -180,6 +182,7 @@ class NeonNightmare {
         document.getElementById('setDifficultyMedium').addEventListener('click', () => this.setDifficulty('medium'));
         document.getElementById('setDifficultyHard').addEventListener('click', () => this.setDifficulty('hard'));
         document.getElementById('setDifficultyExpert').addEventListener('click', () => this.setDifficulty('expert'));
+        document.getElementById('setDifficultyMaster').addEventListener('click', () => this.setDifficulty('master'));
         document.getElementById('closeSettings').addEventListener('click', () => this.hideSettings());
         
         // Song Complete
@@ -350,11 +353,10 @@ class NeonNightmare {
         try {
             // Initialize Audio Context if needed
             if (!this.audioContext) {
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-}
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
 
-await this.audioContext.resume();
-
+            await this.audioContext.resume();
             
             // Update song info
             this.songTitle.textContent = `Level ${level}`;
@@ -410,7 +412,7 @@ await this.audioContext.resume();
             this.songTitle.textContent = file.name.replace(/\.[^/.]+$/, '');
             this.songArtist.textContent = 'Custom Track';
             
-            // Set difficulty to medium for custom tracks
+            // Set difficulty to medium for custom tracks (can be changed in settings)
             this.difficulty = 'medium';
             this.currentLevel = 0;
             
@@ -554,6 +556,14 @@ await this.audioContext.resume();
         // Activate character aura on strong beats
         if (intensity > 0.6) {
             this.activateCharacterAura();
+        }
+        
+        // Pulse multiplier to beat
+        if (this.multiplierPulse) {
+            this.multiplierPulse.classList.add('beat-active');
+            setTimeout(() => {
+                this.multiplierPulse.classList.remove('beat-active');
+            }, 150);
         }
     }
 
