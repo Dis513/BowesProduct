@@ -2,7 +2,7 @@
 
 console.log('Neon Nightmare game.js loaded');
 
-class NeonNightmare {
+class NeonNightmare { 
     constructor() {
         /* =========================
            CORE GAME STATE
