@@ -389,15 +389,29 @@ body {
     border-radius: 10px;
 }
 
-/* Level items */
-.level-item.expert {
-  border-color: #FF0000;
-  color: #FF0000;
+.level-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid #00FFFF;
+    border-radius: 8px;
+    color: #00FFFF;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.level-item.expert:hover {
-  background: rgba(255, 0, 0, 0.3);
-  box-shadow: 0 0 15px #FF0000;
+.level-item:hover {
+    background: rgba(0, 255, 255, 0.3);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00FFFF;
 }
 
 .level-item.easy {
@@ -928,16 +942,15 @@ body {
         0 0 60px #FF1493;
 }
 
-=================================== */
 .song-info {
-  position: fixed;
-  top: 110px;  /* Changed from 60px: now positioned just above note lanes (highway top:150px) */
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  z-index: 60;
-  width: 90%;
-  max-width: 800px;
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 60;
+    width: 90%;
+    max-width: 800px;
 }
 
 .song-title {
@@ -1060,25 +1073,29 @@ body {
     }
 }
 
-/* Notes */
 .note.green {
-  background: #39FF14;
-  color: #39FF14;
+    background: #39FF14;
+    color: #39FF14;
 }
 
 .note.red {
-  background: #FF0000;
-  color: #FF0000;
+    background: #FF0000;
+    color: #FF0000;
+}
+
+.note.yellow {
+    background: #FFFF00;
+    color: #FFFF00;
 }
 
 .note.blue {
-  background: #0066FF;
-  color: #0066FF;
+    background: #0066FF;
+    color: #0066FF;
 }
 
 .note.orange {
-  background: #FFA500;
-  color: #FFA500;
+    background: #FFA500;
+    color: #FFA500;
 }
 
 .note.hit {
@@ -1111,25 +1128,18 @@ body {
     }
 }
 
-/* Fret buttons */
-.fret-button.green {
-  color: #39FF14;
-  box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
-}
+/* ===================================
+   Fret Buttons
+   =================================== */
 
-.fret-button.red {
-  color: #FF0000;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
-}
-
-.fret-button.blue {
-  color: #0066FF;
-  box-shadow: 0 0 15px rgba(0, 102, 255, 0.5);
-}
-
-.fret-button.orange {
-  color: #FFA500;
-  box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+.fret-buttons {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 60;
 }
 
 @media (max-width: 768px) {
@@ -1648,97 +1658,29 @@ body {
         min-width: 220px;
     }
 }
-/* ===================================
-   Updated responsive adjustments for song info and level indicator
-   =================================== */
 
-@media (max-width: 768px) {
-  .song-info {
-    top: 130px;  /* Moved down to stay just above note highway */
-  }
-
-  .level-indicator {
-    top: 120px;   /* Lower than desktop to avoid overlapping multiplier/health */
-    right: 20px;
-  }
-
-  /* Keep your existing mobile adjustments below if needed */
-  .note-highway {
-    top: 200px;
-    height: 50vh;
-  }
-  .character {
-    bottom: 180px;
-  }
-  .target-line {
-    bottom: 180px;
-  }
-  .fret-buttons {
-    bottom: 80px;
-    gap: 8px;
-  }
-  .hud-bottom {
-    bottom: 150px;
-    padding: 0 15px;
-  }
-  .song-info {
-    top: 130px;
-    width: 95%;
-  }
-}
-
-@media (max-width: 480px) {
-  .song-info {
-    top: 140px;  /* Keeps title just above lanes on small phones */
-  }
-
-  .level-indicator {
-    top: 110px;   /* Prevents overlap with multiplier */
-    right: 10px;
-  }
-
-  .level-number {
-    font-size: 1.5rem;
-  }
-
-  /* Your existing small-screen adjustments */
-  .note-highway {
-    top: 220px;
-    height: 45vh;
-    width: 280px;
-  }
-  .character {
-    bottom: 160px;
-  }
-  .character-sprite {
-    width: 60px;
-    height: 90px;
-  }
-  .target-line {
-    bottom: 160px;
-  }
-  .fret-buttons {
-    bottom: 70px;
-    gap: 5px;
-  }
-  .hud-bottom {
-    bottom: 130px;
-    padding: 0 10px;
-  }
-  .combo-display {
-    font-size: 1.3rem;
-  }
-  .song-info {
-    top: 140px;
-  }
-}
-
+/* Very small phones – stack in 2 columns for better tapping */
 @media (max-width: 360px) {
-  .level-indicator {
-    top: 100px;
-    right: 5px;
-  }
+    .level-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px;
+    }
+    
+    .level-item {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
 }
+
+/* Improve mobile game layout visibility */
+@media (max-width: 768px) {
+    /* Adjust note highway position */
+    .note-highway {
+        top: 200px;
+        height: 50vh;
+    }
+    
     /* Adjust character position */
     .character {
         bottom: 180px;
@@ -1810,19 +1752,10 @@ body {
 
 /* Ensure elements don't overlap on mobile */
 @media (max-width: 480px) {
- /* ===================================
-   Updated .level-indicator (move down and slightly right to avoid overlap with multiplier/health)
-   =================================== */
-.level-indicator {
-  position: fixed;
-  top: 140px;  /* Changed from 80px: now below multiplier/health stack */
-  right: 30px; /* Changed from 20px: slight inward adjustment (equivalent to moving multiplier "left a bit") */
-  z-index: 60;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}}
+    .level-indicator {
+        top: 60px;
+        right: 10px;
+    }
     
     .level-number {
         font-size: 1.5rem;
