@@ -1,7 +1,7 @@
-// ===================================
+// ==================================
 // NEON NIGHTMARE - Game Engine
 // Local File Version with Character & Map System
-// ===================================
+// ==================================
 
 class NeonNightmare {
     constructor() {
