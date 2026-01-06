@@ -1,6 +1,6 @@
 // ==================================
 // NEON NIGHTMARE - Game Engine
-// Local File Version with Character & Map System
+// Level Select & Cutscene Version
 // ==================================
 
 class NeonNightmare {
@@ -16,9 +16,6 @@ class NeonNightmare {
         
         // Level System
         this.currentLevel = 1;
-        this.startingLevel = 1;
-        this.levelProgress = 0;
-        this.levelThreshold = 500;
         this.maxLevel = 50;
         
         // Character System
@@ -26,7 +23,6 @@ class NeonNightmare {
         this.characterSprite = null;
         this.characterAura = null;
         this.characterState = 'idle';
-        this.lastAnimationTime = 0;
         
         // Map System
         this.parallaxLayers = {};
@@ -46,6 +42,10 @@ class NeonNightmare {
         this.audioData = null;
         this.startTime = 0;
         this.duration = 0;
+        
+        // Cutscene
+        this.cutsceneVideo = null;
+        this.isCutscenePlaying = false;
         
         // Notes
         this.notes = [];
@@ -95,10 +95,10 @@ class NeonNightmare {
         this.songCompleteMenu = document.getElementById('songCompleteMenu');
         this.levelSelectMenu = document.getElementById('levelSelectMenu');
         
-        // File Upload
-        this.audioFileInput = document.getElementById('audioFileInput');
-        this.uploadButton = document.getElementById('uploadButton');
-        this.uploadInfo = document.getElementById('uploadInfo');
+        // Cutscene Elements
+        this.cutsceneContainer = document.getElementById('cutsceneContainer');
+        this.cutsceneVideo = document.getElementById('cutsceneVideo');
+        this.skipCutsceneButton = document.getElementById('skipCutscene');
         
         // HUD Elements
         this.scoreValue = document.getElementById('scoreValue');
@@ -124,7 +124,9 @@ class NeonNightmare {
         });
         
         // Calculate target line position
-        this.targetY = this.noteHighway.offsetHeight - 150;
+        setTimeout(() => {
+            this.targetY = this.noteHighway.offsetHeight - 150;
+        }, 100);
     }
 
     initializeCharacter() {
@@ -151,10 +153,6 @@ class NeonNightmare {
     }
 
     setupEventListeners() {
-        // File Upload
-        this.uploadButton.addEventListener('click', () => this.audioFileInput.click());
-        this.audioFileInput.addEventListener('change', (e) => this.handleFileUpload(e));
-        
         // Menu Buttons
         document.getElementById('selectLevel').addEventListener('click', () => this.showLevelSelect());
         document.getElementById('openSettings').addEventListener('click', () => this.showSettings());
@@ -175,8 +173,13 @@ class NeonNightmare {
         
         // Song Complete
         document.getElementById('playAgain').addEventListener('click', () => this.restartSong());
-        document.getElementById('uploadNewSong').addEventListener('click', () => this.returnToMenu());
+        document.getElementById('nextLevel').addEventListener('click', () => this.playNextLevel());
+        document.getElementById('selectLevelFromComplete').addEventListener('click', () => this.showLevelSelect());
         document.getElementById('mainMenuFromComplete').addEventListener('click', () => this.returnToMenu());
+        
+        // Cutscene
+        this.skipCutsceneButton.addEventListener('click', () => this.skipCutscene());
+        this.cutsceneVideo.addEventListener('ended', () => this.onCutsceneEnded());
         
         // Keyboard Controls
         document.addEventListener('keydown', (e) => this.handleKeyDown(e));
@@ -194,7 +197,7 @@ class NeonNightmare {
         
         // Pause Toggle (Escape key)
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isPlaying) {
+            if (e.key === 'Escape' && this.isPlaying && !this.isCutscenePlaying) {
                 this.togglePause();
             }
         });
@@ -260,13 +263,105 @@ class NeonNightmare {
         this.mainMenu.classList.remove('hidden');
     }
 
-    selectLevel(level) {
-        this.startingLevel = level;
+    async selectLevel(level) {
         this.currentLevel = level;
         this.hideLevelSelect();
         
-        // Prompt user to upload audio
-        this.uploadButton.click();
+        // Set difficulty based on level
+        this.difficulty = this.getDifficultyForLevel(level);
+        
+        // Load and play cutscene
+        await this.playCutscene(level);
+        
+        // Load audio and start game
+        await this.loadLevelAudio(level);
+    }
+
+    // ===================================
+    // Cutscene System
+    // ===================================
+
+    async playCutscene(level) {
+        const cutsceneUrl = `Level${level}.mp4`;
+        
+        try {
+            // Try to load cutscene
+            this.cutsceneVideo.src = cutsceneUrl;
+            this.cutsceneContainer.classList.add('active');
+            this.isCutscenePlaying = true;
+            
+            // Wait for video to be ready
+            await new Promise((resolve, reject) => {
+                this.cutsceneVideo.onloadeddata = resolve;
+                this.cutsceneVideo.onerror = reject;
+                
+                // Timeout if video doesn't exist
+                setTimeout(() => reject(new Error('Cutscene not found')), 2000);
+            });
+            
+            // Play video
+            await this.cutsceneVideo.play();
+            
+        } catch (error) {
+            // Cutscene doesn't exist, skip to game
+            console.log('Cutscene not found, skipping to game');
+            this.isCutscenePlaying = false;
+            this.cutsceneContainer.classList.remove('active');
+        }
+    }
+
+    onCutsceneEnded() {
+        this.isCutscenePlaying = false;
+        this.cutsceneContainer.classList.remove('active');
+    }
+
+    skipCutscene() {
+        if (this.isCutscenePlaying) {
+            this.cutsceneVideo.pause();
+            this.cutsceneVideo.currentTime = 0;
+            this.onCutsceneEnded();
+        }
+    }
+
+    // ===================================
+    // Audio Loading
+    // ===================================
+
+    async loadLevelAudio(level) {
+        const audioUrl = `Level${level}.mp3`;
+        
+        try {
+            // Initialize Audio Context if needed
+            if (!this.audioContext) {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            // Update song info
+            this.songTitle.textContent = `Level ${level}`;
+            this.songArtist.textContent = this.difficulty.toUpperCase();
+            
+            // Load audio file
+            const response = await fetch(audioUrl);
+            
+            if (!response.ok) {
+                throw new Error(`Audio file not found: ${audioUrl}`);
+            }
+            
+            const arrayBuffer = await response.arrayBuffer();
+            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+            this.duration = this.audioBuffer.duration;
+            
+            // Analyze audio and generate notes
+            await this.analyzeAudioAndGenerateNotes();
+            
+            // Start game
+            this.startGame();
+            
+        } catch (error) {
+            console.error('Error loading audio:', error);
+            alert(`Error: Could not load Level ${level}.mp3\n\nPlease ensure Level${level}.mp3 is in the same directory as the game.`);
+            this.returnToMenu();
+        }
     }
 
     // ===================================
@@ -339,34 +434,6 @@ class NeonNightmare {
     // Level System
     // ===================================
 
-    updateLevel() {
-        // Calculate level based on score and starting level
-        const newLevel = Math.floor(this.score / this.levelThreshold) + this.startingLevel;
-        
-        if (newLevel > this.currentLevel && newLevel <= this.maxLevel) {
-            // Level up!
-            this.currentLevel = newLevel;
-            this.levelNumber.textContent = this.currentLevel;
-            this.levelNumber.classList.add('level-up');
-            
-            // Increase difficulty
-            this.increaseDifficulty();
-            
-            // Remove level-up animation
-            setTimeout(() => {
-                this.levelNumber.classList.remove('level-up');
-            }, 500);
-            
-            console.log(`Level up! Now at level ${this.currentLevel}`);
-        }
-    }
-
-    increaseDifficulty() {
-        // Adjust note spawn rate based on level
-        const minBeatInterval = Math.max(0.05, this.getMinBeatInterval() - (this.currentLevel * 0.002));
-        this.adjustedMinBeatInterval = minBeatInterval;
-    }
-
     getDifficultyForLevel(level) {
         if (level <= 10) return 'easy';
         if (level <= 20) return 'medium';
@@ -427,47 +494,8 @@ class NeonNightmare {
     }
 
     // ===================================
-    // File Upload & Audio Processing
+    // Audio Analysis
     // ===================================
-
-    async handleFileUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        
-        this.uploadButton.textContent = '⏳ Processing...';
-        this.uploadButton.disabled = true;
-        
-        try {
-            // Initialize Audio Context
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Read file
-            const arrayBuffer = await file.arrayBuffer();
-            
-            // Decode audio
-            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-            this.duration = this.audioBuffer.duration;
-            
-            // Update song info
-            this.songTitle.textContent = file.name.replace(/\.[^/.]+$/, '');
-            this.songArtist.textContent = `Level ${this.currentLevel}`;
-            
-            // Set difficulty based on current level
-            this.difficulty = this.getDifficultyForLevel(this.currentLevel);
-            
-            // Analyze audio and generate notes
-            await this.analyzeAudioAndGenerateNotes();
-            
-            // Start game
-            this.startGame();
-            
-        } catch (error) {
-            console.error('Error processing audio:', error);
-            alert('Error processing audio file. Please try a different file.');
-            this.uploadButton.textContent = '🎵 Upload Audio File';
-            this.uploadButton.disabled = false;
-        }
-    }
 
     async analyzeAudioAndGenerateNotes() {
         // Get audio data for analysis
@@ -512,7 +540,7 @@ class NeonNightmare {
         }
         
         // Filter beats based on difficulty and level
-        const minBeatInterval = this.adjustedMinBeatInterval || this.getMinBeatInterval();
+        const minBeatInterval = this.getMinBeatInterval();
         const filteredBeats = this.filterBeats(beats, minBeatInterval);
         
         // Generate notes from beats
@@ -582,13 +610,11 @@ class NeonNightmare {
         this.combo = 0;
         this.maxCombo = 0;
         this.multiplier = 1;
-        this.levelProgress = 0;
         this.perfectHits = 0;
         this.greatHits = 0;
         this.goodHits = 0;
         this.misses = 0;
         this.activeNotes = [];
-        this.adjustedMinBeatInterval = null;
         
         // Reset notes
         this.notes.forEach(note => {
@@ -829,9 +855,6 @@ class NeonNightmare {
         else if (hitType === 'great') this.greatHits++;
         else this.goodHits++;
         
-        // Update level
-        this.updateLevel();
-        
         // Character animation
         this.setCharacterState('hit');
         this.activateCharacterAura();
@@ -974,6 +997,26 @@ class NeonNightmare {
         this.startGame();
     }
 
+    playNextLevel() {
+        if (this.currentLevel < this.maxLevel) {
+            this.currentLevel++;
+            this.cleanup();
+            this.songCompleteMenu.classList.remove('active');
+            
+            // Set difficulty based on new level
+            this.difficulty = this.getDifficultyForLevel(this.currentLevel);
+            
+            // Load and play cutscene
+            this.playCutscene(this.currentLevel).then(() => {
+                // Load audio and start game
+                this.loadLevelAudio(this.currentLevel);
+            });
+        } else {
+            alert('You have completed all levels! Congratulations!');
+            this.returnToMenu();
+        }
+    }
+
     endGame() {
         this.isPlaying = false;
         
@@ -996,14 +1039,6 @@ class NeonNightmare {
         this.settingsMenu.classList.remove('active');
         this.gameContainer.classList.add('hidden');
         this.mainMenu.classList.remove('hidden');
-        
-        // Reset level
-        this.currentLevel = this.startingLevel;
-        
-        // Reset upload button
-        this.uploadButton.textContent = '🎵 Upload Audio File';
-        this.uploadButton.disabled = false;
-        this.uploadInfo.textContent = 'Supports MP3, WAV, OGG, M4A';
     }
 
     cleanup() {
@@ -1020,11 +1055,6 @@ class NeonNightmare {
             }
         });
         this.activeNotes = [];
-        
-        // Close audio context
-        if (this.audioContext && this.audioContext.state !== 'closed') {
-            this.audioContext.close();
-        }
     }
 
     // ===================================
