@@ -1,243 +1,335 @@
-<content>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEON NIGHTMARE - Local Rhythm Game</title>
-    <link rel="stylesheet" href="styles.css">
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+<meta charset="UTF-8">
+<title>BowesProduct – Commercial 3D Models</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="High-quality commercial-ready 3D character models and props for games, animation, and production.">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(2,6,23,0.95);
+  border-bottom: 1px solid #1e293b;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.logo a {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.main-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+.main-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.main-nav a.active,
+.main-nav a:hover {
+  color: #60a5fa;
+}
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 44px;
+}
+
+/* PROFILE */
+#profilePic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  object-fit: cover;
+  display: none;
+}
+
+/* LOGIN */
+.login-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid #60a5fa;
+  background: transparent;
+  color: #60a5fa;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* XP */
+#levelInfo {
+  display: none;
+  width: 140px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+#levelText {
+  white-space: nowrap;
+}
+#xpOuter {
+  width: 100%;
+  height: 5px;
+  background: #1e293b;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+#xpBar {
+  height: 100%;
+  width: 0%;
+  background: #60a5fa;
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+/* MOBILE HEADER */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .header-left {
+    justify-content: space-between;
+  }
+  .header-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+  #levelInfo {
+    width: 100%;
+  }
+}
+
+/* ================= HERO ================= */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  background: linear-gradient(rgba(2,6,23,0.88), rgba(2,6,23,0.88)), url("./images/hero.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 800;
+}
+.hero p {
+  font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+  color: #cbd5f5;
+  margin: 1rem 0 2rem;
+}
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.btn {
+  padding: 0.9rem 1.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.btn.primary {
+  background: #2563eb;
+  color: white;
+}
+.btn.secondary {
+  border: 1.5px solid #60a5fa;
+  color: #60a5fa;
+}
+
+/* ================= FOOTER ================= */
+.site-footer {
+  background: rgba(2,6,23,0.95);
+  border-top: 1px solid #1e293b;
+  padding: 3rem 1rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+.footer-nav a:hover {
+  color: #60a5fa;
+}
+.site-footer p {
+  margin: 0;
+  color: #94a3b8;
+}
+</style>
 </head>
+
 <body>
-    <!-- Background Effects -->
-    <div class="void-background"></div>
-    <div class="fog-layer"></div>
-    
-    <!-- Parallax Background Layers -->
-    <div class="parallax-layer layer-1" id="parallaxLayer1">
-        <div class="star-field"></div>
-    </div>
-    <div class="parallax-layer layer-2" id="parallaxLayer2">
-        <div class="distant-mountains"></div>
-    </div>
-    <div class="parallax-layer layer-3" id="parallaxLayer3">
-        <div class="mid-landscape"></div>
-    </div>
-    <div class="parallax-layer layer-4" id="parallaxLayer4">
-        <div class="foreground-elements"></div>
-    </div>
-    
-    <!-- Beat-reactive glow effect -->
-    <div class="beat-glow" id="beatGlow"></div>
-    
-    <!-- Particles -->
-    <div class="particles" id="particles"></div>
-    
-    <!-- Decorative Elements -->
-    <div class="crooked-tree left"></div>
-    <div class="crooked-tree right"></div>
 
-    <!-- Main Menu -->
-    <div class="menu-container" id="mainMenu">
-        <h1 class="game-title">NEON NIGHTMARE</h1>
-        <p class="game-subtitle">A Local File Rhythm Experience</p>
-        
-        <div class="menu-options">
-            <button class="menu-button" id="showLevelSelect">
-                🎵 Play Levels
-            </button>
-            <div class="file-upload-container">
-                <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
-                <button class="menu-button" id="uploadButton">
-                    📁 Free Play (Upload Audio)
-                </button>
-                <p class="upload-info" id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
-            </div>
-            <button class="menu-button" id="viewLeaderboards">
-                🏆 High Scores
-            </button>
-            <button class="menu-button" id="openSettings">
-                ⚙️ Settings
-            </button>
-        </div>
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+
+    <div class="header-left">
+      <div class="logo"><a href="index.html">BowesProduct</a></div>
+      <nav class="main-nav">
+        <a href="index.html" class="active">Home</a>
+        <a href="models.html">Models</a>
+        <a href="retexture.html">Retexture</a>
+        <a href="game.html">Game</a>
+      </nav>
     </div>
 
-    <!-- Level Select Menu -->
-    <div class="level-select-menu hidden" id="levelSelectMenu">
-        <h2 class="level-select-title">SELECT LEVEL</h2>
-        <div class="level-grid" id="levelGrid">
-            <!-- Levels will be populated by JavaScript -->
-        </div>
-        <button class="menu-button back-button" id="backToMenuFromLevelSelect">
-            ← Back to Menu
-        </button>
+    <div class="header-right">
+      <img id="profilePic" alt="Profile">
+
+      <div id="levelInfo">
+        <div id="levelText"></div>
+        <div id="xpOuter"><div id="xpBar"></div></div>
+      </div>
+
+      <button id="authBtn" class="login-btn">Login</button>
     </div>
 
-    <!-- Intro Screen -->
-    <div class="intro-screen hidden" id="introScreen">
-        <video id="introVideo" class="intro-video" muted playsinline>
-            <!-- Video source will be set by JavaScript -->
-        </video>
-        <div class="intro-overlay">
-            <h2 class="intro-level-name" id="introLevelName">Level Name</h2>
-            <p class="intro-level-artist" id="introLevelArtist">Artist Name</p>
-        </div>
-        <button class="skip-intro-button" id="skipIntroButton">
-            Skip Intro (ESC)
-        </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <h1>Commercial-Ready 3D Assets</h1>
+    <p>Built for real production pipelines</p>
+    <div class="hero-actions">
+      <a href="models.html" class="btn primary">Browse Models</a>
+      <a href="models.html#modelContainer" class="btn secondary">View 3D Preview</a>
     </div>
+  </div>
+</section>
 
-    <!-- Game Container -->
-    <div class="game-container hidden" id="gameContainer">
-        <!-- Level Indicator -->
-        <div class="level-indicator" id="levelIndicator">
-            <span class="level-label">LEVEL</span>
-            <span class="level-number" id="levelNumber">1</span>
-        </div>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-nav">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="license.html">License</a>
+      <a href="refund.html">Refund</a>
+      <a href="rewards.html">Rewards</a>
+    </nav>
+    <p>© 2025 BowesProduct</p>
+  </div>
+</footer>
 
-        <!-- Character -->
-        <div class="character" id="character">
-            <div class="character-sprite" id="characterSprite">
-                <div class="character-body"></div>
-                <div class="character-eyes">
-                    <div class="eye left"></div>
-                    <div class="eye right"></div>
-                </div>
-                <div class="character-aura" id="characterAura"></div>
-            </div>
-            <div class="character-shadow"></div>
-        </div>
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-        <!-- Top HUD -->
-        <div class="hud-top">
-            <div class="score-display">
-                SCORE: <span id="scoreValue">0</span>
-            </div>
-            <div class="multiplier-display">
-                <span id="multiplierValue">1</span>x
-            </div>
-        </div>
+const firebaseConfig = {
+  apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+  authDomain: "bowesproduct.firebaseapp.com",
+  projectId: "bowesproduct"
+};
 
-        <!-- Song Info -->
-        <div class="song-info">
-            <h2 class="song-title" id="songTitle">No Track Loaded</h2>
-            <p class="song-artist" id="songArtist">Select a level to begin</p>
-        </div>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-        <!-- Note Highway -->
-        <div class="note-highway" id="noteHighway">
-            <div class="fret-lanes">
-                <div class="fret-lane" data-fret="green"></div>
-                <div class="fret-lane" data-fret="red"></div>
-                <div class="fret-lane" data-fret="yellow"></div>
-                <div class="fret-lane" data-fret="blue"></div>
-                <div class="fret-lane" data-fret="orange"></div>
-            </div>
-            <div class="target-line" id="targetLine"></div>
-        </div>
+const authBtn = document.getElementById("authBtn");
+const profilePic = document.getElementById("profilePic");
+const levelInfo = document.getElementById("levelInfo");
+const levelText = document.getElementById("levelText");
+const xpBar = document.getElementById("xpBar");
 
-        <!-- Fret Buttons -->
-        <div class="fret-buttons">
-            <div class="fret-button green" data-fret="green">
-                <span>A</span>
-                <span class="fret-button-key">Green</span>
-            </div>
-            <div class="fret-button red" data-fret="red">
-                <span>S</span>
-                <span class="fret-button-key">Red</span>
-            </div>
-            <div class="fret-button yellow" data-fret="yellow">
-                <span>D</span>
-                <span class="fret-button-key">Yellow</span>
-            </div>
-            <div class="fret-button blue" data-fret="blue">
-                <span>F</span>
-                <span class="fret-button-key">Blue</span>
-            </div>
-            <div class="fret-button orange" data-fret="orange">
-                <span>G</span>
-                <span class="fret-button-key">Orange</span>
-            </div>
-        </div>
+authBtn.onclick = () =>
+  auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
 
-        <!-- Bottom HUD -->
-        <div class="hud-bottom">
-            <div class="combo-display" id="comboDisplay">
-                <span id="comboValue">0</span> COMBO
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-        </div>
-    </div>
+onAuthStateChanged(auth, async (user) => {
+ if (!user) {
+  authBtn.textContent = "Login";
+  profilePic.style.display = "none";
+  levelInfo.style.display = "none";
+  return;
+ }
 
-    <!-- Pause Menu -->
-    <div class="pause-menu" id="pauseMenu">
-        <h2 class="pause-title">⏸️ PAUSED</h2>
-        <div class="menu-options">
-            <button class="menu-button" id="resumeGame">
-                ▶️ Resume
-            </button>
-            <button class="menu-button" id="restartSong">
-                🔄 Restart
-            </button>
-            <button class="menu-button" id="returnToMenu">
-                🏠 Main Menu
-            </button>
-        </div>
-    </div>
+ authBtn.textContent = "Logout";
+ profilePic.src = user.photoURL || "";
+ profilePic.style.display = "block";
 
-    <!-- Settings Modal -->
-    <div class="pause-menu" id="settingsMenu">
-        <h2 class="pause-title">⚙️ SETTINGS</h2>
-        <div class="menu-options">
-            <button class="menu-button" id="setDifficultyEasy">
-                🟢 Easy
-            </button>
-            <button class="menu-button" id="setDifficultyMedium">
-                🟡 Medium
-            </button>
-            <button class="menu-button" id="setDifficultyHard">
-                🟠 Hard
-            </button>
-            <button class="menu-button" id="setDifficultyExpert">
-                🔴 Expert
-            </button>
-            <button class="menu-button" id="closeSettings">
-                ← Back
-            </button>
-        </div>
-    </div>
+ const ref = doc(db, "users", user.uid);
+ let snap = await getDoc(ref);
 
-    <!-- Song Complete Modal -->
-    <div class="pause-menu" id="songCompleteMenu">
-        <h2 class="pause-title">🎵 SONG COMPLETE!</h2>
-        <div class="menu-options">
-            <div class="final-score">
-                <p class="score-label">Final Score</p>
-                <p class="score-value" id="finalScoreValue">0</p>
-            </div>
-            <div class="final-stats">
-                <p>Perfect: <span id="perfectCount">0</span></p>
-                <p>Great: <span id="greatCount">0</span></p>
-                <p>Good: <span id="goodCount">0</span></p>
-                <p>Miss: <span id="missCount">0</span></p>
-                <p>Max Combo: <span id="maxComboValue">0</span></p>
-            </div>
-            <button class="menu-button" id="playAgain">
-                🔄 Play Again
-            </button>
-            <button class="menu-button" id="uploadNewSong">
-                📁 Upload New Song
-            </button>
-            <button class="menu-button" id="mainMenuFromComplete">
-                🏠 Main Menu
-            </button>
-        </div>
-    </div>
+ if (!snap.exists()) {
+  await setDoc(ref, { xp: 10 });  // ← New users start with 10 XP
+  snap = await getDoc(ref);
+ }
 
-    <!-- Scripts -->
-    <script src="game.js"></script>
+ const xp = snap.data().xp || 0;
+ const levels = [0, 200, 500, 1000, 2000];
+ let level = levels.filter(v => xp >= v).length - 1;
+ let next = levels[level + 1] ?? levels[level];
+ let progress = next === levels[level] ? 100 :
+  ((xp - levels[level]) / (next - levels[level])) * 100;
+
+ levelText.textContent = `Level ${level} • ${xp} XP`;
+ xpBar.style.width = progress + "%";
+ levelInfo.style.display = "block";
+});
+</script>
+
 </body>
 </html>
-</content>
+
+
+
+
+
