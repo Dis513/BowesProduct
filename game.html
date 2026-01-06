@@ -11,6 +11,25 @@
     <!-- Background Effects -->
     <div class="void-background"></div>
     <div class="fog-layer"></div>
+    
+    <!-- Parallax Background Layers -->
+    <div class="parallax-layer layer-1" id="parallaxLayer1">
+        <div class="star-field"></div>
+    </div>
+    <div class="parallax-layer layer-2" id="parallaxLayer2">
+        <div class="distant-mountains"></div>
+    </div>
+    <div class="parallax-layer layer-3" id="parallaxLayer3">
+        <div class="mid-landscape"></div>
+    </div>
+    <div class="parallax-layer layer-4" id="parallaxLayer4">
+        <div class="foreground-elements"></div>
+    </div>
+    
+    <!-- Beat-reactive glow effect -->
+    <div class="beat-glow" id="beatGlow"></div>
+    
+    <!-- Particles -->
     <div class="particles" id="particles"></div>
     
     <!-- Decorative Elements -->
@@ -44,6 +63,25 @@
 
     <!-- Game Container -->
     <div class="game-container" id="gameContainer">
+        <!-- Level Indicator -->
+        <div class="level-indicator" id="levelIndicator">
+            <span class="level-label">LEVEL</span>
+            <span class="level-number" id="levelNumber">1</span>
+        </div>
+
+        <!-- Character -->
+        <div class="character" id="character">
+            <div class="character-sprite" id="characterSprite">
+                <div class="character-body"></div>
+                <div class="character-eyes">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                </div>
+                <div class="character-aura" id="characterAura"></div>
+            </div>
+            <div class="character-shadow"></div>
+        </div>
+
         <!-- Top HUD -->
         <div class="hud-top">
             <div class="score-display">
