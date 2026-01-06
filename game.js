@@ -1018,3 +1018,4 @@ class NeonNightmare {
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new NeonNightmare();
 });
+ 
