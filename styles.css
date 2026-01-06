@@ -275,6 +275,18 @@ body {
     animation: titleGlow 3s ease-in-out infinite;
 }
 
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 2rem;
+    }
+}
+
 @keyframes titleGlow {
     0%, 100% { 
         text-shadow: 
@@ -318,6 +330,10 @@ body {
     text-transform: uppercase;
     letter-spacing: 2px;
     min-width: 250px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .menu-button:hover {
@@ -387,6 +403,9 @@ body {
     font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .level-item:hover {
@@ -488,6 +507,9 @@ body {
     text-transform: uppercase;
     letter-spacing: 2px;
     z-index: 201;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .skip-button:hover {
@@ -735,20 +757,63 @@ body {
     right: 0;
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     padding: 0 30px;
     z-index: 60;
 }
 
-.score-display,
-.multiplier-display {
+.score-display {
     font-size: 1.5rem;
     color: #00FFFF;
     text-shadow: 0 0 10px #00FFFF;
 }
 
-.multiplier-display {
+/* Multiplier Container with Beat Effect */
+.multiplier-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.multiplier-pulse {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 20, 147, 0.1);
+    border: 2px solid #FF1493;
+    border-radius: 10px;
+    transition: all 0.15s ease-out;
+}
+
+.multiplier-pulse.beat-active {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px #FF1493;
+    background: rgba(255, 20, 147, 0.3);
+}
+
+.multiplier-label {
+    font-size: 0.7rem;
     color: #FF1493;
-    text-shadow: 0 0 10px #FF1493;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.2rem;
+    font-weight: bold;
+}
+
+.multiplier-display {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #FF1493;
+    text-shadow: 
+        0 0 10px #FF1493,
+        0 0 20px #FF1493,
+        0 0 30px #9D00FF;
+    transition: transform 0.15s ease-out;
+}
+
+.multiplier-pulse.beat-active .multiplier-display {
+    transform: scale(1.2);
 }
 
 .song-info {
@@ -758,6 +823,8 @@ body {
     transform: translateX(-50%);
     text-align: center;
     z-index: 60;
+    width: 90%;
+    max-width: 800px;
 }
 
 .song-title {
@@ -765,6 +832,23 @@ body {
     color: #9D00FF;
     text-shadow: 0 0 10px #9D00FF;
     margin-bottom: 0.25rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.3;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .song-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .song-title {
+        font-size: 1rem;
+    }
 }
 
 .song-artist {
@@ -792,6 +876,20 @@ body {
     border-right: 2px solid rgba(0, 255, 255, 0.3);
     box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
     overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .note-highway {
+        width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .note-highway {
+        width: 280px;
+        top: 180px;
+        height: 50vh;
+    }
 }
 
 .fret-lanes {
@@ -840,6 +938,13 @@ body {
     transform: translateX(-50%);
     box-shadow: 0 0 15px currentColor;
     z-index: 51;
+}
+
+@media (max-width: 480px) {
+    .note {
+        width: 45px;
+        height: 16px;
+    }
 }
 
 .note.green {
@@ -911,6 +1016,19 @@ body {
     z-index: 60;
 }
 
+@media (max-width: 768px) {
+    .fret-buttons {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fret-buttons {
+        gap: 8px;
+        bottom: 30px;
+    }
+}
+
 .fret-button {
     width: 70px;
     height: 70px;
@@ -924,6 +1042,24 @@ body {
     cursor: pointer;
     transition: all 0.1s ease;
     color: currentColor;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+    .fret-button {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fret-button {
+        width: 55px;
+        height: 55px;
+    }
 }
 
 .fret-button span:first-child {
@@ -931,10 +1067,28 @@ body {
     font-weight: bold;
 }
 
+@media (max-width: 768px) {
+    .fret-button span:first-child {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .fret-button span:first-child {
+        font-size: 1.2rem;
+    }
+}
+
 .fret-button-key {
     font-size: 0.7rem;
     margin-top: 2px;
     text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
+    .fret-button-key {
+        font-size: 0.6rem;
+    }
 }
 
 .fret-button.green {
@@ -983,11 +1137,37 @@ body {
     z-index: 60;
 }
 
+@media (max-width: 768px) {
+    .hud-bottom {
+        bottom: 110px;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hud-bottom {
+        bottom: 100px;
+        padding: 0 10px;
+    }
+}
+
 .combo-display {
     font-size: 2rem;
     color: #FF1493;
     text-shadow: 0 0 10px #FF1493;
     animation: comboGlow 0.3s ease-out;
+}
+
+@media (max-width: 768px) {
+    .combo-display {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .combo-display {
+        font-size: 1.3rem;
+    }
 }
 
 @keyframes comboGlow {
@@ -1008,6 +1188,18 @@ body {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
     overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .progress-bar {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .progress-bar {
+        width: 150px;
+    }
 }
 
 .progress-fill {
@@ -1031,6 +1223,18 @@ body {
     font-weight: bold;
     z-index: 70;
     animation: hitFeedbackAnim 0.5s ease-out forwards;
+}
+
+@media (max-width: 768px) {
+    .hit-feedback {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hit-feedback {
+        font-size: 2rem;
+    }
 }
 
 @keyframes hitFeedbackAnim {
@@ -1141,6 +1345,18 @@ body {
     text-shadow: 0 0 10px #00FFFF;
 }
 
+@media (max-width: 768px) {
+    .pause-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pause-title {
+        font-size: 1.5rem;
+    }
+}
+
 .final-score {
     margin-bottom: 1.5rem;
 }
@@ -1157,6 +1373,18 @@ body {
     text-shadow: 0 0 20px #FF1493;
 }
 
+@media (max-width: 768px) {
+    .score-value {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .score-value {
+        font-size: 2rem;
+    }
+}
+
 .final-stats {
     margin-bottom: 1.5rem;
     padding: 1rem;
@@ -1167,6 +1395,12 @@ body {
 .final-stats p {
     margin: 0.5rem 0;
     font-size: 1.1rem;
+}
+
+@media (max-width: 480px) {
+    .final-stats p {
+        font-size: 1rem;
+    }
 }
 
 .final-stats span {
@@ -1195,6 +1429,7 @@ body {
     color: #666;
     margin-top: 0.5rem;
 }
+
 /* ===================================
    RESPONSIVE FIXES FOR MOBILE
    =================================== */
@@ -1236,6 +1471,12 @@ body {
         height: 55px;
         font-size: 1.1rem;
     }
+    
+    .menu-button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        min-width: 220px;
+    }
 }
 
 /* Phones */
@@ -1276,4 +1517,3 @@ body {
         font-size: 1.5rem;
     }
 }
- 
