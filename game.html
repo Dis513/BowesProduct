@@ -1,3 +1,4 @@
+<content>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,16 +43,16 @@
         <p class="game-subtitle">A Local File Rhythm Experience</p>
         
         <div class="menu-options">
+            <button class="menu-button" id="showLevelSelect">
+                🎵 Play Levels
+            </button>
             <div class="file-upload-container">
                 <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
                 <button class="menu-button" id="uploadButton">
-                    🎵 Upload Audio File
+                    📁 Free Play (Upload Audio)
                 </button>
                 <p class="upload-info" id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
             </div>
-            <button class="menu-button" id="playDemo">
-                🎮 Play Demo Mode
-            </button>
             <button class="menu-button" id="viewLeaderboards">
                 🏆 High Scores
             </button>
@@ -61,8 +62,33 @@
         </div>
     </div>
 
+    <!-- Level Select Menu -->
+    <div class="level-select-menu hidden" id="levelSelectMenu">
+        <h2 class="level-select-title">SELECT LEVEL</h2>
+        <div class="level-grid" id="levelGrid">
+            <!-- Levels will be populated by JavaScript -->
+        </div>
+        <button class="menu-button back-button" id="backToMenuFromLevelSelect">
+            ← Back to Menu
+        </button>
+    </div>
+
+    <!-- Intro Screen -->
+    <div class="intro-screen hidden" id="introScreen">
+        <video id="introVideo" class="intro-video" muted playsinline>
+            <!-- Video source will be set by JavaScript -->
+        </video>
+        <div class="intro-overlay">
+            <h2 class="intro-level-name" id="introLevelName">Level Name</h2>
+            <p class="intro-level-artist" id="introLevelArtist">Artist Name</p>
+        </div>
+        <button class="skip-intro-button" id="skipIntroButton">
+            Skip Intro (ESC)
+        </button>
+    </div>
+
     <!-- Game Container -->
-    <div class="game-container" id="gameContainer">
+    <div class="game-container hidden" id="gameContainer">
         <!-- Level Indicator -->
         <div class="level-indicator" id="levelIndicator">
             <span class="level-label">LEVEL</span>
@@ -95,7 +121,7 @@
         <!-- Song Info -->
         <div class="song-info">
             <h2 class="song-title" id="songTitle">No Track Loaded</h2>
-            <p class="song-artist" id="songArtist">Upload an audio file to begin</p>
+            <p class="song-artist" id="songArtist">Select a level to begin</p>
         </div>
 
         <!-- Note Highway -->
@@ -154,9 +180,6 @@
             </button>
             <button class="menu-button" id="restartSong">
                 🔄 Restart
-            </button>
-            <button class="menu-button" id="changeDifficulty">
-                📊 Change Difficulty
             </button>
             <button class="menu-button" id="returnToMenu">
                 🏠 Main Menu
@@ -217,3 +240,4 @@
     <script src="game.js"></script>
 </body>
 </html>
+</content>
