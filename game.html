@@ -80,22 +80,10 @@
 
     <!-- Game Container -->
     <div class="game-container" id="gameContainer">
-        <!-- Top HUD -->
-        <div class="hud-top">
-            <div class="score-display">
-                SCORE: <span id="scoreValue">0</span>
-            </div>
-            <div class="level-display-top" id="levelDisplayTop">
-                <span class="level-label-top">LEVEL</span>
-                <span class="level-number-top" id="levelNumberTop">1</span>
-            </div>
-        </div>
-
-        <!-- Song Info -->
-        <div class="song-info">
-            <h2 class="song-title" id="songTitle">No Track Loaded</h2>
-            <p class="song-artist" id="songArtist">Select a level to begin</p>
-            <p class="song-difficulty" id="songDifficulty">Difficulty: Medium</p>
+        <!-- Level Indicator -->
+        <div class="level-indicator" id="levelIndicator">
+            <span class="level-label">LEVEL</span>
+            <span class="level-number" id="levelNumber">1</span>
         </div>
 
         <!-- Character -->
@@ -109,6 +97,27 @@
                 <div class="character-aura" id="characterAura"></div>
             </div>
             <div class="character-shadow"></div>
+        </div>
+
+        <!-- Top HUD -->
+        <div class="hud-top">
+            <div class="score-display">
+                SCORE: <span id="scoreValue">0</span>
+            </div>
+            <div class="multiplier-container">
+                <div class="multiplier-pulse" id="multiplierPulse">
+                    <div class="multiplier-label">MULTIPLIER</div>
+                    <div class="multiplier-display">
+                        <span id="multiplierValue">1</span>x
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Song Info -->
+        <div class="song-info">
+            <h2 class="song-title" id="songTitle">No Track Loaded</h2>
+            <p class="song-artist" id="songArtist">Select a level to begin</p>
         </div>
 
         <!-- Note Highway -->
@@ -151,14 +160,6 @@
         <div class="hud-bottom">
             <div class="combo-display" id="comboDisplay">
                 <span id="comboValue">0</span> COMBO
-            </div>
-            <div class="multiplier-container">
-                <div class="multiplier-pulse" id="multiplierPulse">
-                    <div class="multiplier-label">MULTIPLIER</div>
-                    <div class="multiplier-display">
-                        <span id="multiplierValue">1</span>x
-                    </div>
-                </div>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
@@ -247,4 +248,3 @@
     <script src="game.js"></script>
 </body>
 </html>
-
