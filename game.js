@@ -16,9 +16,10 @@ class NeonNightmare {
         
         // Level System
         this.currentLevel = 1;
+        this.startingLevel = 1;
         this.levelProgress = 0;
-        this.levelThreshold = 500; // Score needed for level up
-        this.maxLevel = Infinity; // Infinite levels
+        this.levelThreshold = 500;
+        this.maxLevel = 50;
         
         // Character System
         this.character = null;
@@ -28,7 +29,7 @@ class NeonNightmare {
         this.lastAnimationTime = 0;
         
         // Map System
-        this.parallaxLayers = [];
+        this.parallaxLayers = {};
         this.scrollPositions = { layer1: 0, layer2: 0, layer3: 0, layer4: 0 };
         this.lastScrollTime = 0;
         
@@ -49,7 +50,7 @@ class NeonNightmare {
         // Notes
         this.notes = [];
         this.activeNotes = [];
-        this.noteSpeed = 3; // pixels per frame
+        this.noteSpeed = 3;
         this.noteSpawnY = -50;
         this.targetY = 0;
         
@@ -78,6 +79,7 @@ class NeonNightmare {
         this.createParticles();
         this.initializeCharacter();
         this.initializeMap();
+        this.generateLevelGrid();
     }
 
     // ===================================
@@ -91,6 +93,7 @@ class NeonNightmare {
         this.pauseMenu = document.getElementById('pauseMenu');
         this.settingsMenu = document.getElementById('settingsMenu');
         this.songCompleteMenu = document.getElementById('songCompleteMenu');
+        this.levelSelectMenu = document.getElementById('levelSelectMenu');
         
         // File Upload
         this.audioFileInput = document.getElementById('audioFileInput');
@@ -108,6 +111,7 @@ class NeonNightmare {
         
         // Level Elements
         this.levelNumber = document.getElementById('levelNumber');
+        this.levelGrid = document.getElementById('levelGrid');
         
         // Game Elements
         this.noteHighway = document.getElementById('noteHighway');
@@ -152,9 +156,10 @@ class NeonNightmare {
         this.audioFileInput.addEventListener('change', (e) => this.handleFileUpload(e));
         
         // Menu Buttons
-        document.getElementById('playDemo').addEventListener('click', () => this.startDemoMode());
+        document.getElementById('selectLevel').addEventListener('click', () => this.showLevelSelect());
         document.getElementById('openSettings').addEventListener('click', () => this.showSettings());
         document.getElementById('viewLeaderboards').addEventListener('click', () => this.showLeaderboards());
+        document.getElementById('backToMainMenu').addEventListener('click', () => this.hideLevelSelect());
         
         // Pause Menu
         document.getElementById('resumeGame').addEventListener('click', () => this.resumeGame());
@@ -215,6 +220,56 @@ class NeonNightmare {
     }
 
     // ===================================
+    // Level Select System
+    // ===================================
+
+    generateLevelGrid() {
+        this.levelGrid.innerHTML = '';
+        
+        for (let i = 1; i <= this.maxLevel; i++) {
+            const levelItem = document.createElement('div');
+            levelItem.className = 'level-item';
+            levelItem.textContent = i;
+            levelItem.dataset.level = i;
+            
+            // Add difficulty class based on level
+            if (i <= 10) {
+                levelItem.classList.add('easy');
+            } else if (i <= 20) {
+                levelItem.classList.add('medium');
+            } else if (i <= 35) {
+                levelItem.classList.add('hard');
+            } else if (i <= 45) {
+                levelItem.classList.add('expert');
+            } else {
+                levelItem.classList.add('master');
+            }
+            
+            levelItem.addEventListener('click', () => this.selectLevel(i));
+            this.levelGrid.appendChild(levelItem);
+        }
+    }
+
+    showLevelSelect() {
+        this.mainMenu.classList.add('hidden');
+        this.levelSelectMenu.classList.add('active');
+    }
+
+    hideLevelSelect() {
+        this.levelSelectMenu.classList.remove('active');
+        this.mainMenu.classList.remove('hidden');
+    }
+
+    selectLevel(level) {
+        this.startingLevel = level;
+        this.currentLevel = level;
+        this.hideLevelSelect();
+        
+        // Prompt user to upload audio
+        this.uploadButton.click();
+    }
+
+    // ===================================
     // Character System
     // ===================================
 
@@ -255,7 +310,7 @@ class NeonNightmare {
 
     updateMapScroll(currentTime) {
         const deltaTime = currentTime - this.lastScrollTime;
-        const scrollSpeed = 0.02 + (this.currentLevel * 0.005); // Speed increases with level
+        const scrollSpeed = 0.02 + (this.currentLevel * 0.005);
         
         // Update parallax layers with different speeds
         this.scrollPositions.layer1 = (this.scrollPositions.layer1 + scrollSpeed * 0.1) % 100;
@@ -285,16 +340,16 @@ class NeonNightmare {
     // ===================================
 
     updateLevel() {
-        // Calculate level based on score (infinite levels)
-        const newLevel = Math.floor(this.score / this.levelThreshold) + 1;
+        // Calculate level based on score and starting level
+        const newLevel = Math.floor(this.score / this.levelThreshold) + this.startingLevel;
         
-        if (newLevel > this.currentLevel) {
+        if (newLevel > this.currentLevel && newLevel <= this.maxLevel) {
             // Level up!
             this.currentLevel = newLevel;
             this.levelNumber.textContent = this.currentLevel;
             this.levelNumber.classList.add('level-up');
             
-            // Increase difficulty slightly with each level
+            // Increase difficulty
             this.increaseDifficulty();
             
             // Remove level-up animation
@@ -308,10 +363,16 @@ class NeonNightmare {
 
     increaseDifficulty() {
         // Adjust note spawn rate based on level
-        const minBeatInterval = Math.max(0.1, this.getMinBeatInterval() - (this.currentLevel * 0.01));
-        
-        // Store the adjusted interval for note generation
+        const minBeatInterval = Math.max(0.05, this.getMinBeatInterval() - (this.currentLevel * 0.002));
         this.adjustedMinBeatInterval = minBeatInterval;
+    }
+
+    getDifficultyForLevel(level) {
+        if (level <= 10) return 'easy';
+        if (level <= 20) return 'medium';
+        if (level <= 35) return 'hard';
+        if (level <= 45) return 'expert';
+        return 'master';
     }
 
     // ===================================
@@ -326,7 +387,7 @@ class NeonNightmare {
         
         // Calculate average volume for low frequencies (bass)
         let bassSum = 0;
-        const bassRange = this.audioData.slice(0, 10); // Low frequencies
+        const bassRange = this.audioData.slice(0, 10);
         
         for (let i = 0; i < bassRange.length; i++) {
             bassSum += bassRange[i];
@@ -389,7 +450,10 @@ class NeonNightmare {
             
             // Update song info
             this.songTitle.textContent = file.name.replace(/\.[^/.]+$/, '');
-            this.songArtist.textContent = 'Local File';
+            this.songArtist.textContent = `Level ${this.currentLevel}`;
+            
+            // Set difficulty based on current level
+            this.difficulty = this.getDifficultyForLevel(this.currentLevel);
             
             // Analyze audio and generate notes
             await this.analyzeAudioAndGenerateNotes();
@@ -418,8 +482,8 @@ class NeonNightmare {
 
     generateNotesFromAudio(channelData, sampleRate) {
         const notes = [];
-        const windowSize = Math.floor(sampleRate * 0.1); // 100ms windows
-        const hopSize = Math.floor(sampleRate * 0.05); // 50ms overlap
+        const windowSize = Math.floor(sampleRate * 0.1);
+        const hopSize = Math.floor(sampleRate * 0.05);
         
         // Calculate energy for each window
         const energies = [];
@@ -447,13 +511,12 @@ class NeonNightmare {
             }
         }
         
-        // Filter beats based on difficulty
+        // Filter beats based on difficulty and level
         const minBeatInterval = this.adjustedMinBeatInterval || this.getMinBeatInterval();
         const filteredBeats = this.filterBeats(beats, minBeatInterval);
         
         // Generate notes from beats
         filteredBeats.forEach((beat, index) => {
-            // Select fret based on beat energy and index
             const fret = this.selectFret(beat.energy, index);
             
             notes.push({
@@ -479,10 +542,11 @@ class NeonNightmare {
 
     getMinBeatInterval() {
         const intervals = {
-            easy: 0.5,    // 2 notes per second max
-            medium: 0.3,  // 3.3 notes per second max
-            hard: 0.2,    // 5 notes per second max
-            expert: 0.15  // 6.7 notes per second max
+            easy: 0.5,
+            medium: 0.3,
+            hard: 0.2,
+            expert: 0.15,
+            master: 0.1
         };
         return intervals[this.difficulty] || 0.3;
     }
@@ -518,7 +582,6 @@ class NeonNightmare {
         this.combo = 0;
         this.maxCombo = 0;
         this.multiplier = 1;
-        this.currentLevel = 1;
         this.levelProgress = 0;
         this.perfectHits = 0;
         this.greatHits = 0;
@@ -535,7 +598,7 @@ class NeonNightmare {
         
         // Update UI
         this.updateHUD();
-        this.levelNumber.textContent = '1';
+        this.levelNumber.textContent = this.currentLevel;
         this.mainMenu.classList.add('hidden');
         this.gameContainer.classList.remove('hidden');
         
@@ -602,7 +665,7 @@ class NeonNightmare {
     }
 
     spawnNotes(currentTime) {
-        const noteLeadTime = 2.0; // seconds
+        const noteLeadTime = 2.0;
         
         this.notes.forEach(note => {
             if (!note.hit && !note.missed && 
@@ -616,14 +679,14 @@ class NeonNightmare {
     }
 
     updateNotes(currentTime) {
-        const timingWindows = this.timingWindows[this.difficulty];
+        const timingWindows = this.timingWindows[this.difficulty] || this.timingWindows['medium'];
         
         this.activeNotes.forEach(note => {
             if (note.hit || note.missed) return;
             
             const timeDiff = note.time - currentTime;
             
-            // Check for miss (note passed target)
+            // Check for miss
             if (timeDiff < -timingWindows.good / 1000) {
                 this.missNote(note);
             }
@@ -700,7 +763,7 @@ class NeonNightmare {
         if (!this.isPlaying || this.isPaused) return;
         
         const currentTime = this.audioContext.currentTime - this.startTime;
-        const timingWindows = this.timingWindows[this.difficulty];
+        const timingWindows = this.timingWindows[this.difficulty] || this.timingWindows['medium'];
         
         // Find the closest note in this fret lane
         const closestNote = this.activeNotes
@@ -708,10 +771,9 @@ class NeonNightmare {
             .sort((a, b) => Math.abs(a.time - currentTime) - Math.abs(b.time - currentTime))[0];
         
         if (closestNote) {
-            const timeDiff = Math.abs(closestNote.time - currentTime) * 1000; // Convert to ms
+            const timeDiff = Math.abs(closestNote.time - currentTime) * 1000;
             
             if (timeDiff <= timingWindows.good) {
-                // Hit the note
                 let hitType;
                 if (timeDiff <= timingWindows.perfect) {
                     hitType = 'perfect';
@@ -936,7 +998,7 @@ class NeonNightmare {
         this.mainMenu.classList.remove('hidden');
         
         // Reset level
-        this.currentLevel = 1;
+        this.currentLevel = this.startingLevel;
         
         // Reset upload button
         this.uploadButton.textContent = '🎵 Upload Audio File';
@@ -1001,14 +1063,6 @@ class NeonNightmare {
     showLeaderboards() {
         alert('Leaderboards feature coming soon!');
     }
-
-    // ===================================
-    // Demo Mode
-    // ===================================
-
-    startDemoMode() {
-        alert('Demo mode coming soon! Please upload an audio file to play.');
-    }
 }
 
 // ===================================
@@ -1018,4 +1072,3 @@ class NeonNightmare {
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new NeonNightmare();
 });
- 
