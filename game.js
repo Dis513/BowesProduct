@@ -1,6 +1,6 @@
 // ==================================
 // NEON NIGHTMARE - Game Engine
-// Level Select & Cutscene Version
+// Enhanced Version with Improved Features
 // ==================================
 
 class NeonNightmare {
@@ -17,6 +17,7 @@ class NeonNightmare {
         // Level System
         this.currentLevel = 1;
         this.maxLevel = 50;
+        this.isCustomSong = false; // Track if custom song is playing
         
         // Character System
         this.character = null;
@@ -29,10 +30,12 @@ class NeonNightmare {
         this.scrollPositions = { layer1: 0, layer2: 0, layer3: 0, layer4: 0 };
         this.lastScrollTime = 0;
         
-        // Beat Detection
+        // Beat Detection - Enhanced
         this.beatDetected = false;
         this.lastBeatTime = 0;
-        this.beatThreshold = 0.3;
+        this.beatThreshold = 0.35; // Increased threshold for better detection
+        this.beatHistory = [];
+        this.beatHistorySize = 10;
         
         // Audio
         this.audioContext = null;
@@ -65,13 +68,13 @@ class NeonNightmare {
         this.goodHits = 0;
         this.misses = 0;
         
-        // Timing Windows (in milliseconds)
+        // Enhanced Timing Windows (in milliseconds) - More distinct difficulty levels
         this.timingWindows = {
-            easy: { perfect: 100, great: 200, good: 300 },
-            medium: { perfect: 50, great: 100, good: 150 },
-            hard: { perfect: 40, great: 80, good: 120 },
-            expert: { perfect: 30, great: 60, good: 90 },
-            master: { perfect: 20, great: 40, good: 60 }
+            easy: { perfect: 120, great: 200, good: 300, noteSpeed: 2.5, minInterval: 0.6, threshold: 0.25 },
+            medium: { perfect: 80, great: 130, good: 200, noteSpeed: 3.0, minInterval: 0.4, threshold: 0.30 },
+            hard: { perfect: 60, great: 100, good: 150, noteSpeed: 3.5, minInterval: 0.25, threshold: 0.35 },
+            expert: { perfect: 45, great: 75, good: 110, noteSpeed: 4.0, minInterval: 0.18, threshold: 0.40 },
+            master: { perfect: 30, great: 50, good: 80, noteSpeed: 4.5, minInterval: 0.12, threshold: 0.45 }
         };
         
         // DOM Elements
@@ -115,9 +118,11 @@ class NeonNightmare {
         this.progressFill = document.getElementById('progressFill');
         this.songTitle = document.getElementById('songTitle');
         this.songArtist = document.getElementById('songArtist');
+        this.songDifficulty = document.getElementById('songDifficulty');
         
-        // Level Elements
-        this.levelNumber = document.getElementById('levelNumber');
+        // Level Elements - Updated to use new position
+        this.levelNumberTop = document.getElementById('levelNumberTop');
+        this.levelDisplayTop = document.getElementById('levelDisplayTop');
         this.levelGrid = document.getElementById('levelGrid');
         
         // Game Elements
@@ -285,6 +290,7 @@ class NeonNightmare {
 
     async selectLevel(level) {
         this.currentLevel = level;
+        this.isCustomSong = false; // This is a preset level
         this.hideLevelSelect();
         
         // Set difficulty based on level
@@ -361,6 +367,10 @@ class NeonNightmare {
             // Update song info
             this.songTitle.textContent = `Level ${level}`;
             this.songArtist.textContent = this.difficulty.toUpperCase();
+            this.songDifficulty.textContent = `Difficulty: ${this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1)}`;
+            
+            // Update level display at top
+            this.levelNumberTop.textContent = level;
             
             // Load audio file
             const response = await fetch(audioUrl);
@@ -411,12 +421,16 @@ class NeonNightmare {
             // Update song info
             this.songTitle.textContent = file.name.replace(/\.[^/.]+$/, '');
             this.songArtist.textContent = 'Custom Track';
+            this.songDifficulty.textContent = `Difficulty: ${this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1)}`;
             
-            // Set difficulty to medium for custom tracks (can be changed in settings)
-            this.difficulty = 'medium';
+            // Set as custom song
+            this.isCustomSong = true;
             this.currentLevel = 0;
             
-            // Analyze audio and generate notes
+            // Update level display at top (show "CUSTOM" instead of number)
+            this.levelNumberTop.textContent = 'CUSTOM';
+            
+            // Analyze audio and generate notes with current difficulty
             await this.analyzeAudioAndGenerateNotes();
             
             // Start game
@@ -518,9 +532,9 @@ class NeonNightmare {
         // Get frequency data
         this.analyser.getByteFrequencyData(this.audioData);
         
-        // Calculate average volume for low frequencies (bass)
+        // Calculate average volume for low frequencies (bass) - Enhanced range
         let bassSum = 0;
-        const bassRange = this.audioData.slice(0, 10);
+        const bassRange = this.audioData.slice(0, 20); // Increased range for better detection
         
         for (let i = 0; i < bassRange.length; i++) {
             bassSum += bassRange[i];
@@ -529,10 +543,14 @@ class NeonNightmare {
         const bassAverage = bassSum / bassRange.length;
         const normalizedBass = bassAverage / 255;
         
-        // Check for beat
-        const isBeat = normalizedBass > this.beatThreshold;
+        // Get difficulty-specific threshold
+        const difficultySettings = this.timingWindows[this.difficulty] || this.timingWindows['medium'];
+        const threshold = difficultySettings.threshold;
         
-        if (isBeat && (currentTime - this.lastBeatTime > 0.2)) {
+        // Check for beat
+        const isBeat = normalizedBass > threshold;
+        
+        if (isBeat && (currentTime - this.lastBeatTime > 0.15)) { // Reduced cooldown for better responsiveness
             this.lastBeatTime = currentTime;
             this.triggerBeatReactiveVisuals(normalizedBass);
             return true;
@@ -547,7 +565,7 @@ class NeonNightmare {
             this.beatGlow.classList.add('active');
             setTimeout(() => {
                 this.beatGlow.classList.remove('active');
-            }, 100);
+            }, 80); // Faster glow effect
         }
         
         // Character reacts to beat
@@ -558,17 +576,17 @@ class NeonNightmare {
             this.activateCharacterAura();
         }
         
-        // Pulse multiplier to beat
+        // Pulse multiplier to beat - Faster and shorter
         if (this.multiplierPulse) {
             this.multiplierPulse.classList.add('beat-active');
             setTimeout(() => {
                 this.multiplierPulse.classList.remove('beat-active');
-            }, 150);
+            }, 80); // Much shorter - was 150ms
         }
     }
 
     // ===================================
-    // Audio Analysis
+    // Audio Analysis - Enhanced
     // ===================================
 
     async analyzeAudioAndGenerateNotes() {
@@ -579,13 +597,13 @@ class NeonNightmare {
         // Analyze to detect beats and generate notes
         this.notes = this.generateNotesFromAudio(channelData, sampleRate);
         
-        console.log(`Generated ${this.notes.length} notes`);
+        console.log(`Generated ${this.notes.length} notes at ${this.difficulty} difficulty`);
     }
 
     generateNotesFromAudio(channelData, sampleRate) {
         const notes = [];
-        const windowSize = Math.floor(sampleRate * 0.1);
-        const hopSize = Math.floor(sampleRate * 0.05);
+        const windowSize = Math.floor(sampleRate * 0.08); // Smaller window for better precision
+        const hopSize = Math.floor(sampleRate * 0.04); // Smaller hop for better granularity
         
         // Calculate energy for each window
         const energies = [];
@@ -597,25 +615,39 @@ class NeonNightmare {
             energies.push(energy / windowSize);
         }
         
-        // Find peaks (beats) using simple thresholding
-        const threshold = this.calculateThreshold(energies);
-        const beats = [];
+        // Get difficulty-specific settings
+        const difficultySettings = this.timingWindows[this.difficulty] || this.timingWindows['medium'];
         
-        for (let i = 1; i < energies.length - 1; i++) {
-            if (energies[i] > threshold && 
-                energies[i] > energies[i - 1] && 
-                energies[i] > energies[i + 1]) {
+        // Calculate threshold using local average for better beat detection
+        const threshold = this.calculateDynamicThreshold(energies);
+        
+        // Find peaks (beats) using enhanced detection
+        const beats = [];
+        const localWindowSize = 5;
+        
+        for (let i = localWindowSize; i < energies.length - localWindowSize; i++) {
+            const localEnergy = energies[i];
+            
+            // Check if this is a local maximum
+            let isLocalMax = true;
+            for (let j = i - localWindowSize; j <= i + localWindowSize; j++) {
+                if (j !== i && energies[j] >= localEnergy) {
+                    isLocalMax = false;
+                    break;
+                }
+            }
+            
+            if (isLocalMax && localEnergy > threshold) {
                 const time = (i * hopSize) / sampleRate;
                 beats.push({
                     time: time,
-                    energy: energies[i]
+                    energy: localEnergy
                 });
             }
         }
         
-        // Filter beats based on difficulty and level
-        const minBeatInterval = this.getMinBeatInterval();
-        const filteredBeats = this.filterBeats(beats, minBeatInterval);
+        // Filter beats based on difficulty-specific minimum interval
+        const filteredBeats = this.filterBeats(beats, difficultySettings.minInterval);
         
         // Generate notes from beats
         filteredBeats.forEach((beat, index) => {
@@ -634,23 +666,32 @@ class NeonNightmare {
         return notes;
     }
 
-    calculateThreshold(energies) {
-        const mean = energies.reduce((a, b) => a + b, 0) / energies.length;
-        const stdDev = Math.sqrt(
-            energies.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / energies.length
-        );
-        return mean + stdDev * 0.5;
-    }
-
-    getMinBeatInterval() {
-        const intervals = {
-            easy: 0.5,
-            medium: 0.3,
-            hard: 0.2,
-            expert: 0.15,
-            master: 0.1
-        };
-        return intervals[this.difficulty] || 0.3;
+    calculateDynamicThreshold(energies) {
+        // Calculate moving average for better threshold
+        const windowSize = 50;
+        const thresholds = [];
+        
+        for (let i = 0; i < energies.length; i++) {
+            let sum = 0;
+            let count = 0;
+            
+            for (let j = Math.max(0, i - windowSize); j <= Math.min(energies.length - 1, i + windowSize); j++) {
+                sum += energies[j];
+                count++;
+            }
+            
+            const localMean = sum / count;
+            thresholds.push(localMean);
+        }
+        
+        // Calculate mean of all thresholds
+        const meanThreshold = thresholds.reduce((a, b) => a + b, 0) / thresholds.length;
+        
+        // Get difficulty-specific multiplier
+        const difficultySettings = this.timingWindows[this.difficulty] || this.timingWindows['medium'];
+        const thresholdMultiplier = 1.0 + (difficultySettings.threshold - 0.3) * 2;
+        
+        return meanThreshold * thresholdMultiplier;
     }
 
     filterBeats(beats, minInterval) {
@@ -669,7 +710,7 @@ class NeonNightmare {
 
     selectFret(energy, index) {
         // Use energy and index to select fret for variety
-        const fretIndex = Math.floor((energy + index * 0.1) * 7) % 5;
+        const fretIndex = Math.floor((energy + index * 0.15) * 7) % 5;
         return this.frets[fretIndex];
     }
 
@@ -698,7 +739,15 @@ class NeonNightmare {
         
         // Update UI
         this.updateHUD();
-        this.levelNumber.textContent = this.currentLevel;
+        this.updateMultiplierColor(); // Set initial multiplier color
+        
+        // Update level display
+        if (this.isCustomSong) {
+            this.levelNumberTop.textContent = 'CUSTOM';
+        } else {
+            this.levelNumberTop.textContent = this.currentLevel;
+        }
+        
         this.mainMenu.classList.add('hidden');
         this.gameContainer.classList.remove('hidden');
         
@@ -900,7 +949,7 @@ class NeonNightmare {
     }
 
     // ===================================
-    // Scoring System
+    // Scoring System - Enhanced with Multiplier Effects
     // ===================================
 
     hitNote(note, hitType) {
@@ -937,6 +986,9 @@ class NeonNightmare {
         this.showHitFeedback(hitType);
         this.animateNoteHit(note);
         
+        // Trigger multiplier hit effect
+        this.triggerMultiplierHitEffect();
+        
         // Update HUD
         this.updateHUD();
         
@@ -969,6 +1021,7 @@ class NeonNightmare {
         
         // Update HUD
         this.updateHUD();
+        this.updateMultiplierColor(); // Reset multiplier color
         
         // Remove note element after animation
         setTimeout(() => {
@@ -988,6 +1041,27 @@ class NeonNightmare {
         } else {
             this.multiplier = 1;
         }
+        
+        // Update multiplier color
+        this.updateMultiplierColor();
+    }
+
+    updateMultiplierColor() {
+        // Remove all multiplier color classes
+        this.multiplierPulse.classList.remove('x1', 'x2', 'x3', 'x4');
+        
+        // Add appropriate color class based on multiplier
+        this.multiplierPulse.classList.add(`x${this.multiplier}`);
+    }
+
+    triggerMultiplierHitEffect() {
+        // Add hit effect animation
+        this.multiplierPulse.classList.add('hit-active');
+        
+        // Remove after animation completes
+        setTimeout(() => {
+            this.multiplierPulse.classList.remove('hit-active');
+        }, 150); // Shorter duration
     }
 
     updateHUD() {
@@ -1137,7 +1211,7 @@ class NeonNightmare {
     }
 
     // ===================================
-    // Menu Functions
+    // Menu Functions - Enhanced
     // ===================================
 
     showSettings() {
@@ -1152,8 +1226,17 @@ class NeonNightmare {
         this.difficulty = level;
         this.hideSettings();
         
+        // Update difficulty display
+        this.songDifficulty.textContent = `Difficulty: ${level.charAt(0).toUpperCase() + level.slice(1)}`;
+        
         // Show confirmation
         alert(`Difficulty set to ${level.toUpperCase()}`);
+        
+        // If game is in progress with custom song, regenerate notes with new difficulty
+        if (this.isPlaying && this.isCustomSong) {
+            // Regenerate notes with new difficulty
+            this.analyzeAudioAndGenerateNotes();
+        }
     }
 
     showSongComplete() {
