@@ -1,7 +1,7 @@
 {
   "name": "neon-nightmare",
-  "version": "2.1.0",
-  "description": "A rhythm game with level select, cutscenes, character, map system, and enhanced difficulty features",
+  "version": "2.0.0",
+  "description": "A rhythm game with level select, cutscenes, character, and map system",
   "main": "index.html",
   "scripts": {
     "start": "npx serve -p 8080",
@@ -14,13 +14,11 @@
     "character",
     "parallax",
     "level-select",
-    "cutscenes",
-    "custom-songs",
-    "beat-detection"
+    "cutscenes"
   ],
   "author": "BowesProduct",
   "license": "MIT",
   "devDependencies": {
     "serve": "^14.2.0"
   }
-} 
+}
