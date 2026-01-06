@@ -1181,3 +1181,17 @@ body {
 .hidden {
     display: none !important;
 }
+
+/* ===================================
+   File Upload Container
+   =================================== */
+
+.file-upload-container {
+    margin-bottom: 1rem;
+}
+
+.upload-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
