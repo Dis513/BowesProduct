@@ -1,3 +1,4 @@
+<content>
 /* ===================================
    NEON NIGHTMARE - Styles
    =================================== */
@@ -330,6 +331,11 @@ body {
     transform: scale(0.95);
 }
 
+.back-button {
+    margin-top: 2rem;
+    min-width: 200px;
+}
+
 .file-upload-container {
     margin-bottom: 1rem;
 }
@@ -338,6 +344,255 @@ body {
     font-size: 0.9rem;
     color: #666;
     margin-top: 0.5rem;
+}
+
+/* ===================================
+   Level Select Menu
+   =================================== */
+
+.level-select-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.level-select-menu.hidden {
+    display: none;
+}
+
+.level-select-title {
+    font-size: 3rem;
+    text-align: center;
+    color: #00FFFF;
+    text-shadow: 0 0 20px #00FFFF;
+    margin-bottom: 2rem;
+}
+
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+}
+
+.level-card {
+    background: rgba(26, 10, 46, 0.8);
+    border: 2px solid #9D00FF;
+    border-radius: 15px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.level-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.level-card:hover::before {
+    opacity: 1;
+}
+
+.level-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(157, 0, 255, 0.4);
+    border-color: #00FFFF;
+}
+
+.level-difficulty {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+}
+
+.level-difficulty.easy {
+    background: rgba(57, 255, 20, 0.2);
+    color: #39FF14;
+    border: 1px solid #39FF14;
+}
+
+.level-difficulty.medium {
+    background: rgba(255, 255, 0, 0.2);
+    color: #FFFF00;
+    border: 1px solid #FFFF00;
+}
+
+.level-difficulty.hard {
+    background: rgba(255, 165, 0, 0.2);
+    color: #FFA500;
+    border: 1px solid #FFA500;
+}
+
+.level-difficulty.expert {
+    background: rgba(255, 0, 0, 0.2);
+    color: #FF0000;
+    border: 1px solid #FF0000;
+}
+
+.level-name {
+    font-size: 1.5rem;
+    color: #00FFFF;
+    text-shadow: 0 0 10px #00FFFF;
+    margin-bottom: 0.5rem;
+}
+
+.level-artist {
+    font-size: 1rem;
+    color: #9D00FF;
+    margin-bottom: 0.75rem;
+}
+
+.level-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.level-play-button {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(0, 255, 255, 0.2);
+    border: 2px solid #00FFFF;
+    border-radius: 10px;
+    color: #00FFFF;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.level-play-button:hover {
+    background: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+/* ===================================
+   Intro Screen
+   =================================== */
+
+.intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 150;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.intro-screen.hidden {
+    display: none;
+}
+
+.intro-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.intro-overlay {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    animation: introFadeIn 1s ease-out 0.5s both;
+}
+
+@keyframes introFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.intro-level-name {
+    font-size: 4rem;
+    color: #00FFFF;
+    text-shadow: 
+        0 0 20px #00FFFF,
+        0 0 40px #00FFFF,
+        0 0 80px #9D00FF;
+    margin-bottom: 1rem;
+    animation: titlePulse 2s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.intro-level-artist {
+    font-size: 1.5rem;
+    color: #9D00FF;
+    text-shadow: 0 0 10px #9D00FF;
+}
+
+.skip-intro-button {
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    z-index: 3;
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00FFFF;
+    border-radius: 10px;
+    color: #00FFFF;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: skipButtonPulse 2s ease-in-out infinite;
+}
+
+@keyframes skipButtonPulse {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+}
+
+.skip-intro-button:hover {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
 }
 
 /* ===================================
@@ -1051,3 +1306,4 @@ body {
 .hidden {
     display: none !important;
 }
+</content>
