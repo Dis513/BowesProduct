@@ -1142,7 +1142,7 @@ class NeonNightmare {
         this.difficulty = level;
         this.hideSettings();
         alert(`Difficulty set to ${level.toUpperCase()}`);
-    }
+    } 
 
     showSongComplete() {
         document.getElementById('finalScoreValue').textContent = this.score.toLocaleString();
