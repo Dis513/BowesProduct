@@ -10,7 +10,7 @@
     <!-- Background Effects -->
     <div class="void-background"></div>
     <div class="fog-layer"></div>
-    
+   
     <!-- Parallax Background Layers -->
     <div class="parallax-layer layer-1" id="parallaxLayer1">
         <div class="star-field"></div>
@@ -24,22 +24,22 @@
     <div class="parallax-layer layer-4" id="parallaxLayer4">
         <div class="foreground-elements"></div>
     </div>
-    
+   
     <!-- Beat-reactive glow effect -->
     <div class="beat-glow" id="beatGlow"></div>
-    
+   
     <!-- Particles -->
     <div class="particles" id="particles"></div>
-    
+   
     <!-- Decorative Elements -->
     <div class="crooked-tree left"></div>
     <div class="crooked-tree right"></div>
-
+   
     <!-- Main Menu -->
     <div class="menu-container" id="mainMenu">
         <h1 class="game-title">NEON NIGHTMARE</h1>
         <p class="game-subtitle">A Local File Rhythm Experience</p>
-        
+       
         <div class="menu-options">
             <button class="menu-button" id="showLevelSelect">
                 🎵 Play Levels
@@ -59,7 +59,7 @@
             </button>
         </div>
     </div>
-
+   
     <!-- Level Select Menu -->
     <div class="level-select-menu hidden" id="levelSelectMenu">
         <h2 class="level-select-title">SELECT LEVEL</h2>
@@ -70,7 +70,7 @@
             ← Back to Menu
         </button>
     </div>
-
+   
     <!-- Intro Screen -->
     <div class="intro-screen hidden" id="introScreen">
         <video id="introVideo" class="intro-video" muted playsinline>
@@ -84,7 +84,7 @@
             Skip Intro (ESC)
         </button>
     </div>
-
+   
     <!-- Game Container -->
     <div class="game-container hidden" id="gameContainer">
         <!-- Level Indicator -->
@@ -92,7 +92,6 @@
             <span class="level-label">LEVEL</span>
             <span class="level-number" id="levelNumber">1</span>
         </div>
-
         <!-- Character -->
         <div class="character" id="character">
             <div class="character-sprite" id="characterSprite">
@@ -105,7 +104,6 @@
             </div>
             <div class="character-shadow"></div>
         </div>
-
         <!-- Top HUD -->
         <div class="hud-top">
             <div class="score-display">
@@ -115,13 +113,11 @@
                 <span id="multiplierValue">1</span>x
             </div>
         </div>
-
         <!-- Song Info -->
         <div class="song-info">
             <h2 class="song-title" id="songTitle">No Track Loaded</h2>
             <p class="song-artist" id="songArtist">Select a level to begin</p>
         </div>
-
         <!-- Note Highway -->
         <div class="note-highway" id="noteHighway">
             <div class="fret-lanes">
@@ -133,7 +129,6 @@
             </div>
             <div class="target-line" id="targetLine"></div>
         </div>
-
         <!-- Fret Buttons -->
         <div class="fret-buttons">
             <div class="fret-button green" data-fret="green">
@@ -157,7 +152,6 @@
                 <span class="fret-button-key">Orange</span>
             </div>
         </div>
-
         <!-- Bottom HUD -->
         <div class="hud-bottom">
             <div class="combo-display" id="comboDisplay">
@@ -168,45 +162,29 @@
             </div>
         </div>
     </div>
-
+   
     <!-- Pause Menu -->
     <div class="pause-menu" id="pauseMenu">
         <h2 class="pause-title">⏸️ PAUSED</h2>
         <div class="menu-options">
-            <button class="menu-button" id="resumeGame">
-                ▶️ Resume
-            </button>
-            <button class="menu-button" id="restartSong">
-                🔄 Restart
-            </button>
-            <button class="menu-button" id="returnToMenu">
-                🏠 Main Menu
-            </button>
+            <button class="menu-button" id="resumeGame">▶️ Resume</button>
+            <button class="menu-button" id="restartSong">🔄 Restart</button>
+            <button class="menu-button" id="returnToMenu">🏠 Main Menu</button>
         </div>
     </div>
-
+   
     <!-- Settings Modal -->
     <div class="pause-menu" id="settingsMenu">
         <h2 class="pause-title">⚙️ SETTINGS</h2>
         <div class="menu-options">
-            <button class="menu-button" id="setDifficultyEasy">
-                🟢 Easy
-            </button>
-            <button class="menu-button" id="setDifficultyMedium">
-                🟡 Medium
-            </button>
-            <button class="menu-button" id="setDifficultyHard">
-                🟠 Hard
-            </button>
-            <button class="menu-button" id="setDifficultyExpert">
-                🔴 Expert
-            </button>
-            <button class="menu-button" id="closeSettings">
-                ← Back
-            </button>
+            <button class="menu-button" id="setDifficultyEasy">🟢 Easy</button>
+            <button class="menu-button" id="setDifficultyMedium">🟡 Medium</button>
+            <button class="menu-button" id="setDifficultyHard">🟠 Hard</button>
+            <button class="menu-button" id="setDifficultyExpert">🔴 Expert</button>
+            <button class="menu-button" id="closeSettings">← Back</button>
         </div>
     </div>
-
+   
     <!-- Song Complete Modal -->
     <div class="pause-menu" id="songCompleteMenu">
         <h2 class="pause-title">🎵 SONG COMPLETE!</h2>
@@ -222,24 +200,13 @@
                 <p>Miss: <span id="missCount">0</span></p>
                 <p>Max Combo: <span id="maxComboValue">0</span></p>
             </div>
-            <button class="menu-button" id="playAgain">
-                🔄 Play Again
-            </button>
-            <button class="menu-button" id="uploadNewSong">
-                📁 Upload New Song
-            </button>
-            <button class="menu-button" id="mainMenuFromComplete">
-                🏠 Main Menu
-            </button>
+            <button class="menu-button" id="playAgain">🔄 Play Again</button>
+            <button class="menu-button" id="uploadNewSong">📁 Upload New Song</button>
+            <button class="menu-button" id="mainMenuFromComplete">🏠 Main Menu</button>
         </div>
     </div>
-
+   
     <!-- Scripts -->
-  <script src="game.js"></script>
+    <script src="game.js"></script>
 </body>
 </html>
-</content>
-
-
-
-
