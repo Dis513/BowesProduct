@@ -16,7 +16,7 @@
     "parallax",
     "infinite-levels"
   ],
-  "author": "SuperNinja",
+  "author": "BowesProduct",
   "license": "MIT",
   "devDependencies": {
     "serve": "^14.2.0"
