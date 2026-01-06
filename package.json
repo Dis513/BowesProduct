@@ -2,11 +2,12 @@
   "name": "neon-nightmare",
   "version": "2.0.0",
   "description": "A rhythm game with character, map system, and infinite levels",
+  "private": true,
   "main": "index.html",
   "scripts": {
-    "start": "npx serve -p 8080",
-    "build": "echo 'Build complete'",
-    "dev": "npx serve -p 8080 -o"
+    "start": "npx serve . -p 8080 --single=false",
+    "dev": "npx serve . -p 8080 --single=false -o",
+    "build": "echo \"Static build complete\""
   },
   "keywords": [
     "rhythm-game",
@@ -21,4 +22,3 @@
     "serve": "^14.2.0"
   }
 }
- 
