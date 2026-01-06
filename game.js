@@ -350,8 +350,11 @@ class NeonNightmare {
         try {
             // Initialize Audio Context if needed
             if (!this.audioContext) {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+await this.audioContext.resume();
+
             
             // Update song info
             this.songTitle.textContent = `Level ${level}`;
