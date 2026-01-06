@@ -95,6 +95,11 @@ class NeonNightmare {
         this.songCompleteMenu = document.getElementById('songCompleteMenu');
         this.levelSelectMenu = document.getElementById('levelSelectMenu');
         
+        // File Upload Elements
+        this.uploadButton = document.getElementById('uploadButton');
+        this.audioFileInput = document.getElementById('audioFileInput');
+        this.uploadInfo = document.getElementById('uploadInfo');
+        
         // Cutscene Elements
         this.cutsceneContainer = document.getElementById('cutsceneContainer');
         this.cutsceneVideo = document.getElementById('cutsceneVideo');
@@ -153,6 +158,12 @@ class NeonNightmare {
     }
 
     setupEventListeners() {
+        // File Upload
+        this.uploadButton = document.getElementById('uploadButton');
+        this.audioFileInput = document.getElementById('audioFileInput');
+        this.uploadButton.addEventListener('click', () => this.audioFileInput.click());
+        this.audioFileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+        
         // Menu Buttons
         document.getElementById('selectLevel').addEventListener('click', () => this.showLevelSelect());
         document.getElementById('openSettings').addEventListener('click', () => this.showSettings());
@@ -176,6 +187,12 @@ class NeonNightmare {
         document.getElementById('nextLevel').addEventListener('click', () => this.playNextLevel());
         document.getElementById('selectLevelFromComplete').addEventListener('click', () => this.showLevelSelect());
         document.getElementById('mainMenuFromComplete').addEventListener('click', () => this.returnToMenu());
+        
+        // File Upload
+        document.getElementById('uploadNewSong')?.addEventListener('click', () => {
+            this.returnToMenu();
+            this.uploadButton.click();
+        });
         
         // Cutscene
         this.skipCutsceneButton.addEventListener('click', () => this.skipCutscene());
@@ -361,6 +378,50 @@ class NeonNightmare {
             console.error('Error loading audio:', error);
             alert(`Error: Could not load Level ${level}.mp3\n\nPlease ensure Level${level}.mp3 is in the same directory as the game.`);
             this.returnToMenu();
+        }
+    }
+
+    // ===================================
+    // File Upload & Audio Processing
+    // ===================================
+
+    async handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        this.uploadButton.textContent = '⏳ Processing...';
+        this.uploadButton.disabled = true;
+        
+        try {
+            // Initialize Audio Context
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Read file
+            const arrayBuffer = await file.arrayBuffer();
+            
+            // Decode audio
+            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+            this.duration = this.audioBuffer.duration;
+            
+            // Update song info
+            this.songTitle.textContent = file.name.replace(/\.[^/.]+$/, '');
+            this.songArtist.textContent = 'Custom Track';
+            
+            // Set difficulty to medium for custom tracks
+            this.difficulty = 'medium';
+            this.currentLevel = 0;
+            
+            // Analyze audio and generate notes
+            await this.analyzeAudioAndGenerateNotes();
+            
+            // Start game
+            this.startGame();
+            
+        } catch (error) {
+            console.error('Error processing audio:', error);
+            alert('Error processing audio file. Please try a different file.');
+            this.uploadButton.textContent = '🎵 Upload Audio File';
+            this.uploadButton.disabled = false;
         }
     }
 
@@ -1039,6 +1100,11 @@ class NeonNightmare {
         this.settingsMenu.classList.remove('active');
         this.gameContainer.classList.add('hidden');
         this.mainMenu.classList.remove('hidden');
+        
+        // Reset upload button
+        this.uploadButton.textContent = '🎵 Upload Audio File';
+        this.uploadButton.disabled = false;
+        this.uploadInfo.textContent = 'Supports MP3, WAV, OGG, M4A';
     }
 
     cleanup() {
