@@ -330,16 +330,6 @@ body {
     transform: scale(0.95);
 }
 
-.file-upload-container {
-    margin-bottom: 1rem;
-}
-
-.upload-info {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 0.5rem;
-}
-
 /* ===================================
    Game Container
    =================================== */
@@ -364,6 +354,146 @@ body {
 .game-container.hidden {
     opacity: 0;
     pointer-events: none;
+}
+
+/* ===================================
+   Level Grid
+   =================================== */
+
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+    max-width: 600px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 0 auto 1.5rem auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.level-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid #00FFFF;
+    border-radius: 8px;
+    color: #00FFFF;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.level-item:hover {
+    background: rgba(0, 255, 255, 0.3);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00FFFF;
+}
+
+.level-item.easy {
+    border-color: #39FF14;
+    color: #39FF14;
+}
+
+.level-item.easy:hover {
+    background: rgba(57, 255, 20, 0.3);
+    box-shadow: 0 0 15px #39FF14;
+}
+
+.level-item.medium {
+    border-color: #FFFF00;
+    color: #FFFF00;
+}
+
+.level-item.medium:hover {
+    background: rgba(255, 255, 0, 0.3);
+    box-shadow: 0 0 15px #FFFF00;
+}
+
+.level-item.hard {
+    border-color: #FFA500;
+    color: #FFA500;
+}
+
+.level-item.hard:hover {
+    background: rgba(255, 165, 0, 0.3);
+    box-shadow: 0 0 15px #FFA500;
+}
+
+.level-item.expert {
+    border-color: #FF0000;
+    color: #FF0000;
+}
+
+.level-item.expert:hover {
+    background: rgba(255, 0, 0, 0.3);
+    box-shadow: 0 0 15px #FF0000;
+}
+
+.level-item.master {
+    border-color: #FF1493;
+    color: #FF1493;
+}
+
+.level-item.master:hover {
+    background: rgba(255, 20, 147, 0.3);
+    box-shadow: 0 0 15px #FF1493;
+}
+
+/* ===================================
+   Cutscene Container
+   =================================== */
+
+.cutscene-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    background: #000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.cutscene-container.active {
+    display: flex;
+}
+
+.cutscene-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.skip-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 1rem 2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00FFFF;
+    color: #00FFFF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 201;
+}
+
+.skip-button:hover {
+    background: rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 20px #00FFFF;
+    transform: scale(1.05);
 }
 
 /* ===================================
