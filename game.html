@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,32 +43,25 @@
         <p class="game-subtitle">A Local File Rhythm Experience</p>
         
         <div class="menu-options">
-            <div class="file-upload-container">
-                <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
-                <button class="menu-button" id="uploadButton">
-                    🎵 Upload Audio File
-                </button>
-                <p class="upload-info" id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
-            </div>
             <button class="menu-button" id="selectLevel">
-                🎮 Select Level
+                \ud83c\udfae Select Level
             </button>
             <button class="menu-button" id="viewLeaderboards">
-                🏆 High Scores
+                \ud83c\udfc6 High Scores
             </button>
             <button class="menu-button" id="openSettings">
-                ⚙️ Settings
+                \u2699\ufe0f Settings
             </button>
         </div>
     </div>
 
     <!-- Level Select Modal -->
     <div class="pause-menu" id="levelSelectMenu">
-        <h2 class="pause-title">🎯 SELECT LEVEL</h2>
+        <h2 class="pause-title">\ud83c\udfaf SELECT LEVEL</h2>
         <div class="level-grid" id="levelGrid"></div>
         <div class="menu-options">
             <button class="menu-button" id="backToMainMenu">
-                ← Back to Menu
+                \u2190 Back to Menu
             </button>
         </div>
     </div>
@@ -75,7 +69,7 @@
     <!-- Cutscene Player -->
     <div class="cutscene-container" id="cutsceneContainer">
         <video id="cutsceneVideo" class="cutscene-video"></video>
-        <button class="skip-button" id="skipCutscene">SKIP ⏭️</button>
+        <button class="skip-button" id="skipCutscene">SKIP \u23ed\ufe0f</button>
     </div>
 
     <!-- Game Container -->
@@ -164,48 +158,48 @@
 
     <!-- Pause Menu -->
     <div class="pause-menu" id="pauseMenu">
-        <h2 class="pause-title">⏸️ PAUSED</h2>
+        <h2 class="pause-title">\u23f8\ufe0f PAUSED</h2>
         <div class="menu-options">
             <button class="menu-button" id="resumeGame">
-                ▶️ Resume
+                \u25b6\ufe0f Resume
             </button>
             <button class="menu-button" id="restartSong">
-                🔄 Restart
+                \ud83d\udd04 Restart
             </button>
             <button class="menu-button" id="changeDifficulty">
-                📊 Change Difficulty
+                \ud83d\udcca Change Difficulty
             </button>
             <button class="menu-button" id="returnToMenu">
-                🏠 Main Menu
+                \ud83c\udfe0 Main Menu
             </button>
         </div>
     </div>
 
     <!-- Settings Modal -->
     <div class="pause-menu" id="settingsMenu">
-        <h2 class="pause-title">⚙️ SETTINGS</h2>
+        <h2 class="pause-title">\u2699\ufe0f SETTINGS</h2>
         <div class="menu-options">
             <button class="menu-button" id="setDifficultyEasy">
-                🟢 Easy
+                \ud83d\udfe2 Easy
             </button>
             <button class="menu-button" id="setDifficultyMedium">
-                🟡 Medium
+                \ud83d\udfe1 Medium
             </button>
             <button class="menu-button" id="setDifficultyHard">
-                🟠 Hard
+                \ud83d\udfe0 Hard
             </button>
             <button class="menu-button" id="setDifficultyExpert">
-                🔴 Expert
+                \ud83d\udd34 Expert
             </button>
             <button class="menu-button" id="closeSettings">
-                ← Back
+                \u2190 Back
             </button>
         </div>
     </div>
 
     <!-- Song Complete Modal -->
     <div class="pause-menu" id="songCompleteMenu">
-        <h2 class="pause-title">🎵 LEVEL COMPLETE!</h2>
+        <h2 class="pause-title">\ud83c\udfb5 LEVEL COMPLETE!</h2>
         <div class="menu-options">
             <div class="final-score">
                 <p class="score-label">Final Score</p>
@@ -219,19 +213,16 @@
                 <p>Max Combo: <span id="maxComboValue">0</span></p>
             </div>
             <button class="menu-button" id="playAgain">
-                🔄 Play Again
+                \ud83d\udd04 Play Again
             </button>
             <button class="menu-button" id="nextLevel">
-                ▶️ Next Level
-            </button>
-            <button class="menu-button" id="uploadNewSong">
-                📁 Upload New Song
+                \u25b6\ufe0f Next Level
             </button>
             <button class="menu-button" id="selectLevelFromComplete">
-                📋 Select Level
+                \ud83d\udccb Select Level
             </button>
             <button class="menu-button" id="mainMenuFromComplete">
-                🏠 Main Menu
+                \ud83c\udfe0 Main Menu
             </button>
         </div>
     </div>
