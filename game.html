@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +51,7 @@
                 <p class="upload-info" id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
             </div>
             <button class="menu-button" id="selectLevel">
-                🎮 Select Level
+                🎮 Select Track
             </button>
             <button class="menu-button" id="viewLeaderboards">
                 🏆 High Scores
@@ -63,7 +64,7 @@
 
     <!-- Level Select Modal -->
     <div class="pause-menu" id="levelSelectMenu">
-        <h2 class="pause-title">🎯 SELECT LEVEL</h2>
+        <h2 class="pause-title">🎯 SELECT TRACK</h2>
         <div class="level-grid" id="levelGrid"></div>
         <div class="menu-options">
             <button class="menu-button" id="backToMainMenu">
@@ -80,9 +81,9 @@
 
     <!-- Game Container -->
     <div class="game-container" id="gameContainer">
-        <!-- Level Indicator -->
+        <!-- Track Indicator -->
         <div class="level-indicator" id="levelIndicator">
-            <span class="level-label">LEVEL</span>
+            <span class="level-label">TRACK</span>
             <span class="level-number" id="levelNumber">1</span>
         </div>
 
@@ -117,7 +118,15 @@
         <!-- Song Info -->
         <div class="song-info">
             <h2 class="song-title" id="songTitle">No Track Loaded</h2>
-            <p class="song-artist" id="songArtist">Select a level to begin</p>
+            <p class="song-artist" id="songArtist">Select a track to begin</p>
+        </div>
+
+        <!-- Health Bar -->
+        <div class="health-container">
+            <div class="health-label">HEALTH</div>
+            <div class="health-bar">
+                <div class="health-fill" id="healthFill"></div>
+            </div>
         </div>
 
         <!-- Note Highway -->
@@ -213,7 +222,7 @@
 
     <!-- Song Complete Modal -->
     <div class="pause-menu" id="songCompleteMenu">
-        <h2 class="pause-title">🎵 LEVEL COMPLETE!</h2>
+        <h2 class="pause-title">🎵 TRACK COMPLETE!</h2>
         <div class="menu-options">
             <div class="final-score">
                 <p class="score-label">Final Score</p>
@@ -230,13 +239,13 @@
                 🔄 Play Again
             </button>
             <button class="menu-button" id="nextLevel">
-                ▶️ Next Level
+                ▶️ Next Track
             </button>
             <button class="menu-button" id="uploadNewSong">
                 📁 Upload New Song
             </button>
             <button class="menu-button" id="selectLevelFromComplete">
-                📋 Select Level
+                📋 Select Track
             </button>
             <button class="menu-button" id="mainMenuFromComplete">
                 🏠 Main Menu
