@@ -1,7 +1,7 @@
 {
   "name": "neon-nightmare",
-  "version": "1.0.0",
-  "description": "A Spotify-integrated rhythm game with Tim Burton-inspired aesthetics",
+  "version": "2.0.0",
+  "description": "A rhythm game with character, map system, and infinite levels",
   "main": "index.html",
   "scripts": {
     "start": "npx serve -p 8080",
@@ -10,9 +10,10 @@
   },
   "keywords": [
     "rhythm-game",
-    "spotify",
     "music-game",
-    "guitar-hero"
+    "character",
+    "parallax",
+    "infinite-levels"
   ],
   "author": "SuperNinja",
   "license": "MIT",
