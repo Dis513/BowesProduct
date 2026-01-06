@@ -519,42 +519,28 @@ body {
 }
 
 /* ===================================
-   HUD Elements
+   Level Indicator
    =================================== */
 
-.hud-top {
+.level-indicator {
     position: fixed;
-    top: 20px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 0 30px;
+    top: 80px;
+    right: 20px;
     z-index: 60;
-}
-
-.score-display {
-    font-size: 1.5rem;
-    color: #00FFFF;
-    text-shadow: 0 0 10px #00FFFF;
-}
-
-/* Level Display at Top */
-.level-display-top {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.5rem;
 }
 
-.level-label-top {
+.level-label {
     font-size: 0.8rem;
     color: #9D00FF;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
-.level-number-top {
+.level-number {
     font-size: 2rem;
     font-weight: bold;
     color: #00FFFF;
@@ -562,7 +548,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.level-number-top.level-up {
+.level-number.level-up {
     animation: levelUpPulse 0.5s ease-out;
 }
 
@@ -580,54 +566,6 @@ body {
         transform: scale(1);
         color: #00FFFF;
     }
-}
-
-/* Song Info with Difficulty */
-.song-info {
-    position: fixed;
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    z-index: 60;
-    width: 90%;
-    max-width: 800px;
-}
-
-.song-title {
-    font-size: 1.5rem;
-    color: #9D00FF;
-    text-shadow: 0 0 10px #9D00FF;
-    margin-bottom: 0.25rem;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-    line-height: 1.3;
-    max-width: 100%;
-}
-
-@media (max-width: 768px) {
-    .song-title {
-        font-size: 1.2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .song-title {
-        font-size: 1rem;
-    }
-}
-
-.song-artist {
-    font-size: 1rem;
-    color: #666;
-}
-
-.song-difficulty {
-    font-size: 0.9rem;
-    color: #00FFFF;
-    text-shadow: 0 0 5px #00FFFF;
-    margin-top: 0.25rem;
 }
 
 /* ===================================
@@ -806,6 +744,116 @@ body {
     75% {
         transform: translateX(-50%) rotate(15deg);
     }
+}
+
+/* ===================================
+   HUD Elements
+   =================================== */
+
+.hud-top {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 30px;
+    z-index: 60;
+}
+
+.score-display {
+    font-size: 1.5rem;
+    color: #00FFFF;
+    text-shadow: 0 0 10px #00FFFF;
+}
+
+/* Multiplier Container with Beat Effect */
+.multiplier-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.multiplier-pulse {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 20, 147, 0.1);
+    border: 2px solid #FF1493;
+    border-radius: 10px;
+    transition: all 0.15s ease-out;
+}
+
+.multiplier-pulse.beat-active {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px #FF1493;
+    background: rgba(255, 20, 147, 0.3);
+}
+
+.multiplier-label {
+    font-size: 0.7rem;
+    color: #FF1493;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.2rem;
+    font-weight: bold;
+}
+
+.multiplier-display {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #FF1493;
+    text-shadow: 
+        0 0 10px #FF1493,
+        0 0 20px #FF1493,
+        0 0 30px #9D00FF;
+    transition: transform 0.15s ease-out;
+}
+
+.multiplier-pulse.beat-active .multiplier-display {
+    transform: scale(1.2);
+}
+
+.song-info {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 60;
+    width: 90%;
+    max-width: 800px;
+}
+
+.song-title {
+    font-size: 1.5rem;
+    color: #9D00FF;
+    text-shadow: 0 0 10px #9D00FF;
+    margin-bottom: 0.25rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.3;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .song-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .song-title {
+        font-size: 1rem;
+    }
+}
+
+.song-artist {
+    font-size: 1rem;
+    color: #666;
 }
 
 /* ===================================
@@ -1132,92 +1180,6 @@ body {
     100% {
         transform: scale(1);
     }
-}
-
-/* Multiplier Container - Updated Position */
-.multiplier-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.multiplier-pulse {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 20, 147, 0.1);
-    border: 2px solid #FF1493;
-    border-radius: 10px;
-    transition: all 0.08s ease-out; /* Faster transition */
-}
-
-.multiplier-pulse.beat-active {
-    transform: scale(1.08); /* Slightly smaller scale */
-    box-shadow: 0 0 20px currentColor; /* Dynamic color */
-    background: rgba(255, 20, 147, 0.2);
-}
-
-.multiplier-pulse.hit-active {
-    animation: multiplierHitEffect 0.15s ease-out;
-}
-
-@keyframes multiplierHitEffect {
-    0% {
-        transform: scale(1);
-        filter: brightness(1);
-    }
-    50% {
-        transform: scale(1.15);
-        filter: brightness(1.5);
-    }
-    100% {
-        transform: scale(1);
-        filter: brightness(1);
-    }
-}
-
-.multiplier-label {
-    font-size: 0.6rem;
-    color: inherit;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.15rem;
-    font-weight: bold;
-}
-
-.multiplier-display {
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-shadow: 
-        0 0 10px currentColor,
-        0 0 15px currentColor;
-    transition: all 0.08s ease-out; /* Faster transition */
-}
-
-.multiplier-pulse.beat-active .multiplier-display {
-    transform: scale(1.1);
-}
-
-/* Multiplier Colors based on value */
-.multiplier-pulse.x1 {
-    border-color: #808080;
-    color: #808080;
-}
-
-.multiplier-pulse.x2 {
-    border-color: #39FF14;
-    color: #39FF14;
-}
-
-.multiplier-pulse.x3 {
-    border-color: #FFFF00;
-    color: #FFFF00;
-}
-
-.multiplier-pulse.x4 {
-    border-color: #FF1493;
-    color: #FF1493;
 }
 
 .progress-bar {
