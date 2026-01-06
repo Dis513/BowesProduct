@@ -124,23 +124,70 @@ html, body {
  transition: width 0.35s ease;
 }
 
-/* MOBILE */
+/* MOBILE HEADER - IMPROVED */
 @media (max-width: 768px) {
- .header-inner {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 8px;
- }
- .header-left {
-  justify-content: space-between;
- }
- .header-right {
-  justify-content: space-between;
-  width: 100%;
- }
- #levelInfo {
-  width: 100%;
- }
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 0.8rem 1rem;
+  }
+
+  .header-left {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .logo {
+    order: -1; /* Ensures logo stays on top */
+  }
+
+  .main-nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .main-nav a {
+    font-size: 1rem;
+    padding: 8px 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .header-right {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+  }
+
+  #levelInfo {
+    width: auto;
+    flex: 1;
+    max-width: 200px;
+  }
+
+  .login-btn {
+    min-width: 80px;
+  }
+}
+
+/* Optional: Even smaller screens */
+@media (max-width: 480px) {
+  .header-right {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #levelInfo {
+    width: 100%;
+    max-width: none;
+  }
 }
 
 /* ================= CONTENT STYLES (rest of page) ================= */
@@ -960,6 +1007,7 @@ onAuthStateChanged(auth, async (user) => {
 </script>
 </body>
 </html>
+
 
 
 
