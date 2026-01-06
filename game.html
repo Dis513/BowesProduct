@@ -42,6 +42,13 @@
         <p class="game-subtitle">A Local File Rhythm Experience</p>
         
         <div class="menu-options">
+            <div class="file-upload-container">
+                <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
+                <button class="menu-button" id="uploadButton">
+                    🎵 Upload Audio File
+                </button>
+                <p class="upload-info" id="uploadInfo">Supports MP3, WAV, OGG, M4A</p>
+            </div>
             <button class="menu-button" id="selectLevel">
                 🎮 Select Level
             </button>
@@ -216,6 +223,9 @@
             </button>
             <button class="menu-button" id="nextLevel">
                 ▶️ Next Level
+            </button>
+            <button class="menu-button" id="uploadNewSong">
+                📁 Upload New Song
             </button>
             <button class="menu-button" id="selectLevelFromComplete">
                 📋 Select Level
