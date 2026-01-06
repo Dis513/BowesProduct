@@ -1,7 +1,7 @@
 {
   "name": "neon-nightmare",
   "version": "2.0.0",
-  "description": "A rhythm game with character, map system, and infinite levels",
+  "description": "A rhythm game with level select, cutscenes, character, and map system",
   "main": "index.html",
   "scripts": {
     "start": "npx serve -p 8080",
@@ -13,7 +13,8 @@
     "music-game",
     "character",
     "parallax",
-    "infinite-levels"
+    "level-select",
+    "cutscenes"
   ],
   "author": "BowesProduct",
   "license": "MIT",
@@ -21,5 +22,3 @@
     "serve": "^14.2.0"
   }
 }
- 
- 
