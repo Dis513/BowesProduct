@@ -16,6 +16,364 @@ body {
 }
 
 /* ===================================
+   Firebase UI Elements
+   =================================== */
+
+.firebase-ui-container {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px 15px;
+    border: 2px solid #00FFFF;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.auth-button {
+    padding: 8px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid #00FFFF;
+    color: #00FFFF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    user-select: none;
+}
+
+.auth-button:hover {
+    background: rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 15px #00FFFF;
+    transform: scale(1.05);
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #9D00FF;
+    box-shadow: 0 0 10px #9D00FF;
+    display: none;
+    object-fit: cover;
+}
+
+.level-info {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.level-text {
+    font-size: 0.8rem;
+    color: #FF1493;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.xp-bar-container {
+    width: 100px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #FF1493;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(255, 20, 147, 0.5);
+}
+
+.xp-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #FF1493, #9D00FF, #00FFFF);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px #FF1493;
+}
+
+/* ===================================
+   High Scores Modal
+   =================================== */
+
+.high-scores-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.95);
+    border: 3px solid #00FFFF;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    display: none;
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.high-scores-modal.active {
+    display: block;
+    animation: menuFadeIn 0.3s ease-out;
+}
+
+.high-scores-title {
+    font-size: 2rem;
+    color: #FF1493;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 20px #FF1493;
+}
+
+.high-scores-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.scores-tab {
+    padding: 8px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #9D00FF;
+    color: #9D00FF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    border-radius: 8px;
+}
+
+.scores-tab:hover {
+    background: rgba(157, 0, 255, 0.3);
+    box-shadow: 0 0 15px #9D00FF;
+}
+
+.scores-tab.active {
+    background: rgba(157, 0, 255, 0.5);
+    border-color: #FF1493;
+    color: #FF1493;
+}
+
+.high-scores-list {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.score-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    background: rgba(0, 255, 255, 0.1);
+    border-left: 3px solid #00FFFF;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.score-entry:hover {
+    background: rgba(0, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.score-entry.first-place {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: #FFD700;
+}
+
+.score-entry.second-place {
+    background: rgba(192, 192, 192, 0.2);
+    border-color: #C0C0C0;
+}
+
+.score-entry.third-place {
+    background: rgba(205, 127, 50, 0.2);
+    border-color: #CD7F32;
+}
+
+.score-rank {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #00FFFF;
+    width: 40px;
+}
+
+.score-name {
+    flex: 1;
+    color: #fff;
+    font-weight: bold;
+}
+
+.score-song {
+    color: #9D00FF;
+    font-size: 0.9rem;
+}
+
+.score-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #FF1493;
+    text-shadow: 0 0 10px #FF1493;
+}
+
+.no-scores {
+    color: #666;
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* ===================================
+   Hold Notes
+   =================================== */
+
+.note.hold-note {
+    height: 60px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.note.hold-note::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    border-radius: inherit;
+    animation: holdNotePulse 1s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes holdNotePulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+.note.hold-note .hold-glow {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: inherit;
+    border-radius: 15px;
+    filter: blur(10px);
+    opacity: 0.6;
+    animation: holdGlowPulse 1.5s ease-in-out infinite;
+    z-index: -2;
+}
+
+@keyframes holdGlowPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+.note.hold-note .hold-flame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    animation: holdFlame 0.5s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes holdFlame {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* ===================================
+   Combo Notes
+   =================================== */
+
+.note.combo-note {
+    position: relative;
+}
+
+.note.combo-note::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px dashed #fff;
+    border-radius: 12px;
+    animation: comboNoteRotate 2s linear infinite;
+}
+
+@keyframes comboNoteRotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.combo-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 0 0 20px #FFD700;
+    z-index: 70;
+    animation: comboIndicatorAnim 1s ease-out forwards;
+}
+
+@keyframes comboIndicatorAnim {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
+    }
+}
+
+/* ===================================
    Background Effects
    =================================== */
 
@@ -1126,6 +1484,226 @@ body {
         transform: translateX(-50%) scale(0.5);
         opacity: 0;
     }
+}
+
+/* ===================================
+   Hold Notes
+   =================================== */
+
+.note.hold-note {
+    height: 20px;
+    border-radius: 10px;
+    position: relative;
+    overflow: visible;
+}
+
+.note.hold-note::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    background: currentColor;
+    box-shadow: 
+        0 0 15px currentColor,
+        0 0 30px currentColor,
+        0 0 45px currentColor,
+        inset 0 0 10px rgba(255, 255, 255, 0.5);
+    animation: holdNoteGlow 0.5s ease-in-out infinite;
+}
+
+@keyframes holdNoteGlow {
+    0%, 100% {
+        box-shadow: 
+            0 0 15px currentColor,
+            0 0 30px currentColor,
+            0 0 45px currentColor,
+            inset 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 
+            0 0 20px currentColor,
+            0 0 40px currentColor,
+            0 0 60px currentColor,
+            inset 0 0 15px rgba(255, 255, 255, 0.7);
+    }
+}
+
+/* Hold note flame effect */
+.note.hold-note::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 20px;
+    background: radial-gradient(ellipse at center, currentColor 0%, transparent 70%);
+    filter: blur(3px);
+    animation: holdNoteFlame 0.3s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+@keyframes holdNoteFlame {
+    0%, 100% {
+        height: 20px;
+        opacity: 0.8;
+    }
+    50% {
+        height: 30px;
+        opacity: 1;
+    }
+}
+
+/* ===================================
+   Combo Notes
+   =================================== */
+
+.note.combo-note {
+    animation: comboNotePulse 0.5s ease-in-out infinite;
+    box-shadow: 
+        0 0 20px currentColor,
+        0 0 40px currentColor,
+        0 0 60px #FFFFFF !important;
+}
+
+@keyframes comboNotePulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+        box-shadow: 
+            0 0 20px currentColor,
+            0 0 40px currentColor,
+            0 0 60px #FFFFFF;
+    }
+    50% {
+        transform: translateX(-50%) scale(1.1);
+        box-shadow: 
+            0 0 30px currentColor,
+            0 0 60px currentColor,
+            0 0 90px #FFFFFF;
+    }
+}
+
+/* ===================================
+   High Scores Menu
+   =================================== */
+
+.high-scores-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background: rgba(0, 255, 255, 0.1);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.score-item:hover {
+    background: rgba(0, 255, 255, 0.2);
+    transform: translateX(5px);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.score-item:nth-child(1) {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: #FFD700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.score-item:nth-child(2) {
+    background: rgba(192, 192, 192, 0.2);
+    border-color: #C0C0C0;
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.4);
+}
+
+.score-item:nth-child(3) {
+    background: rgba(205, 127, 50, 0.2);
+    border-color: #CD7F32;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.4);
+}
+
+.score-rank {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00FFFF;
+    text-shadow: 0 0 10px #00FFFF;
+    min-width: 40px;
+}
+
+.score-song {
+    flex: 1;
+    text-align: left;
+    padding: 0 1rem;
+    font-size: 1rem;
+    color: #FFFFFF;
+}
+
+.score-difficulty {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 4px;
+    margin-right: 1rem;
+}
+
+.score-difficulty.easy {
+    background: rgba(57, 255, 20, 0.2);
+    color: #39FF14;
+    border: 1px solid #39FF14;
+}
+
+.score-difficulty.medium {
+    background: rgba(255, 255, 0, 0.2);
+    color: #FFFF00;
+    border: 1px solid #FFFF00;
+}
+
+.score-difficulty.hard {
+    background: rgba(255, 165, 0, 0.2);
+    color: #FFA500;
+    border: 1px solid #FFA500;
+}
+
+.score-difficulty.expert {
+    background: rgba(255, 0, 0, 0.2);
+    color: #FF0000;
+    border: 1px solid #FF0000;
+}
+
+.score-difficulty.master {
+    background: rgba(255, 20, 147, 0.2);
+    color: #FF1493;
+    border: 1px solid #FF1493;
+}
+
+.score-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #FF1493;
+    text-shadow: 0 0 10px #FF1493;
+    min-width: 100px;
+    text-align: right;
+}
+
+.no-scores {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    padding: 2rem;
 }
 
 /* ===================================
