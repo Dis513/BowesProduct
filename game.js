@@ -59,6 +59,24 @@ class NeonNightmare {
         this.currentHealth = 100;
         this.healthDrainAmount = 10;
         
+        // Difficulty-based health drain values
+        this.healthDrainByDifficulty = {
+            easy: 5,
+            medium: 10,
+            hard: 15,
+            expert: 20,
+            master: 25
+        };
+        
+        // Combo note counts by difficulty
+        this.maxComboNotesByDifficulty = {
+            easy: 2,
+            medium: 2,
+            hard: 3,
+            expert: 3,
+            master: 4
+        };
+        
         // Fret Configuration
         this.frets = ['green', 'red', 'yellow', 'blue', 'orange'];
         this.fretKeys = ['a', 's', 'd', 'f', 'g'];
@@ -317,18 +335,24 @@ class NeonNightmare {
         this.mainMenu.classList.remove('hidden');
     }
 
-    async selectLevel(level) {
+    async async selectLevel(level) {
         this.currentLevel = level;
         this.hideLevelSelect();
         
         // Set difficulty based on level
         this.difficulty = this.getDifficultyForLevel(level);
         
-        // Load and play cutscene
+        // Set playing to false before loading
+        this.isPlaying = false;
+        
+        // Load audio first (without starting)
+        await this.loadLevelAudio(level);
+        
+        // Then play cutscene
         await this.playCutscene(level);
         
-        // Load audio and start game
-        await this.loadLevelAudio(level);
+        // Start game after cutscene
+        this.startGame();
     }
 
     // ===================================
@@ -367,13 +391,22 @@ class NeonNightmare {
     onCutsceneEnded() {
         this.isCutscenePlaying = false;
         this.cutsceneContainer.classList.remove('active');
+        // Start game after cutscene ends
+        if (!this.isPlaying && this.audioBuffer) {
+            this.startGame();
+        }
     }
 
     skipCutscene() {
         if (this.isCutscenePlaying) {
             this.cutsceneVideo.pause();
             this.cutsceneVideo.currentTime = 0;
-            this.onCutsceneEnded();
+            this.cutsceneContainer.classList.remove('active');
+            this.isCutscenePlaying = false;
+            // Start game after skipping cutscene
+            if (!this.isPlaying && this.audioBuffer) {
+                this.startGame();
+            }
         }
     }
 
@@ -396,6 +429,9 @@ class NeonNightmare {
             this.songTitle.textContent = `Level ${level}`;
             this.songArtist.textContent = this.difficulty.toUpperCase();
             
+            // Set note speed and health drain based on difficulty
+            this.setNoteSpeedForDifficulty();
+            
             // Load audio file
             const response = await fetch(audioUrl);
             
@@ -410,8 +446,7 @@ class NeonNightmare {
             // Analyze audio and generate notes
             await this.analyzeAudioAndGenerateNotes();
             
-            // Start game
-            this.startGame();
+            // Don't start game here - wait for cutscene to finish
             
         } catch (error) {
             console.error('Error loading audio:', error);
@@ -456,7 +491,7 @@ class NeonNightmare {
             // Analyze audio and generate notes
             await this.analyzeAudioAndGenerateNotes();
             
-            // Start game
+            // Start game immediately for custom songs (no cutscene)
             this.startGame();
             
         } catch (error) {
@@ -554,7 +589,11 @@ class NeonNightmare {
             master: 5.2
         };
         this.noteSpeed = speedMultipliers[this.difficulty] || 3.0;
-        console.log(`Difficulty: ${this.difficulty}, Note Speed: ${this.noteSpeed}`);
+        
+        // Set health drain based on difficulty
+        this.healthDrainAmount = this.healthDrainByDifficulty[this.difficulty] || 10;
+        
+        console.log(`Difficulty: ${this.difficulty}, Note Speed: ${this.noteSpeed}, Health Drain: ${this.healthDrainAmount}`);
     }
 
     // ===================================
@@ -667,17 +706,54 @@ class NeonNightmare {
         const filteredBeats = this.filterBeats(beats, minBeatInterval);
         
         // Generate notes from beats
+        let noteId = 0;
         filteredBeats.forEach((beat, index) => {
-            const fret = this.selectFret(beat.energy, index);
+            // Determine if this should be a combo note (multiple notes at once)
+            const isComboNote = Math.random() < 0.15; // 15% chance of combo note
+            const maxComboNotes = this.maxComboNotesByDifficulty[this.difficulty] || 2;
             
-            notes.push({
-                id: index,
-                time: beat.time,
-                fret: fret,
-                energy: beat.energy,
-                hit: false,
-                missed: false
-            });
+            if (isComboNote) {
+                // Generate multiple notes for combo
+                const comboCount = Math.min(2 + Math.floor(Math.random() * (maxComboNotes - 1)), maxComboNotes);
+                const selectedFrets = [];
+                
+                // Select unique frets for the combo
+                while (selectedFrets.length < comboCount) {
+                    const fret = this.selectFret(beat.energy, index + selectedFrets.length);
+                    if (!selectedFrets.includes(fret)) {
+                        selectedFrets.push(fret);
+                    }
+                }
+                
+                // Create notes for each fret in the combo
+                selectedFrets.forEach(fret => {
+                    notes.push({
+                        id: noteId++,
+                        time: beat.time,
+                        fret: fret,
+                        energy: beat.energy,
+                        hit: false,
+                        missed: false,
+                        isCombo: true,
+                        comboId: noteId // All notes in this combo share the same comboId
+                    });
+                });
+            } else {
+                // Determine if this should be a hold note (10% chance)
+                const isHoldNote = Math.random() < 0.1;
+                const fret = this.selectFret(beat.energy, index);
+                
+                notes.push({
+                    id: noteId++,
+                    time: beat.time,
+                    fret: fret,
+                    energy: beat.energy,
+                    hit: false,
+                    missed: false,
+                    isHold: isHoldNote,
+                    holdDuration: isHoldNote ? 0.3 + Math.random() * 0.5 : 0 // Hold for 300-800ms
+                });
+            }
         });
         
         return notes;
@@ -738,6 +814,12 @@ class NeonNightmare {
     // ===================================
 
     startGame() {
+        // Prevent starting if already playing
+        if (this.isPlaying) {
+            console.log('Game already playing, not starting again');
+            return;
+        }
+        
         this.isPlaying = true;
         this.isPaused = false;
         this.score = 0;
@@ -758,10 +840,13 @@ class NeonNightmare {
         this.notes.forEach(note => {
             note.hit = false;
             note.missed = false;
+            note.holdStarted = false;
+            note.holdCompleted = false;
         });
         
         // Update UI
         this.updateHUD();
+        this.updateHealthBar();
         this.levelNumber.textContent = this.currentLevel;
         this.mainMenu.classList.add('hidden');
         this.gameContainer.classList.remove('hidden');
@@ -848,8 +933,13 @@ class NeonNightmare {
             
             const timeDiff = note.time - currentTime;
             
-            // Check for miss
-            if (timeDiff < -this.timingWindows.good / 1000) {
+            // Check for miss (but not for hold notes that were started)
+            if (timeDiff < -this.timingWindows.good / 1000 && !note.isHold) {
+                this.missNote(note);
+            }
+            
+            // Check for hold note miss if not started
+            if (note.isHold && timeDiff < -this.timingWindows.good / 1000 && !note.holdStarted) {
                 this.missNote(note);
             }
         });
@@ -862,7 +952,17 @@ class NeonNightmare {
 
     createNoteElement(note) {
         const element = document.createElement('div');
-        element.className = `note ${note.fret}`;
+        
+        // Add appropriate classes based on note type
+        let classes = `note ${note.fret}`;
+        if (note.isHold) {
+            classes += ' hold-note';
+        }
+        if (note.isCombo) {
+            classes += ' combo-note';
+        }
+        
+        element.className = classes;
         element.dataset.noteId = note.id;
         
         const lane = document.querySelector(`.fret-lane[data-fret="${note.fret}"]`);
@@ -889,9 +989,20 @@ class NeonNightmare {
             const y = this.noteSpawnY + progress * (this.targetY - this.noteSpawnY);
             note.element.style.top = y + 'px';
             
-            // Debug: Check if note is at target line
-            if (Math.abs(timeToTarget) < 0.016) { // Within one frame (16ms)
-                console.log(`Note ${note.id} at target line! Y position: ${y}, Target Y: ${this.targetY}`);
+            // Handle hold note height
+            if (note.isHold && note.holdDuration > 0) {
+                const holdProgress = Math.min(1, (currentTime - note.time) / note.holdDuration);
+                const holdHeight = holdProgress * (this.targetY - this.noteSpawnY) * 0.5;
+                note.element.style.height = (20 + holdHeight) + 'px';
+            }
+            
+            // Check if hold note should end
+            if (note.isHold && currentTime > note.time + note.holdDuration) {
+                // Mark hold as completed if it was hit
+                if (note.holdStarted && !note.holdCompleted) {
+                    note.holdCompleted = true;
+                    this.completeHoldNote(note);
+                }
             }
         });
     }
@@ -939,9 +1050,6 @@ class NeonNightmare {
         if (closestNote) {
             const timeDiff = Math.abs(closestNote.time - currentTime) * 1000;
             
-            // Debug logging (can be removed later)
-            console.log(`Hit attempt: timeDiff=${timeDiff.toFixed(1)}ms, noteTime=${closestNote.time.toFixed(3)}s, currentTime=${currentTime.toFixed(3)}s`);
-            
             if (timeDiff <= this.timingWindows.good) {
                 let hitType;
                 if (timeDiff <= this.timingWindows.perfect) {
@@ -952,9 +1060,14 @@ class NeonNightmare {
                     hitType = 'good';
                 }
                 
-                this.hitNote(closestNote, hitType);
-            } else {
-                console.log(`Missed timing window: ${timeDiff.toFixed(1)}ms > ${this.timingWindows.good}ms`);
+                // Handle hold note start
+                if (closestNote.isHold) {
+                    closestNote.holdStarted = true;
+                    this.hitNote(closestNote, hitType);
+                } else {
+                    // Regular note or combo note
+                    this.hitNote(closestNote, hitType);
+                }
             }
         }
     }
@@ -977,14 +1090,22 @@ class NeonNightmare {
     hitNote(note, hitType) {
         note.hit = true;
         
-        // Calculate points
+        // Calculate points (hold notes give more points)
         const points = {
             perfect: 100,
             great: 75,
             good: 50
         };
         
-        this.score += points[hitType] * this.multiplier;
+        let basePoints = points[hitType];
+        if (note.isHold) {
+            basePoints *= 1.5; // Hold notes give 50% more points
+        }
+        if (note.isCombo) {
+            basePoints *= 1.3; // Combo notes give 30% more points
+        }
+        
+        this.score += Math.floor(basePoints * this.multiplier);
         this.combo++;
         
         // Update max combo
@@ -1011,13 +1132,38 @@ class NeonNightmare {
         // Update HUD
         this.updateHUD();
         
-        // Remove note from active notes
+        // Remove note from active notes (unless it's a hold note in progress)
+        if (!note.isHold || note.holdCompleted) {
+            const index = this.activeNotes.indexOf(note);
+            if (index > -1) {
+                this.activeNotes.splice(index, 1);
+            }
+        }
+        
+        // Remove note element after animation
+        setTimeout(() => {
+            if (note.element && note.element.parentNode && (!note.isHold || note.holdCompleted)) {
+                note.element.parentNode.removeChild(note.element);
+            }
+        }, 200);
+    }
+    
+    completeHoldNote(note) {
+        // Add bonus points for completing hold
+        const bonusPoints = Math.floor(50 * this.multiplier);
+        this.score += bonusPoints;
+        this.updateHUD();
+        
+        // Visual feedback for completing hold
+        this.showHitFeedback('perfect');
+        
+        // Remove from active notes
         const index = this.activeNotes.indexOf(note);
         if (index > -1) {
             this.activeNotes.splice(index, 1);
         }
         
-        // Remove note element after animation
+        // Remove element
         setTimeout(() => {
             if (note.element && note.element.parentNode) {
                 note.element.parentNode.removeChild(note.element);
@@ -1185,6 +1331,9 @@ class NeonNightmare {
         // Clean up
         this.cleanup();
         
+        // Reset game state
+        this.isPlaying = false;
+        
         // Reset UI
         this.pauseMenu.classList.remove('active');
         this.songCompleteMenu.classList.remove('active');
@@ -1193,8 +1342,10 @@ class NeonNightmare {
             gameOverMenu.classList.remove('active');
         }
         
-        // Start game
-        this.startGame();
+        // Small delay to ensure cleanup is complete before starting
+        setTimeout(() => {
+            this.startGame();
+        }, 100);
     }
 
     playNextLevel() {
@@ -1206,10 +1357,13 @@ class NeonNightmare {
             // Set difficulty based on new level
             this.difficulty = this.getDifficultyForLevel(this.currentLevel);
             
-            // Load and play cutscene
-            this.playCutscene(this.currentLevel).then(() => {
-                // Load audio and start game
-                this.loadLevelAudio(this.currentLevel);
+            // Set playing to false before loading next level
+            this.isPlaying = false;
+            
+            // Load audio first
+            this.loadLevelAudio(this.currentLevel).then(() => {
+                // Then play cutscene
+                this.playCutscene(this.currentLevel);
             });
         } else {
             alert('You have completed all levels! Congratulations!');
@@ -1223,8 +1377,146 @@ class NeonNightmare {
         // Clean up
         this.cleanup();
         
+        // Save local high score
+        const songName = this.songTitle.textContent;
+        this.saveLocalHighScore(songName, this.score);
+        
+        // Upload to Firebase if logged in
+        this.uploadToFirebase(songName, this.score);
+        
         // Show completion menu
         this.showSongComplete();
+    }
+    
+    async uploadToFirebase(songName, score) {
+        try {
+            const auth = this.getFirebaseAuth();
+            if (!auth || !auth.currentUser) {
+                console.log('User not logged in, skipping Firebase upload');
+                return;
+            }
+            
+            const db = this.getFirestore();
+            const user = auth.currentUser;
+            
+            // Get current user data to update XP
+            const userRef = this.getDocFunction()(db, 'users', user.uid);
+            const userSnap = await userRef;
+            
+            let currentXP = 0;
+            if (userSnap.exists()) {
+                currentXP = userSnap.data().xp || 0;
+            }
+            
+            // Calculate XP based on score (1 XP per 100 points)
+            const earnedXP = Math.floor(score / 100);
+            const newXP = currentXP + earnedXP;
+            
+            // Update user XP
+            await this.getSetDocFunction()(this.getDocFunction()(db, 'users', user.uid), { xp: newXP }, { merge: true });
+            
+            // Check if this is a new high score for this song
+            const scoresQuery = this.getQueryFunction()(
+                this.getCollectionFunction()(db, 'scores'),
+                this.getOrderByFunction()('score'),
+                this.getLimitFunction()(10)
+            );
+            
+            const scoresSnapshot = await this.getGetDocsFunction()(scoresQuery);
+            const existingScores = scoresSnapshot.docs.map(doc => doc.data());
+            const songScores = existingScores.filter(s => s.songName === songName);
+            
+            const isHighScore = songScores.length === 0 || score > Math.max(...songScores.map(s => s.score));
+            
+            if (isHighScore) {
+                // Upload to Firebase leaderboard
+                await this.getAddDocFunction()(this.getCollectionFunction()(db, 'scores'), {
+                    songName: songName,
+                    score: score,
+                    userId: user.uid,
+                    userEmail: user.email,
+                    userPhoto: user.photoURL,
+                    difficulty: this.difficulty,
+                    timestamp: new Date().toISOString()
+                });
+                
+                console.log('High score uploaded to Firebase!');
+            }
+            
+        } catch (error) {
+            console.error('Error uploading to Firebase:', error);
+        }
+    }
+    
+    // Helper functions to access Firebase from global scope
+    getFirebaseAuth() {
+        if (window.firebaseFunctions && window.firebaseFunctions.auth) {
+            return window.firebaseFunctions.auth;
+        }
+        return null;
+    }
+    
+    getFirestore() {
+        if (window.firebaseFunctions && window.firebaseFunctions.db) {
+            return window.firebaseFunctions.db;
+        }
+        return null;
+    }
+    
+    getDocFunction() {
+        if (window.firebaseFunctions && window.firebaseFunctions.doc) {
+            return window.firebaseFunctions.doc;
+        }
+        return null;
+    }
+    
+    getSetDocFunction() {
+        if (window.firebaseFunctions && window.firebaseFunctions.setDoc) {
+            return window.firebaseFunctions.setDoc;
+        }
+        return null;
+    }
+    
+    getCollectionFunction() {
+        if (window.firebaseFunctions && window.firebaseFunctions.collection) {
+            return window.firebaseFunctions.collection;
+        }
+        return null;
+    }
+    
+    getAddDocFunction() {
+        if (window.firebaseFunctions && window.firebaseFunctions.addDoc) {
+            return window.firebaseFunctions.addDoc;
+        }
+        return null;
+    }
+    
+    getQueryFunction() {
+        if (window.firebaseFunctions && window.firebaseFunctions.query) {
+            return window.firebaseFunctions.query;
+        }
+        return null;
+    }
+    
+    getOrderByFunction() {
+        if (window.firebaseFunctions && window.firebaseFunctions.orderBy) {
+            return window.firebaseFunctions.orderBy;
+        }
+        return null;
+    }
+    
+    getLimitFunction() {
+        if (window.firebaseFunctions && window.firebaseFunctions.limit) {
+            return window.firebaseFunctions.limit;
+        }
+        return null;
+    }
+    
+    getGetDocsFunction() {
+        if (window.firebaseFunctions && window.firebaseFunctions.getDocs) {
+            return window.firebaseFunctions.getDocs;
+        }
+        return null;
     }
 
     returnToMenu() {
@@ -1237,6 +1529,10 @@ class NeonNightmare {
         this.pauseMenu.classList.remove('active');
         this.songCompleteMenu.classList.remove('active');
         this.settingsMenu.classList.remove('active');
+        const highScoresMenu = document.getElementById('highScoresMenu');
+        if (highScoresMenu) {
+            highScoresMenu.classList.remove('active');
+        }
         const gameOverMenu = document.getElementById('gameOverMenu');
         if (gameOverMenu) {
             gameOverMenu.classList.remove('active');
@@ -1249,12 +1545,97 @@ class NeonNightmare {
         this.uploadButton.disabled = false;
         this.uploadInfo.textContent = 'Supports MP3, WAV, OGG, M4A';
     }
+    
+    // ===================================
+    // Local High Scores System
+    // ===================================
+    
+    saveLocalHighScore(songName, score) {
+        const scores = this.getLocalHighScores();
+        scores.push({
+            songName: songName,
+            score: score,
+            date: new Date().toISOString(),
+            difficulty: this.difficulty
+        });
+        
+        // Sort by score and keep top 10
+        scores.sort((a, b) => b.score - a.score);
+        const topScores = scores.slice(0, 10);
+        
+        localStorage.setItem('neonNightmareHighScores', JSON.stringify(topScores));
+    }
+    
+    getLocalHighScores() {
+        const stored = localStorage.getItem('neonNightmareHighScores');
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    showHighScores() {
+        const scores = this.getLocalHighScores();
+        const menu = document.getElementById('highScoresMenu');
+        
+        if (!menu) {
+            this.createHighScoresMenu();
+            this.showHighScores();
+            return;
+        }
+        
+        const scoresList = document.getElementById('highScoresList');
+        scoresList.innerHTML = '';
+        
+        if (scores.length === 0) {
+            scoresList.innerHTML = '<p class="no-scores">No high scores yet!</p>';
+        } else {
+            scores.forEach((entry, index) => {
+                const scoreItem = document.createElement('div');
+                scoreItem.className = 'score-item';
+                scoreItem.innerHTML = `
+                    <span class="score-rank">${index + 1}.</span>
+                    <span class="score-song">${entry.songName}</span>
+                    <span class="score-difficulty ${entry.difficulty}">${entry.difficulty}</span>
+                    <span class="score-value">${entry.score.toLocaleString()}</span>
+                `;
+                scoresList.appendChild(scoreItem);
+            });
+        }
+        
+        menu.classList.add('active');
+    }
+    
+    createHighScoresMenu() {
+        const menu = document.createElement('div');
+        menu.className = 'pause-menu';
+        menu.id = 'highScoresMenu';
+        menu.innerHTML = `
+            <h2 class="pause-title">🏆 HIGH SCORES</h2>
+            <div class="high-scores-list" id="highScoresList"></div>
+            <div class="menu-options">
+                <button class="menu-button" id="closeHighScores">
+                    ← Back
+                </button>
+            </div>
+        `;
+        document.body.appendChild(menu);
+        
+        document.getElementById('closeHighScores').addEventListener('click', () => {
+            menu.classList.remove('active');
+        });
+    }
+    
+    showLeaderboards() {
+        this.showHighScores();
+    }
 
     cleanup() {
         // Stop audio
         if (this.audioSource) {
-            this.audioSource.stop();
-            this.audioSource.disconnect();
+            try {
+                this.audioSource.stop();
+                this.audioSource.disconnect();
+            } catch (e) {
+                console.log('Audio source already stopped');
+            }
         }
         
         // Remove all note elements
