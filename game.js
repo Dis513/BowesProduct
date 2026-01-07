@@ -79,11 +79,11 @@ class NeonNightmare {
         this.currentHealth = 100;
         this.healthDrainAmount = 10;
         this.healthDrainPerDifficulty = {
-            easy: 5,
-            medium: 10,
-            hard: 15,
-            expert: 20,
-            master: 25
+            easy: 2,
+            medium: 3,
+            hard: 4,
+            expert: 6,
+            master: 8
         };
         
         // Health System
