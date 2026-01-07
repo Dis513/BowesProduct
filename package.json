@@ -18,7 +18,7 @@
   ],
   "author": "BowesProduct",
   "license": "MIT",
-  "devDependencies": {
+  "devDependencies": { 
     "serve": "^14.2.0"
   }
 }
