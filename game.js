@@ -16,7 +16,6 @@ class NeonNightmare {
             this.maxCombo = 0;
             this.multiplier = 1;
             this.difficulty = 'medium';
-            this.gameMode = 'single'; // 'single' or 'multiplayer'
             
             // Firebase & User Profile
             this.db = null;
@@ -114,14 +113,6 @@ class NeonNightmare {
         this.generateLevelGrid();
         this.initializeFirebase();
         this.loadUserProfile();
-        
-        // Multiplayer State
-        this.isMultiplayer = false;
-        this.isHost = false;
-        this.lobbyCode = '';
-        this.opponent = null;
-        this.socket = null;
-        this.currentGameMode = 'single'; // 'single' or 'multiplayer'
         
         console.log('NeonNightmare initialized successfully');
         } catch (error) {
@@ -447,12 +438,6 @@ class NeonNightmare {
     }
 
     setupEventListeners() {
-        // Prevent duplicate event listeners
-        if (this.eventListenersSetup) {
-            console.log('Event listeners already set up, skipping...');
-            return;
-        }
-        
         console.log('Setting up event listeners...');
         
         // File Upload
@@ -460,51 +445,22 @@ class NeonNightmare {
         const audioFileInput = document.getElementById('audioFileInput');
         
         if (uploadButton && audioFileInput) {
-            // Remove any existing listeners to prevent duplicates
-            uploadButton.replaceWith(uploadButton.cloneNode(true));
-            audioFileInput.replaceWith(audioFileInput.cloneNode(true));
-            
-            // Get fresh references
-            const freshUploadButton = document.getElementById('uploadButton');
-            const freshAudioFileInput = document.getElementById('audioFileInput');
-            
-            freshUploadButton.addEventListener('click', () => freshAudioFileInput.click());
-            freshAudioFileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+            uploadButton.addEventListener('click', () => audioFileInput.click());
+            audioFileInput.addEventListener('change', (e) => this.handleFileUpload(e));
             console.log('Upload button listeners attached');
         } else {
             console.error('Upload button or audio input not found!');
         }
         
-        this.eventListenersSetup = true;
-        
         // Menu Buttons - Use event delegation or null checks
-        const singlePlayerBtn = document.getElementById('singlePlayerButton');
-        if (singlePlayerBtn) {
-            singlePlayerBtn.addEventListener('click', () => {
-                console.log('Single Player clicked');
+        const selectLevelBtn = document.getElementById('selectLevel');
+        if (selectLevelBtn) {
+            selectLevelBtn.addEventListener('click', () => {
+                console.log('Select Level clicked');
                 this.showLevelSelect();
             });
-            console.log('Single Player listener attached');
+            console.log('Select Level listener attached');
         }
-
-        // Multiplayer button
-        const multiplayerBtn = document.getElementById('multiplayerButton');
-        if (multiplayerBtn) {
-            multiplayerBtn.addEventListener('click', () => {
-                console.log('Multiplayer clicked');
-                this.showMultiplayerOptions();
-            });
-            console.log('Multiplayer listener attached');
-        }
-
-        // Slide panel controls
-        document.getElementById('closeCreateLobby')?.addEventListener('click', () => this.closeAllSlidePanels());
-        document.getElementById('closeFindLobby')?.addEventListener('click', () => this.closeAllSlidePanels());
-        document.getElementById('closePvPLeaderboards')?.addEventListener('click', () => this.closeAllSlidePanels());
-        document.getElementById('backToMainFromLobby')?.addEventListener('click', () => this.returnToMenu());
-
-        // Map ban system
-        this.setupMapBanSystem();
         
         const openSettingsBtn = document.getElementById('openSettings');
         if (openSettingsBtn) {
@@ -694,284 +650,6 @@ class NeonNightmare {
                 this.togglePause();
             }
         });
-        
-        // Setup multiplayer listeners
-        this.setupMultiplayerListeners();
-    }
-
-    // ===================================
-    // Multiplayer System
-    // ===================================
-    
-    setupMultiplayerListeners() {
-        console.log('Setting up multiplayer listeners...');
-        
-        // Mode selection buttons
-        const modeButtons = document.querySelectorAll('.mode-button');
-        modeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                modeButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                this.currentGameMode = button.dataset.mode;
-                this.toggleModeContent();
-            });
-        });
-        
-        // Multiplayer lobby buttons
-        document.getElementById('createLobby')?.addEventListener('click', () => this.showCreateLobby());
-        document.getElementById('joinLobby')?.addEventListener('click', () => this.showJoinLobby());
-        document.getElementById('quickMatch')?.addEventListener('click', () => this.quickMatch());
-        
-        // Create lobby actions
-        document.getElementById('confirmCreateLobby')?.addEventListener('click', () => this.createLobby());
-        document.getElementById('cancelCreateLobby')?.addEventListener('click', () => this.hideCreateLobby());
-        
-        // Join lobby actions
-        document.getElementById('cancelJoinLobby')?.addEventListener('click', () => this.hideJoinLobby());
-        
-        // Lobby waiting actions
-        document.getElementById('leaveLobby')?.addEventListener('click', () => this.leaveLobby());
-        
-        console.log('Multiplayer listeners attached');
-    }
-    
-    toggleModeContent() {
-        const singlePlayerContent = document.querySelector('.single-player-content');
-        const multiplayerContent = document.querySelector('.multiplayer-content');
-        
-        if (this.currentGameMode === 'single') {
-            singlePlayerContent.style.display = 'block';
-            multiplayerContent.style.display = 'none';
-        } else {
-            singlePlayerContent.style.display = 'none';
-            multiplayerContent.style.display = 'block';
-        }
-    }
-    
-    showCreateLobby() {
-        document.getElementById('lobbyCreate').style.display = 'block';
-        document.getElementById('lobbyJoin').style.display = 'none';
-        document.getElementById('lobbyWaiting').style.display = 'none';
-    }
-    
-    hideCreateLobby() {
-        document.getElementById('lobbyCreate').style.display = 'none';
-    }
-    
-    showJoinLobby() {
-        document.getElementById('lobbyCreate').style.display = 'none';
-        document.getElementById('lobbyJoin').style.display = 'block';
-        document.getElementById('lobbyWaiting').style.display = 'none';
-        this.loadAvailableLobbies();
-    }
-    
-    hideJoinLobby() {
-        document.getElementById('lobbyJoin').style.display = 'none';
-    }
-    
-    createLobby() {
-        const lobbyName = document.getElementById('lobbyName').value || 'My Lobby';
-        const difficulty = document.getElementById('lobbyDifficulty').value;
-        const songType = document.getElementById('lobbySongType').value;
-        
-        // Generate random lobby code
-        this.lobbyCode = this.generateLobbyCode();
-        this.isHost = true;
-        this.isMultiplayer = true;
-        
-        // Show waiting room
-        document.getElementById('lobbyCreate').style.display = 'none';
-        document.getElementById('lobbyWaiting').style.display = 'block';
-        document.getElementById('currentLobbyCode').textContent = this.lobbyCode;
-        
-        console.log(`Lobby created: ${this.lobbyCode}, Difficulty: ${difficulty}`);
-        
-        // In a real implementation, this would connect to a WebSocket server
-        // For now, we'll simulate the lobby system
-        this.simulateLobbyWaiting();
-    }
-    
-    generateLobbyCode() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = '';
-        for (let i = 0; i < 6; i++) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
-    }
-    
-    loadAvailableLobbies() {
-        const lobbyList = document.getElementById('lobbyList');
-        
-        // Simulate loading lobbies
-        lobbyList.innerHTML = `
-            <div class="lobby-item" onclick="game.joinLobbyByCode('DEMO01')">
-                <div class="lobby-info">
-                    <span class="lobby-name">Demo Lobby - Medium</span>
-                    <span class="lobby-status">1/2 👤</span>
-                </div>
-            </div>
-            <div class="lobby-item" onclick="game.joinLobbyByCode('DEMO02')">
-                <div class="lobby-info">
-                    <span class="lobby-name">Hardcore Battle - Hard</span>
-                    <span class="lobby-status">1/2 👤</span>
-                </div>
-            </div>
-        `;
-    }
-    
-    joinLobbyByCode(code) {
-        this.lobbyCode = code;
-        this.isHost = false;
-        this.isMultiplayer = true;
-        
-        // Show waiting room
-        document.getElementById('lobbyJoin').style.display = 'none';
-        document.getElementById('lobbyWaiting').style.display = 'block';
-        document.getElementById('currentLobbyCode').textContent = code;
-        
-        // Update opponent slot
-        const opponentSlot = document.getElementById('opponentSlot');
-        opponentSlot.classList.remove('empty');
-        opponentSlot.innerHTML = `
-            <div class="player-avatar">🎸</div>
-            <span class="player-name">Opponent</span>
-            <span class="player-status ready">Ready</span>
-        `;
-        
-        console.log(`Joined lobby: ${code}`);
-        
-        // Start game after short delay
-        setTimeout(() => this.startMultiplayerGame(), 2000);
-    }
-    
-    leaveLobby() {
-        this.isMultiplayer = false;
-        this.isHost = false;
-        this.lobbyCode = '';
-        this.opponent = null;
-        
-        // Hide waiting room and show join options
-        document.getElementById('lobbyWaiting').style.display = 'none';
-        
-        // Reset opponent slot
-        const opponentSlot = document.getElementById('opponentSlot');
-        opponentSlot.classList.add('empty');
-        opponentSlot.innerHTML = `
-            <div class="player-avatar">❓</div>
-            <span class="player-name">Waiting...</span>
-            <span class="player-status waiting">⏳</span>
-        `;
-        
-        console.log('Left lobby');
-    }
-    
-    simulateLobbyWaiting() {
-        // Simulate an opponent joining after 3 seconds
-        setTimeout(() => {
-            if (this.isHost && this.isMultiplayer) {
-                const opponentSlot = document.getElementById('opponentSlot');
-                opponentSlot.classList.remove('empty');
-                opponentSlot.innerHTML = `
-                    <div class="player-avatar">🎸</div>
-                    <span class="player-name">Opponent</span>
-                    <span class="player-status ready">Ready</span>
-                `;
-                
-                console.log('Opponent joined! Starting game...');
-                
-                // Start game after short delay
-                setTimeout(() => this.startMultiplayerGame(), 2000);
-            }
-        }, 3000);
-    }
-    
-    quickMatch() {
-        console.log('Quick match requested...');
-        
-        // Simulate quick match finding
-        const quickMatchBtn = document.getElementById('quickMatch');
-        quickMatchBtn.textContent = '🔄 Searching...';
-        quickMatchBtn.disabled = true;
-        
-        setTimeout(() => {
-            // Simulate finding a match and starting game directly
-            this.isMultiplayer = true;
-            this.isHost = false;
-            this.lobbyCode = 'QUICK01';
-            
-            // Hide lobby UI
-            document.querySelector('.multiplayer-content').style.display = 'none';
-            document.getElementById('levelSelect').style.display = 'none';
-            
-            // Start multiplayer game
-            this.startMultiplayerGame();
-            
-            quickMatchBtn.textContent = '⚡ Quick Match';
-            quickMatchBtn.disabled = false;
-        }, 1500);
-    }
-    
-    startMultiplayerGame() {
-        console.log('Starting multiplayer game...');
-        
-        // Hide level select menu
-        this.hideLevelSelect();
-        
-        // Set up multiplayer game
-        this.isMultiplayer = true;
-        this.opponent = {
-            name: 'Opponent',
-            score: 0,
-            combo: 0
-        };
-        
-        // Add opponent score display
-        this.addOpponentScoreDisplay();
-        
-        // Start a random level for demo with medium difficulty
-        const randomLevel = Math.floor(Math.random() * 5) + 1;
-        this.difficulty = 'medium';
-        
-        // Load and start the level
-        this.loadLevel(randomLevel)
-            .then(() => {
-                console.log('Level loaded successfully, starting multiplayer game');
-                this.startGame();
-            })
-            .catch(error => {
-                console.error('Error loading level for multiplayer:', error);
-                alert('Error loading level. Please try again.');
-                this.returnToMenu();
-            });
-    }
-    
-    addOpponentScoreDisplay() {
-        const gameContainer = document.getElementById('gameContainer');
-        
-        // Add opponent score if not already present
-        if (!document.getElementById('opponentScoreDisplay')) {
-            const opponentScore = document.createElement('div');
-            opponentScore.id = 'opponentScoreDisplay';
-            opponentScore.className = 'opponent-score';
-            opponentScore.innerHTML = `
-                <div>OPPONENT</div>
-                <div id="opponentScoreValue">0</div>
-                <div id="opponentComboValue">0 COMBO</div>
-            `;
-            gameContainer.appendChild(opponentScore);
-        }
-        
-        // Add multiplayer class to game container
-        gameContainer.classList.add('multiplayer-game');
-    }
-    
-    updateOpponentScore(score, combo) {
-        const opponentScoreElement = document.getElementById('opponentScoreValue');
-        const opponentComboElement = document.getElementById('opponentComboValue');
-        
-        if (opponentScoreElement) opponentScoreElement.textContent = score.toLocaleString();
-        if (opponentComboElement) opponentComboElement.textContent = `${combo} COMBO`;
     }
 
     createParticles() {
@@ -1043,11 +721,6 @@ class NeonNightmare {
         
         // Set difficulty based on level
         this.difficulty = this.getDifficultyForLevel(level);
-        
-        // Apply difficulty settings
-        this.setNoteSpeedForDifficulty();
-        
-        console.log(`Level ${level} selected - Difficulty: ${this.difficulty}`);
         
         // Load and play cutscene
         await this.playCutscene(level);
@@ -1388,15 +1061,10 @@ class NeonNightmare {
         const channelData = this.audioBuffer.getChannelData(0);
         const sampleRate = this.audioBuffer.sampleRate;
         
-        console.log(`Analyzing audio with difficulty: ${this.difficulty}`);
-        console.log(`Min beat interval: ${this.getMinBeatInterval()}s`);
-        console.log(`Hold note probability: ${this.getHoldNoteProbability()}`);
-        console.log(`Simultaneous note probability: ${this.getSimultaneousNoteProbability()}`);
-        
         // Analyze to detect beats and generate notes
         this.notes = this.generateNotesFromAudio(channelData, sampleRate);
         
-        console.log(`Generated ${this.notes.length} notes for ${this.difficulty} difficulty`);
+        console.log(`Generated ${this.notes.length} notes`);
     }
 
     generateNotesFromAudio(channelData, sampleRate) {
@@ -1434,27 +1102,8 @@ class NeonNightmare {
         const minBeatInterval = this.getMinBeatInterval();
         const filteredBeats = this.filterBeats(beats, minBeatInterval);
         
-        // Calculate maximum notes allowed based on difficulty and song duration
-        const songDuration = this.audioBuffer.duration;
-        const maxNotesPerMinute = {
-            easy: 60,    // 1 note per second max
-            medium: 90,  // 1.5 notes per second max
-            hard: 120,   // 2 notes per second max
-            expert: 150, // 2.5 notes per second max
-            master: 180  // 3 notes per second max
-        };
-        const maxNotes = Math.floor((songDuration / 60) * (maxNotesPerMinute[this.difficulty] || 90));
-        
-        console.log(`Song duration: ${songDuration.toFixed(2)}s, Max notes for ${this.difficulty}: ${maxNotes}`);
-        
-        // Generate notes from beats with limit
+        // Generate notes from beats
         filteredBeats.forEach((beat, index) => {
-            // Stop if we've reached the maximum note limit
-            if (notes.length >= maxNotes) {
-                console.log(`Reached maximum note limit (${maxNotes}) for ${this.difficulty} difficulty`);
-                return;
-            }
-            
             const fret = this.selectFret(beat.energy, index);
             const isHold = Math.random() < this.getHoldNoteProbability();
             const isSimultaneous = Math.random() < this.getSimultaneousNoteProbability();
@@ -1474,17 +1123,17 @@ class NeonNightmare {
             
             notes.push(note);
             
-            // Add simultaneous note if applicable (and we haven't exceeded the limit)
-            if (isSimultaneous && notes.length < maxNotes) {
+            // Add simultaneous note if applicable
+            if (isSimultaneous) {
                 const secondFret = this.selectDifferentFret(fret);
                 notes.push({
                     id: index + '_sim',
-                    time: beat.time + 0.01, // Slightly offset to prevent exact same timing
+                    time: beat.time,
                     fret: secondFret,
-                    energy: beat.energy * 0.8, // Slightly less energy
+                    energy: beat.energy,
                     hit: false,
                     missed: false,
-                    isHold: false, // Simultaneous notes are regular notes
+                    isHold: isHold && Math.random() < 0.5, // 50% chance both are hold notes
                     isSimultaneous: true,
                     isHealth: false // Simultaneous notes are not health notes
                 });
@@ -1500,28 +1149,28 @@ class NeonNightmare {
             energies.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / energies.length
         );
         
-        // Much more restrictive thresholds to reduce note spam
+        // Lower threshold for harder difficulties = more notes
         const thresholdMultipliers = {
-            easy: 1.2,     // Only very strong beats
-            medium: 0.8,   // Strong beats only
-            hard: 0.6,     // Moderate to strong beats
-            expert: 0.4,   // Most significant beats
-            master: 0.3    // Almost all significant beats
+            easy: 0.7,
+            medium: 0.5,
+            hard: 0.4,
+            expert: 0.3,
+            master: 0.2
         };
-        const multiplier = thresholdMultipliers[this.difficulty] || 0.8;
+        const multiplier = thresholdMultipliers[this.difficulty] || 0.5;
         
         return mean + stdDev * multiplier;
     }
 
     getMinBeatInterval() {
         const intervals = {
-            easy: 0.8,    // Much slower - about 1.25 notes per second max
-            medium: 0.5,  // Moderate - about 2 notes per second max
-            hard: 0.35,   // Fast - about 2.8 notes per second max
-            expert: 0.25, // Very fast - about 4 notes per second max
-            master: 0.2   // Extreme - about 5 notes per second max
+            easy: 0.5,
+            medium: 0.35,
+            hard: 0.25,
+            expert: 0.18,
+            master: 0.15  // Challenging but not impossible - about 6-7 notes per second max
         };
-        return intervals[this.difficulty] || 0.5;
+        return intervals[this.difficulty] || 0.35;
     }
 
     filterBeats(beats, minInterval) {
@@ -1551,27 +1200,27 @@ class NeonNightmare {
     }
     
     getHoldNoteProbability() {
-        // Reduced hold note probabilities to make gameplay less overwhelming
+        // Hold notes become more common on higher difficulties
         const probabilities = {
-            easy: 0.05,    // 5% - very few hold notes
-            medium: 0.08,  // 8% - occasional hold notes
-            hard: 0.12,    // 12% - moderate hold notes
-            expert: 0.15,  // 15% - more hold notes
-            master: 0.15   // 15% - same as expert
+            easy: 0.1,
+            medium: 0.15,
+            hard: 0.2,
+            expert: 0.25,
+            master: 0.25  // Keep same as expert - master is hard enough with faster notes
         };
-        return probabilities[this.difficulty] || 0.08;
+        return probabilities[this.difficulty] || 0.15;
     }
     
     getSimultaneousNoteProbability() {
-        // Reduced simultaneous note probabilities to prevent overwhelming gameplay
+        // Simultaneous notes are rare on all difficulties
         const probabilities = {
-            easy: 0.02,    // 2% - very rare
-            medium: 0.04,  // 4% - rare
-            hard: 0.06,    // 6% - occasional
-            expert: 0.08,  // 8% - moderate
-            master: 0.08   // 8% - same as expert
+            easy: 0.05,
+            medium: 0.08,
+            hard: 0.1,
+            expert: 0.12,
+            master: 0.12  // Keep same as expert - too many simultaneous notes makes it impossible
         };
-        return probabilities[this.difficulty] || 0.04;
+        return probabilities[this.difficulty] || 0.08;
     }
 
     // ===================================
@@ -1675,18 +1324,8 @@ class NeonNightmare {
         // Render
         this.render();
         
-        // Continue loop with performance optimization
-        if (this.isMobile()) {
-            // Use setTimeout for better mobile performance
-            setTimeout(() => this.gameLoop(), 1000 / 30); // 30 FPS on mobile
-        } else {
-            // Use requestAnimationFrame for desktop
-            requestAnimationFrame(() => this.gameLoop());
-        }
-    }
-    
-    isMobile() {
-        return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        // Continue loop
+        requestAnimationFrame(() => this.gameLoop());
     }
 
     spawnNotes(currentTime) {
@@ -1740,16 +1379,12 @@ class NeonNightmare {
             element.appendChild(healthIndicator);
         }
         
-        const lanes = this.noteHighway.querySelector('.fret-lanes');
-        const laneIndex = this.frets.indexOf(note.fret);
+        const lane = document.querySelector(`.fret-lane[data-fret="${note.fret}"]`);
+        const laneRect = lane.getBoundingClientRect();
+        const highwayRect = this.noteHighway.getBoundingClientRect();
         
-        // Calculate position using flex layout - each lane is 20% of width
-        const laneWidthPercent = 20; // 5 lanes = 20% each
-        const lanePosition = (laneIndex * laneWidthPercent) + (laneWidthPercent / 2);
-        
-        element.style.left = lanePosition + '%';
+        element.style.left = (laneRect.left - highwayRect.left + laneRect.width / 2) + 'px';
         element.style.top = this.noteSpawnY + 'px';
-        element.style.transform = 'translateX(-50%)'; // Center the note in the lane
         
         note.element = element;
         this.noteHighway.appendChild(element);
@@ -1816,24 +1451,12 @@ class NeonNightmare {
             .sort((a, b) => Math.abs(a.time - currentTime) - Math.abs(b.time - currentTime))[0];
         
         if (closestNote) {
-            let timingWindow, timeDiff;
+            // Use larger timing window for hold notes (300ms vs 150ms)
+            const timingWindow = closestNote.isHold ? this.timingWindows.hold : this.timingWindows.good;
+            const timeDiff = Math.abs(closestNote.time - currentTime) * 1000;
             
-            if (closestNote.isHold) {
-                // For hold notes, detect when the BOTTOM of the note reaches the target line
-                // Hold note duration is 1 second, so we need to check if we're at the start time
-                timingWindow = this.timingWindows.hold; // 300ms window for starting hold
-                timeDiff = Math.abs(closestNote.time - currentTime) * 1000;
-                
-                // Debug logging for hold notes
-                console.log(`Hold note attempt: timeDiff=${timeDiff.toFixed(1)}ms, noteTime=${closestNote.time.toFixed(3)}s, currentTime=${currentTime.toFixed(3)}s`);
-            } else {
-                // Regular notes use the standard timing
-                timingWindow = this.timingWindows.good;
-                timeDiff = Math.abs(closestNote.time - currentTime) * 1000;
-                
-                // Debug logging for regular notes
-                console.log(`Regular note attempt: timeDiff=${timeDiff.toFixed(1)}ms, noteTime=${closestNote.time.toFixed(3)}s, currentTime=${currentTime.toFixed(3)}s`);
-            }
+            // Debug logging
+            console.log(`Hit attempt: timeDiff=${timeDiff.toFixed(1)}ms, noteTime=${closestNote.time.toFixed(3)}s, currentTime=${currentTime.toFixed(3)}s, isHold=${closestNote.isHold}`);
             
             if (timeDiff <= timingWindow) {
                 let hitType;
@@ -1845,14 +1468,11 @@ class NeonNightmare {
                     hitType = 'good';
                 }
                 
+                this.hitNote(closestNote, hitType);
+                
                 // Check if this is a hold note
                 if (closestNote.isHold) {
                     this.startHoldNote(closestNote, fret);
-                    // Don't hit the hold note immediately - wait for successful hold
-                    closestNote.hit = false;
-                    console.log(`Started holding note at bottom: timing=${hitType}`);
-                } else {
-                    this.hitNote(closestNote, hitType);
                 }
             } else {
                 console.log(`Missed timing window: ${timeDiff.toFixed(1)}ms > ${timingWindow}ms`);
@@ -1877,13 +1497,11 @@ class NeonNightmare {
     startHoldNote(note, fret) {
         const currentTime = this.audioContext.currentTime - this.startTime;
         const holdDuration = 1.0; // 1 second hold duration
-        const holdStartTime = note.time; // When the bottom of the note reaches target
-        const holdEndTime = holdStartTime + holdDuration;
+        const holdEndTime = note.time + holdDuration;
         
         this.activeHolds[fret] = {
             note: note,
             startTime: currentTime,
-            holdStartTime: holdStartTime,
             holdEndTime: holdEndTime,
             holdDuration: holdDuration,
             isHolding: true,
@@ -1895,8 +1513,6 @@ class NeonNightmare {
         if (noteElement) {
             noteElement.classList.add('holding');
         }
-        
-        console.log(`Hold note started: holdStartTime=${holdStartTime.toFixed(3)}s, holdEndTime=${holdEndTime.toFixed(3)}s, currentTime=${currentTime.toFixed(3)}s`);
         
         // Start scoring points while holding (2x points for hold notes)
         this.activeHolds[fret].scoreInterval = setInterval(() => {
@@ -1917,30 +1533,19 @@ class NeonNightmare {
             // Clear the scoring interval
             clearInterval(hold.scoreInterval);
             
-            // Check if we're still within the hold note duration
-            if (currentTime < hold.holdEndTime) {
+            // Check if held for at least halfway
+            if (holdTime < halfwayPoint) {
                 // Released too early - count as miss
-                const heldTime = currentTime - hold.holdStartTime;
-                const requiredTime = hold.holdDuration;
-                console.log(`Hold note released too early: held ${heldTime.toFixed(2)}s < required ${requiredTime.toFixed(2)}s`);
-                console.log(`Current time: ${currentTime.toFixed(3)}s, Hold end time: ${hold.holdEndTime.toFixed(3)}s`);
-                
+                console.log(`Hold note released too early: ${holdTime.toFixed(2)}s < ${halfwayPoint.toFixed(2)}s`);
                 this.combo = 0;
                 this.multiplier = 1;
                 this.misses++;
                 this.drainHealth();
                 this.showMissFeedback();
                 this.updateHUD();
-                
-                // Mark the note as missed
-                hold.note.hit = false;
-                hold.note.missed = true;
             } else {
-                // Successfully held for the full duration - hit the note
-                console.log(`Hold note successful! Held until end: ${currentTime.toFixed(3)}s >= ${hold.holdEndTime.toFixed(3)}s`);
-                
-                // Hit the hold note with perfect timing
-                this.hitNote(hold.note, 'perfect');
+                // Successfully held for at least halfway
+                console.log(`Hold note successful: ${holdTime.toFixed(2)}s >= ${halfwayPoint.toFixed(2)}s`);
             }
             
             // Remove visual feedback
@@ -2081,26 +1686,6 @@ class NeonNightmare {
         this.scoreValue.textContent = this.score.toLocaleString();
         this.multiplierValue.textContent = this.multiplier;
         this.comboValue.textContent = this.combo;
-        
-        // Update combo bar
-        this.updateComboBar();
-        
-        // Add visual feedback for high combos
-        if (this.comboDisplay) {
-            if (this.combo >= 20) {
-                this.comboDisplay.classList.add('combo-high');
-            } else {
-                this.comboDisplay.classList.remove('combo-high');
-            }
-            
-            // Trigger animation on combo increase
-            if (this.combo > 0 && this.combo % 10 === 0) {
-                this.comboDisplay.style.animation = 'none';
-                setTimeout(() => {
-                    this.comboDisplay.style.animation = 'comboGlow 0.5s ease-out';
-                }, 10);
-            }
-        }
     }
     
     drainHealth() {
@@ -2115,262 +1700,25 @@ class NeonNightmare {
     }
     
     updateHealthBar() {
-        const leftHealthFill = document.getElementById('leftHealthFill');
-        const rightHealthFill = document.getElementById('rightHealthFill');
-        
-        const percentage = (this.currentHealth / this.maxHealth) * 100;
-        
-        // Update both side health bars with theme colors
-        if (leftHealthFill) {
-            leftHealthFill.style.height = percentage + '%';
-            this.setHealthBarColor(leftHealthFill, percentage);
-        }
-        
-        if (rightHealthFill) {
-            rightHealthFill.style.height = percentage + '%';
-            this.setHealthBarColor(rightHealthFill, percentage);
-        }
-    }
-    
-    setGameMode(mode) {
-        this.gameMode = mode;
-        console.log(`Game mode set to: ${mode}`);
-        
-        // Update UI based on mode
-        if (mode === 'multiplayer') {
-            // Show multiplayer lobby instead of level select
-            this.showMultiplayerLobby();
-        }
-    }
-
-    showMultiplayerOptions() {
-        const mainMenu = document.getElementById('mainMenu');
-        
-        // Show find lobby panel as default
-        this.openSlidePanel('findLobbyPanel');
-        
-        console.log('Multiplayer options shown');
-    }
-
-    openSlidePanel(panelId) {
-        // Close all panels first
-        this.closeAllSlidePanels();
-        
-        // Open the specified panel
-        const panel = document.getElementById(panelId);
-        if (panel) {
-            panel.classList.add('active');
-            console.log(`Opened panel: ${panelId}`);
+        const healthBar = document.getElementById('healthBarFill');
+        if (healthBar) {
+            const percentage = (this.currentHealth / this.maxHealth) * 100;
+            healthBar.style.width = percentage + '%';
             
-            // Load content based on panel
-            if (panelId === 'findLobbyPanel') {
-                this.loadAvailableLobbies();
-            } else if (panelId === 'pvpLeaderboardsPanel') {
-                this.loadPvPLeaderboards();
-            }
-        }
-    }
-
-    closeAllSlidePanels() {
-        document.querySelectorAll('.slide-panel').forEach(panel => {
-            panel.classList.remove('active');
-        });
-        console.log('All slide panels closed');
-    }
-
-    setupMapBanSystem() {
-        this.availableMaps = [
-            { id: 1, name: 'Level 1', difficulty: 'Easy', color: '#00FF00' },
-            { id: 2, name: 'Level 2', difficulty: 'Medium', color: '#FFFF00' },
-            { id: 50, name: 'Level 50', difficulty: 'Master', color: '#FF0000' }
-        ];
-        this.bannedMaps = [];
-        this.selectedMap = null;
-    }
-
-    startMapBanPhase() {
-        const mapBanOverlay = document.getElementById('mapBanOverlay');
-        const mapBanGrid = document.getElementById('mapBanGrid');
-        
-        // Show map ban overlay
-        mapBanOverlay.style.display = 'flex';
-        
-        // Reset ban state
-        this.bannedMaps = [];
-        this.selectedMap = null;
-        
-        // Populate map grid
-        mapBanGrid.innerHTML = '';
-        this.availableMaps.forEach(map => {
-            const mapCard = document.createElement('div');
-            mapCard.className = 'map-card';
-            mapCard.dataset.mapId = map.id;
-            mapCard.innerHTML = `
-                <h3>${map.name}</h3>
-                <p>${map.difficulty}</p>
-            `;
-            
-            mapCard.addEventListener('click', () => this.banMap(map.id, mapCard));
-            mapBanGrid.appendChild(mapCard);
-        });
-        
-        console.log('Map ban phase started');
-    }
-
-    banMap(mapId, cardElement) {
-        if (this.bannedMaps.length > 0) {
-            console.log('Already banned a map');
-            return;
-        }
-        
-        // Mark map as banned
-        const map = this.availableMaps.find(m => m.id === mapId);
-        this.bannedMaps.push(map);
-        cardElement.classList.add('banned');
-        
-        // Disable other cards
-        document.querySelectorAll('.map-card').forEach(card => {
-            if (card !== cardElement) {
-                card.style.pointerEvents = 'none';
-                card.style.opacity = '0.5';
-            }
-        });
-        
-        // Show waiting for opponent
-        const status = document.getElementById('mapBanStatus');
-        status.innerHTML = '<p>Waiting for opponent\'s ban...</p>';
-        
-        console.log(`Banned map: ${map.name}`);
-        
-        // Simulate opponent banning (replace with real multiplayer)
-        setTimeout(() => {
-            this.opponentBannedMap();
-        }, 2000);
-    }
-
-    opponentBannedMap() {
-        // Randomly select a map for opponent to ban (excluding our ban)
-        const availableForOpponent = this.availableMaps.filter(
-            map => !this.bannedMaps.some(banned => banned.id === map.id)
-        );
-        
-        if (availableForOpponent.length > 0) {
-            const opponentBan = availableForOpponent[Math.floor(Math.random() * availableForOpponent.length)];
-            this.bannedMaps.push(opponentBan);
-            
-            // Update UI
-            document.querySelectorAll('.map-card').forEach(card => {
-                if (parseInt(card.dataset.mapId) === opponentBan.id) {
-                    card.classList.add('banned');
-                }
-            });
-            
-            console.log(`Opponent banned: ${opponentBan.name}`);
-            
-            // Select random map from remaining
-            setTimeout(() => {
-                this.selectRandomMap();
-            }, 1500);
-        }
-    }
-
-    selectRandomMap() {
-        const availableMaps = this.availableMaps.filter(
-            map => !this.bannedMaps.some(banned => banned.id === map.id)
-        );
-        
-        if (availableMaps.length > 0) {
-            this.selectedMap = availableMaps[Math.floor(Math.random() * availableMaps.length)];
-            
-            // Show selected map
-            const status = document.getElementById('mapBanStatus');
-            status.innerHTML = `<p style="color: #00FF00;">Playing: ${this.selectedMap.name}</p>`;
-            
-            // Highlight selected map
-            document.querySelectorAll('.map-card').forEach(card => {
-                if (parseInt(card.dataset.mapId) === this.selectedMap.id) {
-                    card.classList.add('selected');
-                }
-            });
-            
-            console.log(`Selected map: ${this.selectedMap.name}`);
-            
-            // Start game after delay
-            setTimeout(() => {
-                this.hideMapBanOverlay();
-                this.startMultiplayerGameWithMap(this.selectedMap.id);
-            }, 2000);
-        }
-    }
-
-    hideMapBanOverlay() {
-        const mapBanOverlay = document.getElementById('mapBanOverlay');
-        mapBanOverlay.style.display = 'none';
-    }
-
-    startMultiplayerGameWithMap(mapId) {
-        console.log(`Starting multiplayer game with map: ${mapId}`);
-        
-        // Close all panels
-        this.closeAllSlidePanels();
-        
-        // Setup multiplayer
-        this.isMultiplayer = true;
-        this.opponent = {
-            name: 'Opponent',
-            score: 0,
-            combo: 0
-        };
-        
-        // Add opponent score display
-        this.addOpponentScoreDisplay();
-        
-        // Load and start the selected map
-        this.loadLevel(mapId)
-            .then(() => {
-                console.log('Level loaded successfully, starting multiplayer game');
-                this.startGame();
-            })
-            .catch(error => {
-                console.error('Error loading level for multiplayer:', error);
-                alert('Error loading level. Please try again.');
-                this.returnToMenu();
-            });
-    }
-
-    setHealthBarColor(healthFill, percentage) {
-        const root = getComputedStyle(document.documentElement);
-        const primaryColor = root.getPropertyValue('--primary-color').trim();
-        const secondaryColor = root.getPropertyValue('--secondary-color').trim();
-        
-        if (percentage > 60) {
-            healthFill.style.background = `linear-gradient(180deg, ${primaryColor}, ${secondaryColor})`;
-        } else if (percentage > 30) {
-            healthFill.style.background = 'linear-gradient(180deg, #FFAA00, #FF6600)';
-        } else {
-            healthFill.style.background = 'linear-gradient(180deg, #FF3366, #CC0000)';
-        }
-    }
-
-    updateComboBar() {
-        const comboBarFill = document.getElementById('comboBarFill');
-        
-        if (comboBarFill) {
-            // Calculate combo percentage (max combo considered 50 for full bar)
-            const percentage = Math.min((this.combo / 50) * 100, 100);
-            comboBarFill.style.width = percentage + '%';
-            
-            // Add visual feedback for high combos
-            if (this.combo >= 40) {
-                comboBarFill.style.background = 'linear-gradient(90deg, #FFD700, #FF1493)';
-                comboBarFill.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.8)';
-            } else if (this.combo >= 20) {
-                comboBarFill.style.background = 'linear-gradient(90deg, #00FFFF, #9D00FF)';
-                comboBarFill.style.boxShadow = '0 0 10px rgba(0, 255, 255, 0.6)';
+            // Change color based on health level
+            if (percentage > 60) {
+                healthBar.style.background = 'linear-gradient(90deg, #00FFFF, #39FF14)';
+            } else if (percentage > 30) {
+                healthBar.style.background = 'linear-gradient(90deg, #FFFF00, #FFA500)';
             } else {
-                comboBarFill.style.background = 'linear-gradient(90deg, #00FFFF, #9D00FF)';
-                comboBarFill.style.boxShadow = '0 0 10px rgba(0, 255, 255, 0.5)';
+                healthBar.style.background = 'linear-gradient(90deg, #FF0000, #FF1493)';
             }
+        }
+        
+        // Update health text
+        const healthText = document.getElementById('healthValue');
+        if (healthText) {
+            healthText.textContent = Math.ceil(this.currentHealth);
         }
     }
     
