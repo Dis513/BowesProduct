@@ -871,8 +871,8 @@ class NeonNightmare {
             this.songTitle.textContent = file.name.replace(/\.[^/.]+$/, '');
             this.songArtist.textContent = 'Custom Track';
             
-            // Set difficulty to medium for custom tracks (can be changed in settings)
-            this.difficulty = 'hard';
+            // Set difficulty to easy for custom tracks (can be changed in settings)
+            this.difficulty = 'easy';
             this.currentLevel = 0;
             
             // Set note speed based on difficulty
