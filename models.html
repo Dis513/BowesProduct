@@ -951,64 +951,68 @@ if (categoryFilter) categoryFilter.addEventListener("change", filterModels);
 
 <!-- Firebase Authentication & XP System (exact same as about.html) -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    collection
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-const firebaseConfig = {
- apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
- authDomain: "bowesproduct.firebaseapp.com",
- projectId: "bowesproduct"
-};
+  // ✅ YOUR EXISTING FIREBASE PROJECT
+  const firebaseConfig = {
+    apiKey: "AIzaSyB4JMVBMcWcN2wKsaVYmnggHH5ue1mUfaA",
+    authDomain: "bowesproduct.firebaseapp.com",
+    projectId: "bowesproduct"
+  };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
 
-const authBtn = document.getElementById("authBtn");
-const profilePic = document.getElementById("profilePic");
-const levelInfo = document.getElementById("levelInfo");
-const levelText = document.getElementById("levelText");
-const xpBar = document.getElementById("xpBar");
+  // Auth
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-authBtn.onclick = () =>
- auth.currentUser ? signOut(auth) : signInWithPopup(auth, provider);
+  // Firestore
+  const db = getFirestore(app);
 
-onAuthStateChanged(auth, async (user) => {
- if (!user) {
-  authBtn.textContent = "Login";
-  profilePic.style.display = "none";
-  levelInfo.style.display = "none";
-  return;
- }
+  // 🌍 Expose EXACT globals your game expects
+  window.firebaseAuth = auth;
+  window.firebaseProvider = provider;
+  window.firebaseDb = db;
 
- authBtn.textContent = "Logout";
- profilePic.src = user.photoURL || "";
- profilePic.style.display = "block";
+  window.firebaseDocs = {
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    collection
+  };
 
- const ref = doc(db, "users", user.uid);
- let snap = await getDoc(ref);
+  console.log("🔥 Firebase connected to bowesproduct");
 
- if (!snap.exists()) {
-  await setDoc(ref, { xp: 10 });
-  snap = await getDoc(ref);
- }
-
- const xp = snap.data().xp || 0;
- const levels = [0, 200, 500, 1000, 2000];
- let level = levels.filter(v => xp >= v).length - 1;
- let next = levels[level + 1] ?? levels[level];
- let progress = next === levels[level] ? 100 :
-  ((xp - levels[level]) / (next - levels[level])) * 100;
-
- levelText.textContent = `Level ${level} • ${xp} XP`;
- xpBar.style.width = progress + "%";
- levelInfo.style.display = "block";
-});
+  // OPTIONAL: basic auth debug (safe to keep)
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("✅ Logged in:", user.uid);
+    } else {
+      console.log("🚪 Logged out");
+    }
+  });
 </script>
+
 </body>
 </html>
+
 
 
 
