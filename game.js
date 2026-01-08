@@ -845,7 +845,7 @@ class NeonNightmare {
             this.songArtist.textContent = 'Custom Track';
             
             // Set difficulty to medium for custom tracks (can be changed in settings)
-            this.difficulty = 'medium';
+            this.difficulty = 'hard';
             this.currentLevel = 0;
             
             // Set note speed based on difficulty
