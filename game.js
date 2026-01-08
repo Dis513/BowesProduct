@@ -2013,5 +2013,5 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Game instance created:', window.game);
     } catch (error) {
         console.error('Failed to create game instance:', error);
-    }
+    } 
 });
