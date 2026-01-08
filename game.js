@@ -15,7 +15,7 @@ class NeonNightmare {
             this.combo = 0;
             this.maxCombo = 0;
             this.multiplier = 1;
-            this.difficulty = 'medium';
+            this.difficulty = 'easy';
             
             // Firebase & User Profile
             this.db = null;
@@ -868,7 +868,7 @@ class NeonNightmare {
             // Use current difficulty setting (can be changed in settings before upload)
             // Default to medium if not set
             if (!this.difficulty) {
-                this.difficulty = 'medium';
+                this.difficulty = 'easy';
             }
             this.currentLevel = 0;
             
