@@ -77,7 +77,7 @@ class NeonNightmare {
         // Health System
         this.maxHealth = 100;
         this.currentHealth = 100;
-        this.healthDrainAmount = 10;
+        this.healthDrainAmount = 3;
         this.healthDrainPerDifficulty = {
             easy: 2,
             medium: 3,
