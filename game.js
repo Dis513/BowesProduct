@@ -1232,7 +1232,7 @@ class NeonNightmare {
         this.activeNotes = [];
         this.currentHealth = this.maxHealth;
         this.gameStartTime = null; // Track when game actually starts
-        this.gracePeriod = 1.0; // 1 second grace period at start
+        this.gracePeriod = 2.0; // 2 second grace period at start
         
         // Reset notes
         this.notes.forEach(note => {
