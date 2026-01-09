@@ -2213,229 +2213,62 @@ button.addEventListener('touchcancel', (e) => {
         const progressFill = document.getElementById('progressFill');
         
         // Update unlock score display
-        if (unlockScore) {
-            unlockScore.textContent = highScore.toLocaleString();
+if (unlockScore) {
+    unlockScore.textContent = highScore.toLocaleString();
+}
+
+// Define all themes with NEW cheap thresholds
+const themes = [
+    { id: 'rainbow-six-siege-theme', req:  50000,     name: 'Siege Ops' },
+    { id: 'star-wars-theme',         req: 150000,     name: 'Galactic Wars' },
+    { id: 'sonic-theme',             req: 400000,     name: 'Speed Demon' },
+    { id: 'dark-souls-theme',        req: 1000000,    name: 'Souls Nightmare' },
+    { id: 'warcraft-theme',          req: 2000000,    name: 'Realms of War' },
+    { id: 'avatar-theme',            req: 3500000,    name: 'Pandora' },
+    { id: 'final-fantasy-theme',     req: 6000000,    name: 'Crystal Chronicles' },
+    { id: 'call-of-duty-theme',      req: 10000000,   name: 'Modern Warfare' },
+    { id: 'minecraft-theme',         req: 15000000,   name: 'Block Wars' }
+];
+
+let nextTarget = 15000000; // default max for progress bar
+
+themes.forEach(theme => {
+    const element = document.getElementById(theme.id);
+    if (!element) return;
+
+    const themeInfo = element.querySelector('.theme-info p');
+    const btn = element.querySelector('.theme-select-btn');
+
+    if (highScore >= theme.req) {
+        element.classList.remove('locked');
+        if (themeInfo) themeInfo.textContent = 'Unlocked!';
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Select';
         }
-        
-        // Calculate progress based on next unlock or max if all unlocked
-        let progressTarget = 80000000;
-        let allUnlocked = true;
-        
-        // Update Rainbow Six Siege theme lock status
-        if (rainbowSixSiegeTheme) {
-            const themeInfo = rainbowSixSiegeTheme.querySelector('.theme-info p');
-            const btn = rainbowSixSiegeTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 100000) {
-                rainbowSixSiegeTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                progressTarget = 100000;
-                rainbowSixSiegeTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 100,000 points (${(100000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
+    } else {
+        element.classList.add('locked');
+        nextTarget = Math.min(nextTarget, theme.req);
+        if (themeInfo) {
+            themeInfo.textContent = `🔒 Unlock at ${theme.req.toLocaleString()} points (${(theme.req - highScore).toLocaleString()} more)`;
         }
-        
-        // Update Star Wars theme lock status
-        if (starWarsTheme) {
-            const themeInfo = starWarsTheme.querySelector('.theme-info p');
-            const btn = starWarsTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 500000) {
-                starWarsTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                if (progressTarget > 500000) progressTarget = 500000;
-                starWarsTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 500,000 points (${(500000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = '🔒 Locked';
         }
-        
-        // Update Sonic theme lock status
-        if (sonicTheme) {
-            const themeInfo = sonicTheme.querySelector('.theme-info p');
-            const btn = sonicTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 2000000) {
-                sonicTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                if (progressTarget > 2000000) progressTarget = 2000000;
-                sonicTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 2,000,000 points (${(2000000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
-        }
-        
-        // Update Dark Souls theme lock status
-        if (darkSoulsTheme) {
-            const themeInfo = darkSoulsTheme.querySelector('.theme-info p');
-            const btn = darkSoulsTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 8000000) {
-                darkSoulsTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                if (progressTarget > 8000000) progressTarget = 8000000;
-                darkSoulsTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 8,000,000 points (${(8000000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
-        }
-        
-        // Update Warcraft theme lock status
-        if (warcraftTheme) {
-            const themeInfo = warcraftTheme.querySelector('.theme-info p');
-            const btn = warcraftTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 15000000) {
-                warcraftTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                if (progressTarget > 15000000) progressTarget = 15000000;
-                warcraftTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 15,000,000 points (${(15000000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
-        }
-        
-        // Update Avatar theme lock status
-        if (avatarTheme) {
-            const themeInfo = avatarTheme.querySelector('.theme-info p');
-            const btn = avatarTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 25000000) {
-                avatarTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                if (progressTarget > 25000000) progressTarget = 25000000;
-                avatarTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 25,000,000 points (${(25000000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
-        }
-        
-        // Update Final Fantasy theme lock status
-        if (finalFantasyTheme) {
-            const themeInfo = finalFantasyTheme.querySelector('.theme-info p');
-            const btn = finalFantasyTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 40000000) {
-                finalFantasyTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                if (progressTarget > 40000000) progressTarget = 40000000;
-                finalFantasyTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 40,000,000 points (${(40000000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
-        }
-        
-        // Update Call of Duty theme lock status
-        if (callOfDutyTheme) {
-            const themeInfo = callOfDutyTheme.querySelector('.theme-info p');
-            const btn = callOfDutyTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 60000000) {
-                callOfDutyTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                if (progressTarget > 60000000) progressTarget = 60000000;
-                callOfDutyTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 60,000,000 points (${(60000000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
-        }
-        
-        // Update Minecraft theme lock status
-        if (minecraftTheme) {
-            const themeInfo = minecraftTheme.querySelector('.theme-info p');
-            const btn = minecraftTheme.querySelector('.theme-select-btn');
-            
-            if (highScore >= 80000000) {
-                minecraftTheme.classList.remove('locked');
-                if (themeInfo) themeInfo.textContent = 'Unlocked!';
-                if (btn) {
-                    btn.disabled = false;
-                    btn.textContent = 'Select';
-                }
-            } else {
-                allUnlocked = false;
-                progressTarget = 80000000;
-                minecraftTheme.classList.add('locked');
-                if (themeInfo) themeInfo.textContent = `🔒 Unlock at 80,000,000 points (${(80000000 - highScore).toLocaleString()} more)`;
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '🔒 Locked';
-                }
-            }
-        }
+    }
+});
+
+// Update progress bar to next unlock
+const progressFill = document.getElementById('progressFill');
+if (progressFill) {
+    const progress = Math.min((highScore / nextTarget) * 100, 100);
+    progressFill.style.width = `${progress}%`;
+}
+
+// Keep current theme selection highlighted
+const current = localStorage.getItem('selectedTheme') || 'neon';
+this.updateThemeUI(current);
         
         // Update progress bar
         if (progressFill) {
