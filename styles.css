@@ -2610,3 +2610,48 @@ body {
 .song-info {
     pointer-events: none;
 }
+
+/* EMERGENCY FIX: Make sure main menu buttons are clickable */
+.menu-options,
+.menu-button,
+#uploadButton,
+#selectLevel,
+#viewLeaderboards,
+#openSettings,
+#openThemes {
+    pointer-events: auto !important;
+    z-index: 9999 !important;           /* way above everything */
+    position: relative;                 /* force stacking context */
+}
+
+/* Remove any accidental blocks on the whole menu area */
+.menu-container,
+#playerProfile,
+.menu-options {
+    pointer-events: auto !important;
+}
+
+/* Make sure no modal or background steals clicks when menu is visible */
+#themeMenu,
+#levelSelectMenu,
+#settingsMenu,
+#pauseMenu,
+#songCompleteMenu,
+#gameOverMenu,
+#leaderboardMenu,
+.loading-screen,
+.cutscene-container {
+    pointer-events: none;              /* let clicks pass through when hidden */
+}
+
+#themeMenu.active,
+#levelSelectMenu.active,
+#settingsMenu.active,
+#pauseMenu.active,
+#songCompleteMenu.active,
+#gameOverMenu.active,
+#leaderboardMenu.active,
+.loading-screen.active,
+.cutsceneContainer.active {
+    pointer-events: auto;              /* only when actually visible */
+}
