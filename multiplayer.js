@@ -30,7 +30,7 @@ class MultiplayerManager {
             // Initialize Colyseus client
             // Force update to new server URL
             localStorage.removeItem('colyseusServer');
-            const serverUrl = 'wss://2567-456c8241-fa18-4d99-bd19-14cc734bc3c0.sandbox-service.public.prod.myninja.ai';
+            const serverUrl = 'https://dis513.github.io/BowesProduct/game.html';
             this.client = new Colyseus.Client(serverUrl);
             
             console.log('Colyseus client initialized');
