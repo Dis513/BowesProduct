@@ -1,0 +1,3448 @@
+/* ===================================
+   BLOCK WARS - Minecraft Theme
+   =================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    background: #1a1a1a;
+    color: #00AA00;
+}
+
+/* ===================================
+   Background Effects
+   =================================== */
+
+.void-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #000000 0%, #0a0a1a 50%, #000000 100%);
+    z-index: 0;
+}
+
+.fog-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 20% 30%, rgba(255, 232, 31, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(0, 150, 255, 0.03) 0%, transparent 50%);
+    z-index: 1;
+    animation: fogPulse 8s ease-in-out infinite;
+}
+
+@keyframes fogPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+}
+
+/* ===================================
+   Parallax Layers
+   =================================== */
+
+.parallax-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    will-change: transform;
+}
+
+.layer-1 {
+    z-index: 2;
+}
+
+.star-field {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255, 232, 31, 0.6), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(2px 2px at 160px 120px, rgba(0, 150, 255, 0.6), transparent),
+        radial-gradient(1px 1px at 230px 80px, #fff, transparent);
+    background-size: 250px 250px;
+    animation: starTwinkle 5s ease-in-out infinite;
+}
+
+@keyframes starTwinkle {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.layer-2 {
+    z-index: 3;
+}
+
+.distant-mountains {
+    position: absolute;
+    bottom: 20%;
+    width: 100%;
+    height: 30%;
+    background: 
+        linear-gradient(135deg, transparent 40%, rgba(0, 50, 100, 0.3) 40%, rgba(0, 50, 100, 0.3) 42%, transparent 42%),
+        linear-gradient(145deg, transparent 30%, rgba(0, 30, 60, 0.2) 30%, rgba(0, 30, 60, 0.2) 33%, transparent 33%);
+    animation: mountainFloat 20s ease-in-out infinite;
+}
+
+@keyframes mountainFloat {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-20px); }
+}
+
+.layer-3 {
+    z-index: 4;
+}
+
+.mid-landscape {
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    height: 20%;
+    background: 
+        linear-gradient(160deg, transparent 50%, rgba(0, 80, 150, 0.2) 50%, rgba(0, 80, 150, 0.2) 55%, transparent 55%);
+    animation: landscapeDrift 15s ease-in-out infinite;
+}
+
+@keyframes landscapeDrift {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }
+}
+
+.layer-4 {
+    z-index: 5;
+}
+
+.foreground-elements {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 15%;
+    background: 
+        linear-gradient(170deg, transparent 60%, rgba(255, 232, 31, 0.2) 60%, rgba(255, 232, 31, 0.2) 65%, transparent 65%);
+    animation: foregroundPulse 10s ease-in-out infinite;
+}
+
+@keyframes foregroundPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.9; }
+}
+
+/* ===================================
+   Beat-reactive Glow
+   =================================== */
+
+.beat-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 6;
+    background: radial-gradient(circle at center, rgba(0, 150, 255, 0) 0%, transparent 70%);
+    transition: background 0.1s ease-out;
+}
+
+.beat-glow.active {
+    background: radial-gradient(circle at center, rgba(0, 150, 255, 0.1) 0%, transparent 70%);
+}
+
+/* ===================================
+   Particles
+   =================================== */
+
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 7;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #00AA00;
+    border-radius: 50%;
+    animation: particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-10vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ===================================
+   Decorative Elements
+   =================================== */
+
+.crooked-tree {
+    position: fixed;
+    bottom: 0;
+    width: 150px;
+    height: 400px;
+    z-index: 8;
+    opacity: 0.3;
+}
+
+.crooked-tree.left {
+    left: -50px;
+    transform: rotate(-15deg);
+}
+
+.crooked-tree.right {
+    right: -50px;
+    transform: rotate(15deg);
+}
+
+.crooked-tree::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(to top, #1a1a2e, #000000);
+    border-radius: 5px;
+}
+
+/* ===================================
+   Menu Container
+   =================================== */
+
+.menu-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.game-title {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #00AA00;
+    text-shadow: 
+        0 0 10px #00AA00,
+        0 0 20px #00AA00,
+        0 0 40px #A0522D,
+        0 0 80px #FF0000;
+    margin-bottom: 0.5rem;
+    animation: titleGlow 3s ease-in-out infinite;
+    letter-spacing: 4px;
+}
+
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 2rem;
+        letter-spacing: 1px;
+    }
+}
+
+@keyframes titleGlow {
+    0%, 100% { 
+        text-shadow: 
+            0 0 10px #00AA00,
+            0 0 20px #00AA00,
+            0 0 40px #A0522D,
+            0 0 80px #FF0000;
+    }
+    50% { 
+        text-shadow: 
+            0 0 20px #00AA00,
+            0 0 40px #00AA00,
+            0 0 60px #A0522D,
+            0 0 100px #FF0000;
+    }
+}
+
+.game-subtitle {
+    font-size: 1.2rem;
+    color: #8B4513;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px #8B4513;
+    letter-spacing: 3px;
+}
+
+.menu-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.menu-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 20, 40, 0.9);
+    border: 2px solid #00AA00;
+    color: #00AA00;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    min-width: 250px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.menu-button:hover {
+    background: rgba(255, 232, 31, 0.2);
+    box-shadow: 0 0 20px #00AA00, inset 0 0 20px rgba(0, 0, 0, 0.6);
+    transform: scale(1.05);
+    border-color: #00AA00;
+    color: #FFF;
+}
+
+.menu-button:active {
+    transform: scale(0.95);
+}
+
+/* ===================================
+   Game Container
+   =================================== */
+
+.game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.game-container.active {
+    display: block;
+    opacity: 1;
+}
+
+.game-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ===================================
+   Level Grid
+   =================================== */
+
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+    max-width: 600px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 0 auto 1.5rem auto;
+    padding: 10px;
+    background: rgba(0, 10, 20, 0.9);
+    border: 2px solid #556B2F;
+    border-radius: 10px;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+.level-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 20, 40, 0.8);
+    border: 2px solid #556B2F;
+    border-radius: 5px;
+    color: #00AA00;
+    font-weight: bold;
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.level-item:hover {
+    background: rgba(255, 232, 31, 0.2);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00AA00;
+    border-color: #00AA00;
+}
+
+.level-item.easy {
+    border-color: #00FF00;
+    color: #00FF00;
+}
+
+.level-item.easy:hover {
+    background: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 15px #00FF00;
+}
+
+.level-item.medium {
+    border-color: #00AA00;
+    color: #00AA00;
+}
+
+.level-item.medium:hover {
+    background: rgba(255, 232, 31, 0.2);
+    box-shadow: 0 0 15px #00AA00;
+}
+
+.level-item.hard {
+    border-color: #A0522D;
+    color: #A0522D;
+}
+
+.level-item.hard:hover {
+    background: rgba(255, 107, 0, 0.2);
+    box-shadow: 0 0 15px #A0522D;
+}
+
+.level-item.expert {
+    border-color: #FF0000;
+    color: #FF0000;
+}
+
+.level-item.expert:hover {
+    background: rgba(255, 0, 0, 0.2);
+    box-shadow: 0 0 15px #FF0000;
+}
+
+.level-item.master {
+    border-color: #9900FF;
+    color: #9900FF;
+}
+
+.level-item.master:hover {
+    background: rgba(153, 0, 255, 0.2);
+    box-shadow: 0 0 15px #9900FF;
+}
+
+/* ===================================
+   Cutscene Container
+   =================================== */
+
+.cutscene-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    background: #000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.cutscene-container.active {
+    display: flex;
+}
+
+.cutscene-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.skip-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 1rem 2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00AA00;
+    color: #00AA00;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 201;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+}
+
+.skip-button:hover {
+    background: rgba(255, 232, 31, 0.2);
+    box-shadow: 0 0 20px #00AA00;
+    transform: scale(1.05);
+    border-color: #00AA00;
+}
+
+/* ===================================
+   Level Indicator
+   =================================== */
+
+.level-indicator {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.level-label {
+    font-size: 0.8rem;
+    color: #556B2F;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.level-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00AA00;
+    text-shadow: 0 0 10px #A0522D;
+    transition: all 0.3s ease;
+}
+
+.level-number.level-up {
+    animation: levelUpPulse 0.5s ease-out;
+}
+
+@keyframes levelUpPulse {
+    0% {
+        transform: scale(1);
+        color: #00AA00;
+    }
+    50% {
+        transform: scale(1.5);
+        color: #00FF00;
+        text-shadow: 0 0 30px #00FF00;
+    }
+    100% {
+        transform: scale(1);
+        color: #00AA00;
+    }
+}
+
+/* ===================================
+   Character
+   =================================== */
+
+.character {
+    position: fixed;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 55;
+    transition: all 0.3s ease;
+}
+
+/* Hide character when game container is not active */
+#gameContainer:not(.active) .character {
+    display: none;
+}
+
+.character-sprite {
+    position: relative;
+    width: 80px;
+    height: 120px;
+}
+
+.character-body {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 100px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #000000 100%);
+    border-radius: 30px 30px 20px 20px;
+    box-shadow: 
+        0 0 20px rgba(0, 150, 255, 0.5),
+        inset 0 -20px 30px rgba(0, 0, 0, 0.7);
+}
+
+.character-eyes {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+}
+
+.eye {
+    width: 15px;
+    height: 15px;
+    background: #00AA00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #A0522D;
+    animation: eyeGlow 2s ease-in-out infinite;
+}
+
+@keyframes eyeGlow {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #A0522D;
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 20px #00AA00, 0 0 30px #8B4513;
+    }
+}
+
+.character-aura {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 150, 255, 0.3) 0%, transparent 70%);
+    animation: auraPulse 3s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+.character-aura.active {
+    animation: auraActive 0.5s ease-out;
+}
+
+@keyframes auraPulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes auraActive {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+}
+
+.character-shadow {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 20px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.7) 0%, transparent 70%);
+}
+
+/* Character Animation States */
+
+.character.idle {
+    animation: characterIdle 2s ease-in-out infinite;
+}
+
+@keyframes characterIdle {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-5px);
+    }
+}
+
+.character.hit {
+    animation: characterHit 0.3s ease-out;
+}
+
+@keyframes characterHit {
+    0% {
+        transform: translateX(-50%) scale(1);
+    }
+    30% {
+        transform: translateX(-50%) scale(1.2);
+    }
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+.character.miss {
+    animation: characterMiss 0.5s ease-out;
+}
+
+@keyframes characterMiss {
+    0%, 100% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+    25% {
+        transform: translateX(-50%) rotate(-10deg);
+    }
+    75% {
+        transform: translateX(-50%) rotate(10deg);
+    }
+}
+
+.character.groove {
+    animation: characterGroove 0.5s ease-in-out;
+}
+
+@keyframes characterGroove {
+    0%, 100% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+    25% {
+        transform: translateX(-50%) rotate(-15deg);
+    }
+    75% {
+        transform: translateX(-50%) rotate(15deg);
+    }
+}
+
+/* ===================================
+   HUD Elements
+   =================================== */
+
+.hud-top {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 30px;
+    z-index: 60;
+}
+
+/* Hide HUD elements when game container is not active */
+#gameContainer:not(.active) .hud-top,
+#gameContainer:not(.active) .hud-bottom,
+#gameContainer:not(.active) .song-info,
+#gameContainer:not(.active) .level-indicator {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hud-top {
+        padding: 0 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hud-top {
+        padding: 0 10px;
+        gap: 5px;
+    }
+}
+
+.score-display {
+    font-size: 1.5rem;
+    color: #00AA00;
+    text-shadow: 0 0 10px #8B4513;
+}
+
+@media (max-width: 768px) {
+    .score-display {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .score-display {
+        font-size: 1rem;
+    }
+}
+
+/* Health Bar Container */
+.health-bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.health-label {
+    font-size: 0.7rem;
+    color: #556B2F;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.health-bar {
+    width: 150px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #556B2F;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+}
+
+@media (max-width: 768px) {
+    .health-bar {
+        width: 120px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .health-bar {
+        width: 100px;
+        height: 8px;
+    }
+}
+
+.health-bar-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #8B4513, #00FF00);
+    border-radius: 4px;
+    transition: width 0.3s ease, background 0.3s ease;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.health-value {
+    font-size: 1rem;
+    color: #556B2F;
+    font-weight: bold;
+    text-shadow: 0 0 5px #556B2F;
+}
+
+@media (max-width: 480px) {
+    .health-value {
+        font-size: 0.8rem;
+    }
+}
+
+/* Multiplier Container with Beat Effect */
+.multiplier-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.multiplier-pulse {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 20, 40, 0.9);
+    border: 2px solid #556B2F;
+    border-radius: 5px;
+    transition: all 0.15s ease-out;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+}
+
+.multiplier-pulse::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 150, 255, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    animation: multiplierGlowPulse 2s ease-in-out infinite;
+}
+
+@keyframes multiplierGlowPulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.2);
+    }
+}
+
+.multiplier-pulse.beat-active {
+    transform: scale(1.15);
+    box-shadow: 0 0 30px #8B4513, 0 0 60px #556B2F, 0 0 90px #00AA00;
+    background: rgba(0, 150, 255, 0.35);
+    border-color: #00AA00;
+}
+
+.multiplier-label {
+    font-size: 0.7rem;
+    color: #556B2F;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.2rem;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.multiplier-display {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00AA00;
+    text-shadow: 
+        0 0 10px #556B2F,
+        0 0 20px #556B2F,
+        0 0 30px #8B4513,
+        0 0 40px #00AA00;
+    transition: transform 0.15s ease-out;
+    position: relative;
+    z-index: 1;
+}
+
+.multiplier-pulse.beat-active .multiplier-display {
+    transform: scale(1.3);
+    color: #00FF00;
+    text-shadow: 
+        0 0 15px #00AA00,
+        0 0 30px #8B4513,
+        0 0 45px #556B2F,
+        0 0 60px #00FF00;
+}
+
+.song-info {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 60;
+    width: 90%;
+    max-width: 800px;
+}
+
+.song-title {
+    font-size: 1.5rem;
+    color: #8B4513;
+    text-shadow: 0 0 10px #556B2F;
+    margin-bottom: 0.25rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.3;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .song-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .song-title {
+        font-size: 1rem;
+    }
+}
+
+.song-artist {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* ===================================
+   Note Highway
+   =================================== */
+
+.note-highway {
+    position: fixed;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 60vh;
+    z-index: 50;
+    background: linear-gradient(180deg, 
+        rgba(0, 5, 10, 0.9) 0%, 
+        rgba(0, 20, 40, 0.7) 50%, 
+        rgba(0, 5, 10, 0.9) 100%);
+    border-left: 2px solid rgba(0, 150, 255, 0.4);
+    border-right: 2px solid rgba(0, 150, 255, 0.4);
+    box-shadow: 0 0 30px rgba(0, 150, 255, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+}
+
+/* Hide note highway when game container is not active */
+#gameContainer:not(.active) .note-highway,
+#gameContainer:not(.active) .fret-buttons {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .note-highway {
+        width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .note-highway {
+        width: 280px;
+        top: 180px;
+        height: 50vh;
+    }
+}
+
+.fret-lanes {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.fret-lane {
+    flex: 1;
+    border-right: 1px solid rgba(0, 150, 255, 0.15);
+}
+
+.fret-lane:last-child {
+    border-right: none;
+}
+
+.target-line {
+    position: absolute;
+    bottom: 150px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        #00AA00, 
+        transparent);
+    box-shadow: 0 0 20px #00AA00;
+    animation: targetLinePulse 1s ease-in-out infinite;
+}
+
+@keyframes targetLinePulse {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.note {
+    position: absolute;
+    width: 60px;
+    height: 20px;
+    border-radius: 5px;
+    transform: translateX(-50%);
+    box-shadow: 0 0 15px currentColor;
+    z-index: 51;
+}
+
+@media (max-width: 480px) {
+    .note {
+        width: 45px;
+        height: 16px;
+    }
+}
+
+.note.green {
+    background: #00FF00;
+    color: #00FF00;
+}
+
+.note.red {
+    background: #FF0000;
+    color: #FF0000;
+}
+
+.note.yellow {
+    background: #00AA00;
+    color: #00AA00;
+}
+
+.note.blue {
+    background: #8B4513;
+    color: #8B4513;
+}
+
+.note.orange {
+    background: #A0522D;
+    color: #A0522D;
+}
+
+.note.hit {
+    animation: noteHit 0.2s ease-out forwards;
+}
+
+@keyframes noteHit {
+    0% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.note.miss {
+    animation: noteMiss 0.3s ease-out forwards;
+}
+
+@keyframes noteMiss {
+    0% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50%) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Health Notes */
+.note.health {
+    border: 3px solid #00FF00;
+    box-shadow: 0 0 20px #00FF00, inset 0 0 10px #00FF00;
+}
+
+.health-indicator {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #00FF00;
+    font-size: 32px;
+    font-weight: bold;
+    text-shadow: 0 0 15px #00FF00, 0 0 30px #00FF00, 0 0 45px #00FF00;
+    animation: healthPulse 0.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes healthPulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(-50%) scale(1.3);
+        opacity: 0.7;
+    }
+}
+
+/* ===================================
+   Fret Buttons
+   =================================== */
+
+.fret-buttons {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 60;
+}
+
+@media (max-width: 768px) {
+    .fret-buttons {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fret-buttons {
+        gap: 8px;
+        bottom: 30px;
+    }
+}
+
+.fret-button {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid currentColor;
+    background: rgba(0, 5, 10, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    color: currentColor;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+}
+
+@media (max-width: 768px) {
+    .fret-button {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fret-button {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+.fret-button span:first-child {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .fret-button span:first-child {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .fret-button span:first-child {
+        font-size: 1.2rem;
+    }
+}
+
+.fret-button-key {
+    font-size: 0.7rem;
+    margin-top: 2px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
+    .fret-button-key {
+        font-size: 0.6rem;
+    }
+}
+
+.fret-button.green {
+    color: #00FF00;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+}
+
+.fret-button.red {
+    color: #FF0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+}
+
+.fret-button.yellow {
+    color: #00AA00;
+    box-shadow: 0 0 15px rgba(255, 232, 31, 0.4);
+}
+
+.fret-button.blue {
+    color: #8B4513;
+    box-shadow: 0 0 15px rgba(0, 150, 255, 0.4);
+}
+
+.fret-button.orange {
+    color: #A0522D;
+    box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+}
+
+.fret-button.pressed {
+    transform: scale(0.9);
+    box-shadow: 0 0 30px currentColor;
+}
+
+/* ===================================
+   Bottom HUD
+   =================================== */
+
+.hud-bottom {
+    position: fixed;
+    bottom: 130px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    z-index: 60;
+}
+
+@media (max-width: 768px) {
+    .hud-bottom {
+        bottom: 110px;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hud-bottom {
+        bottom: 100px;
+        padding: 0 10px;
+    }
+}
+
+.combo-display {
+    font-size: 2rem;
+    color: #00AA00;
+    text-shadow: 0 0 10px #8B4513;
+    animation: comboGlow 0.3s ease-out;
+}
+
+@media (max-width: 768px) {
+    .combo-display {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .combo-display {
+        font-size: 1.3rem;
+    }
+}
+
+@keyframes comboGlow {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.progress-bar {
+    width: 300px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 768px) {
+    .progress-bar {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .progress-bar {
+        width: 150px;
+    }
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8B4513, #00AA00);
+    border-radius: 5px;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 10px #00AA00;
+}
+
+/* ===================================
+   Visual Feedback
+   =================================== */
+
+.hit-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    z-index: 70;
+    animation: hitFeedbackAnim 0.5s ease-out forwards;
+}
+
+@media (max-width: 768px) {
+    .hit-feedback {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hit-feedback {
+        font-size: 2rem;
+    }
+}
+
+@keyframes hitFeedbackAnim {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
+    }
+}
+
+.hit-feedback.perfect {
+    color: #00AA00;
+    text-shadow: 0 0 30px #00AA00;
+}
+
+.hit-feedback.great {
+    color: #00FF00;
+    text-shadow: 0 0 30px #00FF00;
+}
+
+.hit-feedback.good {
+    color: #A0522D;
+    text-shadow: 0 0 30px #A0522D;
+}
+
+.screen-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 232, 31, 0.3);
+    z-index: 65;
+    animation: screenFlashAnim 0.1s ease-out forwards;
+}
+
+@keyframes screenFlashAnim {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.screen-darken {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 65;
+    animation: screenDarkenAnim 0.3s ease-out forwards;
+}
+
+@keyframes screenDarkenAnim {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* ===================================
+   Pause Menu
+   =================================== */
+
+.pause-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    background: rgba(0, 5, 10, 0.98);
+    border: 2px solid #556B2F;
+    border-radius: 5px;
+    padding: 2rem;
+    text-align: center;
+    display: none;
+    box-shadow: 0 0 50px rgba(0, 150, 255, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+.pause-menu.active {
+    display: block;
+    animation: menuFadeIn 0.3s ease-out;
+}
+
+@keyframes menuFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.pause-title {
+    font-size: 2rem;
+    color: #00AA00;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px #8B4513;
+}
+
+@media (max-width: 768px) {
+    .pause-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pause-title {
+        font-size: 1.5rem;
+    }
+}
+
+.game-over-title {
+    color: #FF0000 !important;
+    text-shadow: 
+        0 0 10px #FF0000,
+        0 0 20px #A0522D,
+        0 0 30px #00AA00,
+        0 0 40px #8B4513 !important;
+    animation: gameOverPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes gameOverPulse {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 10px #FF0000,
+            0 0 20px #A0522D,
+            0 0 30px #00AA00,
+            0 0 40px #8B4513;
+    }
+    50% {
+        transform: scale(1.05);
+        text-shadow: 
+            0 0 20px #FF0000,
+            0 0 40px #A0522D,
+            0 0 60px #00AA00,
+            0 0 80px #8B4513;
+    }
+}
+
+.final-score {
+    margin-bottom: 1.5rem;
+}
+
+.score-label {
+    font-size: 0.9rem;
+    color: #555;
+    text-transform: uppercase;
+}
+
+.score-value {
+    font-size: 3rem;
+    color: #00AA00;
+    text-shadow: 0 0 20px #8B4513;
+}
+
+@media (max-width: 768px) {
+    .score-value {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .score-value {
+        font-size: 2rem;
+    }
+}
+
+.final-stats {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(0, 20, 40, 0.8);
+    border: 1px solid #556B2F;
+    border-radius: 5px;
+}
+
+.final-stats p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 480px) {
+    .final-stats p {
+        font-size: 1rem;
+    }
+}
+
+.final-stats span {
+    color: #00AA00;
+    font-weight: bold;
+}
+
+/* ===================================
+   Hidden States
+   =================================== */
+
+.hidden {
+    display: none !important;
+}
+
+/* Ensure main menu is visible by default */
+#mainMenu {
+    display: block;
+}
+
+/* Ensure game container is hidden by default */
+#gameContainer {
+    display: none;
+}
+
+#gameContainer.active {
+    display: block;
+}
+
+/* ===================================
+   File Upload Container
+   =================================== */
+
+.file-upload-container {
+    margin-bottom: 1rem;
+}
+
+.upload-info {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 0.5rem;
+}
+
+/* ===================================
+   Player Profile Display
+   =================================== */
+
+.player-profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: rgba(0, 10, 20, 0.9);
+    border: 2px solid #556B2F;
+    border-radius: 5px;
+    padding: 1rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.profile-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #556B2F, #8B4513);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    box-shadow: 0 0 15px rgba(0, 150, 255, 0.5);
+    animation: profileGlow 3s ease-in-out infinite;
+    overflow: hidden;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-emoji {
+    position: absolute;
+}
+
+.auth-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 20, 40, 0.9);
+    border: 2px solid #00AA00;
+    color: #00AA00;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+.auth-button:hover {
+    background: rgba(255, 232, 31, 0.2);
+    box-shadow: 0 0 20px #00AA00;
+    transform: scale(1.05);
+    border-color: #00AA00;
+}
+
+@keyframes profileGlow {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(0, 150, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(0, 150, 255, 0.8), 0 0 35px rgba(255, 232, 31, 0.5);
+    }
+}
+
+.player-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.player-level {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.player-level .level-label {
+    font-size: 0.8rem;
+    color: #556B2F;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.player-level .level-number {
+    font-size: 1.8rem;
+    color: #00AA00;
+    font-weight: bold;
+    text-shadow: 0 0 10px #8B4513;
+}
+
+.player-xp {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.xp-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #556B2F;
+}
+
+.xp-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #8B4513, #00AA00, #A0522D);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px #00AA00;
+}
+
+.xp-text {
+    font-size: 0.8rem;
+    color: #00AA00;
+    font-weight: bold;
+}
+
+/* ===================================
+   Loading Screen
+   =================================== */
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.98);
+    z-index: 300;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.loading-screen.active {
+    display: flex;
+}
+
+.loading-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 2rem auto;
+    border: 4px solid rgba(0, 150, 255, 0.2);
+    border-top-color: #00AA00;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.4);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-title {
+    font-size: 2rem;
+    color: #00AA00;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px #8B4513;
+}
+
+.loading-text {
+    font-size: 1.2rem;
+    color: #8B4513;
+    margin-bottom: 2rem;
+}
+
+.loading-bar {
+    width: 300px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.loading-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #8B4513, #00AA00, #A0522D);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px #00AA00;
+    animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 20px #00AA00;
+    }
+}
+
+/* ===================================
+   Leaderboard Modal
+   =================================== */
+
+.leaderboard-content {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+}
+
+.leaderboard-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.leaderboard-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 10, 20, 0.8);
+    border: 2px solid #556B2F;
+    color: #00AA00;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.leaderboard-tab:hover {
+    background: rgba(0, 150, 255, 0.2);
+}
+
+.leaderboard-tab.active {
+    background: rgba(0, 150, 255, 0.3);
+    box-shadow: 0 0 15px #00AA00;
+    border-color: #00AA00;
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(0, 5, 10, 0.5);
+    border: 1px solid #003366;
+    border-radius: 5px;
+    min-height: 200px;
+}
+
+.leaderboard-entry {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    background: rgba(0, 20, 40, 0.6);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.leaderboard-entry:hover {
+    background: rgba(0, 150, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.leaderboard-entry.player-entry {
+    border-color: #00AA00;
+    box-shadow: 0 0 10px rgba(255, 232, 31, 0.3);
+}
+
+.leaderboard-rank {
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 40px;
+    text-align: center;
+    color: #556B2F;
+}
+
+.leaderboard-rank.rank-1 {
+    color: #FFD700;
+    text-shadow: 0 0 10px #FFD700;
+}
+
+.leaderboard-rank.rank-2 {
+    color: #C0C0C0;
+    text-shadow: 0 0 10px #C0C0C0;
+}
+
+.leaderboard-rank.rank-3 {
+    color: #CD7F32;
+    text-shadow: 0 0 10px #CD7F32;
+}
+
+.leaderboard-player {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.leaderboard-name {
+    font-size: 1.1rem;
+    color: #00AA00;
+    font-weight: bold;
+}
+
+.leaderboard-difficulty {
+    font-size: 0.8rem;
+    color: #555;
+    text-transform: uppercase;
+}
+
+.leaderboard-score {
+    font-size: 1.3rem;
+    color: #00AA00;
+    font-weight: bold;
+    text-shadow: 0 0 10px #8B4513;
+}
+
+.leaderboard-empty {
+    text-align: center;
+    color: #555;
+    padding: 2rem;
+    font-size: 1.1rem;
+}
+
+/* ===================================
+   Hold Notes
+   =================================== */
+
+.note.hold {
+    height: 60px;
+    border-radius: 5px;
+    animation: holdNoteGlow 1s ease-in-out infinite;
+}
+
+@media (max-width: 480px) {
+    .note.hold {
+        height: 50px;
+    }
+}
+
+.note.hold.green {
+    box-shadow: 0 0 20px #00FF00, 0 0 40px rgba(0, 255, 0, 0.4);
+}
+
+.note.hold.red {
+    box-shadow: 0 0 20px #FF0000, 0 0 40px rgba(255, 0, 0, 0.4);
+}
+
+.note.hold.yellow {
+    box-shadow: 0 0 20px #00AA00, 0 0 40px rgba(255, 232, 31, 0.4);
+}
+
+.note.hold.blue {
+    box-shadow: 0 0 20px #8B4513, 0 0 40px rgba(0, 150, 255, 0.4);
+}
+
+.note.hold.orange {
+    box-shadow: 0 0 20px #A0522D, 0 0 40px rgba(255, 107, 0, 0.4);
+}
+
+@keyframes holdNoteGlow {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 20px currentColor, 0 0 40px rgba(0, 150, 255, 0.3);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 30px currentColor, 0 0 60px rgba(0, 150, 255, 0.5);
+    }
+}
+
+.note.hold.holding {
+    background: linear-gradient(180deg, #00AA00, #8B4513) !important;
+    box-shadow: 0 0 40px #00AA00, 0 0 80px #8B4513 !important;
+    animation: holdNotePulse 0.5s ease-in-out infinite;
+}
+
+@keyframes holdNotePulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1.05);
+    }
+    50% {
+        transform: translateX(-50%) scale(1.15);
+    }
+}
+
+/* Hold track for visual feedback */
+.hold-track {
+    position: absolute;
+    width: 60px;
+    height: 0;
+    background: linear-gradient(180deg, rgba(255, 232, 31, 0.6), rgba(0, 150, 255, 0.3));
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 50;
+    transition: height 0.1s linear;
+}
+
+@media (max-width: 480px) {
+    .hold-track {
+        width: 45px;
+    }
+}
+
+/* ===================================
+   RESPONSIVE FIXES FOR MOBILE
+   =================================== */
+
+/* Make pause menus (including level select) responsive */
+.pause-menu {
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+/* Fix the level grid for mobile */
+.level-grid {
+    grid-template-columns: repeat(5, 1fr) !important; /* Reduce from 10 columns */
+    gap: 12px;
+    max-width: 100%;
+    max-height: none;
+    padding: 15px;
+}
+
+/* Make level items a bit larger and touch-friendly */
+.level-item {
+    width: 60px;
+    height: 60px;
+    font-size: 1.2rem;
+}
+
+/* Tablet and smaller screens */
+@media (max-width: 768px) {
+    .level-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 10px;
+    }
+    
+    .level-item {
+        width: 55px;
+        height: 55px;
+        font-size: 1.1rem;
+    }
+    
+    .menu-button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        min-width: 220px;
+    }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+    .level-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px;
+        padding: 10px;
+    }
+    
+    .level-item {
+        width: 70px;
+        height: 70px;
+        font-size: 1.3rem;
+    }
+    
+    .pause-title {
+        font-size: 1.8rem;
+    }
+    
+    .menu-button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        min-width: 220px;
+    }
+}
+
+/* Very small phones – stack in 2 columns for better tapping */
+@media (max-width: 360px) {
+    .level-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px;
+    }
+    
+    .level-item {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Improve mobile game layout visibility */
+@media (max-width: 768px) {
+    /* Adjust note highway position */
+    .note-highway {
+        top: 200px;
+        height: 50vh;
+    }
+    
+    /* Adjust character position */
+    .character {
+        bottom: 180px;
+    }
+    
+    /* Adjust target line */
+    .target-line {
+        bottom: 180px;
+    }
+    
+    /* Adjust fret buttons */
+    .fret-buttons {
+        bottom: 80px;
+        gap: 8px;
+    }
+    
+    /* Adjust bottom HUD */
+    .hud-bottom {
+        bottom: 150px;
+        padding: 0 15px;
+    }
+    
+    /* Adjust song info */
+    .song-info {
+        top: 120px;
+        width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further adjustments for small phones */
+    .note-highway {
+        top: 220px;
+        height: 45vh;
+        width: 280px;
+    }
+    
+    .character {
+        bottom: 160px;
+    }
+    
+    .character-sprite {
+        width: 60px;
+        height: 90px;
+    }
+    
+    .target-line {
+        bottom: 160px;
+    }
+    
+    .fret-buttons {
+        bottom: 70px;
+        gap: 5px;
+    }
+    
+    .hud-bottom {
+        bottom: 130px;
+        padding: 0 10px;
+    }
+    
+    .combo-display {
+        font-size: 1.3rem;
+    }
+    
+    .song-info {
+        top: 140px;
+    }
+}
+
+/* Ensure elements don't overlap on mobile */
+@media (max-width: 480px) {
+    .level-indicator {
+        top: 60px;
+        right: 10px;
+    }
+    
+    .level-number {
+        font-size: 1.5rem;
+    }
+    
+    /* Adjust player profile for mobile */
+    .player-profile {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .profile-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+    
+    .player-level .level-number {
+        font-size: 1.5rem;
+    }
+    
+    .xp-bar {
+        width: 200px;
+    }
+    
+    /* Adjust loading screen for mobile */
+    .loading-bar {
+        width: 200px;
+    }
+    
+    .loading-title {
+        font-size: 1.5rem;
+    }
+    
+    .loading-text {
+        font-size: 1rem;
+    }
+}
+
+/* ===================================
+   THEME MENU STYLES
+   =================================== */
+
+.theme-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(0, 10, 20, 0.9);
+    border: 2px solid rgba(0, 85, 170, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-option:hover {
+    border-color: rgba(255, 232, 31, 0.5);
+    background: rgba(255, 232, 31, 0.15);
+    transform: translateY(-2px);
+}
+
+.theme-option.selected {
+    border-color: #00AA00;
+    background: rgba(255, 232, 31, 0.2);
+    box-shadow: 0 0 20px rgba(255, 232, 31, 0.3);
+}
+
+.theme-option.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.theme-option.locked:hover {
+    transform: none;
+    background: rgba(0, 10, 20, 0.9);
+}
+
+.theme-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+    margin-right: 1.5rem;
+    border: 2px solid rgba(0, 85, 170, 0.3);
+}
+
+.neon-preview {
+    background: linear-gradient(135deg, #0a0a0a, #1a0a2e);
+    position: relative;
+    overflow: hidden;
+}
+
+.neon-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00FFFF, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00FFFF;
+}
+
+.star-wars-preview {
+    background: linear-gradient(135deg, #000000, #001a33);
+    position: relative;
+    overflow: hidden;
+}
+
+.star-wars-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+
+.dark-souls-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2d1f1f);
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-souls-preview::before {
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    content: '';
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    position: absolute;
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    top: 50%;
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    left: 50%;
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    transform: translate(-50%, -50%);
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    width: 40px;
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    height: 40px;
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    background: radial-gradient(circle, #ff4d4d, transparent);
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    border-radius: 50%;
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+    box-shadow: 0 0 20px #ff4d4d;
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+}
+
+.final-fantasy-preview {
+    background: linear-gradient(135deg, #000000, #1a0033);
+    position: relative;
+    overflow: hidden;
+}
+
+.final-fantasy-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FFD700, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.call-of-duty-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2F4F2F);
+    position: relative;
+    overflow: hidden;
+}
+
+.call-of-duty-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #FF4500, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FF4500;
+}
+
+.minecraft-preview {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+}
+
+.minecraft-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+
+.avatar-preview {
+    background: linear-gradient(135deg, #001a1a, #003333);
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-preview::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00AA00, transparent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00AA00;
+}
+
+.theme-info {
+    flex: 1;
+}
+
+.theme-info h3 {
+    font-size: 1.5rem;
+    color: #00AA00;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+    font-family: 'Orbitron', sans-serif;
+}
+
+.theme-info p {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.theme-select-btn {
+    padding: 0.5rem 1.5rem;
+    background: rgba(0, 20, 40, 0.9);
+    border: 2px solid #00AA00;
+    border-radius: 5px;
+    color: #00AA00;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+.theme-select-btn:hover:not(:disabled) {
+    background: rgba(255, 232, 31, 0.4);
+    box-shadow: 0 0 15px rgba(255, 232, 31, 0.5);
+}
+
+.theme-select-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #444;
+    color: #555;
+}
+
+.unlock-progress {
+    background: rgba(0, 10, 20, 0.9);
+    padding: 1.5rem;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 85, 170, 0.3);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+.unlock-progress h3 {
+    color: #00AA00;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    text-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+    font-family: 'Orbitron', sans-serif;
+}
+
+.unlock-progress p {
+    color: #888;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 85, 170, 0.3);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8B4513, #00AA00);
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 232, 31, 0.5);
+}
+
+.rainbow-six-siege-preview {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, #FF6B00 0%, #1A1A1A 70%);
+    border: 3px solid #FF6B00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #FF6B00;
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.6);
+}
+
+.sonic-preview {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, #FFCC00 0%, #0066CC 70%);
+    border: 4px solid #FFCC00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #FFCC00;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.8), 0 0 40px rgba(0, 102, 204, 0.4);
+}
+
+.warcraft-preview {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, #FFD700 0%, #00AA00 70%);
+    border: 3px solid #FFD700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #FFD700;
+    box-shadow: 0 0 20px rgba(0, 170, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.5);
+}
+
+/* ============================
+   MOBILE OPTIMIZATIONS
+   ============================ */
+
+/* Fix the level grid for mobile */
+.level-grid {
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 12px;
+    max-width: 100%;
+    max-height: none;
+    padding: 15px;
+}
+
+/* Make level items a bit larger and touch-friendly */
+.level-item {
+    width: 60px;
+    height: 60px;
+    font-size: 1.2rem;
+}
+
+/* Tablet and smaller screens */
+@media (max-width: 768px) {
+    .level-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 10px;
+    }
+    
+    .level-item {
+        width: 55px;
+        height: 55px;
+        font-size: 1.1rem;
+    }
+    
+    .menu-button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        min-width: 220px;
+    }
+    
+    .minecraft-title {
+        animation-duration: 3s;
+    }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+    .level-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px;
+        padding: 10px;
+    }
+    
+    .level-item {
+        width: 70px;
+        height: 70px;
+        font-size: 1.3rem;
+    }
+    
+    .pause-title {
+        font-size: 1.8rem;
+    }
+    
+    .menu-button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        min-width: 220px;
+    }
+    
+    .minecraft-title {
+        font-size: 2rem;
+        letter-spacing: 2px;
+        animation: none;
+    }
+    
+    .game-over-title {
+        font-size: 1.8rem;
+        animation: none;
+    }
+    
+    .game-container {
+        box-shadow: 0 0 15px var(--minecraft-green), inset 0 0 25px rgba(0, 170, 0, 0.1);
+    }
+    
+    .theme-store-container,
+    .menu-container {
+        box-shadow: 0 0 15px rgba(0, 170, 0, 0.2);
+    }
+    
+    .star-wars-preview,
+    .neon-preview,
+    .dark-souls-preview,
+    .avatar-preview,
+    .final-fantasy-preview,
+    .call-of-duty-preview,
+    .minecraft-preview,
+    .rainbow-six-siege-preview,
+    .sonic-preview,
+    .warcraft-preview {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        box-shadow: 0 0 10px currentColor;
+    }
+    
+    .star-wars-preview:hover,
+    .neon-preview:hover,
+    .dark-souls-preview:hover,
+    .avatar-preview:hover,
+    .final-fantasy-preview:hover,
+    .call-of-duty-preview:hover,
+    .minecraft-preview:hover,
+    .rainbow-six-siege-preview:hover,
+    .sonic-preview:hover,
+    .warcraft-preview:hover {
+        transform: none;
+        box-shadow: 0 0 15px currentColor;
+    }
+    
+    .stats-display,
+    .achievements-section,
+    .help-section {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .player-profile {
+        padding: 10px;
+    }
+    
+    .player-name {
+        font-size: 1.1rem;
+    }
+    
+    .player-score {
+        font-size: 1rem;
+    }
+    
+    .loading-text {
+        font-size: 1.2rem;
+    }
+    
+    .theme-option {
+        padding: 10px;
+        margin: 8px 0;
+    }
+    
+    .theme-progress-bar {
+        height: 6px;
+    }
+    
+    .modal-content {
+        padding: 15px;
+        max-width: 90%;
+    }
+    
+    .modal-title {
+        font-size: 1.4rem;
+    }
+    
+    .notification {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+    
+    button:hover,
+    .menu-button:hover {
+        transform: none;
+    }
+    
+    .level-item.locked,
+    .level-item.completed,
+    .level-item.current {
+        background: var(--minecraft-olive);
+    }
+    
+    .level-item.completed {
+        border-color: var(--minecraft-green);
+    }
+    
+    .level-item.current {
+        border-color: var(--minecraft-saddle-brown);
+    }
+}
+
+@media (max-width: 360px) {
+    .level-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px;
+    }
+    
+    .level-item {
+        width: 60px;
+        height: 60px;
+        font-size: 1.1rem;
+    }
+    
+    .minecraft-title {
+        font-size: 1.5rem;
+    }
+    
+    .menu-button {
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+        min-width: 180px;
+    }
+}
