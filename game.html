@@ -108,96 +108,110 @@ window.firebaseDocs = { doc, getDoc, setDoc, updateDoc, collection, query, order
         </div>
     </div>
 
-<div class="theme-list">
-  <div class="theme-option" data-theme="neon" id="neon-theme">
-    <div class="theme-preview neon-preview"></div>
-    <div class="theme-info">
-      <h3>Neon Nightmare</h3>
-      <p>Neon Cyberpunk Theme</p>
-    </div>
-    <button class="theme-select-btn">✓ Selected</button>
-  </div>
+<!-- Theme Select Modal -->
+<div class="pause-menu" id="themeMenu" style="display: none;">
+    <h2 class="pause-title">🎨 THEMES & UNLOCKABLES</h2>
+    <div class="theme-list">
+        <div class="theme-option" data-theme="neon" id="neon-theme">
+            <div class="theme-preview neon-preview"></div>
+            <div class="theme-info">
+                <h3>Neon Nightmare</h3>
+                <p>Neon Cyberpunk Theme</p>
+            </div>
+            <button class="theme-select-btn">✓ Selected</button>
+        </div>
 
-  <div class="theme-option" data-theme="rainbow-six-siege" id="rainbow-six-siege-theme">
-    <div class="theme-preview rainbow-six-siege-preview"></div>
-    <div class="theme-info">
-      <h3>Siege Ops</h3>
-      <p>🔒 Unlock at 50,000 points</p>
-    </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+        <div class="theme-option" data-theme="rainbow-six-siege" id="rainbow-six-siege-theme">
+            <div class="theme-preview rainbow-six-siege-preview"></div>
+            <div class="theme-info">
+                <h3>Siege Ops</h3>
+                <p>🔒 Unlock at 50,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
 
-  <div class="theme-option" data-theme="star-wars" id="star-wars-theme">
-    <div class="theme-preview star-wars-preview"></div>
-    <div class="theme-info">
-      <h3>Galactic Wars</h3>
-      <p>🔒 Unlock at 150,000 points</p>
-    </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+        <div class="theme-option" data-theme="star-wars" id="star-wars-theme">
+            <div class="theme-preview star-wars-preview"></div>
+            <div class="theme-info">
+                <h3>Galactic Wars</h3>
+                <p>🔒 Unlock at 150,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
 
-  <div class="theme-option" data-theme="sonic" id="sonic-theme">
-    <div class="theme-preview sonic-preview"></div>
-    <div class="theme-info">
-      <h3>Speed Demon</h3>
-      <p>🔒 Unlock at 400,000 points</p>
-    </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+        <div class="theme-option" data-theme="sonic" id="sonic-theme">
+            <div class="theme-preview sonic-preview"></div>
+            <div class="theme-info">
+                <h3>Speed Demon</h3>
+                <p>🔒 Unlock at 400,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
 
-  <div class="theme-option" data-theme="dark-souls" id="dark-souls-theme">
-    <div class="theme-preview dark-souls-preview"></div>
-    <div class="theme-info">
-      <h3>Souls Nightmare</h3>
-      <p>🔒 Unlock at 1,000,000 points</p>
-    </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+        <div class="theme-option" data-theme="dark-souls" id="dark-souls-theme">
+            <div class="theme-preview dark-souls-preview"></div>
+            <div class="theme-info">
+                <h3>Souls Nightmare</h3>
+                <p>🔒 Unlock at 1,000,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
 
-  <div class="theme-option" data-theme="warcraft" id="warcraft-theme">
-    <div class="theme-preview warcraft-preview"></div>
-    <div class="theme-info">
-      <h3>Realms of War</h3>
-      <p>🔒 Unlock at 2,000,000 points</p>
-    </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+        <div class="theme-option" data-theme="warcraft" id="warcraft-theme">
+            <div class="theme-preview warcraft-preview"></div>
+            <div class="theme-info">
+                <h3>Realms of War</h3>
+                <p>🔒 Unlock at 2,000,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
 
-  <div class="theme-option" data-theme="avatar" id="avatar-theme">
-    <div class="theme-preview avatar-preview"></div>
-    <div class="theme-info">
-      <h3>Pandora</h3>
-      <p>🔒 Unlock at 3,500,000 points</p>
-    </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+        <div class="theme-option" data-theme="avatar" id="avatar-theme">
+            <div class="theme-preview avatar-preview"></div>
+            <div class="theme-info">
+                <h3>Pandora</h3>
+                <p>🔒 Unlock at 3,500,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
 
-  <div class="theme-option" data-theme="final-fantasy" id="final-fantasy-theme">
-    <div class="theme-preview final-fantasy-preview"></div>
-    <div class="theme-info">
-      <h3>Crystal Chronicles</h3>
-      <p>🔒 Unlock at 6,000,000 points</p>
-    </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+        <div class="theme-option" data-theme="final-fantasy" id="final-fantasy-theme">
+            <div class="theme-preview final-fantasy-preview"></div>
+            <div class="theme-info">
+                <h3>Crystal Chronicles</h3>
+                <p>🔒 Unlock at 6,000,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
 
-  <div class="theme-option" data-theme="call-of-duty" id="call-of-duty-theme">
-    <div class="theme-preview call-of-duty-preview"></div>
-    <div class="theme-info">
-      <h3>Modern Warfare</h3>
-      <p>🔒 Unlock at 10,000,000 points</p>
-    </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+        <div class="theme-option" data-theme="call-of-duty" id="call-of-duty-theme">
+            <div class="theme-preview call-of-duty-preview"></div>
+            <div class="theme-info">
+                <h3>Modern Warfare</h3>
+                <p>🔒 Unlock at 10,000,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
 
-  <div class="theme-option" data-theme="minecraft" id="minecraft-theme">
-    <div class="theme-preview minecraft-preview"></div>
-    <div class="theme-info">
-      <h3>Block Wars</h3>
-      <p>🔒 Unlock at 15,000,000 points</p>
+        <div class="theme-option" data-theme="minecraft" id="minecraft-theme">
+            <div class="theme-preview minecraft-preview"></div>
+            <div class="theme-info">
+                <h3>Block Wars</h3>
+                <p>🔒 Unlock at 15,000,000 points</p>
+            </div>
+            <button class="theme-select-btn" disabled>🔒 Locked</button>
+        </div>
     </div>
-    <button class="theme-select-btn" disabled>🔒 Locked</button>
-  </div>
+
+    <div class="unlock-progress">
+        <h3>Unlock Progress</h3>
+        <p>High Score: <span id="unlockScore">0</span></p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <button class="menu-button" id="closeThemes">← Back</button>
 </div>
         <div class="unlock-progress">
             <h3>Unlock Progress</h3>
