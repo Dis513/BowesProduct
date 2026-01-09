@@ -30,7 +30,7 @@ class MultiplayerManager {
             // Initialize Colyseus client
             // Force update to new server URL
             localStorage.removeItem('colyseusServer');
-            const serverUrl = 'https://dis513.github.io/BowesProduct/game.html';
+            const serverUrl = 'ws://localhost:2567';
             this.client = new Colyseus.Client(serverUrl);
             
             console.log('Colyseus client initialized');
