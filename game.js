@@ -720,14 +720,26 @@ document.addEventListener('click', (e) => {
                 });
                 button.addEventListener('mouseup', () => this.handleFretRelease(fret));
                 button.addEventListener('mouseleave', () => this.handleFretRelease(fret));
-                
-                // Touch events - Enhanced with better debugging
-                button.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log(`Touch start on ${fret} button`);
-                    this.handleFretPress(fret);
-                }, { passive: false });
+              // BETTER MOBILE TOUCH (2026 standard)
+button.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  console.log(`✅ TOUCH START ${fret}`);
+  this.handleFretPress(fret);
+}, { passive: false });
+
+button.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  console.log(`✅ TOUCH END ${fret}`);
+  this.handleFretRelease(fret);
+}, { passive: false });
+
+button.addEventListener('touchcancel', (e) => {
+  e.preventDefault();
+  console.log(`⚠️ TOUCH CANCEL ${fret}`);
+  this.handleFretRelease(fret);
+}, { passive: false });
                 
                 button.addEventListener('touchend', (e) => {
                     e.preventDefault();
