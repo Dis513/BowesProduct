@@ -2655,3 +2655,82 @@ body {
 .cutsceneContainer.active {
     pointer-events: auto;              /* only when actually visible */
 }
+/* ================================================
+   NUCLEAR CLICK FIX – LAST RESORT (Jan 2026)
+   Forces ALL buttons/menus to work – desktop + mobile
+   ================================================ */
+
+* {
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;  /* mobile */
+}
+
+/* Force ALL known interactive elements clickable */
+.menu-container,
+.menu-options,
+.menu-button,
+#uploadButton,
+#selectLevel,
+#viewLeaderboards,
+#openSettings,
+#openThemes,
+.auth-button,
+#authBtn,
+.fret-buttons,
+.fret-button,
+.theme-option,
+.theme-select-btn {
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    user-select: auto !important;
+    -webkit-user-select: auto !important;
+    z-index: 99999 !important;              /* extreme priority */
+    position: relative !important;
+}
+
+/* Kill pointer events on EVERY possible overlay/blocker */
+.void-background,
+.fog-layer,
+.parallax-layer,
+.beat-glow,
+.particles,
+.crooked-tree,
+#noteHighway,
+.hud-top,
+.hud-bottom,
+.song-info,
+.loading-screen,
+.cutscene-container,
+#themeMenu:not(.active),
+#levelSelectMenu:not(.active),
+#settingsMenu:not(.active),
+#pauseMenu:not(.active),
+#songCompleteMenu:not(.active),
+#gameOverMenu:not(.active),
+#leaderboardMenu:not(.active) {
+    pointer-events: none !important;
+}
+
+/* Re-enable ONLY when actually needed */
+#themeMenu.active,
+#levelSelectMenu.active,
+#settingsMenu.active,
+#pauseMenu.active,
+#songCompleteMenu.active,
+#gameOverMenu.active,
+#leaderboardMenu.active,
+.loading-screen.active,
+.cutscene-container.active {
+    pointer-events: auto !important;
+}
+
+/* Body & html safety net */
+body, html {
+    pointer-events: auto !important;
+    overflow: visible !important;
+}
+
+/* Debug: Make main menu buttons bright pink so you SEE them */
+.menu-button {
+    background: rgba(255, 105, 180, 0.5) !important;  /* hot pink – remove later */
+}
