@@ -695,15 +695,6 @@ document.addEventListener('click', (e) => {
             this.cutsceneVideo.addEventListener('ended', () => this.onCutsceneEnded());
         }
         
-        // Load saved theme
-        this.loadTheme();
-        this.updateThemeUnlockStatus();
-        
-        // Cutscene
-        if (this.skipCutsceneButton && this.cutsceneVideo) {
-            this.skipCutsceneButton.addEventListener('click', () => this.skipCutscene());
-            this.cutsceneVideo.addEventListener('ended', () => this.onCutsceneEnded());
-        }
         
         // Keyboard Controls
         document.addEventListener('keydown', (e) => this.handleKeyDown(e));
@@ -2043,100 +2034,18 @@ button.addEventListener('touchcancel', (e) => {
     }
 
     selectTheme(themeName) {
-        const starWarsTheme = document.getElementById('star-wars-theme');
-        const darkSoulsTheme = document.getElementById('dark-souls-theme');
-        const avatarTheme = document.getElementById('avatar-theme');
-        const finalFantasyTheme = document.getElementById('final-fantasy-theme');
-        const callOfDutyTheme = document.getElementById('call-of-duty-theme');
-        const minecraftTheme = document.getElementById('minecraft-theme');
-        const rainbowSixSiegeTheme = document.getElementById('rainbow-six-siege-theme');
-        const sonicTheme = document.getElementById('sonic-theme');
-        const warcraftTheme = document.getElementById('warcraft-theme');
-        
-        // Check if Rainbow Six Siege theme is locked
-        if (themeName === 'rainbow-six-siege') {
-            const highScore = this.getHighScore();
-            if (highScore < 100000) {
-                alert('🔒 Siege Ops theme is locked! Score 100,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        // Check if Star Wars theme is locked
-        if (themeName === 'star-wars') {
-            const highScore = this.getHighScore();
-            if (highScore < 500000) {
-                alert('🔒 Galactic Wars theme is locked! Score 500,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        // Check if Sonic theme is locked
-        if (themeName === 'sonic') {
-            const highScore = this.getHighScore();
-            if (highScore < 2000000) {
-                alert('🔒 Speed Demon theme is locked! Score 2,000,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        // Check if Dark Souls theme is locked
-        if (themeName === 'dark-souls') {
-            const highScore = this.getHighScore();
-            if (highScore < 8000000) {
-                alert('🔒 Souls Nightmare theme is locked! Score 8,000,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        // Check if Warcraft theme is locked
-        if (themeName === 'warcraft') {
-            const highScore = this.getHighScore();
-            if (highScore < 15000000) {
-                alert('🔒 Realms of War theme is locked! Score 15,000,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        // Check if Avatar theme is locked
-        if (themeName === 'avatar') {
-            const highScore = this.getHighScore();
-            if (highScore < 25000000) {
-                alert('🔒 Pandora theme is locked! Score 25,000,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        // Check if Final Fantasy theme is locked
-        if (themeName === 'final-fantasy') {
-            const highScore = this.getHighScore();
-            if (highScore < 40000000) {
-                alert('🔒 Crystal Chronicles theme is locked! Score 40,000,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        // Check if Call of Duty theme is locked
-        if (themeName === 'call-of-duty') {
-            const highScore = this.getHighScore();
-            if (highScore < 60000000) {
-                alert('🔒 Modern Warfare theme is locked! Score 60,000,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        // Check if Minecraft theme is locked
-        if (themeName === 'minecraft') {
-            const highScore = this.getHighScore();
-            if (highScore < 80000000) {
-                alert('🔒 Block Wars theme is locked! Score 80,000,000 points to unlock it.');
-                return;
-            }
-        }
-        
-        this.applyTheme(themeName);
-        localStorage.setItem('selectedTheme', themeName);
-        
+  const highScore = this.getHighScore();
+  const required = this.themeUnlockThresholds[themeName];
+  
+  if (required && highScore < required) {
+    alert(`🔒 ${themeName.replace(/-/g, ' ').toUpperCase()} locked!\nNeed ${required.toLocaleString()} points`);
+    return;
+  }
+  
+  this.applyTheme(themeName);
+  localStorage.setItem('selectedTheme', themeName);
+  this.updateThemeUI(themeName);
+}
         // Update UI
         this.updateThemeUI(themeName);
     }
