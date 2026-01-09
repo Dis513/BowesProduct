@@ -2582,3 +2582,31 @@ body {
     color: #FFD700;
     box-shadow: 0 0 20px rgba(0, 170, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.5);
 }
+/* ───────────────────────────────────────────────
+   FIX: Make sure desktop mouse clicks always work
+   (safe override - only applies when needed)
+─────────────────────────────────────────────── */
+
+/* Guarantee buttons are clickable on desktop */
+.fret-buttons,
+.fret-button {
+    pointer-events: auto !important;
+    z-index: 1000 !important;          /* bring above everything */
+}
+
+/* STRICT touch-action ONLY on real touch devices (phones/tablets) */
+@media (hover: none) and (pointer: coarse) {
+    .fret-button,
+    .fret-buttons {
+        touch-action: manipulation !important;
+        overscroll-behavior: none !important;
+    }
+}
+
+/* Prevent HUD/note highway from stealing clicks */
+#noteHighway,
+.hud-top,
+.hud-bottom,
+.song-info {
+    pointer-events: none;
+}
