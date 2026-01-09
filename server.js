@@ -164,25 +164,46 @@ class GameState extends colyseus.Room {
     }
 }
 
+// ================================================
+//           FINAL SERVER STARTUP SECTION
+// ================================================
+
 const port = process.env.PORT || 2567;
 
-// SUPER LOUD DEBUG LOGS - you WILL see these
-console.log("=== SERVER FILE STARTING ===");
+// Print immediately so we know the file is running at all
+console.log("SERVER FILE HAS STARTED EXECUTION");
+console.log("Current working directory:", process.cwd());
 console.log("Node version:", process.version);
-console.log("Current directory:", process.cwd());
-console.log("Trying to listen on port:", port);
 
+// Make sure server is listening and tell us loudly when it does
 server.listen(port, () => {
     console.log("");
-    console.log("╔════════════════════════════════════════════╗");
-    console.log("║     🎮 COLYSEUS SERVER IS **ACTUALLY** RUNNING!    ║");
-    console.log("║                                            ║");
-    console.log(`║           Port: ${port}                           ║`);
-    console.log(`║   Test in browser: http://localhost:${port}       ║`);
-    console.log("║   Now go to game → click Create Room!      ║");
-    console.log("╚════════════════════════════════════════════╝");
+    console.log("╔════════════════════════════════════════════════════╗");
+    console.log("║                                                    ║");
+    console.log("║      🎮  COLYSEUS SERVER IS **NOW RUNNING**!       ║");
+    console.log("║                                                    ║");
+    console.log(`║               Listening on port: ${port}              ║`);
+    console.log(`║         Open browser: http://localhost:${port}         ║`);
+    console.log("║                                                    ║");
+    console.log("║   → Now go to your game and click 'Create Room'!   ║");
+    console.log("║                                                    ║");
+    console.log("╚════════════════════════════════════════════════════╝");
     console.log("");
 });
+
+// If listening fails (port busy, permission, etc.)
+server.on('error', (err) => {
+    console.error("!!! SERVER FAILED TO START !!!");
+    console.error("Error:", err.message);
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${port} is already in use!`);
+        console.error("Try closing other Node processes or change port to 3000");
+    }
+    process.exit(1);
+});
+
+console.log("server.listen() command has been executed");
+console.log("If you don't see the big box above → server didn't start properly");
 
 // Even louder: log if listen fails
 server.on('error', (err) => {
