@@ -33,6 +33,19 @@ class NeonNightmare {
             // Level System
             this.currentLevel = 1;
             this.maxLevel = 50;
+
+            // NEW: Easier theme unlocks
+this.themeUnlockThresholds = {
+  'rainbow-six-siege': 50000,
+  'star-wars': 150000,
+  'sonic': 400000,
+  'dark-souls': 1000000,
+  'warcraft': 2000000,
+  'avatar': 3500000,
+  'final-fantasy': 6000000,
+  'call-of-duty': 10000000,
+  'minecraft': 15000000
+};
             
             // Character System
             this.character = null;
@@ -660,17 +673,17 @@ class NeonNightmare {
             closeSettingsBtn.addEventListener('click', () => this.hideSettings());
         }
         
-        // Theme Selection - event delegation
-        document.addEventListener('click', (e) => {
-            const themeOption = e.target.closest('.theme-option');
-            if (!themeOption) return;
-            
-            const themeName = themeOption.dataset.theme;
-            if (themeName) {
-                console.log('Theme selected:', themeName);
-                this.selectTheme(themeName);
-            }
-        }, true);
+        // Theme Selection - event delegation (KEEP THIS)
+document.addEventListener('click', (e) => {
+    const themeOption = e.target.closest('.theme-option');
+    if (!themeOption) return;
+    
+    const themeName = themeOption.dataset.theme;
+    if (themeName) {
+        console.log('Theme selected:', themeName);
+        this.selectTheme(themeName);  // ← Calls your NEW cheaper unlock logic
+    }
+}, true);  // ← Capture phase = BETTER for mobile overlays
         
         // Load saved theme
         this.loadTheme();
