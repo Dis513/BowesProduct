@@ -6,8 +6,10 @@ const colyseus = require('colyseus');
 const http = require('http');
 const express = require('express');
 
-// Game State Schema
 class GameState extends colyseus.Room {
+    // VERY IMPORTANT: Limit to exactly 2 players
+    maxClients = 2;
+
     constructor() {
         super();
         this.players = {};
@@ -20,12 +22,20 @@ class GameState extends colyseus.Room {
 
     onCreate() {
         this.clock.setInterval(() => this.updateGameState(), 1000 / 60);
+        // Give players 30 seconds to join before room can expire
+        this.setSeatReservationTime(30);
     }
 
     onJoin(client) {
         const playerId = client.sessionId;
-        
-        // Initialize player
+
+        // Prevent same client joining twice (safety check)
+        if (this.players[playerId]) {
+            console.log(`Ignoring duplicate join from ${playerId}`);
+            return;
+        }
+
+        // Add the player
         this.players[playerId] = {
             id: playerId,
             score: 0,
@@ -35,11 +45,19 @@ class GameState extends colyseus.Room {
             connected: true
         };
 
-        this.broadcast('playerJoined', { playerId, playerCount: Object.keys(this.players).length });
-        
-        // Check if room is full (2 players)
+        console.log(`Player joined: ${playerId} | Total players now: ${Object.keys(this.players).length}`);
+
+        // Tell everyone someone joined
+        this.broadcast('playerJoined', { 
+            playerId, 
+            playerCount: Object.keys(this.players).length 
+        });
+
+        // ONLY make room ready when we have EXACTLY 2 real players
         if (Object.keys(this.players).length === 2) {
-            this.setRoomReady();
+            console.log("=== TWO REAL PLAYERS DETECTED === Room is ready!");
+            this.broadcast('roomReady', { playerCount: 2 });
+            // You can auto-start here if you want, or wait for 'setReady' messages
         }
     }
 
@@ -50,7 +68,6 @@ class GameState extends colyseus.Room {
             this.players[playerId].connected = false;
             this.broadcast('playerLeft', { playerId });
             
-            // End game if a player disconnects
             if (this.gameStatus === 'playing') {
                 this.endGame();
             }
@@ -84,9 +101,10 @@ class GameState extends colyseus.Room {
             this.players[playerId].ready = true;
             this.broadcast('playerReady', { playerId });
             
-            // Check if all players are ready
+            // Start game only when BOTH are ready
             const allReady = Object.values(this.players).every(p => p.ready);
             if (allReady && Object.keys(this.players).length === 2) {
+                console.log("Both players are ready → starting game!");
                 this.startGame();
             }
         }
