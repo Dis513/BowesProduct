@@ -37,7 +37,7 @@ class MultiplayerManager {
             console.log('Using LOCAL Colyseus server');
         } else {
             // Production / deployed URL (change this later when you host it)
-            serverUrl = 'wss://your-game-server.com'; // ← put real URL here when deployed
+            serverUrl = 'ws://localhost:2567'; // ← put real URL here when deployed
             console.log('Using PRODUCTION Colyseus server');
         }
 
