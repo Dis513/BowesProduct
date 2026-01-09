@@ -26,14 +26,39 @@ class GameState extends colyseus.Room {
         this.setSeatReservationTime(30);
     }
 
-    onJoin(client) {
-        const playerId = client.sessionId;
+  onJoin(client) {
+    const playerId = client.sessionId;
 
-        // Prevent same client joining twice (safety check)
-        if (this.players[playerId]) {
-            console.log(`Ignoring duplicate join from ${playerId}`);
-            return;
-        }
+    // Prevent duplicate joins from same client (extra safety)
+    if (this.players[playerId]) {
+        console.log(`Ignoring duplicate join attempt from ${playerId}`);
+        return;
+    }
+
+    this.players[playerId] = {
+        id: playerId,
+        score: 0,
+        combo: 0,
+        health: 100,
+        ready: false,
+        connected: true
+    };
+
+    console.log(`Player ${playerId} joined | Total: ${Object.keys(this.players).length}`);
+
+    this.broadcast('playerJoined', {
+        playerId,
+        playerCount: Object.keys(this.players).length
+    });
+
+    // ONLY show "opponent connected" and ready when REAL 2 players
+    if (Object.keys(this.players).length === 2) {
+        console.log("=== TWO DIFFERENT PLAYERS === Room ready!");
+        this.broadcast('roomReady', { playerCount: 2 });
+        // Optional: auto start after 3 seconds
+        // this.clock.setTimeout(() => this.startGame(), 3000);
+    }
+}
 
         // Add the player
         this.players[playerId] = {
