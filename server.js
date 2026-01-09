@@ -164,23 +164,36 @@ class GameState extends colyseus.Room {
     }
 }
 
-// ... all your other code above ...
-
 const port = process.env.PORT || 2567;
+
+// SUPER LOUD DEBUG LOGS - you WILL see these
+console.log("=== SERVER FILE STARTING ===");
+console.log("Node version:", process.version);
+console.log("Current directory:", process.cwd());
+console.log("Trying to listen on port:", port);
 
 server.listen(port, () => {
     console.log("");
     console.log("╔════════════════════════════════════════════╗");
+    console.log("║     🎮 COLYSEUS SERVER IS **ACTUALLY** RUNNING!    ║");
     console.log("║                                            ║");
-    console.log("║     🎮  COLYSEUS SERVER IS NOW RUNNING!    ║");
-    console.log("║                                            ║");
-    console.log(`║           Listening on port: ${port}          ║`);
-    console.log("║      Open your game → Create Room should   ║");
-    console.log("║               work now!                    ║");
-    console.log("║                                            ║");
+    console.log(`║           Port: ${port}                           ║`);
+    console.log(`║   Test in browser: http://localhost:${port}       ║`);
+    console.log("║   Now go to game → click Create Room!      ║");
     console.log("╚════════════════════════════════════════════╝");
     console.log("");
 });
+
+// Even louder: log if listen fails
+server.on('error', (err) => {
+    console.error("SERVER LISTEN ERROR:", err.message);
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${port} is already in use! Kill the process or change port.`);
+    }
+    process.exit(1);
+});
+
+console.log("=== server.listen() called - if you see this but no box → callback didn't fire!");
 const app = express();
 
 
