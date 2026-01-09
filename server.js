@@ -164,9 +164,25 @@ class GameState extends colyseus.Room {
     }
 }
 
-// Initialize Colyseus Server
+// ... all your other code above ...
+
 const port = process.env.PORT || 2567;
+
+server.listen(port, () => {
+    console.log("");
+    console.log("╔════════════════════════════════════════════╗");
+    console.log("║                                            ║");
+    console.log("║     🎮  COLYSEUS SERVER IS NOW RUNNING!    ║");
+    console.log("║                                            ║");
+    console.log(`║           Listening on port: ${port}          ║`);
+    console.log("║      Open your game → Create Room should   ║");
+    console.log("║               work now!                    ║");
+    console.log("║                                            ║");
+    console.log("╚════════════════════════════════════════════╝");
+    console.log("");
+});
 const app = express();
+
 
 // Create HTTP server
 const server = http.createServer(app);
