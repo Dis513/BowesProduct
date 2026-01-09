@@ -25,22 +25,31 @@ class MultiplayerManager {
         this.initializeUI();
     }
 
-    async initialize() {
-        try {
-            // Initialize Colyseus client
-            // Force update to new server URL
-            localStorage.removeItem('colyseusServer');
-            const serverUrl = 'wss://2567-21f97470-0a14-4362-8b9c-029b3fe4ef0e.sandbox-service.public.prod.myninja.ai';
-            this.client = new Colyseus.Client(serverUrl);
-            
-            console.log('Colyseus client initialized');
-            return true;
-        } catch (error) {
-            console.error('Failed to initialize Colyseus client:', error);
-            return false;
-        }
-    }
+   async initialize() {
+    try {
+        localStorage.removeItem('colyseusServer');
 
+        // Choose server based on environment
+        let serverUrl;
+
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            serverUrl = 'ws://localhost:2567';
+            console.log('Using LOCAL Colyseus server');
+        } else {
+            // Production / deployed URL (change this later when you host it)
+            serverUrl = 'wss://your-game-server.com'; // ← put real URL here when deployed
+            console.log('Using PRODUCTION Colyseus server');
+        }
+
+        this.client = new Colyseus.Client(serverUrl);
+        console.log('Connected to:', serverUrl);
+
+        return true;
+    } catch (error) {
+        console.error('Failed to initialize Colyseus client:', error);
+        return false;
+    }
+}
     initializeUI() {
         console.log('initializeUI called');
         
