@@ -2262,10 +2262,14 @@ class NeonNightmare {
         }
     }
 
-    getHighScore() {
-        const highScore = localStorage.getItem('highScore') || '0';
-        return parseInt(highScore);
+  getHighScore() {
+    // Use Firebase totalScore if user is logged in, otherwise fall back to local
+    if (this.currentUser && this.userProfile && typeof this.userProfile.totalScore === 'number') {
+        return this.userProfile.totalScore;
     }
+    // Fallback for when not logged in or profile not loaded yet
+    return parseInt(localStorage.getItem('highScore') || '0');
+}
 
     updateThemeUnlockStatus() {
         const highScore = this.getHighScore();
