@@ -823,7 +823,7 @@ async connectToServer() {
     }
 
     // 🔴 IMPORTANT: put your ngrok URL here
-    const NGROK_URL = "wss://abcd-1234.ngrok-free.app";
+    const NGROK_URL = "wss://filtratable-lophodont-temeka.ngrok-free.dev";
 
     try {
         this.client = new Colyseus.Client(NGROK_URL);
