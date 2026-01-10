@@ -414,8 +414,8 @@ class MultiplayerManager {
             await this.connectToServer();
         }
 
-        // Request rooms from server and wait for response
-        const rooms = await new Promise((resolve, reject) => {
+       const rooms = await this.client.getAvailableRooms("rhythm_game");
+
             // Timeout in case server doesn't respond
             const timeout = setTimeout(() => {
                 reject(new Error('Server did not respond with rooms in time'));
