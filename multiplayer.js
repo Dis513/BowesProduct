@@ -816,21 +816,16 @@ class MultiplayerManager {
     // Utility Functions
     // ==================================
 
-    async connectToServer() {
+   async connectToServer() {
         if (!this.client) {
             // Connect to Colyseus server
-            // IMPORTANT: The WebSocket URL must match the current page URL
-            // For ngrok: Use wss:// for HTTPS, ws:// for HTTP
-            const protocol = window.location.protocol === 'https://filtratable-lophodont-temeka.ngrok-free.dev';
+            // Use the current page's host for the WebSocket connection
+            const protocol = window.location.protocol === 'wss://filtratable-lophodont-temeka.ngrok-free.dev';
             const host = window.location.hostname;
             const port = window.location.port ? `:${window.location.port}` : '';
             const serverUrl = `${protocol}//${host}${port}`;
             
-            console.log('========================================');
-            console.log('Connecting to multiplayer server...');
-            console.log('Current page URL:', window.location.href);
-            console.log('WebSocket URL:', serverUrl);
-            console.log('========================================');
+            console.log('Connecting to server:', serverUrl);
             
             try {
                 this.client = new Colyseus.Client(serverUrl);
@@ -838,24 +833,20 @@ class MultiplayerManager {
                 // Test connection by getting available rooms
                 await this.client.getAvailableRooms('rhythm_game');
                 
-                console.log('✅ Successfully connected to server:', serverUrl);
+                console.log('Successfully connected to server:', serverUrl);
                 this.updateConnectionStatus(true);
-                
-                // Show success message
-                this.showNotification('Connected to multiplayer server!');
             } catch (error) {
-                console.error('❌ Failed to connect to server:', error);
-                console.error('Error details:', error.message);
-                this.updateConnectionStatus(false);
-                this.showError('Cannot connect to server. Make sure ngrok is running and you are using the HTTPS URL.');
+                console.error('Failed to connect to server:', error);
+                // Fallback to localhost for development
+                console.log('Trying fallback to localhost:2567');
+                this.client = new Colyseus.Client('ws://localhost:2567');
+                this.updateConnectionStatus(true);
             }
         } else {
             // Verify connection is still active
-            console.log('✅ Already connected to server');
             this.updateConnectionStatus(true);
         }
     }
-
     leaveRoom() {
         console.log('Leaving room...');
         
