@@ -719,51 +719,36 @@ class MultiplayerManager {
     }
 
     // ==================================
-    // Utility Functions
-    // ==================================
+ // ==================================
+// Utility Functions
+// ==================================
 
-    async connectToServer() {
-        if (!this.client) {
-            // Connect to Colyseus server
-            // Use the current page's host for the WebSocket connection
-            const protocol = window.location.protocol === 'wss://filtratable-lophodont-temeka.ngrok-free.dev';
-            const host = window.location.hostname;
-            const port = window.location.port ? `:${window.location.port}` : '';
-            const serverUrl = `${protocol}//${host}${port}`;
-            
-            console.log('Connecting to server:', serverUrl);
-            console.log('Protocol:', protocol);
-            console.log('Host:', host);
-            console.log('Port:', port);
-            
-           try {
-                // Ensure serverUrl always includes a protocol (e.g., ws:// or wss://)
-                // If serverUrl might come without a protocol, prepend it conditionally.
-                let effectiveServerUrl = serverUrl;
-                if (!effectiveServerUrl.startsWith('ws://') && !effectiveServerUrl.startsWith('wss://')) {
-                    // Assuming a default to secure WebSocket if not specified, or adjust as needed.
-                    effectiveServerUrl = `wss://${effectiveServerUrl}`; 
-                }
-
-                this.client = new Colyseus.Client(effectiveServerUrl);
-                
-                // Test connection by getting available rooms
-                await this.client.getAvailableRooms('rhythm_game');
-                
-                console.log('Successfully connected to server:', effectiveServerUrl);
-                this.updateConnectionStatus(true);
-            } catch (error) {
-                console.error('Failed to connect to server:', error);
-                // Fallback to localhost for development
-                console.log('Trying fallback to localhost:2567');
-                this.client = new Colyseus.Client('ws://localhost:2567');
-                this.updateConnectionStatus(true);
-            }
-        } else {
-            // Verify connection is still active
-            this.updateConnectionStatus(true);
-        }
+async connectToServer() {
+    if (this.client) {
+        this.updateConnectionStatus(true);
+        return;
     }
+
+    // 🔒 Explicit Colyseus WebSocket server
+    const SERVER_URL = "wss://filtratable-lophodont-temeka.ngrok-free.dev";
+
+    console.log("Connecting to server:", SERVER_URL);
+
+    try {
+        this.client = new Colyseus.Client(SERVER_URL);
+
+        // Test connection
+        await this.client.getAvailableRooms("rhythm_game");
+
+        console.log("Successfully connected to server");
+        this.updateConnectionStatus(true);
+    } catch (error) {
+        console.error("Failed to connect to server:", error);
+        this.updateConnectionStatus(false);
+        throw error;
+    }
+}
+
 
     leaveRoom() {
         if (this.room) {
