@@ -825,7 +825,7 @@ class MultiplayerManager {
         return code;
     }
 
-    async async showMultiplayerMenu() {
+    async showMultiplayerMenu() {
         if (this.multiplayerMenu) {
             this.multiplayerMenu.style.display = 'block';
         }
