@@ -401,6 +401,17 @@ class MultiplayerManager {
             console.log('Getting available rooms from client...');
             // Get all available rooms
             const rooms = await this.client.getAvailableRooms('rhythm_game');
+
+if (!Array.isArray(rooms)) {
+    console.error('Expected rooms array but got:', rooms);
+    throw new Error('Lobbies response is not an array. Likely ngrok HTML page returned.');
+}
+
+console.log('Available rooms:', rooms);
+console.log('Number of rooms:', rooms.length);
+
+this.displayLobbies(rooms);
+
             
             console.log('Available rooms:', rooms);
             console.log('Number of rooms:', rooms ? rooms.length : 0);
