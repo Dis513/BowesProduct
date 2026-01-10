@@ -736,13 +736,21 @@ class MultiplayerManager {
             console.log('Host:', host);
             console.log('Port:', port);
             
-            try {
-                this.client = new Colyseus.Client(serverUrl);
+           try {
+                // Ensure serverUrl always includes a protocol (e.g., ws:// or wss://)
+                // If serverUrl might come without a protocol, prepend it conditionally.
+                let effectiveServerUrl = serverUrl;
+                if (!effectiveServerUrl.startsWith('ws://') && !effectiveServerUrl.startsWith('wss://')) {
+                    // Assuming a default to secure WebSocket if not specified, or adjust as needed.
+                    effectiveServerUrl = `wss://${effectiveServerUrl}`; 
+                }
+
+                this.client = new Colyseus.Client(effectiveServerUrl);
                 
                 // Test connection by getting available rooms
                 await this.client.getAvailableRooms('rhythm_game');
                 
-                console.log('Successfully connected to server:', serverUrl);
+                console.log('Successfully connected to server:', effectiveServerUrl);
                 this.updateConnectionStatus(true);
             } catch (error) {
                 console.error('Failed to connect to server:', error);
