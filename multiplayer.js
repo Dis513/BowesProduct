@@ -119,23 +119,6 @@ class MultiplayerManager {
             const gameContainer = document.getElementById('gameContainer');
             gameContainer.insertAdjacentHTML('beforebegin', menuHTML);
             
-            // Create persistent lobby overlay
-            const overlayHTML = `
-                <div class="lobby-overlay" id="lobbyOverlay" style="display: none;">
-                    <div class="lobby-overlay-content">
-                        <div class="lobby-overlay-info">
-                            <span class="lobby-overlay-icon">🎮</span>
-                            <div class="lobby-overlay-details">
-                                <span class="lobby-overlay-code" id="overlayRoomCode">---</span>
-                                <span class="lobby-overlay-players" id="overlayPlayerCount">1/2</span>
-                            </div>
-                        </div>
-                        <button class="lobby-overlay-close" id="closeOverlay">×</button>
-                    </div>
-                </div>
-            `;
-            gameContainer.insertAdjacentHTML('beforebegin', overlayHTML);
-            
             // Cache UI elements
             this.multiplayerMenu = document.getElementById('multiplayerMenu');
             this.lobbyList = document.getElementById('lobbyList');
@@ -196,11 +179,6 @@ class MultiplayerManager {
         // Close multiplayer menu
         document.getElementById('closeMultiplayer').addEventListener('click', () => {
             this.hideMultiplayerMenu();
-        });
-
-        // Close overlay button
-        document.getElementById('closeOverlay').addEventListener('click', () => {
-            document.getElementById('lobbyOverlay').style.display = 'none';
         });
     }
 
@@ -414,11 +392,6 @@ class MultiplayerManager {
         document.getElementById('roomType').textContent = type === 'public' ? 'Public' : 'Private';
         this.currentRoomInfo.style.display = 'block';
         
-        // Update and show overlay
-        const overlay = document.getElementById('lobbyOverlay');
-        document.getElementById('overlayRoomCode').textContent = code;
-        overlay.style.display = 'block';
-        
         // Hide create/join sections when in a room
         document.querySelectorAll('.lobby-section').forEach(section => {
             if (!section.querySelector('#currentRoomInfo')) {
@@ -436,12 +409,6 @@ class MultiplayerManager {
 
     updatePlayerCount(count) {
         document.getElementById('playerCount').textContent = `${count}/2`;
-        
-        // Also update overlay
-        const overlayPlayerCount = document.getElementById('overlayPlayerCount');
-        if (overlayPlayerCount) {
-            overlayPlayerCount.textContent = `${count}/2`;
-        }
     }
 
     updatePlayersList(players) {
@@ -491,7 +458,7 @@ class MultiplayerManager {
 
     toggleReady() {
         if (this.room) {
-            this.room.send({ type: 'setReady' });
+            this.room.send('setReady', {});
         }
     }
 
@@ -512,8 +479,7 @@ class MultiplayerManager {
 
     sendScoreUpdate(score, combo, health) {
         if (this.room) {
-            this.room.send({ 
-                type: 'updateScore',
+            this.room.send('updateScore', {
                 score: score,
                 combo: combo,
                 health: health
@@ -523,8 +489,7 @@ class MultiplayerManager {
 
     sendGameFinished(finalScore) {
         if (this.room) {
-            this.room.send({ 
-                type: 'gameFinished',
+            this.room.send('gameFinished', {
                 finalScore: finalScore
             });
         }
@@ -571,7 +536,7 @@ class MultiplayerManager {
         if (!this.client) {
             // Connect to Colyseus server
             // Use the current page's host for the WebSocket connection
-            const protocol = window.location.protocol === 'ws://localhost:2567';
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             const host = window.location.hostname;
             const port = window.location.port ? `:${window.location.port}` : '';
             const serverUrl = `${protocol}//${host}${port}`;
@@ -608,10 +573,6 @@ class MultiplayerManager {
             
             // Reset UI
             this.currentRoomInfo.style.display = 'none';
-            
-            // Hide overlay
-            document.getElementById('lobbyOverlay').style.display = 'none';
-            
             document.querySelectorAll('.lobby-section').forEach(section => {
                 section.style.display = 'block';
             });
