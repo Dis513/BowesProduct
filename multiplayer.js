@@ -302,6 +302,13 @@ class MultiplayerManager {
             // Connect to server and create room
             await this.connectToServer();
             
+            console.log('Attempting to create room with options:', {
+                roomCode: roomCode,
+                roomType: roomType,
+                isHost: true,
+                level: selectedLevel
+            });
+            
             // Join/create the room with level info
             this.room = await this.client.joinOrCreate('rhythm_game', {
                 roomCode: roomCode,
@@ -310,13 +317,13 @@ class MultiplayerManager {
                 level: selectedLevel
             });
 
+            console.log('Room created successfully:', this.room.roomId);
+            
             this.setupRoomListeners();
             this.lobbyCode = roomCode;
             this.isHost = true;
             this.selectedLevel = selectedLevel;
 
-            console.log('Room created successfully:', roomCode);
-            
             // For public rooms, don't show the code
             const displayCode = roomType === 'private' ? roomCode : 'Public Lobby';
             this.showRoomInfo(displayCode, roomType, selectedLevel);
@@ -324,7 +331,21 @@ class MultiplayerManager {
 
         } catch (error) {
             console.error('Error creating room:', error);
-            this.showError('Failed to create room: ' + error.message);
+            console.error('Error details:', {
+                message: error.message,
+                code: error.code,
+                name: error.name
+            });
+            
+            let errorMessage = 'Failed to create room';
+            if (error.message) {
+                errorMessage += ': ' + error.message;
+            }
+            if (error.code === 4210) {
+                errorMessage = 'Room already exists with this code';
+            }
+            
+            this.showError(errorMessage);
             this.updateConnectionStatus(false);
         }
     }
@@ -373,18 +394,27 @@ class MultiplayerManager {
             console.log('Fetching available lobbies...');
             
             if (!this.client) {
+                console.log('No client found, connecting to server...');
                 await this.connectToServer();
             }
 
+            console.log('Getting available rooms from client...');
             // Get all available rooms
             const rooms = await this.client.getAvailableRooms('rhythm_game');
             
             console.log('Available rooms:', rooms);
+            console.log('Number of rooms:', rooms ? rooms.length : 0);
+            
             this.displayLobbies(rooms);
 
         } catch (error) {
             console.error('Error fetching lobbies:', error);
-            this.showError('Failed to fetch available lobbies');
+            console.error('Error details:', {
+                message: error.message,
+                code: error.code,
+                name: error.name
+            });
+            this.showError('Failed to fetch available lobbies: ' + error.message);
         }
     }
 
@@ -402,6 +432,7 @@ class MultiplayerManager {
             const roomType = roomData.roomType || 'public';
             const playerCount = room.clients;
             const maxPlayers = room.maxClients || 2;
+            const roomLevel = roomData.level || 1;
 
             // Only show public lobbies or lobbies that aren't full
             if (roomType === 'public' || playerCount < maxPlayers) {
@@ -412,12 +443,20 @@ class MultiplayerManager {
                 // For private lobbies, show the room code with lock icon
                 const lobbyName = roomType === 'public' ? '🌍 Public Lobby' : '🔒 ' + roomCode;
                 
+                // Get difficulty color for level
+                let levelColor = '#39FF14'; // Easy (green)
+                if (roomLevel > 10 && roomLevel <= 20) levelColor = '#FFFF00'; // Medium (yellow)
+                else if (roomLevel > 20 && roomLevel <= 35) levelColor = '#FFA500'; // Hard (orange)
+                else if (roomLevel > 35 && roomLevel <= 45) levelColor = '#FF0000'; // Expert (red)
+                else if (roomLevel > 45) levelColor = '#FF1493'; // Master (pink)
+                
                 lobbyItem.innerHTML = `
                     <div class="lobby-info">
                         <span class="lobby-code">${lobbyName}</span>
+                        <span class="lobby-level" style="color: ${levelColor};">Level ${roomLevel}</span>
                         <span class="lobby-players">${playerCount}/${maxPlayers} players</span>
                     </div>
-                    <button class="join-lobby-btn" data-roomid="${room.roomId}" data-code="${roomCode}" data-type="${roomType}">
+                    <button class="join-lobby-btn" data-roomid="${room.roomId}" data-code="${roomCode}" data-type="${roomType}" data-level="${roomLevel}">
                         Join
                     </button>
                 `;
@@ -425,14 +464,39 @@ class MultiplayerManager {
             }
         });
 
-        // Add click listeners to join buttons
+        // Add click listeners to join buttons with touch support
         document.querySelectorAll('.join-lobby-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const roomId = btn.dataset.roomid;
-                const code = btn.dataset.code;
-                const type = btn.dataset.type;
+            btn.addEventListener('click', (e) => {
+                const roomId = e.target.dataset.roomid;
+                const code = e.target.dataset.code;
+                const type = e.target.dataset.type;
+                const level = e.target.dataset.level;
+                
+                // Auto-select the level when joining
+                const levelSelect = document.getElementById('multiplayerLevelSelect');
+                if (levelSelect && level) {
+                    levelSelect.value = level;
+                }
+                
                 this.joinRoom(roomId, code, type);
             });
+            
+            // Add touch support for join buttons
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const roomId = e.target.dataset.roomid;
+                const code = e.target.dataset.code;
+                const type = e.target.dataset.type;
+                const level = e.target.dataset.level;
+                
+                // Auto-select the level when joining
+                const levelSelect = document.getElementById('multiplayerLevelSelect');
+                if (levelSelect && level) {
+                    levelSelect.value = level;
+                }
+                
+                this.joinRoom(roomId, code, type);
+            }, { passive: false });
         });
     }
 
@@ -662,12 +726,15 @@ class MultiplayerManager {
         if (!this.client) {
             // Connect to Colyseus server
             // Use the current page's host for the WebSocket connection
-            const protocol = window.location.protocol === 'https://filtratable-lophodont-temeka.ngrok-free.dev';
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             const host = window.location.hostname;
             const port = window.location.port ? `:${window.location.port}` : '';
             const serverUrl = `${protocol}//${host}${port}`;
             
             console.log('Connecting to server:', serverUrl);
+            console.log('Protocol:', protocol);
+            console.log('Host:', host);
+            console.log('Port:', port);
             
             try {
                 this.client = new Colyseus.Client(serverUrl);
