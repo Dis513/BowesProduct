@@ -821,7 +821,7 @@ class MultiplayerManager {
             // Connect to Colyseus server
             // IMPORTANT: The WebSocket URL must match the current page URL
             // For ngrok: Use wss:// for HTTPS, ws:// for HTTP
-            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const protocol = window.location.protocol === 'https://filtratable-lophodont-temeka.ngrok-free.dev';
             const host = window.location.hostname;
             const port = window.location.port ? `:${window.location.port}` : '';
             const serverUrl = `${protocol}//${host}${port}`;
