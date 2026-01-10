@@ -505,20 +505,40 @@ displayLobbies(rooms) {
         this.joinRoom(roomId, code, type);
     };
 
-    // Add event listeners to all join buttons (click + touch)
-    this.lobbyList.querySelectorAll('.join-lobby-btn').forEach(btn => {
-        // Remove any previous listeners first (prevents duplicates)
-        btn.replaceWith(btn.cloneNode(true));
-    });
+    // Add click listeners to join buttons with touch support
+document.querySelectorAll('.join-lobby-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const roomId = e.currentTarget.dataset.roomid;
+        const code = e.currentTarget.dataset.code;
+        const type = e.currentTarget.dataset.type;
+        const level = e.currentTarget.dataset.level;
 
-    this.lobbyList.querySelectorAll('.join-lobby-btn').forEach(btn => {
-        btn.addEventListener('click', joinHandler);
-        btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            joinHandler(e);
-        }, { passive: false });
-    });
-}
+        // Auto-select the level when joining
+        const levelSelect = document.getElementById('multiplayerLevelSelect');
+        if (levelSelect && level) {
+            levelSelect.value = level;
+        }
+
+        this.joinRoom(roomId, code, type);
+    }); // <-- closes addEventListener
+
+    // Touch support
+    btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const roomId = e.currentTarget.dataset.roomid;
+        const code = e.currentTarget.dataset.code;
+        const type = e.currentTarget.dataset.type;
+        const level = e.currentTarget.dataset.level;
+
+        const levelSelect = document.getElementById('multiplayerLevelSelect');
+        if (levelSelect && level) {
+            levelSelect.value = level;
+        }
+
+        this.joinRoom(roomId, code, type);
+    }, { passive: false });
+
+}); // <-- closes forEach
 
 
         // Add click listeners to join buttons with touch support
