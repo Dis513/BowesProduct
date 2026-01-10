@@ -532,38 +532,65 @@ class MultiplayerManager {
     // Utility Functions
     // ==================================
 
-    async connectToServer() {
-        if (!this.client) {
-            // Connect to Colyseus server
-            // Use the current page's host for the WebSocket connection
-            const protocol = window.location.protocol === ' https://filtratable-lophodont-temeka.ngrok-free.dev/colyseus';
-            const host = window.location.hostname;
-            const port = window.location.port ? `:${window.location.port}` : '';
-            const serverUrl = `${protocol}//${host}${port}`;
-            
-            console.log('Connecting to server:', serverUrl);
-            
-            try {
-                this.client = new Colyseus.Client(serverUrl);
-                
-                // Test connection by getting available rooms
-                await this.client.getAvailableRooms('rhythm_game');
-                
-                console.log('Successfully connected to server:', serverUrl);
-                this.updateConnectionStatus(true);
-            } catch (error) {
-                console.error('Failed to connect to server:', error);
-                // Fallback to localhost for development
-                console.log('Trying fallback to localhost:2567');
-                this.client = new Colyseus.Client('ws://localhost:2567');
-                this.updateConnectionStatus(true);
-            }
-        } else {
-            // Verify connection is still active
-            this.updateConnectionStatus(true);
-        }
+   async connectToServer() {
+    if (this.client) {
+        // Already have a client → assume it's connected
+        console.log("Colyseus client already exists");
+        this.updateConnectionStatus(true);
+        return;
     }
 
+    let serverUrl;
+
+    // 1. Local development (running on localhost)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        serverUrl = 'ws://localhost:2567';
+        console.log("Local development mode → using:", serverUrl);
+    }
+    // 2. Deployed version (e.g. GitHub Pages) → use ngrok tunnel
+    else {
+        // ────────────────────────────────────────────────────────────────
+        // CHANGE THIS LINE every time you restart ngrok!
+        const ngrokUrl = 'https://filtratable-lophodont-temeka.ngrok-free.dev';  // ← PASTE YOUR CURRENT NGROK HTTPS URL HERE
+        // ────────────────────────────────────────────────────────────────
+
+        // Convert https → wss for secure WebSocket
+        serverUrl = ngrokUrl.replace(/^https?:\/\//, 'wss://');
+        console.log("Deployed mode (ngrok) → using:", serverUrl);
+    }
+
+    try {
+        console.log("Attempting to connect to Colyseus server:", serverUrl);
+
+        // Create Colyseus client
+        this.client = new Colyseus.Client(serverUrl);
+
+        // Test connection by fetching available rooms
+        const rooms = await this.client.getAvailableRooms('rhythm_game');
+        console.log(`Connection successful! Found ${rooms.length} available rhythm_game room(s).`);
+
+        this.updateConnectionStatus(true);
+    } catch (error) {
+        console.error("Failed to connect to Colyseus server:", error);
+
+        // Only try localhost fallback when we're actually running locally
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log("Local fallback not needed – already tried localhost");
+        } else {
+            console.log("Trying localhost fallback (development only)...");
+            try {
+                this.client = new Colyseus.Client('ws://localhost:2567');
+                await this.client.getAvailableRooms('rhythm_game');
+                console.log("Localhost fallback succeeded");
+                this.updateConnectionStatus(true);
+            } catch (fallbackError) {
+                console.error("Localhost fallback also failed:", fallbackError);
+                this.showError("Cannot connect to multiplayer server. Is the server running?");
+                this.updateConnectionStatus(false);
+            }
+        }
+    }
+}
     leaveRoom() {
         if (this.room) {
             this.room.leave();
