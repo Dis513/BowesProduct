@@ -821,7 +821,7 @@ class MultiplayerManager {
         // ────────────────────────────────────────────────
         // Modern & reliable way for ngrok + Colyseus (2026 style)
         // ────────────────────────────────────────────────
-        const isSecure = window.location.protocol === 'wss://filtratable-lophodont-temeka.ngrok-free.dev';
+        const isSecure = window.location.protocol === 'https://filtratable-lophodont-temeka.ngrok-free.dev';
         const wsProtocol = isSecure ? 'wss://' : 'ws://';
 
         // Use current host → for ngrok free it automatically uses port 443 (no :2567 needed!)
