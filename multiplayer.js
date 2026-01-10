@@ -404,50 +404,32 @@ class MultiplayerManager {
         }
     }
 
+// ==================================
+// Fetch Available Lobbies
+// ==================================
 async getAvailableLobbies() {
     try {
-        // Emit request to server and wait for response
-        const rooms = await new Promise((resolve, reject) => {
-            // Timeout in case server doesn't respond
-            const timeout = setTimeout(() => reject(new Error('Server did not respond in time')), 5000);
+        if (!this.client) throw new Error('Not connected to server');
 
-            // Handler for rooms response
-            const handler = (roomsData) => {
-                clearTimeout(timeout);
-                this.client.off('roomsList', handler); // remove listener
-
-                if (!Array.isArray(roomsData)) {
-                    reject(new Error('Invalid rooms data'));
-                } else {
-                    resolve(roomsData);
-                }
-            };
-
-            this.client.on('roomsList', handler);
-
-            // Emit request
-            this.client.emit('getRooms', 'rhythm_game');
-        });
-
+        // Get rooms directly from the Colyseus client
+        const rooms = await this.client.getAvailableRooms('rhythm_game');
         console.log('Available rooms:', rooms);
         console.log('Number of rooms:', rooms.length);
 
-        // Display rooms
+        // Display lobbies
         this.displayLobbies(rooms);
 
-    } catch (error) {  // <-- must be here, immediately after try
+    } catch (error) {
         console.error('Error fetching lobbies:', error);
-        console.error('Error details:', {
-            message: error.message,
-            code: error.code,
-            name: error.name
-        });
         this.showError('Failed to fetch available lobbies: ' + error.message);
     }
 }
 
-
+// ==================================
+// Display Lobbies
+// ==================================
 displayLobbies(rooms) {
+    if (!this.lobbyList) return;
     this.lobbyList.innerHTML = '';
 
     if (!Array.isArray(rooms) || rooms.length === 0) {
@@ -473,7 +455,7 @@ displayLobbies(rooms) {
             const lobbyName = roomType === 'public' ? '🌍 Public Lobby' : '🔒 ' + roomCode;
 
             // Determine level color
-            let levelColor = '#39FF14'; // Easy (green)
+            let levelColor = '#39FF14'; // Easy
             if (roomLevel > 10 && roomLevel <= 20) levelColor = '#FFFF00'; // Medium
             else if (roomLevel > 20 && roomLevel <= 35) levelColor = '#FFA500'; // Hard
             else if (roomLevel > 35 && roomLevel <= 45) levelColor = '#FF0000'; // Expert
@@ -493,6 +475,27 @@ displayLobbies(rooms) {
             this.lobbyList.appendChild(lobbyItem);
         }
     });
+
+    // Attach join button listeners **once** (click + touch)
+    this.lobbyList.querySelectorAll('.join-lobby-btn').forEach(btn => {
+        const joinRoomHandler = (e) => {
+            e.preventDefault();
+            const roomId = btn.dataset.roomid;
+            const code = btn.dataset.code;
+            const type = btn.dataset.type;
+            const level = btn.dataset.level;
+
+            // Auto-select the level
+            const levelSelect = document.getElementById('multiplayerLevelSelect');
+            if (levelSelect && level) levelSelect.value = level;
+
+            this.joinRoom(roomId, code, type);
+        };
+
+        btn.addEventListener('click', joinRoomHandler);
+        btn.addEventListener('touchstart', joinRoomHandler, { passive: false });
+    });
+}
 
     // Unified function to handle joining a room
     const joinHandler = (e) => {
