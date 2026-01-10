@@ -816,38 +816,53 @@ class MultiplayerManager {
     // Utility Functions
     // ==================================
 
-async connectToServer() {
-    if (this.client) {
+   async connectToServer() {
+    if (!this.client) {
+        // ────────────────────────────────────────────────
+        // Modern & reliable way for ngrok + Colyseus (2026 style)
+        // ────────────────────────────────────────────────
+        const isSecure = window.location.protocol === 'wss://filtratable-lophodont-temeka.ngrok-free.dev';
+        const wsProtocol = isSecure ? 'wss://' : 'ws://';
+
+        // Use current host → for ngrok free it automatically uses port 443 (no :2567 needed!)
+        const host = window.location.host;  // ← this includes domain + port if present
+
+        const serverUrl = wsProtocol + host;
+
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('Current page URL:     ', window.location.href);
+        console.log('Colyseus target URL:  ', serverUrl);
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+        try {
+            this.client = new Colyseus.Client(serverUrl);
+
+            // Quick connection test
+            const rooms = await this.client.getAvailableRooms('rhythm_game');
+            console.log('Connection test successful — found', rooms.length, 'rooms');
+
+            console.log('✅ Connected to Colyseus server!');
+            this.updateConnectionStatus(true);
+            this.showNotification('Connected to multiplayer server!');
+
+        } catch (error) {
+            console.error('❌ Colyseus connection failed:', error);
+            console.error('Error message:', error.message);
+            this.updateConnectionStatus(false);
+            this.showError(
+                'Cannot connect to server.\n' +
+                'Make sure:\n' +
+                '1. Your Colyseus server is running locally\n' +
+                '2. ngrok http 2567 is active\n' +
+                '3. You opened the page via the **https://** ngrok URL\n' +
+                '4. No firewall/adblock is blocking websocket'
+            );
+        }
+    } else {
+        console.log('Already connected to Colyseus');
         this.updateConnectionStatus(true);
-        return;
-    }
-
-    // 🔴 IMPORTANT: put your ngrok URL here
-    const NGROK_URL = "wss://filtratable-lophodont-temeka.ngrok-free.dev";
-
-    try {
-        this.client = new Colyseus.Client(NGROK_URL);
-
-        // Test connection
-        await this.client.getAvailableRooms("rhythm_game");
-
-        console.log("✅ Connected to Colyseus via ngrok:", NGROK_URL);
-        this.updateConnectionStatus(true);
-
-    } catch (error) {
-        console.error("❌ Colyseus connection failed:", error);
-        this.updateConnectionStatus(false);
-
-        this.showError(
-            "Failed to connect to multiplayer server.\n\n" +
-            "Make sure:\n" +
-            "• ngrok is running\n" +
-            "• URL matches current ngrok session\n" +
-            "• Colyseus server is running on port 2567"
-        );
     }
 }
-
     leaveRoom() {
         console.log('Leaving room...');
         
