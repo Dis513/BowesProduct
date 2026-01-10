@@ -1,0 +1,82 @@
+/* ==================================
+* Multiplayer Error Notifications
+* ================================== */
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+.error-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    z-index: 10000;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 350px;
+    word-wrap: break-word;
+}
+
+/* Ensure multiplayer menu buttons work correctly on mobile and desktop */
+.menu-button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.menu-button:active {
+    transform: scale(0.98);
+}
+
+.menu-button:hover {
+    transform: scale(1.02);
+    transition: transform 0.1s ease;
+}
+
+/* Improve mobile touch targets */
+@media (max-width: 768px) {
+    .menu-button {
+        min-height: 48px;
+        min-width: 48px;
+        padding: 12px 24px;
+    }
+}
+
+/* Prevent button double-tap zoom on mobile */
+.room-type-btn,
+.join-lobby-btn {
+    touch-action: manipulation;
+}
+
+/* Ensure buttons are clickable */
+#multiplayerMenu .menu-button,
+#multiplayerMenu button {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1;
+}
