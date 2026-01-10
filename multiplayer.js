@@ -389,35 +389,52 @@ class MultiplayerManager {
         }
     }
 
-    async getAvailableLobbies() {
-        try {
-            console.log('Fetching available lobbies...');
-            
-            if (!this.client) {
-                console.log('No client found, connecting to server...');
-                await this.connectToServer();
-            }
+ async getAvailableLobbies() {
+    try {
+        console.log('Fetching available lobbies...');
 
-            console.log('Getting available rooms from client...');
-            // Get all available rooms
-            const rooms = await this.client.getAvailableRooms('rhythm_game');
+        // Make sure WebSocket client is connected
+        if (!this.client || this.client.disconnected) {
+            console.log('No client found or disconnected, connecting to server...');
+            await this.connectToServer();
+        }
 
-if (!Array.isArray(rooms)) {
-    console.error('Expected rooms array but got:', rooms);
-    throw new Error('Lobbies response is not an array. Likely ngrok HTML page returned.');
+        // Request rooms from server and wait for response
+        const rooms = await new Promise((resolve, reject) => {
+            // Timeout in case server doesn't respond
+            const timeout = setTimeout(() => {
+                reject(new Error('Server did not respond with rooms in time'));
+            }, 5000);
+
+            // Handler for rooms response
+            const handler = (roomsData) => {
+                clearTimeout(timeout);
+                this.client.off('roomsList', handler); // remove listener after first response
+
+                if (!Array.isArray(roomsData)) {
+                    reject(new Error('Invalid rooms data received from server'));
+                } else {
+                    resolve(roomsData);
+                }
+            };
+
+            this.client.on('roomsList', handler);
+
+            // Emit request to server
+            this.client.emit('getRooms', 'rhythm_game');
+        });
+
+        console.log('Available rooms:', rooms);
+        console.log('Number of rooms:', rooms.length);
+
+        // Pass rooms to display function
+        this.displayLobbies(rooms);
+
+    } catch (error) {
+        console.error('Error fetching lobbies:', error);
+        this.showError('Failed to fetch available lobbies: ' + error.message);
+    }
 }
-
-console.log('Available rooms:', rooms);
-console.log('Number of rooms:', rooms.length);
-
-this.displayLobbies(rooms);
-
-            
-            console.log('Available rooms:', rooms);
-            console.log('Number of rooms:', rooms ? rooms.length : 0);
-            
-            this.displayLobbies(rooms);
-
         } catch (error) {
             console.error('Error fetching lobbies:', error);
             console.error('Error details:', {
