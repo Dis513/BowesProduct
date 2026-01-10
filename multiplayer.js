@@ -430,11 +430,6 @@ class MultiplayerManager {
         // Pass rooms to display function
         this.displayLobbies(rooms);
 
-    } catch (error) {
-        console.error('Error fetching lobbies:', error);
-        this.showError('Failed to fetch available lobbies: ' + error.message);
-    }
-}
         } catch (error) {
             console.error('Error fetching lobbies:', error);
             console.error('Error details:', {
