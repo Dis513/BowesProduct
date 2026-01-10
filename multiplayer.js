@@ -585,72 +585,7 @@ async connectToServer() {
         window.fetch = originalFetch;
     }
 }
-    // ────────────────────────────────────────────────────────────────
-    // TEMPORARY FETCH OVERRIDE to add ngrok bypass header
-    // Only affects matchmaking HTTP requests during connection test
-    // ────────────────────────────────────────────────────────────────
-    const originalFetch = window.fetch;
-    window.fetch = async function(url, options = {}) {
-        options.headers = {
-            ...options.headers,
-            "ngrok-skip-browser-warning": "69420"  // any value works (popular meme value)
-            // Optional alternative: "User-Agent": "MyGameClient/1.0"
-        };
-        return originalFetch(url, options);
-    };
 
-    try {
-        console.log("Creating Colyseus Client with:", serverUrl);
-        this.client = new Colyseus.Client(serverUrl);
-
-        console.log("Testing matchmaking connection...");
-        const rooms = await this.client.getAvailableRooms('rhythm_game');
-
-        console.log(`Success! Found ${rooms.length} available rhythm_game room(s).`);
-        // If we got here → rooms is a real array, not HTML string
-
-        this.updateConnectionStatus(true);
-    } catch (error) {
-        console.error("Colyseus connection / test failed:", error);
-        this.showError("Failed to connect to server. Check ngrok is running and server is active.");
-        this.updateConnectionStatus(false);
-    } finally {
-        // IMPORTANT: Restore original fetch!
-        window.fetch = originalFetch;
-    }
-}
-    try {
-        console.log("Attempting to connect to Colyseus server:", serverUrl);
-
-        // Create Colyseus client
-        this.client = new Colyseus.Client(serverUrl);
-
-        // Test connection by fetching available rooms
-        const rooms = await this.client.getAvailableRooms('rhythm_game');
-        console.log(`Connection successful! Found ${rooms.length} available rhythm_game room(s).`);
-
-        this.updateConnectionStatus(true);
-    } catch (error) {
-        console.error("Failed to connect to Colyseus server:", error);
-
-        // Only try localhost fallback when we're actually running locally
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.log("Local fallback not needed – already tried localhost");
-        } else {
-            console.log("Trying localhost fallback (development only)...");
-            try {
-                this.client = new Colyseus.Client('ws://localhost:2567');
-                await this.client.getAvailableRooms('rhythm_game');
-                console.log("Localhost fallback succeeded");
-                this.updateConnectionStatus(true);
-            } catch (fallbackError) {
-                console.error("Localhost fallback also failed:", fallbackError);
-                this.showError("Cannot connect to multiplayer server. Is the server running?");
-                this.updateConnectionStatus(false);
-            }
-        }
-    }
-}
     leaveRoom() {
         if (this.room) {
             this.room.leave();
