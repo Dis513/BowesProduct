@@ -1,4 +1,36 @@
-// ==================================
+async joinRoom(code, type = 'private') {
+    if (!code) {
+        this.showError('Please enter a room code');
+        return;
+    }
+
+    try {
+        console.log('Joining by code:', code, 'Type:', type);
+
+        await this.connectToServer();
+
+        // Use joinOrCreate with filter on your custom roomCode
+        this.room = await this.client.joinOrCreate('rhythm_game', {
+            roomCode: code.toUpperCase(),  // ← filter by this
+            roomType: type,
+            isHost: false
+        });
+
+        this.setupRoomListeners();
+        this.lobbyCode = code;
+        this.isHost = false;
+
+        console.log('Joined successfully by code:', code);
+
+        const displayCode = type === 'public' ? 'Public Lobby' : code;
+        this.showRoomInfo(displayCode, type);
+        this.updateConnectionStatus(true);
+    } catch (error) {
+        console.error('Join by code failed:', error);
+        this.showError('Cannot join – code invalid, room full, or not public/private as expected.');
+        this.updateConnectionStatus(false);
+    }
+}// ==================================
 // MultiplayerManager - Handles Multiplayer Logic
 // ==================================
 
@@ -253,35 +285,39 @@ class MultiplayerManager {
         }
     }
 
-    async joinRoom(roomId, code, type = 'private') {
-        try {
-            console.log('Joining room:', roomId, 'Code:', code, 'Type:', type);
-
-            await this.connectToServer();
-            
-            // Try to join the room by ID (not roomCode)
-            this.room = await this.client.joinById(roomId, {
-                roomCode: code,
-                isHost: false
-            });
-
-            this.setupRoomListeners();
-            this.lobbyCode = code;
-            this.isHost = false;
-
-            console.log('Joined room successfully:', roomId);
-            
-            // Display appropriate room info based on type
-            const displayCode = type === 'public' ? 'Public Lobby' : code;
-            this.showRoomInfo(displayCode, type);
-            this.updateConnectionStatus(true);
-
-        } catch (error) {
-            console.error('Error joining room:', error);
-            this.showError('Failed to join room. The lobby may be full or the code is incorrect.');
-            this.updateConnectionStatus(false);
-        }
+async joinRoom(code, type = 'private') {
+    if (!code) {
+        this.showError('Please enter a room code');
+        return;
     }
+
+    try {
+        console.log('Joining by code:', code, 'Type:', type);
+
+        await this.connectToServer();
+
+        // Use joinOrCreate with filter on your custom roomCode
+        this.room = await this.client.joinOrCreate('rhythm_game', {
+            roomCode: code.toUpperCase(),  // ← filter by this
+            roomType: type,
+            isHost: false
+        });
+
+        this.setupRoomListeners();
+        this.lobbyCode = code;
+        this.isHost = false;
+
+        console.log('Joined successfully by code:', code);
+
+        const displayCode = type === 'public' ? 'Public Lobby' : code;
+        this.showRoomInfo(displayCode, type);
+        this.updateConnectionStatus(true);
+    } catch (error) {
+        console.error('Join by code failed:', error);
+        this.showError('Cannot join – code invalid, room full, or not public/private as expected.');
+        this.updateConnectionStatus(false);
+    }
+}
 
     async getAvailableLobbies() {
         try {
