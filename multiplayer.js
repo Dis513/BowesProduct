@@ -3,7 +3,7 @@
 // ==================================
 
 class MultiplayerManager {
-    constructor(game) {
+    constructor(game) { 
         this.game = game;
         this.client = null;
         this.room = null;
