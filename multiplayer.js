@@ -404,30 +404,20 @@ class MultiplayerManager {
         }
     }
 
- async getAvailableLobbies() {
+async getAvailableLobbies() {
     try {
-        console.log('Fetching available lobbies...');
-
-        // Make sure WebSocket client is connected
-        if (!this.client || this.client.disconnected) {
-            console.log('No client found or disconnected, connecting to server...');
-            await this.connectToServer();
-        }
-
-       const rooms = await this.client.getAvailableRooms("rhythm_game");
-
+        // Emit request to server and wait for response
+        const rooms = await new Promise((resolve, reject) => {
             // Timeout in case server doesn't respond
-            const timeout = setTimeout(() => {
-                reject(new Error('Server did not respond with rooms in time'));
-            }, 5000);
+            const timeout = setTimeout(() => reject(new Error('Server did not respond in time')), 5000);
 
             // Handler for rooms response
             const handler = (roomsData) => {
                 clearTimeout(timeout);
-                this.client.off('roomsList', handler); // remove listener after first response
+                this.client.off('roomsList', handler); // remove listener
 
                 if (!Array.isArray(roomsData)) {
-                    reject(new Error('Invalid rooms data received from server'));
+                    reject(new Error('Invalid rooms data'));
                 } else {
                     resolve(roomsData);
                 }
@@ -435,26 +425,27 @@ class MultiplayerManager {
 
             this.client.on('roomsList', handler);
 
-            // Emit request to server
+            // Emit request
             this.client.emit('getRooms', 'rhythm_game');
         });
 
         console.log('Available rooms:', rooms);
         console.log('Number of rooms:', rooms.length);
 
-        // Pass rooms to display function
+        // Display rooms
         this.displayLobbies(rooms);
 
-         catch (error) {
-            console.error('Error fetching lobbies:', error);
-            console.error('Error details:', {
-                message: error.message,
-                code: error.code,
-                name: error.name
-            });
-            this.showError('Failed to fetch available lobbies: ' + error.message);
-        }
+    } catch (error) {  // <-- must be here, immediately after try
+        console.error('Error fetching lobbies:', error);
+        console.error('Error details:', {
+            message: error.message,
+            code: error.code,
+            name: error.name
+        });
+        this.showError('Failed to fetch available lobbies: ' + error.message);
     }
+}
+
 
 displayLobbies(rooms) {
     this.lobbyList.innerHTML = '';
