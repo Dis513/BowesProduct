@@ -262,6 +262,16 @@
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
+.lobby-level {
+    font-size: 0.95rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    width: fit-content;
+}
+
 .lobby-players {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.7);
