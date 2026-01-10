@@ -536,7 +536,7 @@ class MultiplayerManager {
         if (!this.client) {
             // Connect to Colyseus server
             // Use the current page's host for the WebSocket connection
-            const protocol = window.location.protocol === ' https://filtratable-lophodont-temeka.ngrok-free.dev';
+            const protocol = window.location.protocol === ' https://filtratable-lophodont-temeka.ngrok-free.dev/colyseus';
             const host = window.location.hostname;
             const port = window.location.port ? `:${window.location.port}` : '';
             const serverUrl = `${protocol}//${host}${port}`;
