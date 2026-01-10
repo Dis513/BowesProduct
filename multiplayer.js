@@ -541,19 +541,52 @@ async connectToServer() {
 
     let serverUrl;
 
-    // 1. Local development
+    // Local development
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         serverUrl = 'ws://localhost:2567';
         console.log("Local development mode → using:", serverUrl);
     }
-    // 2. Deployed (GitHub Pages) → ngrok
+    // Deployed version (GitHub Pages + ngrok)
     else {
-        // CHANGE THIS every time ngrok restarts!
+        // ────────────────────────────────────────────────────────────────
+        // CHANGE THIS LINE every time you restart ngrok!
         const ngrokUrl = 'https://filtratable-lophodont-temeka.ngrok-free.dev';
+        // ────────────────────────────────────────────────────────────────
+        
         serverUrl = ngrokUrl.replace(/^https?:\/\//, 'wss://');
         console.log("Deployed mode (ngrok) → using:", serverUrl);
     }
 
+    // TEMPORARY: Add ngrok bypass header for matchmaking requests
+    const originalFetch = window.fetch;
+    window.fetch = async function(url, options = {}) {
+        options.headers = {
+            ...options.headers,
+            "ngrok-skip-browser-warning": "69420"   // ← this is the important header
+        };
+        return originalFetch(url, options);
+    };
+
+    try {
+        console.log("Creating Colyseus Client with:", serverUrl);
+        this.client = new Colyseus.Client(serverUrl);
+
+        console.log("Testing connection with getAvailableRooms...");
+        const rooms = await this.client.getAvailableRooms('rhythm_game');
+
+        console.log(`SUCCESS! Found ${rooms.length} available rhythm_game rooms`);
+        // If you see this line + a number (even 0) → everything is working!
+
+        this.updateConnectionStatus(true);
+    } catch (error) {
+        console.error("Connection failed:", error);
+        this.showError("Couldn't connect to the server. Is ngrok still running?");
+        this.updateConnectionStatus(false);
+    } finally {
+        // Very important: put fetch back to normal
+        window.fetch = originalFetch;
+    }
+}
     // ────────────────────────────────────────────────────────────────
     // TEMPORARY FETCH OVERRIDE to add ngrok bypass header
     // Only affects matchmaking HTTP requests during connection test
