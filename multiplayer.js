@@ -146,19 +146,34 @@ class MultiplayerManager {
 
     setupMultiplayerEventListeners() {
         // Room type selector
-        document.querySelectorAll('.room-type-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.room-type-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                
-                const roomType = e.target.dataset.type;
-                if (roomType === 'private') {
-                    this.privateCodeSection.style.display = 'block';
-                } else {
-                    this.privateCodeSection.style.display = 'none';
-                }
-            });
-        });
+ document.querySelectorAll('.join-lobby-btn').forEach(btn => {
+    // Click handler
+    btn.addEventListener('click', (e) => {
+        const roomId = e.currentTarget.dataset.roomid;
+        const code = e.currentTarget.dataset.code;
+        const type = e.currentTarget.dataset.type;
+        const level = e.currentTarget.dataset.level;
+
+        const levelSelect = document.getElementById('multiplayerLevelSelect');
+        if (levelSelect && level) levelSelect.value = level;
+
+        this.joinRoom(roomId, code, type);
+    });
+
+    // Touch handler
+    btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const roomId = e.currentTarget.dataset.roomid;
+        const code = e.currentTarget.dataset.code;
+        const type = e.currentTarget.dataset.type;
+        const level = e.currentTarget.dataset.level;
+
+        const levelSelect = document.getElementById('multiplayerLevelSelect');
+        if (levelSelect && level) levelSelect.value = level;
+
+        this.joinRoom(roomId, code, type);
+    }, { passive: false });
+});
 
         // Create room button - Enhanced with touch support
         const createRoomBtn = document.getElementById('createRoomBtn');
