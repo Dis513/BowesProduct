@@ -602,7 +602,7 @@ class MultiplayerManager {
                 console.error('Failed to connect to server:', error);
                 // Fallback to localhost for development
                 console.log('Trying fallback to localhost:2567');
-                this.client = new Colyseus.Client('ws://localhost:2567');
+                this.client = new Colyseus.Client('https://filtratable-lophodont-temeka.ngrok-free.dev');
                 this.updateConnectionStatus(true);
             }
         } else {
