@@ -816,37 +816,71 @@ class MultiplayerManager {
     // Utility Functions
     // ==================================
 
-   async connectToServer() {
-        if (!this.client) {
-            // Connect to Colyseus server
-            // Use the current page's host for the WebSocket connection
-            const protocol = window.location.protocol === 'wss://filtratable-lophodont-temeka.ngrok-free.dev';
-            const host = window.location.hostname;
-            const port = window.location.port ? `:${window.location.port}` : '';
-            const serverUrl = `${protocol}//${host}${port}`;
-            
-            console.log('Connecting to server:', serverUrl);
-            
-            try {
-                this.client = new Colyseus.Client(serverUrl);
-                
-                // Test connection by getting available rooms
-                await this.client.getAvailableRooms('rhythm_game');
-                
-                console.log('Successfully connected to server:', serverUrl);
-                this.updateConnectionStatus(true);
-            } catch (error) {
-                console.error('Failed to connect to server:', error);
-                // Fallback to localhost for development
-                console.log('Trying fallback to localhost:2567');
-                this.client = new Colyseus.Client('ws://localhost:2567');
-                this.updateConnectionStatus(true);
-            }
-        } else {
-            // Verify connection is still active
-            this.updateConnectionStatus(true);
-        }
+async connectToServer() {
+    if (this.client) {
+        console.log('Already connected to Colyseus');
+        this.updateConnectionStatus(true);
+        return;
     }
+
+    // ────────────────────────────────────────────────
+    // FIXED: Correct protocol + host handling for ngrok / github pages / local
+    // ────────────────────────────────────────────────
+    const pageProtocol = window.location.protocol;           // "https:" or "http:"
+    const wsProtocol = pageProtocol === 'https:' ? 'wss://' : 'ws://';
+
+    // Use current host (domain + port if present) — works with ngrok (port 443 implied)
+    const serverUrl = wsProtocol + window.location.host;
+// Clean debug logging with actual values filled in (example when running on GitHub Pages)
+console.log('┌────────────────────────────────────────────────────────────┐');
+console.log('│              Colyseus Connection Debug Info                │');
+console.log('├────────────────────────────────────────────────────────────┤');
+console.log('│ Page URL:           https://dis513.github.io/BowesProduct/game.html');
+console.log('│ Protocol detected:  https:                                 ');
+console.log('│ WebSocket protocol: wss://                                 ');
+console.log('│ Host:               dis513.github.io                       ');
+console.log('│ Final server URL:   wss://dis513.github.io                 ');
+console.log('└────────────────────────────────────────────────────────────┘');
+    try {
+        this.client = new Colyseus.Client(serverUrl);
+
+        // Test the connection (very useful for debugging)
+        const rooms = await this.client.getAvailableRooms('rhythm_game');
+        console.log(`Connection successful! Found ${rooms.length} open rooms`);
+
+        this.updateConnectionStatus(true);
+        this.showNotification('Connected to multiplayer server!');
+
+    } catch (error) {
+        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.error('Colyseus connection FAILED:', error.message);
+        console.error('Full error:', error);
+        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+        this.updateConnectionStatus(false);
+
+        // Helpful message for most common issues
+        this.showError(
+            "Failed to connect to Colyseus server.\n\n" +
+            "Most likely causes:\n" +
+            "• You opened the page via http:// instead of https:// (ngrok requires https)\n" +
+            "• ngrok is not running or wrong port (use: ngrok http 2567)\n" +
+            "• Colyseus server not running / listening on port 2567\n" +
+            "• Browser blocked websocket (check console for more details)"
+        );
+
+        // Optional fallback (only for local dev without ngrok)
+        // try {
+        //     console.log('Trying fallback: ws://localhost:2567');
+        //     this.client = new Colyseus.Client('ws://localhost:2567');
+        //     await this.client.getAvailableRooms('rhythm_game');
+        //     console.log('Fallback connected!');
+        //     this.updateConnectionStatus(true);
+        // } catch (fbErr) {
+        //     console.error('Fallback also failed:', fbErr);
+        // }
+    }
+}
     leaveRoom() {
         console.log('Leaving room...');
         
