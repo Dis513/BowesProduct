@@ -545,24 +545,24 @@ async connectToServer() {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         serverUrl = 'ws://localhost:2567';
         console.log("Local development mode → using:", serverUrl);
-    }
-    // Deployed version (GitHub Pages + ngrok)
+    } 
+    // Deployed (GitHub Pages + ngrok)
     else {
-        // ────────────────────────────────────────────────────────────────
-        // CHANGE THIS LINE every time you restart ngrok!
+        // CHANGE THIS every time ngrok restarts!
         const ngrokUrl = 'https://filtratable-lophodont-temeka.ngrok-free.dev';
-        // ────────────────────────────────────────────────────────────────
         
         serverUrl = ngrokUrl.replace(/^https?:\/\//, 'wss://');
         console.log("Deployed mode (ngrok) → using:", serverUrl);
     }
 
-    // TEMPORARY: Add ngrok bypass header for matchmaking requests
+    // Save the original fetch FIRST (this fixes the "Unexpected identifier" error)
     const originalFetch = window.fetch;
+
+    // Temporary override to add the ngrok bypass header
     window.fetch = async function(url, options = {}) {
         options.headers = {
             ...options.headers,
-            "ngrok-skip-browser-warning": "69420"   // ← this is the important header
+            "ngrok-skip-browser-warning": "69420"   // ← this bypasses the warning page
         };
         return originalFetch(url, options);
     };
@@ -571,19 +571,19 @@ async connectToServer() {
         console.log("Creating Colyseus Client with:", serverUrl);
         this.client = new Colyseus.Client(serverUrl);
 
-        console.log("Testing connection with getAvailableRooms...");
+        console.log("Testing matchmaking connection...");
         const rooms = await this.client.getAvailableRooms('rhythm_game');
 
-        console.log(`SUCCESS! Found ${rooms.length} available rhythm_game rooms`);
-        // If you see this line + a number (even 0) → everything is working!
+        console.log(`SUCCESS! Found ${rooms.length} available rhythm_game room(s)`);
+        // If you reach here → no more HTML warning page, real data!
 
         this.updateConnectionStatus(true);
     } catch (error) {
-        console.error("Connection failed:", error);
-        this.showError("Couldn't connect to the server. Is ngrok still running?");
+        console.error("Connection / matchmaking test failed:", error);
+        this.showError("Failed to connect to server or fetch rooms. Check ngrok.");
         this.updateConnectionStatus(false);
     } finally {
-        // Very important: put fetch back to normal
+        // Restore original fetch (prevents breaking other parts of your app)
         window.fetch = originalFetch;
     }
 }
