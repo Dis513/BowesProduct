@@ -446,51 +446,85 @@ class MultiplayerManager {
         }
     }
 
-    displayLobbies(rooms) {
-        this.lobbyList.innerHTML = '';
+displayLobbies(rooms) {
+    this.lobbyList.innerHTML = '';
 
-        if (!rooms || rooms.length === 0) {
-            this.lobbyList.innerHTML = '<div class="no-lobbies">No lobbies available. Create one!</div>';
-            return;
+    if (!Array.isArray(rooms) || rooms.length === 0) {
+        this.lobbyList.innerHTML = `
+            <div class="no-lobbies">No lobbies available. Create one!</div>
+        `;
+        return;
+    }
+
+    rooms.forEach(room => {
+        const roomData = room.metadata || {};
+        const roomCode = roomData.roomCode || 'Unknown';
+        const roomType = roomData.roomType || 'public';
+        const playerCount = room.clients || 0;
+        const maxPlayers = room.maxClients || 2;
+        const roomLevel = roomData.level || 1;
+
+        // Only show public lobbies or lobbies that aren't full
+        if (roomType === 'public' || playerCount < maxPlayers) {
+            const lobbyItem = document.createElement('div');
+            lobbyItem.className = 'lobby-item';
+
+            const lobbyName = roomType === 'public' ? '🌍 Public Lobby' : '🔒 ' + roomCode;
+
+            // Determine level color
+            let levelColor = '#39FF14'; // Easy (green)
+            if (roomLevel > 10 && roomLevel <= 20) levelColor = '#FFFF00'; // Medium
+            else if (roomLevel > 20 && roomLevel <= 35) levelColor = '#FFA500'; // Hard
+            else if (roomLevel > 35 && roomLevel <= 45) levelColor = '#FF0000'; // Expert
+            else if (roomLevel > 45) levelColor = '#FF1493'; // Master
+
+            lobbyItem.innerHTML = `
+                <div class="lobby-info">
+                    <span class="lobby-code">${lobbyName}</span>
+                    <span class="lobby-level" style="color: ${levelColor};">Level ${roomLevel}</span>
+                    <span class="lobby-players">${playerCount}/${maxPlayers} players</span>
+                </div>
+                <button class="join-lobby-btn" data-roomid="${room.roomId}" data-code="${roomCode}" data-type="${roomType}" data-level="${roomLevel}">
+                    Join
+                </button>
+            `;
+
+            this.lobbyList.appendChild(lobbyItem);
+        }
+    });
+
+    // Unified function to handle joining a room
+    const joinHandler = (e) => {
+        const btn = e.currentTarget;
+        const roomId = btn.dataset.roomid;
+        const code = btn.dataset.code;
+        const type = btn.dataset.type;
+        const level = btn.dataset.level;
+
+        // Auto-select the level when joining
+        const levelSelect = document.getElementById('multiplayerLevelSelect');
+        if (levelSelect && level) {
+            levelSelect.value = level;
         }
 
-        rooms.forEach(room => {
-            const roomData = room.metadata || {};
-            const roomCode = roomData.roomCode || 'Unknown';
-            const roomType = roomData.roomType || 'public';
-            const playerCount = room.clients;
-            const maxPlayers = room.maxClients || 2;
-            const roomLevel = roomData.level || 1;
+        this.joinRoom(roomId, code, type);
+    };
 
-            // Only show public lobbies or lobbies that aren't full
-            if (roomType === 'public' || playerCount < maxPlayers) {
-                const lobbyItem = document.createElement('div');
-                lobbyItem.className = 'lobby-item';
-                
-                // For public lobbies, don't show the room code - just show "Public"
-                // For private lobbies, show the room code with lock icon
-                const lobbyName = roomType === 'public' ? '🌍 Public Lobby' : '🔒 ' + roomCode;
-                
-                // Get difficulty color for level
-                let levelColor = '#39FF14'; // Easy (green)
-                if (roomLevel > 10 && roomLevel <= 20) levelColor = '#FFFF00'; // Medium (yellow)
-                else if (roomLevel > 20 && roomLevel <= 35) levelColor = '#FFA500'; // Hard (orange)
-                else if (roomLevel > 35 && roomLevel <= 45) levelColor = '#FF0000'; // Expert (red)
-                else if (roomLevel > 45) levelColor = '#FF1493'; // Master (pink)
-                
-                lobbyItem.innerHTML = `
-                    <div class="lobby-info">
-                        <span class="lobby-code">${lobbyName}</span>
-                        <span class="lobby-level" style="color: ${levelColor};">Level ${roomLevel}</span>
-                        <span class="lobby-players">${playerCount}/${maxPlayers} players</span>
-                    </div>
-                    <button class="join-lobby-btn" data-roomid="${room.roomId}" data-code="${roomCode}" data-type="${roomType}" data-level="${roomLevel}">
-                        Join
-                    </button>
-                `;
-                this.lobbyList.appendChild(lobbyItem);
-            }
-        });
+    // Add event listeners to all join buttons (click + touch)
+    this.lobbyList.querySelectorAll('.join-lobby-btn').forEach(btn => {
+        // Remove any previous listeners first (prevents duplicates)
+        btn.replaceWith(btn.cloneNode(true));
+    });
+
+    this.lobbyList.querySelectorAll('.join-lobby-btn').forEach(btn => {
+        btn.addEventListener('click', joinHandler);
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            joinHandler(e);
+        }, { passive: false });
+    });
+}
+
 
         // Add click listeners to join buttons with touch support
         document.querySelectorAll('.join-lobby-btn').forEach(btn => {
