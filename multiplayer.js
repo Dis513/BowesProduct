@@ -531,7 +531,6 @@ class MultiplayerManager {
     // ==================================
     // Utility Functions
     // ==================================
-
 async connectToServer() {
     if (this.client) {
         console.log("Colyseus client already exists");
@@ -541,28 +540,28 @@ async connectToServer() {
 
     let serverUrl;
 
-    // Local development
+    // 1. Local development
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         serverUrl = 'ws://localhost:2567';
         console.log("Local development mode → using:", serverUrl);
     } 
-    // Deployed (GitHub Pages + ngrok)
+    // 2. Deployed (GitHub Pages + ngrok)
     else {
-        // CHANGE THIS every time ngrok restarts!
         const ngrokUrl = 'https://filtratable-lophodont-temeka.ngrok-free.dev';
-        
         serverUrl = ngrokUrl.replace(/^https?:\/\//, 'wss://');
         console.log("Deployed mode (ngrok) → using:", serverUrl);
     }
 
-    // Save the original fetch FIRST (this fixes the "Unexpected identifier" error)
+    // ────────────────────────────────────────────────────────────────
+    // Save original fetch FIRST (this prevents the syntax error)
     const originalFetch = window.fetch;
+    // ────────────────────────────────────────────────────────────────
 
-    // Temporary override to add the ngrok bypass header
+    // Temporary override for ngrok bypass
     window.fetch = async function(url, options = {}) {
         options.headers = {
             ...options.headers,
-            "ngrok-skip-browser-warning": "69420"   // ← this bypasses the warning page
+            "ngrok-skip-browser-warning": "69420"
         };
         return originalFetch(url, options);
     };
@@ -575,15 +574,14 @@ async connectToServer() {
         const rooms = await this.client.getAvailableRooms('rhythm_game');
 
         console.log(`SUCCESS! Found ${rooms.length} available rhythm_game room(s)`);
-        // If you reach here → no more HTML warning page, real data!
 
         this.updateConnectionStatus(true);
     } catch (error) {
-        console.error("Connection / matchmaking test failed:", error);
-        this.showError("Failed to connect to server or fetch rooms. Check ngrok.");
+        console.error("Connection / test failed:", error);
+        this.showError("Failed to connect to multiplayer server.");
         this.updateConnectionStatus(false);
     } finally {
-        // Restore original fetch (prevents breaking other parts of your app)
+        // Restore original fetch (critical!)
         window.fetch = originalFetch;
     }
 }
