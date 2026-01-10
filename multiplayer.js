@@ -547,7 +547,7 @@ async connectToServer() {
     } 
     // 2. Deployed (GitHub Pages + ngrok)
     else {
-        const ngrokUrl = 'https://orange-jeans-slide.loca.lt';
+        const ngrokUrl = 'https://filtratable-lophodont-temeka.ngrok-free.dev ';
         serverUrl = ngrokUrl.replace(/^https?:\/\//, 'wss://');
         console.log("Deployed mode (ngrok) → using:", serverUrl);
     }
