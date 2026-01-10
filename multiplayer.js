@@ -3,7 +3,7 @@
 // ==================================
 
 class MultiplayerManager {
-    constructor(game) { 
+    constructor(game) {
         this.game = game;
         this.client = null;
         this.room = null;
@@ -29,9 +29,6 @@ class MultiplayerManager {
     createMultiplayerUI() {
         // Create multiplayer menu if it doesn't exist
         if (!document.getElementById('multiplayerMenu')) {
-            // Populate level selector
-            this.populateLevelSelector();
-            
             const menuHTML = `
                 <div class="pause-menu" id="multiplayerMenu" style="display: none;">
                     <h2 class="pause-title">👥 MULTIPLAYER</h2>
@@ -40,17 +37,6 @@ class MultiplayerManager {
                     <div class="connection-status" id="connectionStatus">
                         <span class="status-indicator offline"></span>
                         <span class="status-text">Disconnected</span>
-                    </div>
-                    
-                    <!-- Level Selection -->
-                    <div class="lobby-section">
-                        <h3>Select Level</h3>
-                        <div class="level-selector-container">
-                            <select id="multiplayerLevelSelect" class="room-code-input">
-                                <option value="">Choose a level...</option>
-                            </select>
-                            <p class="code-hint">Select a level before creating or joining a room</p>
-                        </div>
                     </div>
                     
                     <!-- Create Room Section -->
@@ -160,19 +146,13 @@ class MultiplayerManager {
             });
         });
 
-        // Create room button - Enhanced with touch support
-        const createRoomBtn = document.getElementById('createRoomBtn');
-        createRoomBtn.addEventListener('click', () => {
+        // Create room button
+        document.getElementById('createRoomBtn').addEventListener('click', () => {
             this.createRoom();
         });
-        createRoomBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.createRoom();
-        }, { passive: false });
 
-        // Join room button - Enhanced with touch support
-        const joinRoomBtn = document.getElementById('joinRoomBtn');
-        joinRoomBtn.addEventListener('click', () => {
+        // Join room button
+        document.getElementById('joinRoomBtn').addEventListener('click', () => {
             const code = document.getElementById('joinCodeInput').value.trim().toUpperCase();
             if (code) {
                 this.joinRoom(code);
@@ -180,95 +160,26 @@ class MultiplayerManager {
                 this.showError('Please enter a room code');
             }
         });
-        joinRoomBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const code = document.getElementById('joinCodeInput').value.trim().toUpperCase();
-            if (code) {
-                this.joinRoom(code);
-            } else {
-                this.showError('Please enter a room code');
-            }
-        }, { passive: false });
 
-        // Refresh lobbies button - Enhanced with touch support
-        const refreshLobbiesBtn = document.getElementById('refreshLobbiesBtn');
-        refreshLobbiesBtn.addEventListener('click', () => {
+        // Refresh lobbies button
+        document.getElementById('refreshLobbiesBtn').addEventListener('click', () => {
             this.getAvailableLobbies();
         });
-        refreshLobbiesBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.getAvailableLobbies();
-        }, { passive: false });
 
-        // Ready button - Enhanced with touch support
-        const readyBtn = document.getElementById('readyBtn');
-        readyBtn.addEventListener('click', () => {
+        // Ready button
+        document.getElementById('readyBtn').addEventListener('click', () => {
             this.toggleReady();
         });
-        readyBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.toggleReady();
-        }, { passive: false });
 
-        // Leave room button - Enhanced with touch support
-        const leaveRoomBtn = document.getElementById('leaveRoomBtn');
-        leaveRoomBtn.addEventListener('click', () => {
+        // Leave room button
+        document.getElementById('leaveRoomBtn').addEventListener('click', () => {
             this.leaveRoom();
         });
-        leaveRoomBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.leaveRoom();
-        }, { passive: false });
 
-        // Close multiplayer menu - Enhanced with touch support
-        const closeMultiplayerBtn = document.getElementById('closeMultiplayer');
-        closeMultiplayerBtn.addEventListener('click', () => {
+        // Close multiplayer menu
+        document.getElementById('closeMultiplayer').addEventListener('click', () => {
             this.hideMultiplayerMenu();
         });
-        closeMultiplayerBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.hideMultiplayerMenu();
-        }, { passive: false });
-    }
-
-    // ==================================
-    // Level Selection
-    // ==================================
-
-    populateLevelSelector() {
-        const levelSelect = document.getElementById('multiplayerLevelSelect');
-        if (!levelSelect) return;
-        
-        levelSelect.innerHTML = '<option value="">Choose a level...</option>';
-        
-        for (let i = 1; i <= 50; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `Level ${i}`;
-            
-            // Add difficulty class based on level
-            if (i <= 10) {
-                option.classList.add('easy');
-            } else if (i <= 20) {
-                option.classList.add('medium');
-            } else if (i <= 35) {
-                option.classList.add('hard');
-            } else if (i <= 45) {
-                option.classList.add('expert');
-            } else {
-                option.classList.add('master');
-            }
-            
-            levelSelect.appendChild(option);
-        }
-    }
-
-    getSelectedLevel() {
-        const levelSelect = document.getElementById('multiplayerLevelSelect');
-        if (!levelSelect) return 1;
-        
-        const level = parseInt(levelSelect.value);
-        return level || 1;
     }
 
     // ==================================
@@ -277,13 +188,6 @@ class MultiplayerManager {
 
     async createRoom() {
         try {
-            // Check if level is selected
-            const selectedLevel = this.getSelectedLevel();
-            if (!selectedLevel) {
-                this.showError('Please select a level before creating a room');
-                return;
-            }
-
             const activeTypeBtn = document.querySelector('.room-type-btn.active');
             const roomType = activeTypeBtn.dataset.type;
             let roomCode = null;
@@ -297,89 +201,57 @@ class MultiplayerManager {
                 roomCode = this.generateRoomCode();
             }
 
-            console.log(`Creating ${roomType} room with code: ${roomCode} for level: ${selectedLevel}`);
+            console.log(`Creating ${roomType} room with code: ${roomCode}`);
 
             // Connect to server and create room
             await this.connectToServer();
             
-            console.log('Attempting to create room with options:', {
-                roomCode: roomCode,
-                roomType: roomType,
-                isHost: true,
-                level: selectedLevel
-            });
-            
-            // Join/create the room with level info
+            // Join/create the room
             this.room = await this.client.joinOrCreate('rhythm_game', {
                 roomCode: roomCode,
                 roomType: roomType,
-                isHost: true,
-                level: selectedLevel
+                isHost: true
             });
 
-            console.log('Room created successfully:', this.room.roomId);
-            
             this.setupRoomListeners();
             this.lobbyCode = roomCode;
             this.isHost = true;
-            this.selectedLevel = selectedLevel;
 
+            console.log('Room created successfully:', roomCode);
+            
             // For public rooms, don't show the code
             const displayCode = roomType === 'private' ? roomCode : 'Public Lobby';
-            this.showRoomInfo(displayCode, roomType, selectedLevel);
+            this.showRoomInfo(displayCode, roomType);
             this.updateConnectionStatus(true);
 
         } catch (error) {
             console.error('Error creating room:', error);
-            console.error('Error details:', {
-                message: error.message,
-                code: error.code,
-                name: error.name
-            });
-            
-            let errorMessage = 'Failed to create room';
-            if (error.message) {
-                errorMessage += ': ' + error.message;
-            }
-            if (error.code === 4210) {
-                errorMessage = 'Room already exists with this code';
-            }
-            
-            this.showError(errorMessage);
+            this.showError('Failed to create room: ' + error.message);
             this.updateConnectionStatus(false);
         }
     }
 
     async joinRoom(roomId, code, type = 'private') {
         try {
-            // Check if level is selected
-            const selectedLevel = this.getSelectedLevel();
-            if (!selectedLevel) {
-                this.showError('Please select a level before joining a room');
-                return;
-            }
-
-            console.log('Joining room:', roomId, 'Code:', code, 'Type:', type, 'Level:', selectedLevel);
+            console.log('Joining room:', roomId, 'Code:', code, 'Type:', type);
 
             await this.connectToServer();
             
-            // Try to join the room by ID (not roomCode) with level info
+            // Try to join the room by ID (not roomCode)
             this.room = await this.client.joinById(roomId, {
                 roomCode: code,
-                isHost: false,
-                level: selectedLevel
+                isHost: false
             });
 
             this.setupRoomListeners();
             this.lobbyCode = code;
             this.isHost = false;
-            this.selectedLevel = selectedLevel;
 
             console.log('Joined room successfully:', roomId);
             
             // Display appropriate room info based on type
             const displayCode = type === 'public' ? 'Public Lobby' : code;
-            this.showRoomInfo(displayCode, type, selectedLevel);
+            this.showRoomInfo(displayCode, type);
             this.updateConnectionStatus(true);
 
         } catch (error) {
@@ -394,27 +266,18 @@ class MultiplayerManager {
             console.log('Fetching available lobbies...');
             
             if (!this.client) {
-                console.log('No client found, connecting to server...');
                 await this.connectToServer();
             }
 
-            console.log('Getting available rooms from client...');
             // Get all available rooms
             const rooms = await this.client.getAvailableRooms('rhythm_game');
             
             console.log('Available rooms:', rooms);
-            console.log('Number of rooms:', rooms ? rooms.length : 0);
-            
             this.displayLobbies(rooms);
 
         } catch (error) {
             console.error('Error fetching lobbies:', error);
-            console.error('Error details:', {
-                message: error.message,
-                code: error.code,
-                name: error.name
-            });
-            this.showError('Failed to fetch available lobbies: ' + error.message);
+            this.showError('Failed to fetch available lobbies');
         }
     }
 
@@ -432,7 +295,6 @@ class MultiplayerManager {
             const roomType = roomData.roomType || 'public';
             const playerCount = room.clients;
             const maxPlayers = room.maxClients || 2;
-            const roomLevel = roomData.level || 1;
 
             // Only show public lobbies or lobbies that aren't full
             if (roomType === 'public' || playerCount < maxPlayers) {
@@ -443,20 +305,12 @@ class MultiplayerManager {
                 // For private lobbies, show the room code with lock icon
                 const lobbyName = roomType === 'public' ? '🌍 Public Lobby' : '🔒 ' + roomCode;
                 
-                // Get difficulty color for level
-                let levelColor = '#39FF14'; // Easy (green)
-                if (roomLevel > 10 && roomLevel <= 20) levelColor = '#FFFF00'; // Medium (yellow)
-                else if (roomLevel > 20 && roomLevel <= 35) levelColor = '#FFA500'; // Hard (orange)
-                else if (roomLevel > 35 && roomLevel <= 45) levelColor = '#FF0000'; // Expert (red)
-                else if (roomLevel > 45) levelColor = '#FF1493'; // Master (pink)
-                
                 lobbyItem.innerHTML = `
                     <div class="lobby-info">
                         <span class="lobby-code">${lobbyName}</span>
-                        <span class="lobby-level" style="color: ${levelColor};">Level ${roomLevel}</span>
                         <span class="lobby-players">${playerCount}/${maxPlayers} players</span>
                     </div>
-                    <button class="join-lobby-btn" data-roomid="${room.roomId}" data-code="${roomCode}" data-type="${roomType}" data-level="${roomLevel}">
+                    <button class="join-lobby-btn" data-roomid="${room.roomId}" data-code="${roomCode}" data-type="${roomType}">
                         Join
                     </button>
                 `;
@@ -464,39 +318,14 @@ class MultiplayerManager {
             }
         });
 
-        // Add click listeners to join buttons with touch support
+        // Add click listeners to join buttons
         document.querySelectorAll('.join-lobby-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const roomId = e.target.dataset.roomid;
-                const code = e.target.dataset.code;
-                const type = e.target.dataset.type;
-                const level = e.target.dataset.level;
-                
-                // Auto-select the level when joining
-                const levelSelect = document.getElementById('multiplayerLevelSelect');
-                if (levelSelect && level) {
-                    levelSelect.value = level;
-                }
-                
+            btn.addEventListener('click', () => {
+                const roomId = btn.dataset.roomid;
+                const code = btn.dataset.code;
+                const type = btn.dataset.type;
                 this.joinRoom(roomId, code, type);
             });
-            
-            // Add touch support for join buttons
-            btn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                const roomId = e.target.dataset.roomid;
-                const code = e.target.dataset.code;
-                const type = e.target.dataset.type;
-                const level = e.target.dataset.level;
-                
-                // Auto-select the level when joining
-                const levelSelect = document.getElementById('multiplayerLevelSelect');
-                if (levelSelect && level) {
-                    levelSelect.value = level;
-                }
-                
-                this.joinRoom(roomId, code, type);
-            }, { passive: false });
         });
     }
 
@@ -558,23 +387,9 @@ class MultiplayerManager {
     // UI Updates
     // ==================================
 
-    showRoomInfo(code, type, level = 1) {
+    showRoomInfo(code, type) {
         document.getElementById('currentRoomCode').textContent = code;
         document.getElementById('roomType').textContent = type === 'public' ? 'Public' : 'Private';
-        
-        // Add level display to room details
-        const roomDetails = document.querySelector('.room-details');
-        if (roomDetails) {
-            // Check if level info already exists
-            let levelInfo = roomDetails.querySelector('.room-level');
-            if (!levelInfo) {
-                levelInfo = document.createElement('p');
-                levelInfo.className = 'room-level';
-                roomDetails.appendChild(levelInfo);
-            }
-            levelInfo.innerHTML = `<strong>Level:</strong> ${level}`;
-        }
-        
         this.currentRoomInfo.style.display = 'block';
         
         // Hide create/join sections when in a room
@@ -657,14 +472,9 @@ class MultiplayerManager {
         // Hide multiplayer menu
         this.hideMultiplayerMenu();
         
-        // Load the selected level and start the game
-        if (this.selectedLevel) {
-            console.log('Loading level:', this.selectedLevel);
-            this.game.selectLevel(this.selectedLevel);
-        } else {
-            console.error('No level selected!');
-            this.showError('No level selected. Please select a level and try again.');
-        }
+        // Start the game
+        // You'll need to implement this in your game.js
+        console.log('Multiplayer game started!');
     }
 
     sendScoreUpdate(score, combo, health) {
@@ -719,36 +529,40 @@ class MultiplayerManager {
     }
 
     // ==================================
- // ==================================
-// Utility Functions
-// ==================================
+    // Utility Functions
+    // ==================================
 
-async connectToServer() {
-    if (this.client) {
-        this.updateConnectionStatus(true);
-        return;
+    async connectToServer() {
+        if (!this.client) {
+            // Connect to Colyseus server
+            // Use the current page's host for the WebSocket connection
+            const protocol = window.location.protocol === ' https://filtratable-lophodont-temeka.ngrok-free.dev';
+            const host = window.location.hostname;
+            const port = window.location.port ? `:${window.location.port}` : '';
+            const serverUrl = `${protocol}//${host}${port}`;
+            
+            console.log('Connecting to server:', serverUrl);
+            
+            try {
+                this.client = new Colyseus.Client(serverUrl);
+                
+                // Test connection by getting available rooms
+                await this.client.getAvailableRooms('rhythm_game');
+                
+                console.log('Successfully connected to server:', serverUrl);
+                this.updateConnectionStatus(true);
+            } catch (error) {
+                console.error('Failed to connect to server:', error);
+                // Fallback to localhost for development
+                console.log('Trying fallback to localhost:2567');
+                this.client = new Colyseus.Client('ws://localhost:2567');
+                this.updateConnectionStatus(true);
+            }
+        } else {
+            // Verify connection is still active
+            this.updateConnectionStatus(true);
+        }
     }
-
-    // 🔒 Explicit Colyseus WebSocket server
-    const SERVER_URL = "wss://filtratable-lophodont-temeka.ngrok-free.dev";
-
-    console.log("Connecting to server:", SERVER_URL);
-
-    try {
-        this.client = new Colyseus.Client(SERVER_URL);
-
-        // Test connection
-        await this.client.getAvailableRooms("rhythm_game");
-
-        console.log("Successfully connected to server");
-        this.updateConnectionStatus(true);
-    } catch (error) {
-        console.error("Failed to connect to server:", error);
-        this.updateConnectionStatus(false);
-        throw error;
-    }
-}
-
 
     leaveRoom() {
         if (this.room) {
@@ -785,9 +599,6 @@ async connectToServer() {
 
     async showMultiplayerMenu() {
         this.multiplayerMenu.style.display = 'block';
-        
-        // Populate level selector
-        this.populateLevelSelector();
         
         // Try to connect to server and update connection status
         try {
