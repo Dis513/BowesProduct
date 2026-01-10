@@ -532,9 +532,8 @@ class MultiplayerManager {
     // Utility Functions
     // ==================================
 
-   async connectToServer() {
+async connectToServer() {
     if (this.client) {
-        // Already have a client → assume it's connected
         console.log("Colyseus client already exists");
         this.updateConnectionStatus(true);
         return;
@@ -542,23 +541,53 @@ class MultiplayerManager {
 
     let serverUrl;
 
-    // 1. Local development (running on localhost)
+    // 1. Local development
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         serverUrl = 'ws://localhost:2567';
         console.log("Local development mode → using:", serverUrl);
     }
-    // 2. Deployed version (e.g. GitHub Pages) → use ngrok tunnel
+    // 2. Deployed (GitHub Pages) → ngrok
     else {
-        // ────────────────────────────────────────────────────────────────
-        // CHANGE THIS LINE every time you restart ngrok!
-        const ngrokUrl = 'https://filtratable-lophodont-temeka.ngrok-free.dev';  // ← PASTE YOUR CURRENT NGROK HTTPS URL HERE
-        // ────────────────────────────────────────────────────────────────
-
-        // Convert https → wss for secure WebSocket
+        // CHANGE THIS every time ngrok restarts!
+        const ngrokUrl = 'https://filtratable-lophodont-temeka.ngrok-free.dev';
         serverUrl = ngrokUrl.replace(/^https?:\/\//, 'wss://');
         console.log("Deployed mode (ngrok) → using:", serverUrl);
     }
 
+    // ────────────────────────────────────────────────────────────────
+    // TEMPORARY FETCH OVERRIDE to add ngrok bypass header
+    // Only affects matchmaking HTTP requests during connection test
+    // ────────────────────────────────────────────────────────────────
+    const originalFetch = window.fetch;
+    window.fetch = async function(url, options = {}) {
+        options.headers = {
+            ...options.headers,
+            "ngrok-skip-browser-warning": "69420"  // any value works (popular meme value)
+            // Optional alternative: "User-Agent": "MyGameClient/1.0"
+        };
+        return originalFetch(url, options);
+    };
+
+    try {
+        console.log("Creating Colyseus Client with:", serverUrl);
+        this.client = new Colyseus.Client(serverUrl);
+
+        console.log("Testing matchmaking connection...");
+        const rooms = await this.client.getAvailableRooms('rhythm_game');
+
+        console.log(`Success! Found ${rooms.length} available rhythm_game room(s).`);
+        // If we got here → rooms is a real array, not HTML string
+
+        this.updateConnectionStatus(true);
+    } catch (error) {
+        console.error("Colyseus connection / test failed:", error);
+        this.showError("Failed to connect to server. Check ngrok is running and server is active.");
+        this.updateConnectionStatus(false);
+    } finally {
+        // IMPORTANT: Restore original fetch!
+        window.fetch = originalFetch;
+    }
+}
     try {
         console.log("Attempting to connect to Colyseus server:", serverUrl);
 
