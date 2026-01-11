@@ -7,7 +7,8 @@ const http = require('http');
 const express = require('express');
 
 // Game State Schema
-class GameState extends colyseus.Room {
+class GameRoom extends colyseus.Room {
+ {
     constructor() {
         super();
         this.players = {};
@@ -257,10 +258,9 @@ const gameServer = new colyseus.Server({
     server: server,
 });
 
-// Define game room
-gameServer.define('rhythm_game', GameState, {
-    maxClients: 2
-});
+class GameRoom extends colyseus.Room {
+    maxClients = 2;
+
 
 // Start server
 server.listen(port, '0.0.0.0', () => {
